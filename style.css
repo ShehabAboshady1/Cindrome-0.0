@@ -1,0 +1,294 @@
+/* --- 1. الألوان الأساسية والـ Reset --- */
+:root {
+    --maincolor: #161616;   
+    --accent-teal: #099e9e;  
+    --text-cream: #f1e3c8;   
+    --dark-bg: #010a09;      
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--maincolor);
+    color: var(--text-cream);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- 2. تنسيق الـ Navbar الأساسي (الكمبيوتر) --- */
+.bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--dark-bg);
+    padding: 15px 50px;
+    height: 70px;
+    position: relative; 
+}
+
+/* الشعار على الشمال */
+.bar .logo {
+    max-width: 140px;
+    height: auto;
+    z-index: 2;
+}
+
+/* --- 3. السيرش بار (مُسنتر بالملّي والأزرار جوة) --- */
+.search-form {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30vw; 
+    max-width: 450px;
+    z-index: 2;
+}
+
+.search-wrapper {
+    position: relative; 
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#search {
+    width: 100%;
+    padding: 10px 75px 10px 15px; 
+    border: 1px solid #333;
+    border-radius: 6px;
+    background-color: #222;
+    color: var(--text-cream);
+    outline: none;
+    font-size: 14px;
+}
+
+/* زرار البحث الأساسي (المربع التيال جوة الخانة) */
+.search-submit-btn {
+    position: absolute;
+    right: 4px;
+    background-color: var(--accent-teal);
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.search-submit-btn:hover {
+    background-color: #0bd1d1;
+}
+
+/* 🌟 تنسيق وتلوين أيقونة الـ SVG الاحترافية 🌟 */
+.search-icon {
+    width: 16px;
+    height: 16px;
+    color: #010a09; /* متلونة بنفس لون الخلفية الغامقة عشان التباين */
+    transition: transform 0.2s;
+}
+
+.search-submit-btn:hover .search-icon {
+    transform: scale(1.1); /* تكبر سنة خفيفة شياكة لما تقف بالماوس */
+}
+
+/* زرار الإلغاء الـ X جوة الخانة قبل العدسة */
+.clear-btn {
+    position: absolute;
+    right: 45px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.clear-btn:hover {
+    color: var(--text-cream);
+}
+
+/* --- 4. الجزء اليمين (الأزرار والروابط للكمبيوتر) --- */
+.right-bar {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    margin-left: auto; 
+    z-index: 2;
+}
+
+button.signin-btn, button.log-content {
+    background-color: var(--accent-teal);
+    color: #010a09;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap; 
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-cream);
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.nav-item:hover {
+    color: var(--accent-teal);
+}
+
+/* إخفاء عناصر تحكم الموبايل في وضع الكمبيوتر */
+.menu-checkbox, .hamburger-btn {
+    display: none;
+}
+
+/* --- 5. تنسيق القوائم المنسدلة والنزلة السلسة (الكمبيوتر) --- */
+.dropdown {
+    position: relative;
+    display: flex;
+    justify-content: center; 
+}
+
+.dropdown-menu, .dropdown ul {
+    position: absolute;
+    top: 100%;
+    left: 50%; 
+    transform: translateX(-50%) translateY(-15px); 
+    background-color: var(--dark-bg);
+    border: 1px solid #222;
+    list-style: none;
+    padding: 10px 0;
+    min-width: 170px; 
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+.dropdown-menu li a, .dropdown ul li a {
+    display: block;
+    padding: 10px 20px; 
+    color: var(--text-cream);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.dropdown-menu li a:hover, .dropdown ul li a:hover {
+    background-color: var(--accent-teal);
+    color: #010a09;
+}
+
+.dropdown:hover > ul {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+
+/* ======================================================= */
+/* 📱 6. شغل الموبايل (كل حاجة في نفس السطر + سيرش صغير) 📱 */
+/* ======================================================= */
+
+@media (max-width: 768px) {
+    .bar {
+        padding: 10px 15px;
+        justify-content: space-between; 
+    }
+
+    .bar .logo {
+        max-width: 90px; 
+    }
+
+    .search-form {
+        position: static; 
+        transform: none;
+        flex: 1; 
+        margin: 0 15px; 
+        width: auto;
+    }
+
+    #search {
+        padding: 8px 65px 8px 10px; 
+        font-size: 13px;
+    }
+
+    .search-submit-btn {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .search-icon {
+        width: 13px;
+        height: 13px;
+    }
+
+    .clear-btn {
+        right: 36px;
+        font-size: 18px;
+    }
+
+    .hamburger-btn {
+        display: block;
+        font-size: 24px;
+        color: var(--text-cream);
+        cursor: pointer;
+    }
+
+    .right-bar {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 70px; 
+        left: 0;
+        width: 100%;
+        background-color: var(--dark-bg);
+        padding: 20px;
+        gap: 20px;
+        align-items: flex-start;
+        border-top: 1px solid #222;
+        
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: all 0.3s ease;
+        z-index: 99;
+    }
+
+    .menu-checkbox:checked ~ .right-bar {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dropdown {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dropdown-menu, .dropdown ul {
+        position: static;
+        transform: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: none;
+        background-color: #0b1514;
+        width: 100%;
+        margin-top: 10px;
+        box-shadow: none;
+        border: none;
+    }
+
+    .dropdown:hover > ul {
+        display: block;
+    }
+}

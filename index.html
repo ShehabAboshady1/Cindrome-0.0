@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <header>
+       <nav class="bar">
+        <!-- 1. الشعار -->
+        <img class="logo" src="./assets/no background logo.png" alt="logo">
+
+        <!-- 2. مساحة البحث الذكية (الـ SVG والـ X غاطسين جوة) -->
+        <form class="search-form">
+            <div class="search-wrapper">
+                <input id="search" type="search" placeholder="Search...">
+                <!-- زرار الـ X لمسح الكلام تلقائياً -->
+                <button type="reset" class="clear-btn">&times;</button>
+                <!-- زرار البحث وبداخله أيقونة الـ SVG الاحترافية -->
+                <button type="submit" class="search-submit-btn">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        </form>
+
+        <!-- 3. تريكة زرار الثلاث شرط للموبايل -->
+        <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+        <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+        <!-- 4. القائمة اليمين كاملة (right-bar) -->
+        <div class="right-bar">
+            <!-- زرار تسجيل الدخول -->
+            <a href="sigin-page"><button class="signin-btn">Sign in</button></a>
+            
+            <!-- قائمة الـ Home -->
+            <a href="homelink" class="nav-item">Home</a>
+
+            <!-- قائمة الـ Content والمنسدلة -->
+            <div class="dropdown">
+                <a href="#" class="nav-item">Content</a>
+                <ul class="dropdown-menu">
+                    <li><a href="movies-link">Movies</a></li>
+                    <li><a href="series-link">TV Series</a></li>
+                    <li><a href="anime-link">Anime</a></li>
+                </ul>
+            </div>
+
+            <!-- قائمة الـ Drome -->
+            <a href="Dromelink" class="nav-item">Drome</a>
+
+            <!-- قائمة الـ Account والمنسدلة -->
+            <div class="dropdown">
+                <a href="#" class="nav-item">Account</a>
+                <ul class="dropdown-menu">
+                    <li><a href="Profile-link">Profile</a></li>
+                    <li><a href="likes-link">Likes</a></li>
+                    <li><a href="lists-link">Lists</a></li>
+                    <li><a href="watchlist-link">Watchlist</a></li>
+                    <li><a href="diary-link">Diary</a></li>
+                    <li><a href="reviews-link">Reviews</a></li>
+                    <li><a href="signin-link">Log out</a></li>
+                </ul>
+            </div>
+
+            <!-- زرار اللوج في الآخر خالص -->
+            <a href="log-page"><button class="log-content">Log</button></a>
+        </div>
+    </nav>
+    </header>
+    <main>
+
+        <div class="trending">
+            <h2>Trending Now</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div>
+        <hr>
+        <div class="watchlist-preview">
+            <h2>From Watchlist</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div>
+        <hr>
+        <div class="suggest-movies">
+            <h2>Must-Watch movies</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div>
+        <hr>
+        <div class="suggest-tv-series">
+            <h2>Must watch Tv Series</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div>
+        <hr>
+        <div class="suggest anime">
+            <h2>Must watch Anime</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div>
+    </main>
+    <hr>
+    <footer>
+        <img class="logo" src="./assets/no background logo.png" alt="logo">
+        <a href="about us-link">About Us</a>
+        <p>Contact us</p>
+        <a href="sendemailtous"><svg xmlns="email emojie"></svg></a>
+        <a href="our instagram page"><svg xmlns="instagram emojie"></svg></a>
+        <a href="our X page"><svg xmlns="X emojie"></svg></a>
+    </footer>
+</body>
+
+</html>
