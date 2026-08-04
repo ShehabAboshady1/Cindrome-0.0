@@ -10,69 +10,70 @@
 
 <body>
     <header>
-       <nav class="bar">
-        
-        <img class="logo" src="./assets/no background logo.png" alt="logo">
+        <nav class="bar">
 
-        
-        <form class="search-form">
-            <div class="search-wrapper">
-                <input id="search" type="search" placeholder="Search...">
-                
-                <button type="reset" class="clear-btn">&times;</button>
-                
-                <button type="submit" class="search-submit-btn">
-                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </button>
+            <img class="logo" src="./assets/no background logo.png" alt="logo">
+
+
+            <form class="search-form">
+                <div class="search-wrapper">
+                    <input id="search" type="search" placeholder="Search...">
+
+                    <button type="reset" class="clear-btn">&times;</button>
+
+                    <button type="submit" class="search-submit-btn">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- 3. تريكة زرار الثلاث شرط للموبايل -->
+            <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+            <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+            <!-- 4. القائمة اليمين كاملة (right-bar) -->
+            <div class="right-bar">
+                <!-- زرار تسجيل الدخول -->
+                <a href="sigin-page"><button class="signin-btn">Sign in</button></a>
+
+                <!-- قائمة الـ Home -->
+                <a href="homelink" class="nav-item">Home</a>
+
+                <!-- قائمة الـ Content والمنسدلة -->
+                <div class="dropdown">
+                    <a href="#" class="nav-item">Content</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="movies-link">Movies</a></li>
+                        <li><a href="series-link">TV Series</a></li>
+                        <li><a href="anime-link">Anime</a></li>
+                    </ul>
+                </div>
+
+                <!-- قائمة الـ Drome -->
+                <a href="Dromelink" class="nav-item">Drome</a>
+
+                <!-- قائمة الـ Account والمنسدلة -->
+                <div class="dropdown">
+                    <a href="#" class="nav-item">Account</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="Profile-link">Profile</a></li>
+                        <li><a href="likes-link">Likes</a></li>
+                        <li><a href="lists-link">Lists</a></li>
+                        <li><a href="watchlist-link">Watchlist</a></li>
+                        <li><a href="diary-link">Diary</a></li>
+                        <li><a href="reviews-link">Reviews</a></li>
+                        <li><a href="signin-link">Log out</a></li>
+                    </ul>
+                </div>
+
+                <!-- زرار اللوج في الآخر خالص -->
+                <a href="log-page"><button class="log-content">Log</button></a>
             </div>
-        </form>
-
-        <!-- 3. تريكة زرار الثلاث شرط للموبايل -->
-        <input type="checkbox" id="menu-toggle" class="menu-checkbox">
-        <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
-
-        <!-- 4. القائمة اليمين كاملة (right-bar) -->
-        <div class="right-bar">
-            <!-- زرار تسجيل الدخول -->
-            <a href="sigin-page"><button class="signin-btn">Sign in</button></a>
-            
-            <!-- قائمة الـ Home -->
-            <a href="homelink" class="nav-item">Home</a>
-
-            <!-- قائمة الـ Content والمنسدلة -->
-            <div class="dropdown">
-                <a href="#" class="nav-item">Content</a>
-                <ul class="dropdown-menu">
-                    <li><a href="movies-link">Movies</a></li>
-                    <li><a href="series-link">TV Series</a></li>
-                    <li><a href="anime-link">Anime</a></li>
-                </ul>
-            </div>
-
-            <!-- قائمة الـ Drome -->
-            <a href="Dromelink" class="nav-item">Drome</a>
-
-            <!-- قائمة الـ Account والمنسدلة -->
-            <div class="dropdown">
-                <a href="#" class="nav-item">Account</a>
-                <ul class="dropdown-menu">
-                    <li><a href="Profile-link">Profile</a></li>
-                    <li><a href="likes-link">Likes</a></li>
-                    <li><a href="lists-link">Lists</a></li>
-                    <li><a href="watchlist-link">Watchlist</a></li>
-                    <li><a href="diary-link">Diary</a></li>
-                    <li><a href="reviews-link">Reviews</a></li>
-                    <li><a href="signin-link">Log out</a></li>
-                </ul>
-            </div>
-
-            <!-- زرار اللوج في الآخر خالص -->
-            <a href="log-page"><button class="log-content">Log</button></a>
-        </div>
-    </nav>
+        </nav>
     </header>
     <main>
 
