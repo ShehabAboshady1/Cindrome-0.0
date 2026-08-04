@@ -30,7 +30,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  gap: 20px; /* مسافة أمان إجبارية تمنع التداخل */
+  gap: 20px;
   background-color: var(--dark-bg);
   padding: 15px 0px;
   height: 62px;
@@ -43,14 +43,14 @@ header {
   max-width: 150px;
   height: max-content;
   z-index: 2;
-  flex-shrink: 0; /* يمنع انكماش اللوجو */
+  flex-shrink: 0;
 }
 
-/* --- 3. السيرش بار (مرن وما بين العناصر من غير تداخل) --- */
+/* --- 3. السيرش بار --- */
 .search-form {
-  flex: 1; /* يأخذ المساحة المتاحة بمرونة */
+  flex: 1;
   max-width: 420px;
-  min-width: 200px; /* يصغر بمثالية من غير ما يختفي */
+  min-width: 200px;
   z-index: 2;
 }
 
@@ -141,7 +141,7 @@ input[type="search"]::-webkit-search-results-decoration {
   gap: 16px;
   align-items: center;
   z-index: 2;
-  flex-shrink: 0; /* مصد أمان يمنع الأزرار إنها تنكمش أو تدخل جوة السيرش */
+  flex-shrink: 0;
 }
 
 button.signin-btn,
@@ -168,15 +168,17 @@ button.log-content:hover {
   font-weight: bold;
   white-space: nowrap;
   transition: color 0.2s;
+  cursor: pointer;
 }
 
 .nav-item:hover {
   color: var(--accent-teal);
 }
 
-/* إخفاء عناصر تحكم الموبايل في وضع الشاشات الكبيرة */
+/* إخفاء عناصر التحكم الخاصة بالموبايل والـ Checkboxes افتراضياً */
 .menu-checkbox,
-.hamburger-btn {
+.hamburger-btn,
+.dropdown-checkbox {
   display: none;
 }
 
@@ -184,17 +186,16 @@ button.log-content:hover {
 .dropdown {
   position: relative;
   display: flex;
-  justify-content: center;
+  align-items: center;
 }
 
-.dropdown-menu,
-.dropdown ul {
+.dropdown-menu {
   position: absolute;
   top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(10px);
-  background-color: var(--dark-bg);
-  border: 1px solid #222;
+  background-color: #121d1c;
+  border: 1px solid #1a2625;
   list-style: none;
   padding: 8px 0;
   min-width: 160px;
@@ -203,33 +204,42 @@ button.log-content:hover {
   z-index: 100;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0.25s ease;
 }
 
-.dropdown-menu li a,
-.dropdown ul li a {
+.dropdown-menu li {
+  width: 100%;
+}
+
+.dropdown-menu li a {
   display: block;
   padding: 10px 18px;
   color: var(--text-cream);
   text-decoration: none;
   font-size: 14px;
-  transition: background 0.2s;
+  white-space: nowrap;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
-.dropdown-menu li a:hover,
-.dropdown ul li a:hover {
+.dropdown-menu li a:hover {
   background-color: var(--accent-teal);
   color: #010a09;
 }
 
-.dropdown:hover > ul {
+/* فتح القائمة في الكمبيوتر بالـ Hover */
+.dropdown:hover > .dropdown-menu {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
 /* ======================================================= */
-/* 📱 6. شغل الموبايل والتابلت (Respnosive عند 1024px) 📱 */
+/* 📱 6. شغل الموبايل والتابلت (Responsive عند 1024px) 📱 */
 /* ======================================================= */
 
 @media (max-width: 1024px) {
@@ -309,8 +319,17 @@ button.log-content:hover {
     align-items: flex-start;
   }
 
-  .dropdown-menu,
-  .dropdown ul {
+  /* 1. تصفير الـ hover في الموبايل بقوة محدد أعلى لمنع اللمس الخطأ */
+  .dropdown:hover > .dropdown-menu {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    display: none;
+  }
+
+  /* 2. ضبط القائمة المنسدلة في الموبايل بقوة محدد (0, 2, 0) لتتغلب على الكمبيوتر */
+  .dropdown .dropdown-menu {
     position: static;
     transform: none;
     opacity: 1;
@@ -320,11 +339,21 @@ button.log-content:hover {
     width: 100%;
     margin-top: 8px;
     box-shadow: none;
-    border: none;
+    border: 1px solid #1a2625;
     border-radius: 4px;
+    padding: 5px 0;
+    transition: none;
   }
 
-  .dropdown:hover > ul {
+  .dropdown .dropdown-menu li a {
+    padding: 10px 15px;
+    color: var(--text-cream);
+    display: block;
+  }
+
+  /* 3. إظهار القائمة فقط وحصرياً عند الضغط على الـ Checkbox في الموبايل */
+  .dropdown .dropdown-checkbox:checked ~ .dropdown-menu,
+  .dropdown:hover > .dropdown-checkbox:checked ~ .dropdown-menu {
     display: block;
   }
 }
