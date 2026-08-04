@@ -14,7 +14,6 @@
 
             <img class="logo" src="./assets/no background logo.png" alt="logo">
 
-
             <form class="search-form">
                 <div class="search-wrapper">
                     <input id="search" type="search" placeholder="Search...">
@@ -31,11 +30,11 @@
                 </div>
             </form>
 
-            <!-- 3. تريكة زرار الثلاث شرط للموبايل -->
+            <!-- زرار الثلاث شرط للموبايل -->
             <input type="checkbox" id="menu-toggle" class="menu-checkbox">
             <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
 
-            <!-- 4. القائمة اليمين كاملة (right-bar) -->
+            <!-- القائمة اليمين كاملة (right-bar) -->
             <div class="right-bar">
                 <!-- زرار تسجيل الدخول -->
                 <a href="sigin-page"><button class="signin-btn">Sign in</button></a>
@@ -43,9 +42,10 @@
                 <!-- قائمة الـ Home -->
                 <a href="homelink" class="nav-item">Home</a>
 
-                <!-- قائمة الـ Content والمنسدلة -->
+                <!-- قائمة الـ Content والمنسدلة (معدّلة بـ Checkbox) -->
                 <div class="dropdown">
-                    <a href="#" class="nav-item">Content</a>
+                    <input type="checkbox" id="content-toggle" class="dropdown-checkbox">
+                    <label for="content-toggle" class="nav-item dropdown-label">Content ▾</label>
                     <ul class="dropdown-menu">
                         <li><a href="movies-link">Movies</a></li>
                         <li><a href="series-link">TV Series</a></li>
@@ -56,9 +56,10 @@
                 <!-- قائمة الـ Drome -->
                 <a href="Dromelink" class="nav-item">Drome</a>
 
-                <!-- قائمة الـ Account والمنسدلة -->
+                <!-- قائمة الـ Account والمنسدلة (معدّلة بـ Checkbox) -->
                 <div class="dropdown">
-                    <a href="#" class="nav-item">Account</a>
+                    <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
+                    <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
                     <ul class="dropdown-menu">
                         <li><a href="Profile-link">Profile</a></li>
                         <li><a href="likes-link">Likes</a></li>
@@ -75,8 +76,8 @@
             </div>
         </nav>
     </header>
-    <main>
 
+    <main>
         <div class="trending">
             <h2>Trending Now</h2>
             <div class="card"><a href="movie-page-link">
