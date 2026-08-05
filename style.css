@@ -38,10 +38,11 @@ header {
   border-bottom: 1px solid #1a2625;
 }
 
-/* الشعار على الشمال */
 .bar .logo {
   max-width: 150px;
-  height: max-content;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
   z-index: 2;
   flex-shrink: 0;
 }
