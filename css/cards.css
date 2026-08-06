@@ -1,12 +1,9 @@
-/* ==========================================
-   🎢 1. Horizontal Carousel / Slider Layout
-   ========================================== */
 .carousel-section {
   width: 100%;
   max-width: 1200px;
   margin: 35px auto;
   padding: 0 15px;
-  box-sizing: border-box; /* لضمان عدم خروج العناصر عن الحجم الكلي */
+  box-sizing: border-box;
 }
 
 .carousel-header {
@@ -48,19 +45,14 @@
   color: #010a09;
 }
 
-/* المسار الأفقي للكروت (مع دعم التتش للموبايل) */
 .carousel-track {
   display: flex;
   gap: 16px;
   overflow-x: auto;
   scroll-behavior: smooth;
   padding: 8px 2px;
-
-  /* 📱 ميزتان أساسيتان لتشغيل التاتش والسحب الممتاز في الموبايل */
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
-
-  /* إخفاء شريط السكرول الظاهر */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -69,12 +61,9 @@
   display: none;
 }
 
-/* ==========================================
-   🎬 2. Movie Card Component (CINDROME)
-   ========================================== */
 .movie-card {
   position: relative;
-  flex: 0 0 170px; /* تصغير طفيف ليناسب شاشات الموبايل المتنوعة */
+  flex: 0 0 170px;
   aspect-ratio: 2 / 3;
   border-radius: 10px;
   overflow: hidden;
@@ -85,8 +74,6 @@
     transform 0.3s ease,
     border-color 0.3s ease,
     box-shadow 0.3s ease;
-
-  /* تجعل الكارت يقف بسلاسة عند التمرير في الموبايل */
   scroll-snap-align: start;
 }
 
@@ -96,7 +83,6 @@
   box-shadow: 0 10px 25px rgba(9, 158, 158, 0.25);
 }
 
-/* --- 🖼️ البوستر --- */
 .card-poster {
   width: 100%;
   height: 100%;
@@ -109,7 +95,6 @@
   transform: scale(1.06);
 }
 
-/* --- 🎭 الـ Overlay --- */
 .card-overlay {
   position: absolute;
   top: 0;
@@ -132,20 +117,21 @@
     opacity 0.3s ease,
     visibility 0.3s ease;
   z-index: 2;
+  box-sizing: border-box;
 }
 
-/* إظهار الـ Overlay عند الـ Hover في اللابتوب أو الضغط في الموبايل */
 .movie-card:hover .card-overlay,
 .movie-card:active .card-overlay {
   opacity: 1;
   visibility: visible;
 }
 
-/* --- 🔝 السطر العلوي والتقييم --- */
 .card-top-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 4px;
+  width: 100%;
 }
 
 .type-badge {
@@ -157,6 +143,8 @@
   border-radius: 4px;
   letter-spacing: 0.5px;
   line-height: 1;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .rating-box {
@@ -167,40 +155,40 @@
   overflow: hidden;
   background-color: #0d1a18;
   height: 20px;
-
-  /* 🔒 حماية إضافية للآيفون */
-  flex-shrink: 0; /* يمنع Safari إنه ينكمش أو يضغط الصندوق */
+  flex-shrink: 0;
+  width: max-content;
 }
 
 .rating-label {
   background-color: var(--accent-teal);
   color: #010a09;
-  padding: 0 6px; /* padding أفقي فقط */
+  padding: 0 5px;
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 102%; /* تملأ 100% من ارتفاع البوكس بدون أي حواف سوداء فوق أو تحت */
+  height: 100%;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .rating-score {
   color: #ffc107;
-  padding: 0 6px;
+  padding: 0 5px;
   font-size: 10px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-
-  /* 🚀 السطرين دول هما الحل السحري لمشكلة الآيفون */
-  white-space: nowrap; /* يمنع نزول الرقم تحت النجمة نهائياً */
-  gap: 3px; /* يعمل مسافة بين النجمة والرقم */
+  white-space: nowrap;
+  gap: 2px;
+  flex-shrink: 0;
+  min-width: max-content;
 }
 
-/* --- 🔻 الجزء السفلي --- */
 .card-bottom-content {
   display: flex;
   flex-direction: column;
@@ -232,7 +220,6 @@
   color: var(--text-cream);
 }
 
-/* --- 🔘 الأزرار --- */
 .card-actions {
   display: flex;
   gap: 6px;
