@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome</title>
+
+    <!-- حيلة منع الكاش لجميع الملفات المقسمة -->
+    <script>
+        const v = Date.now();
+        document.write(`
+        <link rel="stylesheet" href="css/main.css?v=${v}">
+        <link rel="stylesheet" href="css/navbar.css?v=${v}">
+        <link rel="stylesheet" href="css/hero.css?v=${v}">
+        <link rel="stylesheet" href="css/cards.css?v=${v}">
+      `);
+    </script>
+</head>
+
+<body>
+    <header>
+        <nav class="bar">
+
+            <img class="logo" src="./assets/no background logo.png" alt="logo">
+
+            <form class="search-form">
+                <div class="search-wrapper">
+                    <input id="search" type="search" placeholder="Search...">
+
+                    <button type="reset" class="clear-btn">&times;</button>
+
+                    <button type="submit" class="search-submit-btn">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- زرار الثلاث شرط للموبايل -->
+            <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+            <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+            <!-- القائمة اليمين كاملة (right-bar) -->
+            <div class="right-bar">
+                <!-- زرار تسجيل الدخول -->
+                <a href="sigin-page"><button class="signin-btn">Sign in</button></a>
+
+                <!-- قائمة الـ Home -->
+                <a href="homelink" class="nav-item">Home</a>
+
+                <!-- قائمة الـ Content والمنسدلة (معدّلة بـ Checkbox) -->
+                <div class="dropdown">
+                    <input type="checkbox" id="content-toggle" class="dropdown-checkbox">
+                    <label for="content-toggle" class="nav-item dropdown-label">Content ▾</label>
+                    <ul class="dropdown-menu">
+                        <li><a href="movies-link">Movies</a></li>
+                        <li><a href="series-link">TV Series</a></li>
+                        <li><a href="anime-link">Anime</a></li>
+                    </ul>
+                </div>
+
+                <!-- قائمة الـ Drome -->
+                <a href="Dromelink" class="nav-item">Drome</a>
+
+                <!-- قائمة الـ Account والمنسدلة (معدّلة بـ Checkbox) -->
+                <div class="dropdown">
+                    <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
+                    <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
+                    <ul class="dropdown-menu">
+                        <li><a href="Profile-link">Profile</a></li>
+                        <li><a href="likes-link">Likes</a></li>
+                        <li><a href="lists-link">Lists</a></li>
+                        <li><a href="watchlist-link">Watchlist</a></li>
+                        <li><a href="diary-link">Diary</a></li>
+                        <li><a href="reviews-link">Reviews</a></li>
+                        <li><a href="signin-link">Log out</a></li>
+                    </ul>
+                </div>
+
+                <!-- زرار اللوج في الآخر خالص -->
+                <a href="log-page"><button class="log-content">Log</button></a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="hero-tags">
+                        <span class="badge trending-badge">🔥 Trending #1</span>
+                        <span class="badge category-badge">Movie</span>
+                    </div>
+                    <h1 class="hero-title">The Odyssey</h1>
+                    <div class="hero-meta">
+                        <span class="rating">⭐ 8.8 <i>/ 10</i></span>
+                        <span class="meta-dot">•</span>
+                        <span class="year">2026</span>
+                        <span class="meta-dot">•</span>
+                        <span class="genre">Action, Adventure, Drama</span>
+                    </div>
+                    <p class="hero-description">
+                        Follow the epic journey of Odysseus as he struggles to return home after the Trojan War, facing
+                        mythical beasts, ruthless gods, and impossible challenges.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#" class="btn btn-primary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            View Movie
+                        </a>
+                        <a href="#" class="btn btn-secondary">
+                            Explore All Movies
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+<!-- Trending Section (Carousel Container) -->
+<!-- Trending Section (Carousel Container) -->
+<section class="carousel-section">
+  
+  <div class="carousel-header">
+    <h2 class="carousel-title">🔥 Trending Now</h2>
+    
+    <div class="carousel-controls">
+      <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+      <button class="carousel-btn" aria-label="Next">&#10095;</button>
+    </div>
+  </div>
+
+  <div class="carousel-track">
+    
+    <!-- Card 1 -->
+    <div class="movie-card">
+      <img src="assets/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+      <div class="card-overlay">
+        <div class="card-top-row">
+          <span class="type-badge">MOVIE</span>
+          <div class="rating-box">
+            <span class="rating-label">RATING</span>
+            <span class="rating-score">⭐ 8.8</span>
+          </div>
+        </div>
+        <div class="card-bottom-content">
+          <h3 class="card-title">The Odyssey 1</h3>
+          <div class="meta-row"><span class="age-badge">PG-13</span><span>2026</span></div>
+          <div class="card-actions">
+            <a href="#" class="btn-details">Details</a>
+            <button class="btn-watchlist">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="movie-card">
+      <img src="assets/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+      <div class="card-overlay">
+        <div class="card-top-row">
+          <span class="type-badge">MOVIE</span>
+          <div class="rating-box"><span class="rating-label">RATING</span><span class="rating-score">⭐ 8.8</span></div>
+        </div>
+        <div class="card-bottom-content">
+          <h3 class="card-title">The Odyssey 2</h3>
+          <div class="meta-row"><span class="age-badge">PG-13</span><span>2026</span></div>
+          <div class="card-actions"><a href="#" class="btn-details">Details</a><button class="btn-watchlist">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="movie-card">
+      <img src="assets/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+      <div class="card-overlay">
+        <div class="card-top-row">
+          <span class="type-badge">MOVIE</span>
+          <div class="rating-box"><span class="rating-label">RATING</span><span class="rating-score">⭐ 8.8</span></div>
+        </div>
+        <div class="card-bottom-content">
+          <h3 class="card-title">The Odyssey 3</h3>
+          <div class="meta-row"><span class="age-badge">PG-13</span><span>2026</span></div>
+          <div class="card-actions"><a href="#" class="btn-details">Details</a><button class="btn-watchlist">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="movie-card">
+      <img src="assets/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+      <div class="card-overlay">
+        <div class="card-top-row">
+          <span class="type-badge">MOVIE</span>
+          <div class="rating-box"><span class="rating-label">RATING</span><span class="rating-score">⭐ 8.8</span></div>
+        </div>
+        <div class="card-bottom-content">
+          <h3 class="card-title">The Odyssey 4</h3>
+          <div class="meta-row"><span class="age-badge">PG-13</span><span>2026</span></div>
+          <div class="card-actions"><a href="#" class="btn-details">Details</a><button class="btn-watchlist">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="movie-card">
+      <img src="assets/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+      <div class="card-overlay">
+        <div class="card-top-row">
+          <span class="type-badge">MOVIE</span>
+          <div class="rating-box"><span class="rating-label">RATING</span><span class="rating-score">⭐ 8.8</span></div>
+        </div>
+        <div class="card-bottom-content">
+          <h3 class="card-title">The Odyssey 5</h3>
+          <div class="meta-row"><span class="age-badge">PG-13</span><span>2026</span></div>
+          <div class="card-actions"><a href="#" class="btn-details">Details</a><button class="btn-watchlist">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="movie-card">
+      <img src="assets/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+      <div class="card-overlay">
+        <div class="card-top-row">
+          <span class="type-badge">MOVIE</span>
+          <div class="rating-box"><span class="rating-label">RATING</span><span class="rating-score">⭐ 8.8</span></div>
+        </div>
+        <div class="card-bottom-content">
+          <h3 class="card-title">The Odyssey 6</h3>
+          <div class="meta-row"><span class="age-badge">PG-13</span><span>2026</span></div>
+          <div class="card-actions"><a href="#" class="btn-details">Details</a><button class="btn-watchlist">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="movie-card">
+      <img src="assets/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+      <div class="card-overlay">
+        <div class="card-top-row">
+          <span class="type-badge">MOVIE</span>
+          <div class="rating-box"><span class="rating-label">RATING</span><span class="rating-score">⭐ 8.8</span></div>
+        </div>
+        <div class="card-bottom-content">
+          <h3 class="card-title">The Odyssey 7</h3>
+          <div class="meta-row"><span class="age-badge">PG-13</span><span>2026</span></div>
+          <div class="card-actions"><a href="#" class="btn-details">Details</a><button class="btn-watchlist">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="movie-card">
+      <img src="assets/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+      <div class="card-overlay">
+        <div class="card-top-row">
+          <span class="type-badge">MOVIE</span>
+          <div class="rating-box"><span class="rating-label">RATING</span><span class="rating-score">⭐ 8.8</span></div>
+        </div>
+        <div class="card-bottom-content">
+          <h3 class="card-title">The Odyssey 8</h3>
+          <div class="meta-row"><span class="age-badge">PG-13</span><span>2026</span></div>
+          <div class="card-actions"><a href="#" class="btn-details">Details</a><button class="btn-watchlist">+</button></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>        <!-- <div class="trending">
+            <h2>Trending Now</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div>
+        <hr>
+        <div class="watchlist-preview">
+            <h2>From Watchlist</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div>
+        <hr>
+        <div class="suggest-movies">
+            <h2>Must-Watch movies</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div>
+        <hr>
+        <div class="suggest-tv-series">
+            <h2>Must watch Tv Series</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div>
+        <hr>
+        <div class="suggest anime">
+            <h2>Must watch Anime</h2>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+            <div class="card"><a href="movie-page-link">
+                    <figure><img src="" alt="movie poster" width="130" height="200">
+                </a>
+                <figcaption>Name</figcaption><button>add to watchlist</button></figure>
+            </div>
+        </div> -->
+    </main>
+    <!-- <hr>
+    <footer>
+        <img class="logo" src="./assets/no background logo.png" width="200px" alt="logo">
+        <a href="about us-link">About Us</a>
+        <p>Contact us</p>
+        <a href="sendemailtous"><svg xmlns="email emojie"></svg></a>
+        <a href="our instagram page"><svg xmlns="instagram emojie"></svg></a>
+        <a href="our X page"><svg xmlns="X emojie"></svg></a>
+    </footer> -->
+    
+</body>
+
+</html>
