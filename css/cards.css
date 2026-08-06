@@ -154,34 +154,39 @@
   line-height: 1;
 }
 
+/* 🎯 ضبط إطار التقييم بدون أي فراغات سوداء (Pixel-Perfect) */
 .rating-box {
   display: inline-flex;
-  align-items: center;
+  align-items: stretch; /* يخلي الجزء الفيروزي والأسود يملؤوا الارتفاع بالكامل */
   border: 1px solid var(--accent-teal);
   border-radius: 4px;
   overflow: hidden;
   background-color: #0d1a18;
-  line-height: 1;
+  height: 20px; /* ارتفاع ثابت وموحد للبوكس */
 }
 
 .rating-label {
   background-color: var(--accent-teal);
   color: #010a09;
-  padding: 4px 5px;
-  font-size: 8px;
+  padding: 0 6px; /* padding أفقي فقط */
+  font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 100%; /* تملأ 100% من ارتفاع البوكس بدون أي حواف سوداء فوق أو تحت */
 }
 
 .rating-score {
   color: #ffc107;
-  padding: 4px 6px;
+  padding: 0 6px; /* padding أفقي فقط */
   font-size: 10px;
   font-weight: 800;
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 /* --- 🔻 الجزء السفلي --- */
