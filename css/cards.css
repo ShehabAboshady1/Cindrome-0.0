@@ -11,22 +11,21 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  gap: 12px; /* 👈 مسافة أمان أوتوماتيكية تمنع الالتصاق */
+  gap: 12px; /* مسافة أمان أوتوماتيكية تمنع الالتصاق */
 }
 
 .carousel-title {
   font-size: 20px;
   font-weight: 800;
   color: var(--text-cream);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* 👈 بيعمل ... لو النص طويل وما يخبطش في الأسهم */
+  white-space: normal; /* يسمح للنص بالظهور كاملاً بدون قص */
+  line-height: 1.3;
 }
 
 .carousel-controls {
   display: flex;
   gap: 8px;
-  flex-shrink: 0; /* 👈 يمنع الأسهم إنها تنضغط في الشاشات الضيقة */
+  flex-shrink: 0; /* يمنع الأسهم إنها تنضغط في الشاشات الضيقة */
 }
 
 .carousel-btn {
@@ -269,20 +268,20 @@
   }
 
   .carousel-header {
-    gap: 15px;
+    gap: 10px;
   }
 
   .carousel-title {
-    font-size: 16px;
+    font-size: 15px; /* حجم خط متناسق ومريح بدون ما يلغوش على الأسهم */
   }
 
   .carousel-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 13px;
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
   }
 
   .movie-card {
-    flex: 0 0 145px; /* تصغير الكروت سنة بسيطة للموبايل عشان تبان مريحة */
+    flex: 0 0 145px;
   }
 }
