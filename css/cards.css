@@ -1,7 +1,7 @@
 .carousel-section {
   width: 100%;
   max-width: 1200px;
-  margin: 65px auto; /* 👈 كبرنا المسافة الرأسية بين الفئات من 35px لـ 65px */
+  margin: 65px auto;
   padding: 0 15px;
   box-sizing: border-box;
 }
@@ -11,17 +11,22 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  gap: 12px; /* 👈 مسافة أمان أوتوماتيكية تمنع الالتصاق */
 }
 
 .carousel-title {
   font-size: 20px;
   font-weight: 800;
   color: var(--text-cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 👈 بيعمل ... لو النص طويل وما يخبطش في الأسهم */
 }
 
 .carousel-controls {
   display: flex;
   gap: 8px;
+  flex-shrink: 0; /* 👈 يمنع الأسهم إنها تنضغط في الشاشات الضيقة */
 }
 
 .carousel-btn {
@@ -253,4 +258,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ==========================================
+   📱 Mobile Optimization (تنسيق الموبايل)
+   ========================================= */
+@media (max-width: 768px) {
+  .carousel-section {
+    margin: 40px auto;
+  }
+
+  .carousel-header {
+    gap: 15px;
+  }
+
+  .carousel-title {
+    font-size: 16px;
+  }
+
+  .carousel-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  .movie-card {
+    flex: 0 0 145px; /* تصغير الكروت سنة بسيطة للموبايل عشان تبان مريحة */
+  }
 }
