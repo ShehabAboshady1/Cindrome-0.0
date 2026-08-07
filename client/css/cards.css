@@ -1,5 +1,5 @@
 /* ==========================================
-   🎬 Movie Card Component (Reusable)
+   🎬 Movie Card Component (Clean HTML Structure)
    ========================================= */
 
 .movie-card {
@@ -16,8 +16,6 @@
     border-color 0.3s ease,
     box-shadow 0.3s ease;
   scroll-snap-align: start;
-
-  /* 👈 ضيف السطرين دول هنا لإنقاذ الأركان في الآيفون/سفاري */
   isolation: isolate;
   -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
@@ -134,10 +132,20 @@
   min-width: max-content;
 }
 
+/* 🌟 الجزء الأساسي المعدل بفضل الـ HTML النظيف */
 .card-bottom-content {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 3px;
+  width: 100%;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* بنخليهم يبدأوا من الشمال جنب بعض */
+  gap: 6px; /* المسافة الصغيرة بين الاسم والتصنيف (خليها 4px لو عاوزها أضيق) */
+  width: 100%;
 }
 
 .card-title {
@@ -147,29 +155,35 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.meta-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 10px;
-  color: #8a9e9c;
+  margin: 0;
+  flex: unset; /* بنلغي الـ flex عشان ما يمدش للآخر */
 }
 
 .age-badge {
-  border: 1px solid rgba(9, 158, 158, 0.4);
+  border: 1px solid rgba(9, 158, 158, 0.5);
   padding: 1px 4px;
   border-radius: 3px;
-  font-size: 8px;
-  color: var(--text-cream);
+  font-size: 8.5px;
+  color: var(--accent-teal);
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.meta-row {
+  font-size: 11px;
+  color: #8a9e9c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  spac
 }
 
 .card-actions {
   display: flex;
   gap: 6px;
   align-items: center;
-  margin-top: 2px;
+  margin-top: 5px;
 }
 
 .btn-details {
@@ -200,9 +214,7 @@
   justify-content: center;
 }
 
-/* ==========================================
-   📱 Mobile Responsive for Cards
-   ========================================= */
+/* 📱 Mobile Responsive */
 @media (max-width: 768px) {
   .movie-card {
     flex: 0 0 145px;
@@ -212,39 +224,19 @@
     padding: 6px;
   }
 
-  /* توحيد محاذاة الصف العلوي */
   .card-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* توحيد المحاذاة الرأسية */
-    gap: 4px;
-    height: 20px; /* تحديد ارتفاع الصف العلوي بالكامل */
+    height: 20px;
   }
 
-  /* 1. ضبط بادج نوع المحتوى ليطابق الارتفاع تماماً */
-  .type-badge {
-    height: 100%; /* ياخد الـ 20px كاملين زي الـ rating-box */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 6px;
-    font-size: 8.5px;
-    box-sizing: border-box;
-  }
-
-  /* 2. ضبط صندوق التقييم */
-  .rating-box {
-    height: 100%; /* 20px */
-    flex-shrink: 0;
-  }
-
-  /* 3. إخفاء كلمة IMDb في الموبايل والكتفاء بـ النجمة + الرقم فقط لتوفير مساحة */
   .rating-label {
-    display: none; /* هيوفر حوالي 25px كاملين في العرض! */
+    display: none;
   }
 
-  .rating-score {
-    padding: 0 5px;
-    font-size: 9.5px;
+  .card-title {
+    font-size: 12px;
+  }
+
+  .meta-row {
+    font-size: 10px;
   }
 }
