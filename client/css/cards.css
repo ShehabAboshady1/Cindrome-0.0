@@ -204,29 +204,43 @@
     flex: 0 0 145px;
   }
 
-  /* 1. تقليل البادنج الداخلي للـ Overlay عشان نكسب مساحة افقية extra */
   .card-overlay {
     padding: 6px;
   }
 
-  /* 2. السماح للـ Top Row بضغط محتوياته أو التكيف */
+  /* توحيد محاذاة الصف العلوي */
   .card-top-row {
-    gap: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* توحيد المحاذاة الرأسية */
+    gap: 4px;
+    height: 20px; /* تحديد ارتفاع الصف العلوي بالكامل */
   }
 
-  /* 3. تصغير البادنج للـ Badges عشان تكفي المساحة المتاحة (133px) */
+  /* 1. ضبط بادج نوع المحتوى ليطابق الارتفاع تماماً */
   .type-badge {
-    padding: 3px 4px;
+    height: 100%; /* ياخد الـ 20px كاملين زي الـ rating-box */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
     font-size: 8.5px;
+    box-sizing: border-box;
   }
 
+  /* 2. ضبط صندوق التقييم */
+  .rating-box {
+    height: 100%; /* 20px */
+    flex-shrink: 0;
+  }
+
+  /* 3. إخفاء كلمة IMDb في الموبايل والكتفاء بـ النجمة + الرقم فقط لتوفير مساحة */
   .rating-label {
-    padding: 0 3px;
-    font-size: 8.5px;
+    display: none; /* هيوفر حوالي 25px كاملين في العرض! */
   }
 
   .rating-score {
-    padding: 0 3px;
-    font-size: 9px;
+    padding: 0 5px;
+    font-size: 9.5px;
   }
 }
