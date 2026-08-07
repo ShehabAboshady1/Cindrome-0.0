@@ -4,7 +4,7 @@
 
 .movie-card {
   position: relative;
-  flex: 0 0 170px; /* لضمان الثبات جوه الكاروسيل */
+  flex: 0 0 170px;
   aspect-ratio: 2 / 3;
   border-radius: 10px;
   overflow: hidden;
@@ -16,6 +16,10 @@
     border-color 0.3s ease,
     box-shadow 0.3s ease;
   scroll-snap-align: start;
+
+  /* 👈 ضيف السطرين دول هنا لإنقاذ الأركان في الآيفون/سفاري */
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .movie-card:hover {
