@@ -18,7 +18,7 @@ body {
 /* --- Hero Section --- */
 .details-hero {
   position: relative;
-  padding: 40px 0;
+  padding: 40px 16px; /* إضافة مسافة أمان جانبية للهيرو */
   background: center/cover no-repeat;
   border-bottom: 1px solid #121d1c;
 }
@@ -30,6 +30,7 @@ body {
   justify-content: flex-start;
   text-align: left;
 }
+
 /* --- Rating Star / Score Styling --- */
 .rating-star {
   display: inline-flex;
@@ -67,6 +68,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 }
 
 .media-title {
@@ -81,8 +83,10 @@ body {
   color: #718096;
   font-weight: 400;
 }
+
 .meta-inline {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   font-size: 0.88rem;
@@ -101,14 +105,10 @@ body {
   font-weight: 600;
 }
 
-.rating-star {
-  color: var(--text-cream, #e2e8f0);
-  font-weight: bold;
-}
-
 /* --- Action Buttons --- */
 .action-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 6px;
 }
@@ -170,6 +170,7 @@ body {
 .tabs-bar-wrapper {
   background-color: #0b1514;
   border-bottom: 1px solid #1a2625;
+  padding: 0 16px; /* مسافة جانبية لشريط التبويبات */
 }
 
 .tabs-header-compact {
@@ -206,9 +207,9 @@ body {
   background-color: var(--accent-teal, #00b4d8);
 }
 
-/* --- Tabs Content Area --- */
+/* --- Tabs Content Area (إصلاح مشكلة الحشر في طرف الشاشة) --- */
 .details-content {
-  padding: 24px 0 40px;
+  padding: 24px 16px 40px 16px; /* إضافة مسافة أمان جانبية 16px تحل مشكلة التلاصق بالحافة تماماً */
 }
 .tab-content,
 .season-content {
@@ -255,6 +256,8 @@ body {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
 .season-btn {
@@ -266,6 +269,8 @@ body {
   font-size: 0.82rem;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .season-btn:hover {
   color: #fff;
@@ -453,7 +458,20 @@ body {
 
   .hero-content-left {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
+  }
+
+  .media-info-left {
+    align-items: center;
+  }
+
+  .action-buttons {
+    justify-content: center;
+  }
+
+  .details-poster {
+    width: 130px;
   }
 
   .tabs-bar-wrapper {
@@ -468,7 +486,7 @@ body {
 
   .tabs-header-compact {
     width: max-content;
-    padding: 0 16px;
+    padding: 0 4px;
   }
 
   .tab-btn {
