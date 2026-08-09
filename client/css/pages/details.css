@@ -462,13 +462,13 @@ body {
     overflow-x: hidden;
   }
 
-  /* 2. تحجيم الكلاس الرئيسي (nav-container) لمنع العرض الثابت المسبب للخروج */
+  /* 2. تحجيم الكلاس الرئيسي (nav-container) */
   .details-page .nav-container {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
     margin: 0 auto;
   }
 
@@ -489,7 +489,7 @@ body {
     width: 120px;
   }
 
-  /* 4. ترتيب تفاصيل المسلسل (TV Series / التقييم / المواسم) */
+  /* 4. ترتيب تفاصيل المسلسل */
   .meta-inline {
     justify-content: center;
     flex-wrap: wrap;
@@ -498,10 +498,10 @@ body {
   }
 
   .meta-dot {
-    display: none; /* إخفاء النقط في الموبايل لتفادي الزحمة */
+    display: none;
   }
 
-  /* 5. تشكيلة الزراير (زرار Log بطول الشاشة وتحته Watchlist والقلب) */
+  /* 5. تشكيلة الزراير */
   .action-buttons {
     display: flex;
     flex-wrap: wrap;
@@ -525,40 +525,46 @@ body {
     flex: 0 0 auto;
   }
 
-  /* 6. شريط التبويبات الرئيسي (ضم الأزرار بالكامل داخل عرض الشاشة) */
+  /* 6. شريط التبويبات الرئيسي (حل خارج الصندوق: سكرول ناعم بخط مريح + Mask Fade) */
   .tabs-bar-wrapper {
     width: 100%;
     max-width: 100%;
-    overflow: hidden; /* إيقاف السكرول وتجميعهم في الشاشة */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     box-sizing: border-box;
-    padding: 0;
+    /* التمرير مع اختفاء تدريجي على الطرف ليلمح لليوزر بوجود سكرول */
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  }
+
+  .tabs-bar-wrapper::-webkit-scrollbar {
+    display: none;
   }
 
   .tabs-header-compact {
     display: flex;
-    justify-content: space-between; /* توزيع الأزرار على كامل عرض الشاشة */
     align-items: center;
-    width: 100%;                     /* إلغاء max-content وجعله 100% */
-    padding: 0;                      /* إزالة أي بادينج خارجي من الشمال واليمين */
-    gap: 4px;                        /* مسافة صغيرة جداً بين الأزرار */
-    box-sizing: border-box;
+    width: max-content;
+    padding-left: 0;
+    padding-right: 24px; /* مساحة لظهور التلاشي */
+    gap: 12px;
   }
 
   .tab-btn {
-    flex: 1;                         /* كل زرار ياخد مساحة متساوية */
-    text-align: center;
-    padding: 6px 4px;                /* تصغير البادينج الداخلي ليناسب الشاشة */
-    font-size: 0.72rem;              /* تصغير الخط عشان يستوعب الكلمات */
+    flex-shrink: 0;
+    padding: 6px 14px;
+    font-size: 0.85rem; /* خط كبير ومريح جداً للقراءة */
     white-space: nowrap;
   }
 
-  /* 7. سكرول المواسم أفقي سلس */
+  /* 7. سكرول المواسم أفقي */
   .seasons-sub-nav {
     display: flex;
     justify-content: flex-start;
     overflow-x: auto;
     white-space: nowrap;
-    gap: 6px;
+    gap: 8px;
     padding-left: 0;
     padding-bottom: 8px;
     margin-bottom: 16px;
@@ -572,11 +578,11 @@ body {
 
   .season-btn {
     flex-shrink: 0;
-    padding: 5px 10px;
-    font-size: 0.75rem;
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 
-  /* 8. تعديل الحلقات (إلغاء space-between واستبدالها بحيلة margin-left) */
+  /* 8. تعديل الحلقات (حل خارج الصندوق: تحويل الكروت المزعجة إلى Minimal List) */
   .details-content {
     padding-left: 12px;
     padding-right: 12px;
@@ -586,21 +592,32 @@ body {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* إزالة المسافات الكبيرة بين الكروت */
   }
 
   .ep-row.ep-link {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding: 10px 12px;
-    gap: 8px;
+    padding: 12px 6px; /* بادينج خفيف ومريح */
+    gap: 12px;
+    background: transparent; /* إزالة خلفية الصندوق الضخمة */
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* خط فاصل شيك ورقيق */
+    border-radius: 0; /* إزالة التدوير */
+  }
+
+  .ep-row.ep-link:last-child {
+    border-bottom: none; /* إزالة الخط من آخر حلقة */
   }
 
   .ep-info-flex {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: auto; 
+    width: auto;
     min-width: 0;
     flex: 1;
     gap: 8px;
@@ -609,6 +626,7 @@ body {
   .ep-title {
     flex: 1;
     min-width: 0;
+    font-size: 0.88rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -617,6 +635,8 @@ body {
   .ep-time {
     flex-shrink: 0;
     margin-left: auto;
+    font-size: 0.75rem;
+    opacity: 0.6;
   }
 
   /* 9. شبكة Cast & Crew للموبايل */
