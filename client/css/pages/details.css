@@ -467,8 +467,8 @@ body {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 12px;
+    padding-right: 12px;
     margin: 0 auto;
   }
 
@@ -525,36 +525,42 @@ body {
     flex: 0 0 auto;
   }
 
-  /* 6. شريط التبويبات الرئيسي (Overview, Seasons...) يسحب أفقي بدون ما يفرد الصفحة */
+  /* 6. شريط التبويبات الرئيسي (ضم الأزرار بالكامل داخل عرض الشاشة) */
   .tabs-bar-wrapper {
     width: 100%;
-    max-width: 100vw;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    max-width: 100%;
+    overflow: hidden; /* إيقاف السكرول وتجميعهم في الشاشة */
     box-sizing: border-box;
-  }
-
-  .tabs-bar-wrapper::-webkit-scrollbar {
-    display: none;
+    padding: 0;
   }
 
   .tabs-header-compact {
-    width: max-content;
-    padding: 0 16px;
+    display: flex;
+    justify-content: space-between; /* توزيع الأزرار على كامل عرض الشاشة */
+    align-items: center;
+    width: 100%;                     /* إلغاء max-content وجعله 100% */
+    padding: 0;                      /* إزالة أي بادينج خارجي من الشمال واليمين */
+    gap: 4px;                        /* مسافة صغيرة جداً بين الأزرار */
+    box-sizing: border-box;
   }
 
   .tab-btn {
-    flex-shrink: 0;
+    flex: 1;                         /* كل زرار ياخد مساحة متساوية */
+    text-align: center;
+    padding: 6px 4px;                /* تصغير البادينج الداخلي ليناسب الشاشة */
+    font-size: 0.72rem;              /* تصغير الخط عشان يستوعب الكلمات */
+    white-space: nowrap;
   }
 
   /* 7. سكرول المواسم أفقي سلس */
   .seasons-sub-nav {
     display: flex;
+    justify-content: flex-start;
     overflow-x: auto;
     white-space: nowrap;
-    gap: 10px;
-    padding-bottom: 10px;
+    gap: 6px;
+    padding-left: 0;
+    padding-bottom: 8px;
     margin-bottom: 16px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -566,51 +572,37 @@ body {
 
   .season-btn {
     flex-shrink: 0;
-  }
-  /* 8. تعديل الحلقات والحاويات الحاضنة لمنع الـ Overflow */
-
-  /* ضمان إن حاوية الموسم نفسه متخرجش بره الشاشة */
-  .season-content {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    overflow: hidden; /* يمنع تسريب أي عنصر للخارج */
+    padding: 5px 10px;
+    font-size: 0.75rem;
   }
 
+  /* 8. تعديل الحلقات (إلغاء space-between واستبدالها بحيلة margin-left) */
   .details-content {
     padding-left: 12px;
     padding-right: 12px;
-    width: 100%;
-    box-sizing: border-box;
   }
 
   .minimal-ep-list {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .ep-row.ep-link {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     padding: 10px 12px;
     gap: 8px;
-    display: flex;
-    align-items: center;
-  }
-
-  .ep-num {
-    flex-shrink: 0; /* ضمان عدم انكماش رقم الحلقة */
   }
 
   .ep-info-flex {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    flex: 1 !important; /* يأخذ باقي المساحة المتاحة فقط */
-    width: 0 !important; /* الحيلة السحرية للـ Flexbox لمنع التمدد */
-    min-width: 0 !important; /* يسمح للـ ellipsis بالعمل */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: auto; 
+    min-width: 0;
+    flex: 1;
     gap: 8px;
   }
 
