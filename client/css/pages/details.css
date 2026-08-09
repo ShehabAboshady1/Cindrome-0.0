@@ -448,12 +448,22 @@ body {
   user-select: auto;
 }
 
-/* --- Responsive Media Queries (تعديلات الموبايل فقط) --- */
+/* ==========================================================================
+   MOBILE ONLY FIXES (Media Query for max-width: 768px)
+   ========================================================================== */
 @media (max-width: 768px) {
+  /* منع أي خروج للمحتوى برا حدود شاشة الموبايل */
   html,
   body {
     max-width: 100vw;
     overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
   }
 
   /* تنسيق محتوى الهيرو في المنتصف للموبايل */
@@ -461,35 +471,37 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    width: 100%;
   }
 
   .media-info-left {
     align-items: center;
+    width: 100%;
   }
 
-  /* ترتيب الأزرار فوق بشكل منظم (الزر الأساسي سطر كامل، والزرارين التانيين جنب بعض) */
+  .details-poster {
+    width: 130px;
+  }
+
+  /* ترتيب الأزرار فوق بشكل منظم ومريح للموبايل */
   .action-buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
     justify-content: center;
     width: 100%;
   }
 
   .btn-primary {
-    flex: 1 1 100%;
+    flex: 1 1 100%; /* زرار اللوج يأخذ السطر كاملاً */
   }
 
   .btn-secondary {
-    flex: 1 1 auto;
+    flex: 1 1 auto; /* زرار الـ Watchlist */
   }
 
   .btn-icon-only {
-    flex: 0 0 auto;
-  }
-
-  .details-poster {
-    width: 130px;
+    flex: 0 0 auto; /* زرار القلب جنب الـ Watchlist بالضبط بدون نزول لسطر جديد */
   }
 
   /* إصلاح شريط التبويبات الأفقية للموبايل */
@@ -505,22 +517,26 @@ body {
 
   .tabs-header-compact {
     width: max-content;
-    padding: 0 4px;
+    padding: 0 16px;
   }
 
   .tab-btn {
     flex-shrink: 0;
   }
 
-  /* منع خروج الحلقات والقوائم برا حدود الشاشة */
-  .details-content,
+  /* محتوى الصفحة وقائمة الحلقات لمنع خروجها برا الشاشة */
+  .details-content {
+    padding: 24px 16px 40px 16px;
+    width: 100%;
+    max-width: 100%;
+  }
+
   .minimal-ep-list,
   .ep-row.ep-link,
   .review-item,
   .reviews-minimal {
     width: 100%;
     max-width: 100%;
-    box-sizing: border-box;
   }
 
   .ep-info-flex {
@@ -538,7 +554,7 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     width: 100%;
   }
-  
+
   .cast-img {
     width: 75px;
     height: 75px;
