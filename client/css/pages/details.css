@@ -567,36 +567,51 @@ body {
   .season-btn {
     flex-shrink: 0;
   }
+  /* 8. تعديل الحلقات والحاويات الحاضنة لمنع الـ Overflow */
 
- /* 8. تعديل الحلقات (تثبيت العرض والـ Padding والـ Space-between لمنع خروج الصندوق) */
+  /* ضمان إن حاوية الموسم نفسه متخرجش بره الشاشة */
+  .season-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden; /* يمنع تسريب أي عنصر للخارج */
+  }
+
   .details-content {
     padding-left: 12px;
     padding-right: 12px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .minimal-ep-list {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .ep-row.ep-link {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
     padding: 10px 12px;
     gap: 8px;
-  }
-
-  /* هنا كان سبب المشكلة، لغينا الـ width 100% وخليناه auto */
-  .ep-info-flex {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: auto; 
-    min-width: 0;
-    flex: 1;
-    gap: 8px; /* صغرنا المسافة بين الاسم والوقت شوية للموبايل */
+  }
+
+  .ep-num {
+    flex-shrink: 0; /* ضمان عدم انكماش رقم الحلقة */
+  }
+
+  .ep-info-flex {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex: 1 !important; /* يأخذ باقي المساحة المتاحة فقط */
+    width: 0 !important; /* الحيلة السحرية للـ Flexbox لمنع التمدد */
+    min-width: 0 !important; /* يسمح للـ ellipsis بالعمل */
+    gap: 8px;
   }
 
   .ep-title {
