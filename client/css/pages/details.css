@@ -448,7 +448,7 @@ body {
   user-select: auto;
 }
 
-/* --- Responsive Media Queries --- */
+/* --- Responsive Media Queries (تعديلات الموبايل فقط) --- */
 @media (max-width: 768px) {
   html,
   body {
@@ -456,6 +456,7 @@ body {
     overflow-x: hidden;
   }
 
+  /* تنسيق محتوى الهيرو في المنتصف للموبايل */
   .hero-content-left {
     flex-direction: column;
     align-items: center;
@@ -466,14 +467,32 @@ body {
     align-items: center;
   }
 
+  /* ترتيب الأزرار فوق بشكل منظم (الزر الأساسي سطر كامل، والزرارين التانيين جنب بعض) */
   .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     justify-content: center;
+    width: 100%;
+  }
+
+  .btn-primary {
+    flex: 1 1 100%;
+  }
+
+  .btn-secondary {
+    flex: 1 1 auto;
+  }
+
+  .btn-icon-only {
+    flex: 0 0 auto;
   }
 
   .details-poster {
     width: 130px;
   }
 
+  /* إصلاح شريط التبويبات الأفقية للموبايل */
   .tabs-bar-wrapper {
     width: 100%;
     overflow-x: auto;
@@ -493,9 +512,33 @@ body {
     flex-shrink: 0;
   }
 
+  /* منع خروج الحلقات والقوائم برا حدود الشاشة */
+  .details-content,
+  .minimal-ep-list,
+  .ep-row.ep-link,
+  .review-item,
+  .reviews-minimal {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .ep-info-flex {
+    min-width: 0;
+  }
+
+  .ep-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* شبكة طاقم العمل للموبايل */
   .cast-cards-grid {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    width: 100%;
   }
+  
   .cast-img {
     width: 75px;
     height: 75px;
