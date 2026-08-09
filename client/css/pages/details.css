@@ -1,457 +1,8 @@
 /* ==========================================================================
-   DETAILS PAGE STYLES (Cindrome)
-   ========================================================================== */
-
-/* --- General & Page Layout --- */
-body,
-.details-page {
-  background-color: var(--dark-bg, #080f0e);
-}
-body {
-  margin: 0;
-}
-.details-page {
-  color: var(--text-cream, #e2e8f0);
-  min-height: calc(100vh - 200px);
-}
-
-/* --- Hero Section --- */
-.details-hero {
-  position: relative;
-  padding: 40px 16px; /* إضافة مسافة أمان جانبية للهيرو */
-  background: center/cover no-repeat;
-  border-bottom: 1px solid #121d1c;
-}
-
-.hero-content-left {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  justify-content: flex-start;
-  text-align: left;
-}
-
-/* --- Rating Star / Score Styling --- */
-.rating-star {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text-cream, #e2e8f0);
-  font-weight: 600;
-}
-
-.rating-star::before {
-  content: "⭐";
-  font-size: 0.85rem;
-}
-
-.rating-star i {
-  color: #718096;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 0.82rem;
-  margin-left: 2px;
-}
-.poster-wrapper {
-  flex-shrink: 0;
-}
-
-.details-poster {
-  width: 150px;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: block;
-}
-
-.media-info-left {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.media-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.2;
-}
-
-.release-year {
-  font-size: 1.2rem;
-  color: #718096;
-  font-weight: 400;
-}
-
-.meta-inline {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-  color: #a0aec0;
-}
-.meta-dot {
-  color: #4a5568;
-}
-
-.badge-tag {
-  background: rgba(0, 180, 216, 0.15);
-  color: var(--accent-teal, #00b4d8);
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-/* --- Action Buttons --- */
-.action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.btn {
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-.btn-primary {
-  background-color: var(--accent-teal, #00b4d8);
-  color: #010a09;
-  padding: 10px 16px;
-  font-size: 0.88rem;
-}
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 180, 216, 0.3);
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #fff;
-  padding: 8px 16px;
-  font-size: 0.88rem;
-}
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.btn-icon-only {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-cream, #e2e8f0);
-  padding: 8px 12px;
-  font-size: 0.9rem;
-}
-.btn-icon-only:hover {
-  background: rgba(0, 180, 216, 0.15);
-  color: var(--accent-teal, #00b4d8);
-  border-color: rgba(0, 180, 216, 0.3);
-}
-.btn-icon-only.liked,
-.btn-icon-only.active {
-  color: #e53e3e;
-  background: rgba(229, 62, 62, 0.15);
-  border-color: rgba(229, 62, 62, 0.3);
-}
-
-/* --- Compact Tabs Bar --- */
-.tabs-bar-wrapper {
-  background-color: #0b1514;
-  border-bottom: 1px solid #1a2625;
-  padding: 0 16px; /* مسافة جانبية لشريط التبويبات */
-}
-
-.tabs-header-compact {
-  display: flex;
-  gap: 16px;
-  justify-content: flex-start;
-}
-
-.tab-btn {
-  background: transparent;
-  border: none;
-  color: #718096;
-  padding: 10px 8px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  position: relative;
-  transition: color 0.2s;
-  white-space: nowrap;
-}
-.tab-btn:hover {
-  color: #e2e8f0;
-}
-.tab-btn.active {
-  color: var(--accent-teal, #00b4d8);
-}
-.tab-btn.active::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--accent-teal, #00b4d8);
-}
-
-/* --- Tabs Content Area (إصلاح مشكلة الحشر في طرف الشاشة) --- */
-.details-content {
-  padding: 24px 16px 40px 16px; /* إضافة مسافة أمان جانبية 16px تحل مشكلة التلاصق بالحافة تماماً */
-}
-.tab-content,
-.season-content {
-  display: none;
-}
-.tab-content.active,
-.season-content.active {
-  display: block;
-}
-
-/* --- TAB 1: Overview Styles --- */
-.short-summary {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: #cbd5e0;
-  max-width: 650px;
-  margin-bottom: 20px;
-}
-
-.mini-details-grid {
-  display: flex;
-  gap: 32px;
-  border-top: 1px solid #121d1c;
-  padding-top: 16px;
-}
-
-.mini-detail-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.detail-label {
-  font-size: 0.75rem;
-  color: #718096;
-  text-transform: uppercase;
-}
-.detail-value {
-  font-size: 0.88rem;
-  font-weight: 500;
-}
-
-/* --- TAB 2: Seasons & Episodes Styles --- */
-.seasons-sub-nav {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.season-btn {
-  background: #0d1817;
-  border: 1px solid #1a2625;
-  color: #a0aec0;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.82rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.season-btn:hover {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-.season-btn.active {
-  background: var(--accent-teal, #00b4d8);
-  color: #010a09;
-  border-color: var(--accent-teal, #00b4d8);
-  font-weight: bold;
-}
-
-.minimal-ep-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 550px;
-}
-
-.ep-row.ep-link {
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
-  background: #0d1817;
-  border-radius: 6px;
-  border: 1px solid #1a2625;
-  transition: all 0.2s ease;
-}
-.ep-link:hover {
-  background: #11201f;
-  border-color: var(--accent-teal, #00b4d8);
-  transform: translateX(4px);
-}
-.ep-row.active-ep {
-  border-color: var(--accent-teal, #00b4d8);
-  background: rgba(0, 180, 216, 0.1);
-}
-
-.ep-num {
-  color: var(--accent-teal, #00b4d8);
-  font-size: 0.82rem;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-.ep-info-flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  gap: 12px;
-}
-.ep-title {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #e2e8f0;
-}
-.ep-time {
-  color: #718096;
-  font-size: 0.78rem;
-  flex-shrink: 0;
-  opacity: 0.85;
-}
-
-/* --- TAB 3: Cast & Crew Styles --- */
-.cast-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 20px;
-  max-width: 750px;
-}
-
-.cast-card {
-  background: transparent;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.cast-img {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: top center;
-  background-color: #121d1c;
-  border: 2px solid #1a2625;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.cast-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  text-align: center;
-}
-.actor-name {
-  font-size: 0.85rem;
-  color: #e2e8f0;
-  line-height: 1.2;
-  font-weight: 500;
-}
-.character-name {
-  font-size: 0.75rem;
-  color: #718096;
-}
-
-/* --- TAB 4: Reviews Styles --- */
-.reviews-minimal {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 600px;
-}
-
-.review-item {
-  background: #0d1817;
-  border: 1px solid #1a2625;
-  padding: 16px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-.review-item:hover {
-  background: #11201f;
-  border-color: rgba(0, 180, 216, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.review-meta {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 8px;
-  font-size: 0.85rem;
-}
-.stars {
-  color: var(--text-cream, #e2e8f0);
-  letter-spacing: 1px;
-}
-
-.spoiler-tag {
-  color: #e53e3e;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(229, 62, 62, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.review-text {
-  font-size: 0.88rem;
-  color: #cbd5e0;
-  line-height: 1.5;
-}
-.review-text.blurred {
-  filter: blur(5px);
-  user-select: none;
-  cursor: pointer;
-  transition:
-    filter 0.3s ease,
-    opacity 0.3s ease;
-  opacity: 0.6;
-}
-.review-text.blurred:hover {
-  filter: blur(3px);
-  opacity: 0.8;
-}
-.review-text.revealed {
-  filter: none;
-  opacity: 1;
-  user-select: auto;
-}
-
-/* ==========================================================================
    MOBILE ONLY FIXES (Media Query for max-width: 768px)
    ========================================================================== */
 @media (max-width: 768px) {
+
   /* 1. منع أي عنصر في الصفحة إنه يخرج بره أفقياً */
   html,
   body,
@@ -568,21 +119,38 @@ body {
     flex-shrink: 0;
   }
 
-  /* 8. قفل عرض قائمة الحلقات بالكامل وتثبيتها جوه الشاشة */
-  .details-content,
-  .minimal-ep-list,
-  .ep-row.ep-link {
+  /* 8. تعديل الحلقات (تثبيت العرض والـ Padding والـ Space-between لمنع خروج الصندوق) */
+  .details-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .minimal-ep-list {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
-  .ep-info-flex {
-    min-width: 0; /* بيمنع الـ Flex box من فرد البوكس يمين */
+  .ep-row.ep-link {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .ep-info-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+    flex: 1;
   }
 
   .ep-title {
+    flex: 1;
+    min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -590,6 +158,7 @@ body {
 
   .ep-time {
     flex-shrink: 0;
+    margin-left: auto;
   }
 
   /* 9. شبكة Cast & Crew للموبايل */
