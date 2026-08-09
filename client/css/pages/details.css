@@ -467,8 +467,8 @@ body {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 12px;
+    padding-right: 12px;
     margin: 0 auto;
   }
 
@@ -525,7 +525,7 @@ body {
     flex: 0 0 auto;
   }
 
-  /* 6. شريط التبويبات الرئيسي (حل خارج الصندوق: سكرول ناعم بخط مريح + Mask Fade) */
+  /* 6. شريط التبويبات الرئيسي (خط واصل ومريح وبدون ضغط) */
   .tabs-bar-wrapper {
     width: 100%;
     max-width: 100%;
@@ -533,9 +533,7 @@ body {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     box-sizing: border-box;
-    /* التمرير مع اختفاء تدريجي على الطرف ليلمح لليوزر بوجود سكرول */
-    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
-    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    margin-bottom: 12px;
   }
 
   .tabs-bar-wrapper::-webkit-scrollbar {
@@ -544,17 +542,17 @@ body {
 
   .tabs-header-compact {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
     width: max-content;
-    padding-left: 0;
-    padding-right: 24px; /* مساحة لظهور التلاشي */
-    gap: 12px;
+    padding: 0 4px;
+    gap: 6px;
   }
 
   .tab-btn {
     flex-shrink: 0;
-    padding: 6px 14px;
-    font-size: 0.85rem; /* خط كبير ومريح جداً للقراءة */
+    padding: 6px 12px;
+    font-size: 0.8rem; /* خط واضح ومريح للعين */
     white-space: nowrap;
   }
 
@@ -564,10 +562,10 @@ body {
     justify-content: flex-start;
     overflow-x: auto;
     white-space: nowrap;
-    gap: 8px;
+    gap: 6px;
     padding-left: 0;
     padding-bottom: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
@@ -578,65 +576,69 @@ body {
 
   .season-btn {
     flex-shrink: 0;
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    padding: 5px 10px;
+    font-size: 0.78rem;
   }
 
-  /* 8. تعديل الحلقات (حل خارج الصندوق: تحويل الكروت المزعجة إلى Minimal List) */
+/* 8. تعديل الحلقات (تصغير الـ Container والخط لتفادي الضخامة) */
   .details-content {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
+  /* تصغير الحاوية نفسها وسنترتها */
   .minimal-ep-list {
-    width: 100%;
+    width: 94%;            /* الحيلة هنا: الحاوية بقت أصغر من الشاشة سنة */
     max-width: 100%;
+    margin: 0 auto;        /* لتوسيط قائمة الحلقات في المنتصف */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 0; /* إزالة المسافات الكبيرة بين الكروت */
+    gap: 6px;              /* مسافة صغيرة ورشيقة بين الحلقات */
   }
 
+  /* كارت الحلقة */
   .ep-row.ep-link {
     width: 100%;
-    max-width: 100%;
     box-sizing: border-box;
-    padding: 12px 6px; /* بادينج خفيف ومريح */
-    gap: 12px;
-    background: transparent; /* إزالة خلفية الصندوق الضخمة */
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* خط فاصل شيك ورقيق */
-    border-radius: 0; /* إزالة التدوير */
+    padding: 7px 10px;     /* ارتفاع أصغر وملموم */
+    gap: 8px;
+    display: flex;
+    align-items: center;
   }
 
-  .ep-row.ep-link:last-child {
-    border-bottom: none; /* إزالة الخط من آخر حلقة */
+  .ep-num {
+    flex-shrink: 0;
+    font-size: 0.75rem;    /* تصغير رقم الحلقة */
+    opacity: 0.7;
   }
 
   .ep-info-flex {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: auto;
+    width: auto; 
     min-width: 0;
     flex: 1;
     gap: 8px;
   }
 
+  /* تصغير خط عنوان الحلقة */
   .ep-title {
     flex: 1;
     min-width: 0;
-    font-size: 0.88rem;
+    font-size: 0.78rem;    /* خط ملموم وناعم */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
+  /* تصغير خط وقت الحلقة */
   .ep-time {
     flex-shrink: 0;
     margin-left: auto;
-    font-size: 0.75rem;
-    opacity: 0.6;
+    font-size: 0.72rem;    /* خط الوقت أصغر سنة */
+    opacity: 0.7;
   }
 
   /* 9. شبكة Cast & Crew للموبايل */
