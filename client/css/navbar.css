@@ -229,6 +229,9 @@ button.signin-btn {
     z-index: 999;
     margin-left: 0;
   }
+  .right-bar > *:first-child {
+    display: none; 
+  }
 
   .menu-checkbox:checked ~ .right-bar {
     opacity: 1;
@@ -280,4 +283,5 @@ button.signin-btn {
   .dropdown:hover > .dropdown-checkbox:checked ~ .dropdown-menu {
     display: block;
   }
+
 }
