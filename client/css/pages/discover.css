@@ -17,6 +17,46 @@ body {
 }
 
 /* ==========================================================================
+   DISCOVER PAGE HEADER (TITLE & SUBTITLE)
+   ========================================================================== */
+
+.discover-header-section {
+  text-align: center;
+  padding: 30px 20px 10px 20px;
+}
+
+.discover-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-cream);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.discover-subtitle {
+  font-size: 0.95rem;
+  color: rgba(241, 227, 200, 0.6);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Section Title Inside The Cards Container */
+.grid-header {
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(241, 227, 200, 0.08);
+}
+
+.grid-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-cream);
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
    2. FILTER BAR SECTION
    ========================================================================== */
 
@@ -25,7 +65,7 @@ body {
   display: flex;
   justify-content: center;
   padding: 20px 15px;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   position: relative;
   z-index: 10;
 }
@@ -363,6 +403,22 @@ body {
    ========================================================================== */
 
 @media (max-width: 920px) {
+  .discover-header-section {
+    padding: 20px 15px 5px 15px;
+  }
+
+  .discover-title {
+    font-size: 1.8rem;
+  }
+
+  .discover-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .grid-title {
+    font-size: 1rem;
+  }
+
   .discover-grid-section {
     width: 95%;
   }
@@ -381,7 +437,7 @@ body {
   }
 
   .cards-grid .content-card {
-    max-width: 100%; /* يتمدد بشكل أنيق داخل العمودين */
+    max-width: 100%;
   }
 
   .filter-v-divider {
