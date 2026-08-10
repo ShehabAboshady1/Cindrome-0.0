@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CINDROME - DISCOVER PAGE (CLEAN & RESPONSIVE)
+   CINDROME - DISCOVER PAGE (PERFECT 2-COLUMN MOBILE FIX)
    ========================================================================== */
 
 /* 1. Global Setup */
@@ -363,33 +363,32 @@ body {
    ========================================================================== */
 
 @media (max-width: 920px) {
-  /* Container layout adjustments */
   .discover-grid-section {
-    width: 96%;
+    width: 95%;
   }
 
   .discover-grid-container {
-    padding: 10px 8px;
+    padding: 14px 12px;
     border-radius: 14px;
   }
 
   /* 
-     تثبيت 3 كروت بالضبط في الصف لجميع الموبايلات والأندرويد والآيفون
+     تثبيت كارتين (2) فقط في كل صف لكل الموبايلات لراحة العين ووضوح التفاصيل
   */
   .cards-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
   .cards-grid .content-card {
-    max-width: 100%; /* يتوسع مرناً مع العمود */
+    max-width: 100%; /* يتمدد بشكل أنيق داخل العمودين */
   }
 
   .filter-v-divider {
     display: none;
   }
 
-  /* Filter Bar Mobile Layout (Rows) */
+  /* Filter Bar Mobile Layout */
   .filter-bar-container {
     display: flex;
     flex-wrap: wrap;
@@ -399,7 +398,6 @@ body {
     width: 100%;
   }
 
-  /* Row 1: Search + Reset */
   .filter-search-box {
     order: 1;
     flex: 1;
@@ -412,7 +410,6 @@ body {
     border: 1px solid rgba(241, 227, 200, 0.1);
   }
 
-  /* Row 2: Type Pills */
   .type-selector {
     order: 3;
     width: 100%;
@@ -424,7 +421,6 @@ body {
     font-size: 0.8rem;
   }
 
-  /* Row 3: Dropdowns Grid 2x2 */
   .dropdowns-group {
     order: 4;
     width: 100%;
@@ -437,7 +433,6 @@ body {
     width: 100%;
   }
 
-  /* Pagination Mobile Adjustments */
   .pagination-container {
     gap: 4px;
     padding: 4px 8px;
