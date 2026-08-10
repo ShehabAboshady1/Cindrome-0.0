@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CINDROME - DISCOVER PAGE (CLEAN & SINGLE MEDIA QUERY)
+   CINDROME - DISCOVER PAGE (CLEAN & RESPONSIVE)
    ========================================================================== */
 
 /* 1. Global Setup */
@@ -27,7 +27,6 @@ body {
   padding: 20px 15px;
   margin-bottom: 30px;
   position: relative;
-  /* تم تعديل الـ z-index ليصبح 10 ليكون أسفل الـ Header وأعلى من الكروت */
   z-index: 10;
 }
 
@@ -44,7 +43,6 @@ body {
   box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
   font-family: inherit;
   position: relative;
-  /* تم تعديل الـ z-index ليصبح 11 بدلاً من 1001 */
   z-index: 11;
 }
 
@@ -196,7 +194,6 @@ body {
   list-style: none;
   padding: 6px;
   margin: 0;
-  /* تم تعديل الـ z-index ليصبح 50 ليطفو فوق الفلاتر والكروت دون حجب الـ Navbar */
   z-index: 50;
 }
 
@@ -244,7 +241,7 @@ body {
 }
 
 /* ==========================================================================
-   3. DISCOVER GRID SECTION (FLUID GRID - NO MEDIA QUERIES NEEDED)
+   3. DISCOVER GRID SECTION (DESKTOP DEFAULT)
    ========================================================================== */
 
 .discover-grid-section {
@@ -267,7 +264,6 @@ body {
   width: 100%;
 }
 
-/* Grid المرن: يتكيف تلقائياً مع حجم الشاشة بدون media queries */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -291,7 +287,6 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
-  /* تم تقليل المسافة المتروكة تحت الـ Pagination من 60px إلى 20px */
   padding: 20px 0 5px 0;
 }
 
@@ -368,14 +363,26 @@ body {
    ========================================================================== */
 
 @media (max-width: 920px) {
-  /* Layout Adjustments */
+  /* Container layout adjustments */
   .discover-grid-section {
-    width: 95%;
+    width: 96%;
   }
 
   .discover-grid-container {
-    padding: 14px 10px;
+    padding: 10px 8px;
     border-radius: 14px;
+  }
+
+  /* 
+     تثبيت 3 كروت بالضبط في الصف لجميع الموبايلات والأندرويد والآيفون
+  */
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .cards-grid .content-card {
+    max-width: 100%; /* يتوسع مرناً مع العمود */
   }
 
   .filter-v-divider {
