@@ -112,11 +112,13 @@
                     </button>
 
                     <!-- visible on other users profile -->
-                    <button class="btn-profile-pill btn-follow other-only">
-                        <i class="fa-solid fa-user-plus"></i> Follow
+                    <button id="followBtn" class="btn-profile-pill btn-follow other-only" type="button"
+                        aria-pressed="false" aria-label="Follow user">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span class="btn-label">Follow</span>
                     </button>
-                    <button class="btn-profile-pill btn-notify other-only" title="Turn on notifications"
-                        aria-label="Turn on notifications">
+                    <button id="notifyBtn" class="btn-profile-pill btn-notify other-only" type="button"
+                        title="Turn on notifications" aria-label="Turn on notifications" aria-pressed="false">
                         <i class="fa-solid fa-bell"></i>
                     </button>
                 </div>
@@ -569,6 +571,55 @@
             const step = card.offsetWidth + 14;
             row.scrollBy({ left: direction * step, behavior: 'smooth' });
         }
+
+        function setFollowState(isFollowing) {
+            const followBtn = document.getElementById('followBtn');
+            if (!followBtn) return;
+
+            const icon = followBtn.querySelector('i');
+            const label = followBtn.querySelector('.btn-label');
+
+            followBtn.classList.toggle('is-active', isFollowing);
+            followBtn.setAttribute('aria-pressed', String(isFollowing));
+            followBtn.setAttribute('aria-label', isFollowing ? 'Following user' : 'Follow user');
+
+            if (isFollowing) {
+                icon.className = 'fa-solid fa-check';
+                label.textContent = 'Following';
+            } else {
+                icon.className = 'fa-solid fa-user-plus';
+                label.textContent = 'Follow';
+            }
+        }
+
+        function setNotificationState(isEnabled) {
+            const notifyBtn = document.getElementById('notifyBtn');
+            if (!notifyBtn) return;
+
+            notifyBtn.classList.toggle('is-active', isEnabled);
+            notifyBtn.setAttribute('aria-pressed', String(isEnabled));
+            notifyBtn.setAttribute('aria-label', isEnabled ? 'Turn off notifications' : 'Turn on notifications');
+            notifyBtn.title = isEnabled ? 'Turn off notifications' : 'Turn on notifications';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const followBtn = document.getElementById('followBtn');
+            const notifyBtn = document.getElementById('notifyBtn');
+
+            if (followBtn) {
+                followBtn.addEventListener('click', () => {
+                    const isFollowing = !followBtn.classList.contains('is-active');
+                    setFollowState(isFollowing);
+                });
+            }
+
+            if (notifyBtn) {
+                notifyBtn.addEventListener('click', () => {
+                    const isEnabled = !notifyBtn.classList.contains('is-active');
+                    setNotificationState(isEnabled);
+                });
+            }
+        });
 
         // mode: 'self' or 'other'
         function setProfileMode(mode) {
