@@ -363,8 +363,27 @@
 
 /* 📱 Mobile Responsiveness */
 @media (max-width: 768px) {
+  .profile-header-container,
+  .profile-main-container,
+  .profile-content,
+  .profile-sidebar,
+  .profile-card-box,
+  .sidebar-card,
+  .reviews-list,
+  .review-card {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
+
   .profile-main-container {
     grid-template-columns: 1fr;
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .profile-header-container {
@@ -372,11 +391,17 @@
     align-items: center;
     text-align: center;
     margin-top: -60px;
-    padding: 0 14px;
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .profile-info-bar {
     padding-top: 0;
+    width: 100%;
   }
 
   .profile-main-row {
@@ -401,6 +426,13 @@
     max-width: 100%;
   }
 
+  .profile-content,
+  .profile-sidebar,
+  .reviews-list {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .profile-cards-wrapper {
     display: flex;
     flex-wrap: nowrap;
@@ -410,6 +442,7 @@
     padding: 4px 4px 14px;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
+    width: 100%;
     max-width: 100%;
   }
 
@@ -417,6 +450,8 @@
     flex: 0 0 180px;
     min-width: 180px;
     scroll-snap-align: start;
+    width: 100%;
+    max-width: 100%;
   }
 
   .profile-cards-wrapper .card-overlay {
@@ -487,6 +522,16 @@ body {
   width: min(1200px, calc(100% - 40px));
 }
 
+@media (max-width: 768px) {
+  .profile-header-container,
+  .profile-main-container {
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+}
+
 /* show/hide actions by profile type */
 .profile-page-self .other-only {
   display: none;
@@ -501,6 +546,14 @@ body {
   background: var(--accent-teal, #099e9e);
   border: 1px solid var(--accent-teal, #099e9e);
   color: var(--dark-bg, #010a09);
+}
+
+.btn-follow.is-active,
+.btn-notify.is-active {
+  background: var(--text-cream, #f1e3c8);
+  border-color: var(--text-cream, #f1e3c8);
+  color: var(--dark-bg, #010a09);
+  box-shadow: 0 0 0 2px rgba(9, 158, 158, 0.16);
 }
 
 /* same hover technique -> creamy */
@@ -518,6 +571,10 @@ body {
 
 .btn-notify i {
   font-size: 0.95rem;
+}
+
+.btn-follow .btn-label {
+  transition: all 0.2s ease;
 }
 
 /* Favorite Titles: force smaller card size (desktop + mobile) */
