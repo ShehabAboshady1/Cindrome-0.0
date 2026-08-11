@@ -1,0 +1,394 @@
+/* ==========================================================================
+   CINDROME PROFILE PAGE STYLES
+   ========================================================================== */
+
+/* Banner */
+.profile-banner {
+  height: 220px;
+  background-image: url(../../assets/backdrops/backdrop-onepiece.webp);
+  background-size: cover;
+  background-position: center 20%;
+  position: relative;
+}
+
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 20%,
+    var(--dark-bg, #010a09) 100%
+  );
+}
+
+/* Profile Header Section */
+.profile-header-container {
+  max-width: 1200px; /* توسيع الهيدر ليطابق الحاوية الرئيسية */
+  margin: -50px auto 0;
+  padding: 0 20px;
+  position: relative;
+  display: flex;
+  gap: 24px;
+  z-index: 10;
+}
+
+.profile-avatar-wrapper {
+  flex-shrink: 0;
+}
+
+.profile-avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid var(--dark-bg, #010a09);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  object-fit: cover;
+  background-color: var(--maincolor, #161616);
+}
+
+.profile-info-bar {
+  flex-grow: 1;
+  padding-top: 55px;
+}
+
+/* Row 1: Name + Actions on the Right */
+.profile-main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.user-titles {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.display-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-cream, #f1e3c8);
+  margin: 0;
+}
+
+.username {
+  font-size: 0.9rem;
+  color: rgba(241, 227, 200, 0.5);
+}
+
+.genre-badge {
+  font-size: 0.72rem;
+  background-color: rgba(9, 158, 158, 0.15);
+  color: var(--accent-teal, #099e9e);
+  border: 1px solid rgba(9, 158, 158, 0.3);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* Actions Inline */
+.profile-actions-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-profile-pill {
+  border: 1px solid rgba(241, 227, 200, 0.2);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-cream, #f1e3c8);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-profile-pill:hover {
+  background-color: var(--accent-teal, #099e9e);
+  color: var(--dark-bg, #010a09);
+  border-color: var(--accent-teal, #099e9e);
+}
+
+.btn-settings {
+  padding: 6px 10px;
+  border-radius: 50%;
+}
+
+/* User Bio & Stats */
+.user-bio {
+  font-size: 0.88rem;
+  color: rgba(241, 227, 200, 0.75);
+  max-width: 650px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 24px;
+  border-top: 1px solid rgba(241, 227, 200, 0.1);
+  padding-top: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-teal, #099e9e);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: rgba(241, 227, 200, 0.5);
+}
+
+/* Main Page Layout (تكبير الـ Container عشان الكروت تفرد براحتها) */
+.profile-main-container {
+  max-width: 1200px;
+  margin: 28px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+}
+
+.profile-card-box {
+  background-color: rgba(22, 22, 22, 0.8);
+  border: 1px solid rgba(241, 227, 200, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.profile-box-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-cream, #f1e3c8);
+}
+
+.profile-box-title i {
+  color: var(--accent-teal, #099e9e);
+}
+
+/* ⭐ FAVORITES SECTION (بدون أي تعديل على كلاسات الكارت الداخلية) */
+.profile-cards-wrapper {
+  display: flex;
+  gap: 14px;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.profile-cards-wrapper .content-card {
+  flex: 1 1 calc(25% - 11px);
+  min-width: 0;
+  width: auto;
+}
+
+/* 🎬 CURRENTLY WATCHING LIST */
+.currently-watching-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tracking-item {
+  display: flex;
+  gap: 14px;
+  background-color: var(--dark-bg, #010a09);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(241, 227, 200, 0.08);
+  align-items: center;
+}
+
+.tracking-poster {
+  width: 55px;
+  aspect-ratio: 2 / 3;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.tracking-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tracking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.tracking-header h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-cream, #f1e3c8);
+  margin: 0;
+}
+
+.tag {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  background-color: rgba(9, 158, 158, 0.18);
+  color: var(--accent-teal, #099e9e);
+  border: 1px solid rgba(9, 158, 158, 0.3);
+}
+
+.anime-tag,
+.tv-tag {
+  background-color: rgba(9, 158, 158, 0.18);
+  color: var(--accent-teal, #099e9e);
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: rgba(241, 227, 200, 0.6);
+  margin-bottom: 6px;
+}
+
+.progress-bar {
+  height: 5px;
+  background-color: rgba(241, 227, 200, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--accent-teal, #099e9e);
+  border-radius: 10px;
+}
+
+/* Sidebar Styles */
+.sidebar-card {
+  background-color: rgba(22, 22, 22, 0.8);
+  border: 1px solid rgba(241, 227, 200, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.sidebar-card-title {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(241, 227, 200, 0.4);
+  margin-bottom: 10px;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  color: var(--text-cream, #f1e3c8);
+  text-decoration: none;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(241, 227, 200, 0.05);
+  transition: color 0.2s;
+}
+
+.sidebar-menu li a:hover {
+  color: var(--accent-teal, #099e9e);
+}
+
+.sidebar-menu li a i {
+  width: 20px;
+  color: var(--accent-teal, #099e9e);
+}
+
+.menu-count {
+  font-size: 0.75rem;
+  background-color: rgba(241, 227, 200, 0.1);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.quick-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qs-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: rgba(241, 227, 200, 0.7);
+}
+
+.qs-row strong {
+  color: var(--text-cream, #f1e3c8);
+}
+
+
+/* 📱 Mobile Responsiveness */
+@media (max-width: 768px) {
+  .profile-main-container {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-header-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: -60px;
+  }
+
+  .profile-info-bar {
+    padding-top: 0;
+  }
+
+  .profile-main-row {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .user-titles {
+    justify-content: center;
+  }
+
+  .profile-actions-inline {
+    margin-top: 4px;
+  }
+
+  .profile-stats {
+    justify-content: center;
+  }
+
+  .profile-cards-wrapper {
+    gap: 8px;
+  }
+
+  .tracking-poster {
+    width: 45px;
+  }
+}
