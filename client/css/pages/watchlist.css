@@ -326,7 +326,7 @@
   }
 
   .watchlist-cards-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
     gap: 12px;
   }
   .watchlist-cards-grid .mini-content-card {
