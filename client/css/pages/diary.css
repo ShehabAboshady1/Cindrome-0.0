@@ -347,4 +347,31 @@
     width: 14px;
     height: 14px;
   }
+   /* ==========================================================================
+       🌟 FIX FOR MOBILE DROPDOWN LISTS (منع الكتمة والخروج برا الشاشة) 🌟
+    ========================================================================== */
+    
+    .diary-main-wrapper .dropdown-list {
+        width: max-content; /* بيخلي القائمة تاخد راحتها في العرض بناءً على الكلام */
+        min-width: 140px;   /* عرض أدنى عشان شكلها يبقى متناسق */
+    }
+
+    /* 1. قائمة (السنة) - تفتح من الشمال لليمين عادي */
+    .diary-main-wrapper .css-dropdown:first-of-type .dropdown-list {
+        left: 0;
+        right: auto;
+    }
+
+    /* 2. قائمة (الشهر) - تفتح في السنتر بالظبط */
+    .diary-main-wrapper .css-dropdown:nth-of-type(2) .dropdown-list {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+
+    /* 3. قائمة (الترتيب) - تفتح من اليمين للشمال عشان متخبطش في حافة الشاشة */
+    .diary-main-wrapper .css-dropdown:last-of-type .dropdown-list {
+        left: auto;
+        right: 0;
+    }
 }
