@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome - Diary</title>
+    <link rel="icon" type="image/png" href="../assets/logos/cindrome-logo.png">
+    <script>
+        const v = Date.now();
+        document.write(`
+        <link rel="stylesheet" href="../css/main.css?v=${v}">
+        <link rel="stylesheet" href="../css/navbar.css?v=${v}">
+        <link rel="stylesheet" href="../css/mini-card.css?v=${v}">
+        <link rel="stylesheet" href="../css/pages/watchlist.css?v=${v}">
+        <link rel="stylesheet" href="../css/stars.css?v=${v}">
+        <link rel="stylesheet" href="../css/pages/diary.css?v=${v}">
+      `);
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="bar">
+            <div class="nav-container">
+                <a href="../../index.html" class="logo-link">
+                    <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
+                </a>
+                <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+                <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+                <div class="right-bar">
+                    <a href="./sign-in.html"><button class="signin-btn">Sign in</button></a>
+                    <a href="../../index.html" class="nav-item">Home</a>
+                    <a href="../pages/discover.html" class="nav-item">Discover</a>
+                    <div class="dropdown">
+                        <input type="checkbox" id="content-toggle" class="dropdown-checkbox">
+                        <label for="content-toggle" class="nav-item dropdown-label">Content ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="../pages/movies.html">Movies</a></li>
+                            <li><a href="../pages/series.html">TV Series</a></li>
+                            <li><a href="../pages/anime.html">Anime</a></li>
+                        </ul>
+                    </div>
+                    <a href="../pages/drome.html" class="nav-item">Drome</a>
+                    <div class="dropdown">
+                        <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
+                        <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./profile.html">Profile</a></li>
+                            <li><a href="./diary.html">Diary</a></li>
+                            <li><a href="./watchlist.html">Watchlist</a></li>
+                            <li><a href="./sign-in.html">Log out</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button type="button" class="search-trigger-btn" aria-label="Search">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN DIARY SECTION -->
+    <main class="diary-main-wrapper">
+
+        <div class="diary-header-box">
+            <h1 class="watchlist-title">Diary</h1>
+            <p class="diary-teal-subtitle">You have logged 10 items this year</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="discover-filter-section">
+            <div class="filter-bar-container">
+                <details class="css-dropdown">
+                    <summary class="dropdown-selected">2026 <span class="dropdown-arrow">▼</span></summary>
+                    <ul class="dropdown-list">
+                        <li class="dropdown-item">2026</li>
+                        <li class="dropdown-item">2025</li>
+                        <li class="dropdown-item">All Years</li>
+                    </ul>
+                </details>
+                <div class="filter-v-divider"></div>
+                <details class="css-dropdown">
+                    <summary class="dropdown-selected">August <span class="dropdown-arrow">▼</span></summary>
+                    <ul class="dropdown-list">
+                        <li class="dropdown-item">August</li>
+                        <li class="dropdown-item">July</li>
+                        <li class="dropdown-item">All Months</li>
+                    </ul>
+                </details>
+                <div class="filter-v-divider"></div>
+                <details class="css-dropdown">
+                    <summary class="dropdown-selected">Sort Date <span class="dropdown-arrow">▼</span></summary>
+                    <ul class="dropdown-list">
+                        <li class="dropdown-item">Newest First</li>
+                        <li class="dropdown-item">Oldest First</li>
+                    </ul>
+                </details>
+            </div>
+        </div>
+
+        <!-- Diary Entries Rows -->
+        <div class="diary-list-container">
+
+            <!-- ================= MONTH: AUGUST 2026 ================= -->
+            <div class="diary-month-divider">August 2026</div>
+
+            <!-- 1. Dune: Part Two -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">14</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="MOVIE">
+                    <div class="mini-card-media">
+                        <img src="../assets/posters/poster-dune2.webp" class="mini-card-poster" alt="Dune">
+                        <div class="mini-top-rating">★ 8.4</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">Dune: Part Two</a>
+                        <span class="diary-item-year">(2024)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="4.5 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-half">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg liked" title="Favorited" viewBox="0 0 24 24" fill="currentColor"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                            <svg class="status-svg" title="Reviewed" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            <svg class="status-svg" title="Rewatched" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="17 1 21 5 17 9"></polyline>
+                                <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                                <polyline points="7 23 3 19 7 15"></polyline>
+                                <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <p class="diary-user-review">"Absolute cinematic masterpiece. The visuals and sound design are
+                        unmatched."</p>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- 2. Attack on Titan -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">12</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="ANIME">
+                    <div class="mini-card-media">
+                        <img src="../assets/posters/poster-aot.webp" class="mini-card-poster" alt="AOT">
+                        <div class="mini-top-rating">★ 8.6</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">Attack on Titan</a>
+                        <span class="diary-item-year">(2013)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="5 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg liked" title="Favorited" viewBox="0 0 24 24" fill="currentColor"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                            <svg class="status-svg" title="Reviewed" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="diary-user-review">"The best plot twists in anime history. Speechless."</p>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- 3. Game of Thrones -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">11</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="TV SERIES">
+                    <div class="mini-card-media">
+                        <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
+                            class="mini-card-poster" alt="Game of Thrones">
+                        <div class="mini-top-rating">★ 9.2</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">Game of Thrones</a>
+                        <span class="diary-item-year">(2011)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="4.5 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-half">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg" title="Reviewed" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="diary-user-review">"Except for the final season, this is peak television."</p>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- 4. Demon Slayer -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">09</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="ANIME">
+                    <div class="mini-card-media">
+                        <img src="../assets/posters/poster-demonslayer.webp" class="mini-card-poster"
+                            alt="Demon Slayer">
+                        <div class="mini-top-rating">★ 8.4</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">Demon Slayer</a>
+                        <span class="diary-item-year">(2019)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="4.0 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span><span class="star-full">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg liked" title="Favorited" viewBox="0 0 24 24" fill="currentColor"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                            <svg class="status-svg" title="Reviewed" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="diary-user-review">"The animation quality by Ufotable is out of this world."</p>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- 5. Interstellar -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">05</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="MOVIE">
+                    <div class="mini-card-media">
+                        <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/tYaC23U62BOJRNVIlFGT6iowEwj.jpg"
+                            class="mini-card-poster" alt="Interstellar">
+                        <div class="mini-top-rating">★ 8.7</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">Interstellar</a>
+                        <span class="diary-item-year">(2014)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="3.5 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span><span class="star-half">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg liked" title="Favorited" viewBox="0 0 24 24" fill="currentColor"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                            <svg class="status-svg" title="Rewatched" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="17 1 21 5 17 9"></polyline>
+                                <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                                <polyline points="7 23 3 19 7 15"></polyline>
+                                <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- 6. The Boys -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">02</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="TV SERIES">
+                    <div class="mini-card-media">
+                        <img src="../assets/posters/poster-theboys.webp" class="mini-card-poster" alt="The Boys">
+                        <div class="mini-top-rating">★ 8.5</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">The Boys</a>
+                        <span class="diary-item-year">(2019)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="4.5 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-half">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg liked" title="Favorited" viewBox="0 0 24 24" fill="currentColor"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                            <svg class="status-svg" title="Reviewed" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="diary-user-review">"Diabolical. Antony Starr deserves all the awards for Homelander."</p>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- ================= MONTH: JULY 2026 ================= -->
+            <div class="diary-month-divider">July 2026</div>
+
+            <!-- 7. Spider-Man -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">28</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="MOVIE">
+                    <div class="mini-card-media">
+                        <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"
+                            class="mini-card-poster" alt="Spider-Man">
+                        <div class="mini-top-rating">★ 8.5</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">Spider-Man: Across the Spider-Verse</a>
+                        <span class="diary-item-year">(2023)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="5 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg liked" title="Favorited" viewBox="0 0 24 24" fill="currentColor"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                            <svg class="status-svg" title="Reviewed" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="diary-user-review">"Visually groundbreaking. Every frame is a painting."</p>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- 8. Shōgun -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">20</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="TV SERIES">
+                    <div class="mini-card-media">
+                        <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/7O4iVfOMQmdCSxhOg1WnzG1AgYT.jpg"
+                            class="mini-card-poster" alt="Shōgun">
+                        <div class="mini-top-rating">★ 8.6</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">Shōgun</a>
+                        <span class="diary-item-year">(2024)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="4.0 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span><span class="star-full">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg" title="Reviewed" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="diary-user-review">"Incredible production value and intense political drama."</p>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- 9. The Odyssey -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">15</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="MOVIE">
+                    <div class="mini-card-media">
+                        <img src="../assets/posters/poster-odyssey.webp"
+                            class="mini-card-poster" alt="The Odyssey">
+                        <div class="mini-top-rating">★ 8.5</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">The Odyssey</a>
+                        <span class="diary-item-year">(1997)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="3.0 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-full">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg" title="Rewatched" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="17 1 21 5 17 9"></polyline>
+                                <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                                <polyline points="7 23 3 19 7 15"></polyline>
+                                <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- 10. Oppenheimer -->
+            <div class="diary-entry-row">
+                <div class="diary-date-num">05</div>
+
+                <div class="mini-content-card" tabindex="0" data-tooltip="MOVIE">
+                    <div class="mini-card-media">
+                        <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
+                            class="mini-card-poster" alt="Oppenheimer">
+                        <div class="mini-top-rating">★ 8.2</div>
+                    </div>
+                </div>
+
+                <div class="diary-details-col">
+                    <div class="diary-movie-heading">
+                        <a href="#" class="diary-item-title-link">Oppenheimer</a>
+                        <span class="diary-item-year">(2023)</span>
+                    </div>
+
+                    <div class="diary-meta-row">
+                        <div class="stars" title="2.5 Stars">
+                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                class="star-half">★</span>
+                        </div>
+                        <div class="diary-status-badges">
+                            <svg class="status-svg" title="Reviewed" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="diary-user-review">"The pacing was a bit too slow for me, but Cillian Murphy was great."
+                    </p>
+                </div>
+
+                <div class="diary-actions-col">
+                    <button class="diary-square-btn edit-btn" title="Edit Entry"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg></button>
+                    <button class="diary-square-btn delete-btn" title="Delete Entry"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <img class="footer-logo" src="../assets/logos/no background logo.png" alt="Logo">
+            <div class="footer-nav">
+                <a href="about.html" class="footer-link">About Us</a>
+                <span class="footer-divider"></span>
+                <div class="footer-socials">
+                    <a href="mailto:cindrome.me@gmail.com" class="social-icon" aria-label="Email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
