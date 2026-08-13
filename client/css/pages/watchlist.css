@@ -21,7 +21,6 @@
   font-weight: 800;
   color: var(--text-cream);
   letter-spacing: 2px;
-  text-transform: uppercase;
   margin: 0;
   text-align: center;
 }
@@ -327,10 +326,12 @@
   }
 
   .watchlist-cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
   }
-
+  .watchlist-cards-grid .mini-content-card {
+    max-width: 100%;
+  }
   .filter-v-divider {
     display: none;
   }
