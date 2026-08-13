@@ -1,0 +1,321 @@
+/* ==========================================================================
+   CINDROME - DIARY PAGE (COMPACT ROW LAYOUT WITH EMOJIS & VERTICAL ACTIONS)
+========================================================================== */
+
+.diary-main-wrapper {
+  width: 92%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  min-height: 70vh;
+}
+
+/* Header & Subtitle */
+.diary-header-box {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.diary-teal-subtitle {
+  color: var(--accent-teal);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+/* Container for rows */
+.diary-list-container {
+  background: rgba(22, 22, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Month Divider */
+.diary-month-divider {
+  color: var(--accent-teal);
+  font-size: 1rem;
+  font-weight: 700;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(9, 158, 158, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.diary-month-divider:not(:first-child) {
+  margin-top: 16px;
+}
+
+/* Diary Row Entry (Horizontal Layout) */
+.diary-entry-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: rgba(1, 10, 9, 0.5);
+  border: 1px solid rgba(241, 227, 200, 0.08);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: all 0.25s ease;
+}
+
+.diary-entry-row:hover {
+  background: rgba(1, 10, 9, 0.85);
+  border-color: rgba(9, 158, 158, 0.35);
+  transform: translateX(4px);
+}
+
+/* Date Badge Number */
+.diary-date-num {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: rgba(241, 227, 200, 0.5);
+  flex: 0 0 30px;
+  text-align: right;
+  padding-top: 2px;
+}
+
+/* Mini Card inside Row */
+.diary-entry-row .mini-content-card {
+  flex: 0 0 55px;
+  width: 55px;
+}
+.diary-entry-row .mini-top-rating {
+  font-size: 7.5px;
+  padding: 2px 4px;
+}
+
+/* Details Column */
+.diary-details-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 2px;
+}
+
+.diary-movie-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Title as a Link */
+.diary-item-title-link {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-cream);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.diary-item-title-link:hover {
+  color: var(--accent-teal);
+  text-decoration: underline;
+}
+
+.diary-item-year {
+  font-size: 0.75rem;
+  color: rgba(241, 227, 200, 0.5);
+  font-weight: 500;
+}
+
+/* 🌟 Stars & SVG Status Row (جنب بعض) 🌟 */
+.diary-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+/* TEXT-CREAM STARS */
+.stars {
+  color: var(--text-cream, #e2e8f0);
+  letter-spacing: 1.5px;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.star-full {
+  color: var(--text-cream, #e2e8f0);
+}
+
+.star-half {
+  position: relative;
+  display: inline-block;
+  color: transparent;
+}
+
+.star-half::after {
+  content: "★";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--text-cream, #e2e8f0);
+  width: 50%;
+  overflow: hidden;
+}
+
+/* 🌟 Modern SVG Status Badges (اللي طلبتها بالظبط) 🌟 */
+.diary-status-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-svg {
+  width: 14px;
+  height: 14px;
+  color: rgba(241, 227, 200, 0.4); /* بتندمج بعبقرية مع لون الـ --text-cream */
+  cursor: default;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+.status-svg.liked {
+  color: #ff4757; /* أحمر خفيف للـ Favorite */
+}
+
+/* Review Text */
+.diary-user-review {
+  font-size: 0.82rem;
+  color: rgba(241, 227, 200, 0.75);
+  font-style: italic;
+  margin: 2px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 🌟 Right Side Actions Column (فوق بعض على اليمين) 🌟 */
+.diary-actions-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto; /* السر اللي بيزقهم لليمين خالص */
+}
+
+/* Square Action Buttons (لأزرار التعديل والحذف بالـ SVG) */
+.diary-square-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.diary-square-btn svg {
+  width: 14px;
+  height: 14px;
+  color: rgba(241, 227, 200, 0.6); /* لون فخم متناسق مع الخلفية */
+  transition: color 0.2s ease;
+}
+
+.diary-square-btn:hover {
+  background: rgba(9, 158, 158, 0.15);
+  border-color: rgba(9, 158, 158, 0.3);
+  transform: translateX(-2px);
+}
+
+.diary-square-btn.edit-btn:hover svg {
+  color: var(--accent-teal);
+}
+
+.diary-square-btn.delete-btn:hover svg {
+  color: #ff4757;
+}
+
+/* ==========================================================================
+   📱 MOBILE RESPONSIVE FIXES
+========================================================================== */
+@media (max-width: 768px) {
+  /* 1. Filter Bar Fix */
+  .diary-main-wrapper .filter-bar-container {
+    flex-wrap: nowrap;
+    padding: 8px 6px;
+    gap: 6px;
+    justify-content: space-between;
+  }
+  .diary-main-wrapper .css-dropdown {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+  .diary-main-wrapper .dropdown-selected {
+    padding: 6px;
+    font-size: 0.72rem;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  /* 2. Container & Row Tuning */
+  .diary-list-container {
+    padding: 14px 10px;
+  }
+
+  .diary-entry-row {
+    gap: 10px;
+    padding: 10px 12px;
+    flex-wrap: nowrap; /* مفيش حاجة هتنزل تحت الكارت! */
+  }
+
+  .diary-date-num {
+    flex: 0 0 22px;
+    font-size: 1.15rem;
+    margin-right: 0;
+    padding-top: 2px;
+  }
+
+  .diary-entry-row .mini-content-card {
+    flex: 0 0 45px;
+    width: 45px;
+  }
+
+  .diary-details-col {
+    padding-right: 0;
+    padding-top: 0;
+  }
+
+  /* 3. Show review on mobile (max 2 lines) */
+  .diary-user-review {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    margin-top: 4px;
+    opacity: 0.9;
+  }
+
+  /* 4. Actions on Mobile (Still stacked on far right) */
+  .diary-actions-col {
+    gap: 6px;
+  }
+
+  .diary-square-btn {
+    padding: 5px;
+  }
+  .diary-square-btn svg {
+    width: 13px;
+    height: 13px;
+  }
+}
