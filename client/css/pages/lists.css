@@ -4,7 +4,7 @@
 
 /* 1. الحاوية الأساسية للصفحة (Page Wrapper) */
 .lists-page-wrapper {
-  width: 92%;
+  width: 96%;
   max-width: 1320px;
   margin: 0 auto;
   padding-top: 40px;
@@ -151,7 +151,7 @@
 /* شبكة الكروت */
 .lists-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
   justify-items: center;
 }
@@ -160,48 +160,11 @@
 .lists-grid .list-card {
   margin: 0;
   width: 100%;
-  max-width: 250px;
+  max-width: 295px;
   padding: 14px;
 }
 
-/* تصغير البوسترات ومنطقة الـ 3D بشكل متناسق للشاشات الكبيرة */
-.lists-grid .poster-stack {
-  height: 180px;
-}
-.lists-grid .stack-poster {
-  width: 105px;
-  height: 150px;
-}
-.lists-grid .stack-poster:nth-child(1) {
-  left: 5px;
-  top: 15px;
-}
-.lists-grid .stack-poster:nth-child(2) {
-  left: 35px;
-  top: 10px;
-}
-.lists-grid .stack-poster:nth-child(3) {
-  left: 65px;
-  top: 5px;
-}
-.lists-grid .stack-poster:nth-child(4) {
-  left: 95px;
-  top: 0px;
-}
 
-/* Desktop Hover */
-.lists-grid .list-card:hover .stack-poster:nth-child(1) {
-  transform: translate(-8px, 0) rotate(-10deg);
-}
-.lists-grid .list-card:hover .stack-poster:nth-child(2) {
-  transform: translate(-2px, -3px) rotate(-3deg) scale(0.98);
-}
-.lists-grid .list-card:hover .stack-poster:nth-child(3) {
-  transform: translate(6px, -4px) rotate(5deg) scale(0.96);
-}
-.lists-grid .list-card:hover .stack-poster:nth-child(4) {
-  transform: translate(14px, -3px) rotate(12deg) scale(0.94);
-}
 
 /* الـ Meta Row */
 .lists-grid .list-meta {
@@ -367,7 +330,7 @@
 
   .lists-grid {
     /* تعديل العرض عشان يسمح للكروت إنها تاخد مساحتها الأصلية المتسنترة */
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 16px;
   }
 
@@ -390,45 +353,7 @@
     box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.5);
   }
 
-  /* 🔥 مسافاتك الأصلية اللي بتسنتر الكروت جوه الكارت 🔥 */
-  .lists-grid .stack-poster:nth-child(1) {
-    left: 5px;
-    top: 15px;
-    transform: none;
-  }
-  .lists-grid .stack-poster:nth-child(2) {
-    left: 35px;
-    top: 10px;
-    transform: scale(0.96);
-  }
-  .lists-grid .stack-poster:nth-child(3) {
-    left: 65px;
-    top: 5px;
-    transform: scale(0.92);
-  }
-  .lists-grid .stack-poster:nth-child(4) {
-    left: 95px;
-    top: 0px;
-    transform: scale(0.88);
-  }
 
-  /* 🔥 الفردة لفوق (Vertical Stack) مع خروج اللي ورا خالص لأعلى مسافة 🔥 */
-  .lists-grid .list-card:active .stack-poster:nth-child(1),
-  .lists-grid .list-card:hover .stack-poster:nth-child(1) {
-    transform: translateY(2px); /* الأول ثابت مكانه أو بينزل سيكا */
-  }
-  .lists-grid .list-card:active .stack-poster:nth-child(2),
-  .lists-grid .list-card:hover .stack-poster:nth-child(2) {
-    transform: translateY(-6px) scale(0.96); /* التاني يطلع شوية */
-  }
-  .lists-grid .list-card:active .stack-poster:nth-child(3),
-  .lists-grid .list-card:hover .stack-poster:nth-child(3) {
-    transform: translateY(-12px) scale(0.92); /* التالت يطلع أكتر */
-  }
-  .lists-grid .list-card:active .stack-poster:nth-child(4),
-  .lists-grid .list-card:hover .stack-poster:nth-child(4) {
-    transform: translateY(-24px) scale(0.88); /* الرابع اللي ورا يطلع لأعلى مسافة وينطر لفوق */
-  }
 
   /* تصغير الخطوط والأيقونات */
   .lists-grid .list-title {
