@@ -391,11 +391,26 @@
     box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.5);
   }
 
-  /* 🔥 سر حل الـ Overflow: إضافة مسافات left محسوبة بالمللي للموبايل 🔥 */
-  .lists-grid .stack-poster:nth-child(1) { left: 0px; top: 12px; transform: none; }
-  .lists-grid .stack-poster:nth-child(2) { left: 16px; top: 8px; transform: scale(0.96); }
-  .lists-grid .stack-poster:nth-child(3) { left: 32px; top: 4px; transform: scale(0.92); }
-  .lists-grid .stack-poster:nth-child(4) { left: 48px; top: 0px; transform: scale(0.88); }
+ .lists-grid .stack-poster:nth-child(1) {
+    left: -5px;
+    top: 12px;
+    transform: none;
+  }
+  .lists-grid .stack-poster:nth-child(2) {
+    left: 11px;
+    top: 8px;
+    transform: scale(0.96);
+  }
+  .lists-grid .stack-poster:nth-child(3) {
+    left: 27px;
+    top: 4px;
+    transform: scale(0.92);
+  }
+  .lists-grid .stack-poster:nth-child(4) {
+    left: 43px;
+    top: 0px;
+    transform: scale(0.88);
+  }
 
   /* 🔥 فردة الـ Hover في الموبايل: نفس الشكل الجميل بس بمسافات صغيرة عشان السكرول 🔥 */
   .lists-grid .list-card:hover .stack-poster:nth-child(1) { transform: translate(-4px, 0) rotate(-6deg); }
