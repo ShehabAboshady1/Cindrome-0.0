@@ -355,17 +355,36 @@
 
 
 
-  /* تصغير الخطوط والأيقونات */
+ /* ==========================================================================
+     تصغير الخطوط والأيقونات + تظبيط سطر اليوزر والزراير
+  ========================================================================== */
   .lists-grid .list-title {
     font-size: 14px;
+    white-space: normal;
+    line-height: 1.4;
   }
 
+  /* 🔥 التعديل هنا: تحويل الـ meta لعمود عشان اليوزر والزراير ياخدوا راحتهم 🔥 */
   .lists-grid .list-meta {
     font-size: 11px;
+    flex-direction: column;  /* تحويلهم لسطرين فوق بعض */
+    align-items: flex-start; /* محاذاة الكلام للشمال */
+    gap: 8px;                /* مسافة بين سطر اليوزر وسطر الزراير */
+    margin-top: 4px;
   }
 
+  /* سطر اليوزر والعدد بياخد العرض كله عشان مفيش حاجة تتقص */
   .lists-grid .list-meta > div:first-child {
-    max-width: 60%;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* حاوية الزراير تاخد العرض كله وتتزق لليمين مع خط خفيف يفصلهم */
+  .lists-grid .list-actions {
+    width: 100%;
+    justify-content: flex-end; /* زق الزراير لليمين */
+    padding-top: 6px;
+    border-top: 1px solid rgba(241, 227, 200, 0.05); /* خط شيك بيفصلهم */
   }
 
   .lists-grid .list-action-btn {
@@ -378,6 +397,8 @@
     width: 14px;
     height: 14px;
   }
+
+  /* Pagination Mobile */
   .pagination-container {
     gap: 4px;
     padding: 4px 8px;
