@@ -233,6 +233,7 @@
   .list-card:hover .stack-poster:nth-child(3),
   .list-card:hover .stack-poster:nth-child(4) {
     transform: inherit;
+    opacity: 0.8;
   }
 
   .list-title {
