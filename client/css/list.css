@@ -1,0 +1,224 @@
+/* ==========================================================================
+   CINDROME - LIST CARD COMPONENT (Reusable)
+========================================================================== */
+
+/* 1. الحاوية الأساسية للكارت */
+.list-card {
+    position: relative;        /* إجبار الكارت إنه يفهم ترتيب الطبقات */
+    z-index: 1;                /* ترتيب افتراضي حادي */
+    
+    /* 🌟 التعديل السحري لعرض الكارت عشان يلم نفسه 🌟 */
+    width: 100%;
+    max-width: 295px;          /* أقصى عرض للكارت عشان ما يفرشحش */
+    margin:10px;            /* توسيط الكارت تلقائياً لو المساحة حواليه فاضية */
+    
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 🌟 تأثير الـ Hover على الكارت نفسه */
+.list-card:hover {
+    z-index: 10;               /* يركب فوق الكروت اللي جنبه بسلاسة */
+    border-color: var(--accent-teal);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(9, 158, 158, 0.2);
+}
+
+/* 2. منطقة الـ 3D Posters Container */
+.poster-stack {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    perspective: 1000px;       /* بيدي البعد الثالث للعين */
+    cursor: pointer;
+}
+
+/* 3. البوسترات المتراكمة داخل الكارت */
+.stack-poster {
+    position: absolute;
+    width: 130px;
+    height: 185px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: -5px 8px 20px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: bottom center;
+}
+
+/* ترتيب البوسترات ودرجات الميل (Z-Index + 3D Position) */
+.stack-poster:nth-child(1) {
+    z-index: 4;
+    left: 10px;
+    top: 20px;
+    transform: rotate(-6deg);
+}
+
+.stack-poster:nth-child(2) {
+    z-index: 3;
+    left: 55px;
+    top: 12px;
+    transform: rotate(-1deg) scale(0.96);
+    opacity: 0.95;
+}
+
+.stack-poster:nth-child(3) {
+    z-index: 2;
+    left: 100px;
+    top: 5px;
+    transform: rotate(4deg) scale(0.92);
+    opacity: 0.88;
+}
+
+.stack-poster:nth-child(4) {
+    z-index: 1;
+    left: 140px;
+    top: 0px;
+    transform: rotate(9deg) scale(0.88);
+    opacity: 0.8;
+}
+
+/* الحركة عند الـ Hover (تفريد الكروت زي الكوتشينة) */
+.list-card:hover .stack-poster:nth-child(1) {
+    transform: translate(-10px, 0) rotate(-10deg);
+}
+
+.list-card:hover .stack-poster:nth-child(2) {
+    transform: translate(-2px, -4px) rotate(-3deg) scale(0.98);
+}
+
+.list-card:hover .stack-poster:nth-child(3) {
+    transform: translate(8px, -6px) rotate(5deg) scale(0.96);
+}
+
+.list-card:hover .stack-poster:nth-child(4) {
+    transform: translate(18px, -4px) rotate(12deg) scale(0.94);
+}
+
+/* 4. تفاصيل ومعلومات الـ List */
+.list-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* عنوان القائمة (رابط) */
+.list-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-cream);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.list-title:hover {
+    color: var(--accent-teal);
+}
+
+.list-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #8a9e9c;
+}
+
+.user-badge {
+    color: var(--accent-teal);
+    font-weight: 600;
+}
+
+.list-items-count {
+    margin-left: 4px;
+}
+
+/* 5. زراير اللايك والكومنت الخاصة بالكارت */
+.list-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.list-action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* مسافة بين الأيقونة والرقم */
+    color: rgba(241, 227, 200, 0.5);
+    font-size: 13px; /* حجم خط الرقم */
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.list-action-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.list-action-btn:hover {
+    transform: scale(1.15);
+}
+
+.like-btn:hover {
+    color: #ff4757; 
+}
+
+.comment-btn:hover {
+    color: var(--accent-teal);
+}
+
+/* ==========================================
+   📱 Responsive Design for Mobile
+========================================= */
+@media (max-width: 768px) {
+    .list-card {
+        /* التعديل للموبايل عشان يفضل حاكم نفسه */
+        max-width: 200px;
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .poster-stack {
+        height: 140px;
+    }
+
+    .stack-poster {
+        width: 85px;
+        height: 120px;
+        border-radius: 6px;
+        box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .stack-poster:nth-child(1) { z-index: 4; left: 5px; top: 15px; transform: none; }
+    .stack-poster:nth-child(2) { z-index: 3; left: 35px; top: 10px; transform: scale(0.96); }
+    .stack-poster:nth-child(3) { z-index: 2; left: 65px; top: 5px; transform: scale(0.92); }
+    .stack-poster:nth-child(4) { z-index: 1; left: 95px; top: 0px; transform: scale(0.88); }
+
+    .list-card:hover .stack-poster:nth-child(1),
+    .list-card:hover .stack-poster:nth-child(2),
+    .list-card:hover .stack-poster:nth-child(3),
+    .list-card:hover .stack-poster:nth-child(4) {
+        transform: inherit;
+    }
+
+    .list-title {
+        font-size: 14px;
+    }
+    
+    .list-meta {
+        font-size: 11px;
+    }
+}
