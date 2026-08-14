@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome - Lists</title>
+    <link rel="icon" type="image/png" href="../assets/logos/cindrome-logo.png">
+    <script>
+        const v = Date.now();
+        document.write(`
+        <link rel="stylesheet" href="../css/main.css?v=${v}">
+        <link rel="stylesheet" href="../css/navbar.css?v=${v}">
+        <link rel="stylesheet" href="../css/mini-card.css?v=${v}">
+        <link rel="stylesheet" href="../css/pages/watchlist.css?v=${v}">
+        <link rel="stylesheet" href="../css/stars.css?v=${v}">
+        <link rel="stylesheet" href="../css/list.css?v=${v}">
+        <link rel="stylesheet" href="../css/pages/lists.css?v=${v}">
+      `);
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="bar">
+            <div class="nav-container">
+                <a href="../../index.html" class="logo-link">
+                    <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
+                </a>
+                <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+                <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+                <div class="right-bar">
+                    <a href="./sign-in.html"><button class="signin-btn">Sign in</button></a>
+                    <a href="../../index.html" class="nav-item">Home</a>
+                    <a href="../pages/discover.html" class="nav-item">Discover</a>
+                    <div class="dropdown">
+                        <input type="checkbox" id="content-toggle" class="dropdown-checkbox">
+                        <label for="content-toggle" class="nav-item dropdown-label">Content ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="../pages/movies.html">Movies</a></li>
+                            <li><a href="../pages/series.html">TV Series</a></li>
+                            <li><a href="../pages/anime.html">Anime</a></li>
+                        </ul>
+                    </div>
+                    <a href="../pages/drome.html" class="nav-item">Drome</a>
+                    <div class="dropdown">
+                        <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
+                        <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./profile.html">Profile</a></li>
+                            <li><a href="diary.html">Diary</a></li>
+                            <li><a href="./watchlist.html">Watchlist</a></li>
+                            <li><a href="./sign-in.html">Log out</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button type="button" class="search-trigger-btn" aria-label="Search">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN LISTS SECTION -->
+    <main class="lists-page-wrapper">
+        
+        <!-- Header -->
+        <div class="lists-header-box">
+            <h1 class="watchlist-title">Lists</h1>
+            <p class="diary-teal-subtitle">Explore and share amazing collections</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="discover-filter-section">
+            <div class="filter-bar-container">
+                <div class="lists-search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" class="lists-search-input" placeholder="Search lists...">
+                </div>
+                
+                <div class="filter-v-divider"></div>
+                
+                <details class="css-dropdown">
+                    <summary class="dropdown-selected">Popular <span class="dropdown-arrow">▼</span></summary>
+                    <ul class="dropdown-list">
+                        <li class="dropdown-item">Popular</li>
+                        <li class="dropdown-item">Recent</li>
+                        <li class="dropdown-item">Following</li>
+                    </ul>
+                </details>
+            </div>
+        </div>
+
+        <!-- 🌟 BLACK CONTAINER & GRID 🌟 -->
+        <section class="lists-container-box">
+            
+            <!-- العنوان والخط الفاصل الجديد اللي طلبته -->
+            <div class="container-inner-header">
+                <h2 class="inner-header-title">Community Lists</h2>
+                <hr class="inner-header-hr">
+            </div>
+
+            <div class="lists-grid">
+                
+                <!-- List Card 1 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="../assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                        <img src="../assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="../assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                        <img src="../assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="single-list.html" class="list-title">The Best Content Ever</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @Shehab</span>
+                                <span class="list-items-count">• 4 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn" title="Like List">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <span>1.2k</span>
+                                </button>
+                                <button class="list-action-btn comment-btn" title="Comment">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                    <span>84</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Card 2 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="../assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="../assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                        <img src="../assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                        <img src="../assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="single-list.html" class="list-title">Masterpiece Anime & Shows</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @Alex</span>
+                                <span class="list-items-count">• 12 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <span>850</span>
+                                </button>
+                                <button class="list-action-btn comment-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                    <span>42</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Card 3 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="../assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                        <img src="../assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                        <img src="../assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="../assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="single-list.html" class="list-title">Cinematography Legends</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @DromeOfficial</span>
+                                <span class="list-items-count">• 24 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <span>5.6k</span>
+                                </button>
+                                <button class="list-action-btn comment-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                    <span>312</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Card 4 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="../assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                        <img src="../assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                        <img src="../assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                        <img src="../assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="single-list.html" class="list-title">Sci-Fi Masterpieces</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @Sarah</span>
+                                <span class="list-items-count">• 18 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <span>420</span>
+                                </button>
+                                <button class="list-action-btn comment-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                    <span>15</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Card 5 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="../assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                        <img src="../assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                        <img src="../assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="../assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="single-list.html" class="list-title">My Top 10 of 2026</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @Kareem</span>
+                                <span class="list-items-count">• 10 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <span>95</span>
+                                </button>
+                                <button class="list-action-btn comment-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                    <span>8</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Card 6 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="../assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="../assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                        <img src="../assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                        <img src="../assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="single-list.html" class="list-title">Binge-Worthy Series</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @Nour</span>
+                                <span class="list-items-count">• 35 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <span>2.1k</span>
+                                </button>
+                                <button class="list-action-btn comment-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                    <span>145</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <a href="../../index.html" class="logo-link">
+                <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
+            </a>
+            <div class="footer-nav">
+                <a href="about.html" class="footer-link">About Us</a>
+                <span class="footer-divider"></span>
+                <div class="footer-socials">
+                    <a href="mailto:cindrome.me@gmail.com" class="social-icon" aria-label="Email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
