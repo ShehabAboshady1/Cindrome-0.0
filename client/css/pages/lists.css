@@ -391,23 +391,23 @@
     box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.5);
   }
 
- .lists-grid .stack-poster:nth-child(1) {
-    left: -5px;
+.lists-grid .stack-poster:nth-child(1) {
+    left: -8px;
     top: 12px;
     transform: none;
   }
   .lists-grid .stack-poster:nth-child(2) {
-    left: 11px;
+    left: 8px;
     top: 8px;
     transform: scale(0.96);
   }
   .lists-grid .stack-poster:nth-child(3) {
-    left: 27px;
+    left: 24px;
     top: 4px;
     transform: scale(0.92);
   }
   .lists-grid .stack-poster:nth-child(4) {
-    left: 43px;
+    left: 40px;
     top: 0px;
     transform: scale(0.88);
   }
