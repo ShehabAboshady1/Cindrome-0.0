@@ -1,0 +1,379 @@
+/* ==========================================================================
+   CINDROME - LISTS PAGE (Layout & Container)
+========================================================================== */
+
+/* 1. الحاوية الأساسية للصفحة (Page Wrapper) */
+.lists-page-wrapper {
+  width: 92%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  min-height: 70vh;
+}
+
+/* 2. عنوان الصفحة والوصف */
+.lists-header-box {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.watchlist-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-cream);
+  margin: 0 0 8px 0;
+}
+
+.diary-teal-subtitle {
+  color: var(--accent-teal);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   3. FILTER BAR SECTION (شريط البحث والفلاتر)
+========================================================================== */
+.discover-filter-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 10;
+}
+
+.filter-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(22, 22, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  padding: 8px 20px;
+  border-radius: 100px;
+  box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
+}
+
+.filter-v-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(241, 227, 200, 0.12);
+}
+
+/* مربع البحث الخاص بالقوائم */
+.lists-search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--dark-bg);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 50px;
+  padding: 8px 16px;
+  transition: all 0.25s ease;
+  min-width: 250px;
+}
+
+.lists-search-box:focus-within {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 12px rgba(9, 158, 158, 0.35);
+}
+
+.lists-search-box .search-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-cream);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.lists-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-cream);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  width: 100%;
+}
+
+.lists-search-input::placeholder {
+  color: rgba(241, 227, 200, 0.4);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   4. BLACK CONTAINER & GRID (البرواز الأسود وشبكة الكروت)
+========================================================================== */
+
+/* الحاوية اللي شايلة الخلفية والعنوان */
+.lists-container-box {
+  background: rgba(1, 10, 9, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
+}
+
+/* العنوان والخط الفاصل جوا الكونتير */
+.container-inner-header {
+  margin-bottom: 25px;
+  padding: 0 10px;
+}
+
+.inner-header-title {
+  color: var(--text-cream);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  border-left: 4px solid var(--accent-teal);
+  padding-left: 10px;
+  line-height: 1.2;
+}
+
+.inner-header-hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(9, 158, 158, 0.5) 0%,
+    rgba(241, 227, 200, 0.05) 100%
+  );
+  margin: 0;
+}
+
+/* شبكة الكروت */
+.lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+/* حماية إضافية وتصغير الكارت جوا الصفحة دي بس */
+.lists-grid .list-card {
+  margin: 0;
+  width: 100%;
+  max-width: 250px;
+  padding: 14px;
+}
+
+/* تصغير البوسترات ومنطقة الـ 3D بشكل متناسق للشاشات الكبيرة */
+.lists-grid .poster-stack {
+  height: 180px;
+}
+.lists-grid .stack-poster {
+  width: 105px;
+  height: 150px;
+}
+.lists-grid .stack-poster:nth-child(1) {
+  left: 5px;
+  top: 15px;
+}
+.lists-grid .stack-poster:nth-child(2) {
+  left: 35px;
+  top: 10px;
+}
+.lists-grid .stack-poster:nth-child(3) {
+  left: 65px;
+  top: 5px;
+}
+.lists-grid .stack-poster:nth-child(4) {
+  left: 95px;
+  top: 0px;
+}
+
+/* Desktop Hover */
+.lists-grid .list-card:hover .stack-poster:nth-child(1) {
+  transform: translate(-8px, 0) rotate(-10deg);
+}
+.lists-grid .list-card:hover .stack-poster:nth-child(2) {
+  transform: translate(-2px, -3px) rotate(-3deg) scale(0.98);
+}
+.lists-grid .list-card:hover .stack-poster:nth-child(3) {
+  transform: translate(6px, -4px) rotate(5deg) scale(0.96);
+}
+.lists-grid .list-card:hover .stack-poster:nth-child(4) {
+  transform: translate(14px, -3px) rotate(12deg) scale(0.94);
+}
+
+/* الـ Meta Row */
+.lists-grid .list-meta {
+  margin-top: 5px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.lists-grid .list-meta > div:first-child {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  max-width: 60%;
+}
+
+.lists-grid .user-badge {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.lists-grid .list-items-count {
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+/* ==========================================================================
+   5. RESPONSIVE DESIGN (تظبيط الموبايل)
+========================================================================== */
+@media (max-width: 920px) {
+  .lists-page-wrapper {
+    width: 95%;
+  }
+}
+
+@media (max-width: 768px) {
+  /* 🌟 شريط البحث والفلاتر 🌟 */
+  .filter-bar-container {
+    flex-wrap: nowrap;
+    border-radius: 20px;
+    padding: 8px 10px;
+    width: 100%;
+    gap: 12px;
+    justify-content: space-between;
+  }
+
+  .filter-v-divider {
+    display: none;
+  }
+
+  .lists-search-box {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    padding: 8px 12px;
+  }
+
+  .css-dropdown {
+    flex: 0 0 auto;
+    width: max-content;
+  }
+
+  /* 🔥 حل ضيقة زرار الـ Popular وتداخل السهم 🔥 */
+  .dropdown-selected {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px; /* مسافة محترمة بين الكلمة والسهم */
+    padding: 8px 16px; /* مساحة براح عشان ما تتخنقش */
+    white-space: nowrap;
+  }
+
+  /* تظبيط الكونتير والـ Grid */
+  .lists-container-box {
+    padding: 20px 12px;
+  }
+
+  .container-inner-header {
+    margin-bottom: 15px;
+  }
+
+  .inner-header-title {
+    font-size: 1.1rem;
+  }
+
+  .lists-grid {
+    /* تعديل العرض عشان يسمح للكروت إنها تاخد مساحتها الأصلية المتسنترة */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  /* 🌟 تصغير الكارت للموبايل بنفس مقاساتك الأصلية بالمللي 🌟 */
+  .lists-grid .list-card {
+    max-width: 220px;
+    width: 100%;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .lists-grid .poster-stack {
+    height: 140px;
+  }
+
+  .lists-grid .stack-poster {
+    width: 85px;
+    height: 120px;
+    border-radius: 6px;
+    box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* 🔥 مسافاتك الأصلية اللي بتسنتر الكروت جوه الكارت 🔥 */
+  .lists-grid .stack-poster:nth-child(1) {
+    left: 5px;
+    top: 15px;
+    transform: none;
+  }
+  .lists-grid .stack-poster:nth-child(2) {
+    left: 35px;
+    top: 10px;
+    transform: scale(0.96);
+  }
+  .lists-grid .stack-poster:nth-child(3) {
+    left: 65px;
+    top: 5px;
+    transform: scale(0.92);
+  }
+  .lists-grid .stack-poster:nth-child(4) {
+    left: 95px;
+    top: 0px;
+    transform: scale(0.88);
+  }
+
+  /* 🔥 الفردة لفوق (Vertical Stack) مع خروج اللي ورا خالص لأعلى مسافة 🔥 */
+  .lists-grid .list-card:active .stack-poster:nth-child(1),
+  .lists-grid .list-card:hover .stack-poster:nth-child(1) {
+    transform: translateY(2px); /* الأول ثابت مكانه أو بينزل سيكا */
+  }
+  .lists-grid .list-card:active .stack-poster:nth-child(2),
+  .lists-grid .list-card:hover .stack-poster:nth-child(2) {
+    transform: translateY(-6px) scale(0.96); /* التاني يطلع شوية */
+  }
+  .lists-grid .list-card:active .stack-poster:nth-child(3),
+  .lists-grid .list-card:hover .stack-poster:nth-child(3) {
+    transform: translateY(-12px) scale(0.92); /* التالت يطلع أكتر */
+  }
+  .lists-grid .list-card:active .stack-poster:nth-child(4),
+  .lists-grid .list-card:hover .stack-poster:nth-child(4) {
+    transform: translateY(-24px) scale(0.88); /* الرابع اللي ورا يطلع لأعلى مسافة وينطر لفوق */
+  }
+
+  /* تصغير الخطوط والأيقونات */
+  .lists-grid .list-title {
+    font-size: 14px;
+  }
+
+  .lists-grid .list-meta {
+    font-size: 11px;
+  }
+
+  .lists-grid .list-meta > div:first-child {
+    max-width: 60%;
+  }
+
+  .lists-grid .list-action-btn {
+    font-size: 11px;
+    gap: 3px;
+    padding: 2px;
+  }
+
+  .lists-grid .list-action-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+}
