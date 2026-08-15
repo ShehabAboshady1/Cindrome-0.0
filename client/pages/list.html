@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome - Single List</title>
+    <link rel="icon" type="image/png" href="../assets/logos/cindrome-logo.png">
+    <script>
+        const v = Date.now();
+        document.write(`
+        <link rel="stylesheet" href="../css/main.css?v=${v}">
+        <link rel="stylesheet" href="../css/navbar.css?v=${v}">
+        <link rel="stylesheet" href="../css/mini-card.css?v=${v}">
+        <link rel="stylesheet" href="../css/pages/watchlist.css?v=${v}">
+        <link rel="stylesheet" href="../css/pages/single-list.css?v=${v}">        
+      `);
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="bar">
+            <div class="nav-container">
+                <a href="../../index.html" class="logo-link">
+                    <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
+                </a>
+                <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+                <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+                <div class="right-bar">
+                    <a href="./sign-in.html"><button class="signin-btn">Sign in</button></a>
+                    <a href="../../index.html" class="nav-item">Home</a>
+                    <a href="./discover.html" class="nav-item">Discover</a>
+                    <a href="./lists.html" class="nav-item">Lists</a>
+                    <div class="dropdown">
+                        <input type="checkbox" id="content-toggle" class="dropdown-checkbox">
+                        <label for="content-toggle" class="nav-item dropdown-label">Content ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./movies.html">Movies</a></li>
+                            <li><a href="./series.html">TV Series</a></li>
+                            <li><a href="./anime.html">Anime</a></li>
+                        </ul>
+                    </div>
+                    <a href="./drome.html" class="nav-item">Drome</a>
+                    <div class="dropdown">
+                        <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
+                        <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./profile.html">Profile</a></li>
+                            <li><a href="./diary.html">Diary</a></li>
+                            <li><a href="./watchlist.html">Watchlist</a></li>
+                            <li><a href="./sign-in.html">Log out</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button type="button" class="search-trigger-btn" aria-label="Search">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="single-list-main-section">
+
+        <!-- 1. HEADER -->
+        <section class="single-list-header-section">
+            <h1 class="single-list-title">Mind-Bending Masterpieces</h1>
+            <div class="list-meta-info">
+                <img src="../assets/logos/cindrome-logo.png" alt="User Avatar" class="list-author-avatar">
+                <span class="list-author-name">A list by <a href="profile.html">@Shehab</a></span>
+                <span class="list-update-date">• Updated 2 days ago</span>
+            </div>
+        </section>
+
+        <!-- 2. GRID SECTION -->
+        <section class="single-list-grid-section">
+            <div class="single-list-grid-container">
+
+                <!-- العداد ونسبة المشاهدة وزراير التفاعل (ملمومين) -->
+                <div class="grid-header-meta list-inline-header">
+                    <div class="header-meta-left">
+                        <span class="grid-count-text">20 Titles</span>
+                        <!-- نسبة المشاهدة (بسيطة ومباشرة) -->
+                        <div class="list-user-progress">
+                            <svg class="progress-eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <span class="progress-numbers">5/20</span>
+                            <span class="progress-percentage">(25%)</span>
+                        </div>
+                    </div>
+
+                    <div class="single-list-actions-inline">
+                        <button class="list-action-btn like-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                            <span>1.2k</span>
+                        </button>
+                        <button class="list-action-btn share-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- شبكة الكروت (20 كارت) -->
+                <div class="single-list-cards-grid">
+
+                    <!-- كارت 1 -->
+                    <div class="mini-content-card" data-tooltip="Breaking Bad">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-breakingbad.webp" alt="Breaking Bad"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 9.5</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 2 -->
+                    <div class="mini-content-card" data-tooltip="Vinland Saga">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-vinlandsaga.webp" alt="Vinland Saga"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.8</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 3 -->
+                    <div class="mini-content-card" data-tooltip="Dune: Part Two">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-dune2.webp" alt="Dune" class="mini-card-poster"
+                                    loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.8</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 4 -->
+                    <div class="mini-content-card" data-tooltip="Attack on Titan">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-aot.webp" alt="Attack on Titan"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 9.1</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 5 -->
+                    <div class="mini-content-card" data-tooltip="Game of Thrones">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-gameofthrones.webp" alt="Game of Thrones"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 9.2</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 6 -->
+                    <div class="mini-content-card" data-tooltip="Demon Slayer">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-demonslayer.webp" alt="Demon Slayer"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.6</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 7 -->
+                    <div class="mini-content-card" data-tooltip="Interstellar">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/tYaC23U62BOJRNVIlFGT6iowEwj.jpg"
+                                    alt="Interstellar" class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.7</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 8 -->
+                    <div class="mini-content-card" data-tooltip="The Boys">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-theboys.webp" alt="The Boys" class="mini-card-poster"
+                                    loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.7</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 9 -->
+                    <div class="mini-content-card" data-tooltip="Spider-Man">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-spiderman.webp" alt="Spider-Man"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.6</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 10 -->
+                    <div class="mini-content-card" data-tooltip="Shōgun">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/7O4iVfOMQmdCSxhOg1WnzG1AgYT.jpg"
+                                    alt="Shōgun" class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.7</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 11 -->
+                    <div class="mini-content-card" data-tooltip="The Odyssey">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-odyssey.webp" alt="The Odyssey"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 7.0</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 12 -->
+                    <div class="mini-content-card" data-tooltip="Oppenheimer">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
+                                    alt="Oppenheimer" class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.3</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 13 -->
+                    <div class="mini-content-card" data-tooltip="Shutter Island">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-shutterisland.webp" alt="Shutter Island"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.2</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 14 -->
+                    <div class="mini-content-card" data-tooltip="One Piece">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-onepiece.webp" alt="One Piece"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 9.0</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 15 -->
+                    <div class="mini-content-card" data-tooltip="Zodiac">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-zodiac.webp" alt="Zodiac" class="mini-card-poster"
+                                    loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.1</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 16 -->
+                    <div class="mini-content-card" data-tooltip="The Conjuring">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-theconjuring.webp" alt="The Conjuring"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 7.5</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 17 -->
+                    <div class="mini-content-card" data-tooltip="Fight Club">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg"
+                                    alt="Fight Club" class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.8</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 18 -->
+                    <div class="mini-content-card" data-tooltip="True Detective">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-truedetective.webp" alt="True Detective"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.9</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 19 -->
+                    <div class="mini-content-card" data-tooltip="Dark">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-dark.webp" alt="Dark" class="mini-card-poster"
+                                    loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.8</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كارت 20 -->
+                    <div class="mini-content-card" data-tooltip="The Last of Us">
+                        <div class="mini-card-media">
+                            <a href="./details.html" style="display: contents;">
+                                <img src="../assets/posters/poster-thelastofus.webp" alt="The Last of Us"
+                                    class="mini-card-poster" loading="lazy">
+                            </a>
+                            <div class="mini-top-rating">★ 8.8</div>
+                            <div class="mini-card-bar">
+                                <button class="mini-bar-btn btn-add"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <button class="mini-bar-btn btn-fav"><svg viewBox="0 0 24 24" width="14" height="14"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. MODERN COMMENTS SECTION -->
+        <section id="comments-section" class="list-comments-wrapper">
+            <div class="comments-container">
+                <h2 class="comments-title">Comments <span class="comments-count">42</span></h2>
+
+                <!-- إضافة تعليق -->
+                <div class="add-comment-box">
+                    <img src="../assets/logos/cindrome-logo.png" alt="My Avatar" class="comment-avatar">
+                    <div class="comment-input-area">
+                        <textarea class="comment-textarea" placeholder="Add a comment..."></textarea>
+                        <div class="comment-submit-row">
+                            <button class="post-comment-btn">Post</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comments-divider"></div>
+
+                <!-- قائمة التعليقات -->
+                <div class="comments-list">
+
+                    <!-- 🌟 تعليق أساسي مع ردود 🌟 -->
+                    <div class="comment-thread">
+                        <div class="single-comment">
+                            <img src="../assets/logos/cindrome-logo.png" alt="User" class="comment-avatar">
+                            <div class="comment-content-wrapper">
+                                <div class="comment-header">
+                                    <span class="comment-user">@Ahmed_Ali</span>
+                                    <span class="comment-time">2h</span>
+                                </div>
+                                <p class="comment-text">Great list! But where is Fight Club? It definitely deserves a
+                                    spot here.</p>
+                                <div class="comment-interactions">
+                                    <button class="interaction-btn"><svg viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                            </path>
+                                        </svg> 12</button>
+                                    <button class="interaction-btn reply-trigger"><svg viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                            </path>
+                                        </svg> Reply</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- الردود (Nested) -->
+                        <div class="nested-replies">
+                            <div class="single-comment reply-comment">
+                                <img src="../assets/logos/cindrome-logo.png" alt="User"
+                                    class="comment-avatar small-avatar">
+                                <div class="comment-content-wrapper">
+                                    <div class="comment-header">
+                                        <span class="comment-user">@Shehab</span>
+                                        <span class="comment-badge">Author</span>
+                                        <span class="comment-time">1h</span>
+                                    </div>
+                                    <p class="comment-text">I thought about adding it, but decided to keep it strictly
+                                        2010s and newer. Maybe in part 2!</p>
+                                    <div class="comment-interactions">
+                                        <button class="interaction-btn"><svg viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                                </path>
+                                            </svg> 5</button>
+                                        <button class="interaction-btn reply-trigger"><svg viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                                </path>
+                                            </svg> Reply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- تعليق أساسي تاني -->
+                    <div class="comment-thread">
+                        <div class="single-comment">
+                            <img src="../assets/logos/cindrome-logo.png" alt="User" class="comment-avatar">
+                            <div class="comment-content-wrapper">
+                                <div class="comment-header">
+                                    <span class="comment-user">@Nour99</span>
+                                    <span class="comment-time">5h</span>
+                                </div>
+                                <p class="comment-text">Shutter Island is an absolute masterpiece. W list.</p>
+                                <div class="comment-interactions">
+                                    <button class="interaction-btn"><svg viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                            </path>
+                                        </svg> 3</button>
+                                    <button class="interaction-btn reply-trigger"><svg viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                            </path>
+                                        </svg> Reply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <a href="../../index.html" class="logo-link">
+                <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
+            </a>
+            <div class="footer-nav">
+                <a href="about.html" class="footer-link">About Us</a>
+                <span class="footer-divider"></span>
+                <div class="footer-socials">
+                    <a href="mailto:cindrome.me@gmail.com" class="social-icon" aria-label="Email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
