@@ -410,12 +410,14 @@
         padding: 6px 10px;
     }
 
-    /* 🌟 جعل زراير الـ Mini Card ظاهرة دائماً في الموبايل 🌟 */
-    .mini-card-bar {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: translateY(0) !important;
-        background: rgba(0, 0, 0, 0.75); /* عشان تبان فوق البوستر */
+/* 🌟 إظهار زراير الموبايل بشفافية هادية (بدون important وبدون تدرج) 🌟 */
+    .single-list-cards-grid .mini-content-card .mini-card-bar {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        background: rgba(0, 0, 0, 0.18); /* لون أسود بشفافية 40% بس */
+        backdrop-filter: blur(1.5px); /* لمسة إزاز خفيفة جداً عشان الزراير توضح */
+        -webkit-backdrop-filter: blur(1.5px);
     }
 
     .nested-replies { margin-left: 20px; }
