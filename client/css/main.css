@@ -1,0 +1,154 @@
+:root {
+  --maincolor: #161616;
+  --accent-teal: #099e9e;
+  --text-cream: #f1e3c8;
+  --dark-bg: #010a09;
+  --accent-gold: #ffc107;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--maincolor);
+  color: var(--text-cream);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ==========================================
+   🎨 Custom Scrollbar (Clean 10px Turquoise)
+   ========================================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-bg, #010a09);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--accent-teal);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #0bd1d1;
+}
+
+::-webkit-scrollbar-button:single-button {
+  background-color: var(--dark-bg, #010a09);
+  height: 10px;
+  width: 10px;
+}
+
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+  border-width: 0 4px 6px 4px;
+  border-color: transparent transparent var(--accent-teal) transparent;
+}
+
+::-webkit-scrollbar-button:single-button:vertical:increment {
+  border-width: 6px 4px 0 4px;
+  border-color: var(--accent-teal) transparent transparent transparent;
+}
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: var(--accent-teal) var(--dark-bg, #010a09);
+}
+
+/* ==========================================
+   🔻 Minimal Footer Styles
+   ========================================= */
+.site-footer {
+  width: 100%;
+  background-color: var(--dark-bg, #010a09);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 40px 20px 25px;
+  margin-top: 80px;
+  box-sizing: border-box;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  max-width: 150px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-link {
+  color: #8a9e9c;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--accent-teal);
+}
+
+.footer-divider {
+  width: 1px;
+  height: 14px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.social-icon {
+  color: #8a9e9c;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.social-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.social-icon:hover {
+  color: var(--accent-teal);
+  transform: translateY(-2px);
+}
+
+.footer-copy {
+  color: #4a5d5b;
+  font-size: 12px;
+  margin: 0;
+}
