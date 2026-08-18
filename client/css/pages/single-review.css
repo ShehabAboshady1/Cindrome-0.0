@@ -235,7 +235,7 @@
 .is-spoiler .blurred-text {
     filter: blur(10px);
     user-select: none;
-    cursor: pointer; 
+    cursor: default; 
     transition: filter 0.3s ease;
 }
 
@@ -512,7 +512,6 @@
         width: 105px; 
     }
 
-    /* الكونتينر الأب عشان يسمح بقص الكلام الزيادة */
     .external-movie-info {
         gap: 5px;
         min-width: 0; 
@@ -530,7 +529,6 @@
         margin-top: 2px;
     }
 
-    /* التعديل السحري لمنع النزول لسطر جديد وقص الكلام الطويل */
     .episode-meta-pill {
         font-size: 0.75rem; 
         padding: 4px 8px;
@@ -547,13 +545,16 @@
         margin-bottom: 25px;
     }
     
+    /* منعنا الـ wrap عشان البادج يفضل فوق يمين جنب اليوزر */
     .card-user-header {
-        flex-wrap: wrap; 
+        flex-wrap: nowrap; 
+        align-items: flex-start;
         gap: 10px;
     }
 
     .reviewer-meta-inside {
         gap: 10px;
+        flex: 1; /* عشان ياخد المساحة المتاحة ويسيب الباقي للبادج */
     }
 
     .card-avatar {
@@ -566,9 +567,13 @@
         gap: 6px;
     }
 
+    /* ثبتنا حجم البادج ومنعناه من الانضغاط (flex-shrink: 0) */
     .card-spoiler-badge {
         font-size: 0.75rem;
         padding: 4px 8px;
+        flex-shrink: 0; 
+        align-self: flex-start;
+        margin-top: 4px; /* تظبيط بصري سيكا مع اسم اليوزر */
     }
 
     .card-divider {
