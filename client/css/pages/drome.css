@@ -144,6 +144,7 @@ html, body.drome-page {
     max-width: 85%;
 }
 
+/* حجم الخط للابتوب */
 .user-bubble-content p {
     margin: 0;
     font-size: 0.95rem; 
@@ -184,6 +185,7 @@ html, body.drome-page {
     width: calc(100% - 48px); 
 }
 
+/* حجم الخط للابتوب */
 .drome-bubble-content p {
     margin: 0;
     font-size: 0.95rem; 
@@ -421,6 +423,18 @@ html, body.drome-page {
 
     .chat-messages-container {
         padding: 20px 15px 0;
+    }
+
+    /* 🌟 تصغير خط رسالة اليوزر في الموبايل 🌟 */
+    .user-bubble-content p {
+        font-size: 0.82rem; 
+        line-height: 1.5;
+    }
+
+    /* 🌟 تصغير خط رسالة الكمبيوتر في الموبايل 🌟 */
+    .drome-bubble-content p {
+        font-size: 0.82rem; 
+        line-height: 1.6;
     }
 
     .drome-input-wrapper {
