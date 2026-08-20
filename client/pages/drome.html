@@ -69,9 +69,7 @@
     </header>
 
     <main class="drome-wrapper">
-        
         <section class="drome-chat-area">
-            
             <div class="chat-messages-container" id="chatContainer">
                 <div class="chat-messages-inner" id="chatInner">
                     
@@ -101,14 +99,11 @@
                             </div>
                         </div>
                     </div>
-                
                 </div>
             </div>
 
             <div class="drome-input-wrapper">
-                
                 <div class="drome-input-box">
-                    
                     <button class="inline-icon-btn" onclick="clearChat()" title="New Chat">
                         <i class="fa-solid fa-plus"></i>
                     </button>
@@ -136,7 +131,6 @@
                 </div>
                 <p class="drome-disclaimer">Drome AI can make mistakes. Always check the ratings.</p>
             </div>
-
         </section>
     </main>
 
@@ -183,7 +177,6 @@
             isGenerating = true;
             updateInputUI();
 
-            const chatContainer = document.getElementById('chatContainer');
             const chatInner = document.getElementById('chatInner');
             const emptyState = document.getElementById('emptyState');
             const typingIndicator = document.getElementById('typingIndicator');
@@ -204,8 +197,9 @@
 
             typingIndicator.style.display = 'flex';
             
-            // سكرول للكونتينر الداخلي عشان نمنع الهزة
+            const chatContainer = document.getElementById('chatContainer');
             chatContainer.scrollTop = chatContainer.scrollHeight; 
+            window.scrollTo(0, document.body.scrollHeight); 
 
             replyTimeout = setTimeout(() => {
                 typingIndicator.style.display = 'none'; 
@@ -220,6 +214,7 @@
                 `;
                 chatInner.insertBefore(dromeBubble, typingIndicator);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
+                window.scrollTo(0, document.body.scrollHeight);
 
                 finishGeneration();
             }, 3000); 
@@ -271,6 +266,8 @@
             bubbles.forEach(b => b.remove());
             
             if (emptyState) emptyState.style.display = 'block';
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.scrollTop = 0;
         }
 
         function selectFocus(text) {
