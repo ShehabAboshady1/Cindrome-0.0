@@ -17,7 +17,6 @@ body.drome-page {
    1. CHAT AREA & HEADER SECTION
 ================================================== */
 .drome-chat-area {
-    /* 🌟 التعديل هنا: ياخد ارتفاع الشاشة بالظبط ويخلي الفوتر تحتيه 🌟 */
     height: calc(100vh - 70px); 
     display: flex;
     flex-direction: column;
@@ -31,7 +30,7 @@ body.drome-page {
 .drome-header-section {
     text-align: center;
     margin-bottom: 20px; 
-    flex-shrink: 0; /* بيمنعه إنه يتضغط */
+    flex-shrink: 0; 
 }
 
 .drome-main-title {
@@ -43,24 +42,22 @@ body.drome-page {
     text-transform: uppercase;
 }
 
-/* 🌟 التعديل السحري للـ Subtitle عشان مينزلش سطرين 🌟 */
 .drome-subtitle {
     font-size: 0.88rem; 
     color: rgba(241, 227, 200, 0.7); 
     margin: 0;
     font-weight: 400;
     letter-spacing: 0.3px;
-    white-space: normal; /* يسمحله ينزل بس بشكل مرتب لو الشاشة صغيرة جداً */
+    white-space: normal; 
     line-height: 1.4;
     padding: 0 10px;
 }
 
-/* 🌟 الكارت المارد: بياخد المساحة المتبقية بمرونة بدون حسابات معقدة 🌟 */
 .drome-chat-main-card {
     width: 100%;
     max-width: 900px; 
-    flex-grow: 1; /* بياخد كل المساحة اللي تحت العنوان */
-    min-height: 0; /* سر المرونة عشان السكرول يشتغل جوه الكارت مش براه */
+    flex-grow: 1; 
+    min-height: 0; 
     background: var(--maincolor, #161616); 
     border: 1px solid var(--accent-teal, #099e9e); 
     border-radius: 24px; 
@@ -106,16 +103,16 @@ body.drome-page {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    min-height: 100%; /* عشان السنترة المظبوطة لحالة البداية */
+    min-height: 100%; 
 }
 
 /* ==================================================
-   3. EMPTY STATE (السنترة الأوتوماتيك)
+   3. EMPTY STATE
 ================================================== */
 .drome-empty-state {
     align-self: center; 
     text-align: center;
-    margin: auto 0; /* 🌟 التعديل ده بيسنترها في النص بالظبط ويلغي الضغط 🌟 */
+    margin: auto 0; 
     padding: 20px 0;
     max-width: 650px;
     width: 100%;
@@ -327,7 +324,7 @@ body.drome-page {
     font-size: 0.7rem; 
     color: rgba(241, 227, 200, 0.4);
     margin: 8px 0 0 0;
-    text-align: center; /* 🌟 لو نزلت سطرين تتسنتر بشياكة 🌟 */
+    text-align: center; 
     padding: 0 10px;
     line-height: 1.3;
 }
@@ -439,7 +436,7 @@ body.drome-page {
 }
 
 /* ==========================================
-   📱 Mobile Responsiveness (السر كله هنا)
+   📱 Mobile Responsiveness (تظبيط زرار الميكسد والـ Placeholder)
 ========================================== */
 @media (max-width: 768px) {
     .drome-header-section { margin-bottom: 12px; margin-top: 10px; }
@@ -457,9 +454,8 @@ body.drome-page {
     .drome-input-box { 
         max-width: 100%; 
         flex-wrap: nowrap; 
-        /* 🌟 تصغير كل المسافات جوه الموبايل عشان يدي مساحة براح 🌟 */
-        padding: 4px 6px; 
-        gap: 4px; 
+        padding: 4px 6px 4px 8px; 
+        gap: 5px; 
         border-radius: 24px;
     }
     
@@ -471,27 +467,34 @@ body.drome-page {
         gap: 4px;
     }
 
-    /* 🌟 تصغير الأزرار جداً عشان مربع الكتابة يبان 🌟 */
+    /* 🌟 إرجاع شياكة زرار Mixed في الموبايل بدون ضغط 🌟 */
     .dropdown-selected {
-        padding: 4px 8px;
-        font-size: 0.7rem;
-        gap: 4px;
+        padding: 5px 10px;
+        font-size: 0.78rem;
+        gap: 6px;
     }
 
+    /* 🌟 تظبيط خط مكان الكتابة والـ Placeholder عشان يظهر كاملاً 🌟 */
     .drome-input-box textarea {
         font-size: 0.8rem;
-        padding: 4px 2px;
+        padding: 6px 4px;
+        min-width: 0;
+    }
+
+    .drome-input-box textarea::placeholder {
+        font-size: 0.75rem;
+        opacity: 0.6;
     }
 
     .send-btn, .inline-icon-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 0.8rem;
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
         margin-bottom: 0;
     }
 
     .dropdown-list {
-        min-width: 100px;
+        min-width: 110px;
         bottom: calc(100% + 8px);
     }
 }
