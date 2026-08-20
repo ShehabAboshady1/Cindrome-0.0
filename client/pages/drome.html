@@ -72,14 +72,17 @@
         <section class="drome-chat-area">
             <div class="chat-messages-container" id="chatContainer">
                 <div class="chat-messages-inner" id="chatInner">
+                    
+                    <div id="pullToRefreshIndicator" class="pull-to-refresh-indicator">
+                        <i class="fa-solid fa-arrow-down"></i> <span>Pull down</span>
+                    </div>
 
                     <div class="drome-empty-state" id="emptyState">
                         <img src="../assets/logos/cindrome-logo.png" alt="Cindrome Logo" class="drome-large-logo">
                         <h2 class="drome-welcome-text">How can I help you discover today?</h2>
-
+                        
                         <div class="suggested-prompts">
-                            <button class="prompt-btn"
-                                onclick="fillInput('Suggest a movie with a mind-bending plot twist.')">
+                            <button class="prompt-btn" onclick="fillInput('Suggest a movie with a mind-bending plot twist.')">
                                 Suggest a movie with a mind-bending plot twist.
                             </button>
                             <button class="prompt-btn" onclick="fillInput('What should I watch after Dune?')">
@@ -88,8 +91,7 @@
                         </div>
                     </div>
 
-                    <div class="chat-bubble drome-chat-row typing-indicator-bubble" id="typingIndicator"
-                        style="display: none;">
+                    <div class="chat-bubble drome-chat-row typing-indicator-bubble" id="typingIndicator" style="display: none;">
                         <div class="drome-avatar">
                             <img src="../assets/logos/cindrome-logo.png" alt="Cindrome">
                         </div>
@@ -125,9 +127,8 @@
                         </details>
                     </div>
 
-                    <textarea id="dromeInput" rows="1" placeholder="Type a message..." onkeydown="handleEnter(event)"
-                        oninput="autoResize(this)"></textarea>
-
+                    <textarea id="dromeInput" rows="1" placeholder="Type a message..." onkeydown="handleEnter(event)" oninput="autoResize(this)"></textarea>
+                    
                     <button class="send-btn" id="mainSendBtn" onclick="toggleSendOrStop()">
                         <i class="fa-solid fa-arrow-up" id="sendBtnIcon"></i>
                     </button>
@@ -142,8 +143,8 @@
         let replyTimeout;
 
         function autoResize(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
+            textarea.style.height = 'auto'; 
+            textarea.style.height = textarea.scrollHeight + 'px'; 
         }
 
         function toggleSendOrStop() {
@@ -165,8 +166,7 @@
                 chatInner.insertBefore(stopBubble, typingIndicator);
 
                 const chatContainer = document.getElementById('chatContainer');
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-                window.scrollTo(0, document.body.scrollHeight);
+                chatContainer.scrollTop = chatContainer.scrollHeight; 
 
                 finishGeneration();
             } else {
@@ -178,7 +178,6 @@
             const input = document.getElementById('dromeInput');
             if (input.value.trim() === '' || isGenerating) return;
 
-            // 🌟 نقفل الكيبورد فوراً أول ما اليوزر يدوس إرسال 🌟
             input.blur();
 
             isGenerating = true;
@@ -198,18 +197,17 @@
                 </div>
             `;
             chatInner.insertBefore(userBubble, typingIndicator);
-
-            input.value = '';
-            input.style.height = 'auto';
+            
+            input.value = ''; 
+            input.style.height = 'auto'; 
 
             typingIndicator.style.display = 'flex';
-
+            
             const chatContainer = document.getElementById('chatContainer');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-            window.scrollTo(0, document.body.scrollHeight);
+            chatContainer.scrollTop = chatContainer.scrollHeight; 
 
             replyTimeout = setTimeout(() => {
-                typingIndicator.style.display = 'none';
+                typingIndicator.style.display = 'none'; 
 
                 const dromeBubble = document.createElement('div');
                 dromeBubble.className = 'chat-bubble drome-chat-row';
@@ -221,10 +219,9 @@
                 `;
                 chatInner.insertBefore(dromeBubble, typingIndicator);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
-                window.scrollTo(0, document.body.scrollHeight);
 
                 finishGeneration();
-            }, 3000);
+            }, 3000); 
         }
 
         function finishGeneration() {
@@ -235,34 +232,32 @@
         function updateInputUI() {
             const sendBtnIcon = document.getElementById('sendBtnIcon');
             const inputField = document.getElementById('dromeInput');
-
+            
             if (isGenerating) {
-                sendBtnIcon.className = 'fa-solid fa-stop';
-                // 🌟 التعديل السحري: نستخدم readOnly بدل disabled عشان الأندرويد 🌟
-                inputField.readOnly = true;
+                sendBtnIcon.className = 'fa-solid fa-stop'; 
+                inputField.readOnly = true; 
                 inputField.placeholder = "Drome is thinking...";
-                inputField.blur(); // تأكيد قفل الكيبورد
+                inputField.blur(); 
             } else {
-                sendBtnIcon.className = 'fa-solid fa-arrow-up';
-                inputField.readOnly = false;
+                sendBtnIcon.className = 'fa-solid fa-arrow-up'; 
+                inputField.readOnly = false; 
                 inputField.placeholder = "Type a message...";
-                // 🌟 التعديل السحري: إجبار الكيبورد يفضل مقفول بعد ما الكمبيوتر يخلص 🌟
-                inputField.blur();
+                inputField.blur(); 
             }
         }
 
         function fillInput(text) {
-            if (isGenerating) return;
+            if (isGenerating) return; 
             const inputField = document.getElementById('dromeInput');
             inputField.value = text;
-            autoResize(inputField);
+            autoResize(inputField); 
             sendMessage();
         }
 
         function handleEnter(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                if (isGenerating) return;
+            if(event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault(); 
+                if (isGenerating) return; 
                 sendMessage();
             }
         }
@@ -270,15 +265,13 @@
         function clearChat() {
             const chatInner = document.getElementById('chatInner');
             const emptyState = document.getElementById('emptyState');
-            const typingIndicator = document.getElementById('typingIndicator');
-
+            
             const bubbles = chatInner.querySelectorAll('.chat-bubble:not(.typing-indicator-bubble)');
             bubbles.forEach(b => b.remove());
-
+            
             if (emptyState) emptyState.style.display = 'block';
             const chatContainer = document.getElementById('chatContainer');
             chatContainer.scrollTop = 0;
-            window.scrollTo(0, 0);
         }
 
         function selectFocus(text) {
@@ -286,14 +279,72 @@
             document.getElementById('contentDropdown').removeAttribute('open');
         }
 
-        document.addEventListener('click', function (event) {
+        document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('contentDropdown');
             if (dropdown && dropdown.hasAttribute('open') && !dropdown.contains(event.target)) {
                 dropdown.removeAttribute('open');
             }
         });
 
+        // ==================================================
+        // 🌟 برمجة الـ Pull to Refresh للموبايل 🌟
+        // ==================================================
+        let pStart = 0;
+        let pCurrent = 0;
+        const chatContainer = document.getElementById('chatContainer');
+        const ptrIndicator = document.getElementById('pullToRefreshIndicator');
+
+        chatContainer.addEventListener('touchstart', function(e) {
+            // يبدأ يحسب السحب بس لو إنت في أول الصفحة فوق خالص
+            if (chatContainer.scrollTop === 0) {
+                pStart = e.touches[0].clientY;
+            }
+        }, {passive: true});
+
+        chatContainer.addEventListener('touchmove', function(e) {
+            if (chatContainer.scrollTop === 0 && pStart > 0) {
+                pCurrent = e.touches[0].clientY;
+                let pullDistance = pCurrent - pStart;
+                
+                // لو بيسحب لتحت
+                if (pullDistance > 0) {
+                    // تصعيب السحب شوية عشان ميبقاش سريع اوي
+                    let height = Math.min(pullDistance * 0.4, 70); 
+                    ptrIndicator.style.height = height + 'px';
+                    
+                    if (height >= 50) {
+                        ptrIndicator.innerHTML = '<i class="fa-solid fa-plus"></i> <span>Release for new chat</span>';
+                    } else {
+                        ptrIndicator.innerHTML = '<i class="fa-solid fa-arrow-down"></i> <span>Pull down</span>';
+                    }
+                }
+            }
+        }, {passive: true});
+
+        chatContainer.addEventListener('touchend', function(e) {
+            if (pStart > 0 && pCurrent > 0) {
+                let pullDistance = pCurrent - pStart;
+                let height = Math.min(pullDistance * 0.4, 70); 
+                
+                // لو السحبة عدت الـ 50 بيكسل، نفذ أمر المسح
+                if (height >= 50 && chatContainer.scrollTop === 0) {
+                    ptrIndicator.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Starting...</span>';
+                    setTimeout(() => {
+                        clearChat();
+                        resetPTR();
+                    }, 400); // تأخير بسيط للأنيميشن
+                } else {
+                    resetPTR();
+                }
+            }
+            pStart = 0;
+            pCurrent = 0;
+        });
+
+        function resetPTR() {
+            ptrIndicator.style.height = '0px';
+        }
+
     </script>
 </body>
-
 </html>
