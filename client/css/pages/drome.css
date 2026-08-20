@@ -3,551 +3,514 @@
 ========================================================================== */
 
 body.drome-page {
-  background-color: var(--dark-bg, #010a09);
-  color: var(--text-cream, #f1e3c8);
+    background-color: var(--dark-bg, #010a09); 
+    color: var(--text-cream, #f1e3c8); 
 }
 
 .drome-wrapper {
-  display: flex;
-  width: 100%;
-  justify-content: center;
+    display: flex;
+    width: 100%;
+    justify-content: center; 
 }
 
 /* ==================================================
    1. CHAT AREA & HEADER SECTION
 ================================================== */
 .drome-chat-area {
-  height: calc(100vh - 70px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: transparent;
-  padding: 20px;
-  width: 100%;
-  max-width: 100%;
+    height: calc(100vh - 70px); 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent; 
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
 }
 
 .drome-header-section {
-  text-align: center;
-  margin-bottom: 20px;
-  flex-shrink: 0;
+    text-align: center;
+    margin-bottom: 20px; 
+    flex-shrink: 0; 
 }
 
 .drome-main-title {
-  font-size: 2.8rem;
-  font-weight: 900;
-  color: var(--text-cream);
-  letter-spacing: 2px;
-  margin: 0 0 8px 0;
-  text-transform: uppercase;
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--text-cream);
+    letter-spacing: 2px;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
 }
 
 .drome-subtitle {
-  font-size: 0.88rem;
-  color: rgba(241, 227, 200, 0.7);
-  margin: 0;
-  font-weight: 400;
-  letter-spacing: 0.3px;
-  white-space: normal;
-  line-height: 1.4;
-  padding: 0 10px;
+    font-size: 0.88rem; 
+    color: rgba(241, 227, 200, 0.7); 
+    margin: 0;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    white-space: normal; 
+    line-height: 1.4;
+    padding: 0 10px;
 }
 
+/* في اللابتوب الكارت رمادي والفقاعات سودا */
 .drome-chat-main-card {
-  width: 100%;
-  max-width: 900px;
-  flex-grow: 1;
-  min-height: 0;
-  background: var(--maincolor, #161616);
-  border: 1px solid var(--accent-teal, #099e9e);
-  border-radius: 24px;
-  box-shadow:
-    0 14px 40px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(9, 158, 158, 0.15);
-  display: flex;
-  flex-direction: column;
+    width: 100%;
+    max-width: 900px; 
+    flex-grow: 1; 
+    min-height: 0; 
+    background: var(--maincolor, #161616); 
+    border: 1px solid var(--accent-teal, #099e9e); 
+    border-radius: 24px; 
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(9, 158, 158, 0.15); 
+    display: flex;
+    flex-direction: column;
 }
 
 /* ==================================================
    2. CHAT SCROLL & MESSAGES
 ================================================== */
 .chat-messages-container {
-  flex-grow: 1;
-  overflow-y: auto;
-  width: 100%;
-  padding: 30px 10px 20px 20px;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(9, 158, 158, 0.5) transparent;
+    flex-grow: 1;
+    overflow-y: auto;
+    width: 100%;
+    padding: 30px 10px 20px 20px; 
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(9, 158, 158, 0.5) transparent;
 }
 
-.chat-messages-container::-webkit-scrollbar {
-  width: 14px;
-}
-.chat-messages-container::-webkit-scrollbar-track {
-  background: transparent;
-  margin: 40px 0;
-}
+.chat-messages-container::-webkit-scrollbar { width: 14px; }
+.chat-messages-container::-webkit-scrollbar-track { background: transparent; margin: 40px 0; }
 .chat-messages-container::-webkit-scrollbar-thumb {
-  background: rgba(9, 158, 158, 0.5);
-  border-radius: 10px;
-  border: 4px solid var(--maincolor, #161616);
-  background-clip: padding-box;
+    background: rgba(9, 158, 158, 0.5);
+    border-radius: 10px;
+    border: 4px solid var(--maincolor, #161616); 
+    background-clip: padding-box;
 }
-.chat-messages-container::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-teal);
-  border: 4px solid var(--maincolor, #161616);
-  background-clip: padding-box;
+.chat-messages-container::-webkit-scrollbar-thumb:hover { 
+    background: var(--accent-teal); 
+    border: 4px solid var(--maincolor, #161616);
+    background-clip: padding-box;
 }
 
 .chat-messages-inner {
-  width: 100%;
-  max-width: 750px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  min-height: 100%;
+    width: 100%;
+    max-width: 750px; 
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 100%; 
 }
 
 /* ==================================================
    3. EMPTY STATE
 ================================================== */
 .drome-empty-state {
-  align-self: center;
-  text-align: center;
-  margin: auto 0;
-  padding: 20px 0;
-  max-width: 650px;
-  width: 100%;
+    align-self: center; 
+    text-align: center;
+    margin: auto 0; 
+    padding: 20px 0;
+    max-width: 650px;
+    width: 100%;
 }
 
 .drome-large-logo {
-  width: 50px;
-  opacity: 0.9;
-  margin-bottom: 16px;
-  border-radius: 50%;
-  box-shadow: 0 0 20px rgba(9, 158, 158, 0.3);
+    width: 50px; 
+    opacity: 0.9;
+    margin-bottom: 16px;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(9, 158, 158, 0.3);
 }
 
 .drome-welcome-text {
-  font-size: 1.15rem;
-  margin-bottom: 20px;
-  color: var(--text-cream);
+    font-size: 1.15rem; 
+    margin-bottom: 20px;
+    color: var(--text-cream);
 }
 
 .suggested-prompts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
 }
 
 .prompt-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(241, 227, 200, 0.15);
-  color: rgba(241, 227, 200, 0.9);
-  padding: 8px 14px;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(241, 227, 200, 0.15);
+    color: rgba(241, 227, 200, 0.9);
+    padding: 8px 14px; 
+    border-radius: 50px; 
+    font-size: 0.75rem; 
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .prompt-btn:hover {
-  border-color: var(--accent-teal);
-  background: rgba(9, 158, 158, 0.15);
-  transform: translateY(-2px);
+    border-color: var(--accent-teal);
+    background: rgba(9, 158, 158, 0.15);
+    transform: translateY(-2px);
 }
 
 /* ==================================================
    4. CHAT BUBBLES
 ================================================== */
 .chat-bubble {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-  width: 100%;
+    display: flex;
+    gap: 12px; 
+    margin-bottom: 20px; 
+    width: 100%;
 }
 
-.user-chat-row {
-  justify-content: flex-end;
-}
+.user-chat-row { justify-content: flex-end; }
 
+/* الستايل لللابتوب */
 .user-bubble-content {
-  background: var(--dark-bg, #010a09);
-  border: 1px solid rgba(241, 227, 200, 0.08);
-  border-radius: 20px 20px 4px 20px;
-  padding: 12px 16px;
-  max-width: 85%;
+    background: var(--dark-bg, #010a09); 
+    border: 1px solid rgba(241, 227, 200, 0.08);
+    border-radius: 20px 20px 4px 20px; 
+    padding: 12px 16px;
+    max-width: 85%;
 }
 
-.user-bubble-content p,
-.drome-bubble-content p {
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--text-cream);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  white-space: pre-wrap;
+.user-bubble-content p, .drome-bubble-content p {
+    margin: 0;
+    font-size: 0.85rem; 
+    line-height: 1.6;
+    color: var(--text-cream);
+    word-wrap: break-word;     
+    overflow-wrap: break-word; 
+    word-break: break-word;     
+    white-space: pre-wrap;     
 }
 
-.drome-chat-row {
-  justify-content: flex-start;
-  align-items: flex-end;
-}
+.drome-chat-row { justify-content: flex-start; align-items: flex-end; }
 
 .drome-avatar {
-  width: 32px;
-  height: 32px;
-  background: rgba(9, 158, 158, 0.15);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border: 1px solid rgba(9, 158, 158, 0.3);
+    width: 32px; 
+    height: 32px;
+    background: rgba(9, 158, 158, 0.15);
+    border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(9, 158, 158, 0.3);
 }
 
-.drome-avatar img {
-  width: 20px;
-  border-radius: 50%;
-}
+.drome-avatar img { width: 20px; border-radius: 50%; }
 
+/* الستايل لللابتوب */
 .drome-bubble-content {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(241, 227, 200, 0.08);
-  border-radius: 20px 20px 20px 4px;
-  padding: 12px 16px;
-  max-width: 85%;
+    background: rgba(255, 255, 255, 0.04); 
+    border: 1px solid rgba(241, 227, 200, 0.08);
+    border-radius: 20px 20px 20px 4px; 
+    padding: 12px 16px;
+    max-width: 85%;
 }
 
 /* ==================================================
    5. INPUT BOX & TEXTAREA CONTROLS 
 ================================================== */
 .drome-input-wrapper {
-  padding: 12px 20px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: transparent;
-  position: relative;
-  width: 100%;
+    padding: 12px 20px 16px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent; 
+    position: relative;
+    width: 100%;
 }
 
+/* الستايل لللابتوب */
 .drome-input-box {
-  width: 100%;
-  max-width: 750px;
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  background: var(--dark-bg, #010a09);
-  border: 1px solid rgba(241, 227, 200, 0.15);
-  border-radius: 24px;
-  padding: 8px 8px 8px 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  transition: border-color 0.2s ease;
-  overflow: visible;
+    width: 100%;
+    max-width: 750px; 
+    display: flex;
+    align-items: flex-end; 
+    gap: 8px; 
+    background: var(--dark-bg, #010a09); 
+    border: 1px solid rgba(241, 227, 200, 0.15);
+    border-radius: 24px; 
+    padding: 8px 8px 8px 12px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: border-color 0.2s ease;
+    overflow: visible; 
 }
 
 .drome-input-box:focus-within,
-.drome-input-box:hover {
-  border-color: var(--accent-teal);
-}
+.drome-input-box:hover { border-color: var(--accent-teal); }
 
 .drome-input-box textarea {
-  flex-grow: 1;
-  background: transparent;
-  border: none;
-  color: var(--text-cream);
-  font-size: 0.85rem;
-  outline: none;
-  font-family: inherit;
-  padding: 8px 8px;
-  min-width: 0;
-  resize: none;
-  overflow-y: auto;
-  max-height: 150px;
-  line-height: 1.5;
-  box-sizing: border-box;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-cream);
+    font-size: 0.85rem; 
+    outline: none;
+    font-family: inherit;
+    padding: 8px 8px; 
+    min-width: 0; 
+    resize: none; 
+    overflow-y: auto; 
+    max-height: 150px; 
+    line-height: 1.5;
+    box-sizing: border-box;
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
 }
 
-.drome-input-box textarea::-webkit-scrollbar {
-  display: none;
-}
+.drome-input-box textarea::-webkit-scrollbar { display: none; }
 
-/* 🌟 منع الـ Placeholder إنه يلف على سطرين 🌟 */
 .drome-input-box textarea::placeholder {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 
-/* 🌟 توحيد كل الهوامش للصفر لضمان التمركز على مسطرة واحدة 🌟 */
 .inline-icon-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-cream);
-  opacity: 0.6;
-  font-size: 1.1rem;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  margin: 0;
+    background: transparent;
+    border: none;
+    color: var(--text-cream);
+    opacity: 0.6;
+    font-size: 1.1rem;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin: 0 4px 0 0; 
 }
 
 .inline-icon-btn:hover {
-  opacity: 1;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--accent-teal);
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent-teal);
 }
 
 .send-btn {
-  background: var(--accent-teal);
-  color: var(--dark-bg);
-  border: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  margin: 0;
+    background: var(--accent-teal); 
+    color: var(--dark-bg);
+    border: none;
+    width: 34px; 
+    height: 34px;
+    border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin: 0; 
 }
 
-.send-btn:hover {
-  transform: scale(1.05);
-}
+.send-btn:hover { transform: scale(1.05); }
 
 .drome-disclaimer {
-  font-size: 0.7rem;
-  color: rgba(241, 227, 200, 0.4);
-  margin: 8px 0 0 0;
-  text-align: center;
-  padding: 0 10px;
-  line-height: 1.3;
+    font-size: 0.7rem; 
+    color: rgba(241, 227, 200, 0.4);
+    margin: 8px 0 0 0;
+    text-align: center; 
+    padding: 0 10px;
+    line-height: 1.3;
 }
 
 /* ==================================================
    6. USER'S CSS DROPDOWN
 ================================================== */
 .dropdowns-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-  margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0; 
+    margin: 0; 
 }
 
 .css-dropdown {
-  position: relative;
-  font-family: inherit;
-  width: max-content;
-  min-width: 90px;
+    position: relative;
+    font-family: inherit;
+    width: max-content; 
+    min-width: 90px; 
 }
 
-.css-dropdown summary::-webkit-details-marker {
-  display: none;
-}
+.css-dropdown summary::-webkit-details-marker { display: none; }
 
+/* الستايل لللابتوب */
 .dropdown-selected {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--dark-bg);
-  border: 1px solid rgba(241, 227, 200, 0.12);
-  border-radius: 50px;
-  /* 🌟 ارتفاع 34 بيكسل ليكون مطابق للزراير 🌟 */
-  height: 34px;
-  padding: 0 14px;
-  color: var(--text-cream);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  list-style: none;
-  transition: all 0.25s ease;
-  user-select: none;
-  gap: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--dark-bg);
+    border: 1px solid rgba(241, 227, 200, 0.12);
+    border-radius: 50px;
+    height: 34px;
+    padding: 0 14px; 
+    color: var(--text-cream);
+    font-size: 0.8rem; 
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    transition: all 0.25s ease;
+    user-select: none;
+    gap: 8px; 
 }
 
 .dropdown-selected:hover,
 .css-dropdown[open] .dropdown-selected {
-  border-color: var(--accent-teal);
-  box-shadow: 0 0 10px rgba(9, 158, 158, 0.25);
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 10px rgba(9, 158, 158, 0.25);
 }
 
 .dropdown-arrow {
-  font-size: 0.55rem;
-  color: var(--accent-teal);
-  transition: transform 0.3s ease;
+    font-size: 0.55rem;
+    color: var(--accent-teal);
+    transition: transform 0.3s ease;
 }
 
-.css-dropdown[open] .dropdown-arrow {
-  transform: rotate(180deg);
-}
+.css-dropdown[open] .dropdown-arrow { transform: rotate(180deg); }
 
 .dropdown-list {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  top: auto;
-  left: 0;
-  width: max-content;
-  min-width: 100%;
-  background: var(--maincolor);
-  border: 1px solid rgba(241, 227, 200, 0.15);
-  border-radius: 12px;
-  box-shadow: 0 15px 35px rgba(1, 10, 9, 0.95);
-  list-style: none;
-  padding: 6px;
-  margin: 0;
-  z-index: 50;
+    position: absolute;
+    bottom: calc(100% + 12px); 
+    top: auto; 
+    left: 0;
+    width: max-content;
+    min-width: 100%;
+    background: var(--maincolor);
+    border: 1px solid rgba(241, 227, 200, 0.15);
+    border-radius: 12px; 
+    box-shadow: 0 15px 35px rgba(1, 10, 9, 0.95);
+    list-style: none;
+    padding: 6px;
+    margin: 0;
+    z-index: 50;
 }
 
 .dropdown-item {
-  padding: 8px 12px;
-  color: rgba(241, 227, 200, 0.75);
-  font-size: 0.8rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+    padding: 8px 12px;
+    color: rgba(241, 227, 200, 0.75);
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 8px; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap; 
 }
 
 .dropdown-item:hover {
-  background: rgba(9, 158, 158, 0.18);
-  color: var(--text-cream);
+    background: rgba(9, 158, 158, 0.18);
+    color: var(--text-cream);
 }
 
 /* ==================================================
    7. TYPING DOTS ANIMATION
 ================================================== */
-.typing-dots {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  height: 18px;
-}
+.typing-dots { display: flex; align-items: center; gap: 4px; height: 18px; }
 .dot {
-  width: 4.5px;
-  height: 4.5px;
-  background-color: rgba(241, 227, 200, 0.6);
-  border-radius: 50%;
-  animation: typing 1.4s infinite ease-in-out;
+    width: 4.5px; height: 4.5px; background-color: rgba(241, 227, 200, 0.6);
+    border-radius: 50%; animation: typing 1.4s infinite ease-in-out;
 }
-.dot:nth-child(1) {
-  animation-delay: 0s;
-}
-.dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
+.dot:nth-child(1) { animation-delay: 0s; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
 @keyframes typing {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.4;
-  }
-  50% {
-    transform: translateY(-3px);
-    opacity: 1;
-  }
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50% { transform: translateY(-3px); opacity: 1; }
 }
 
 /* ==========================================
-   📱 Mobile Responsiveness (التظبيط الصح للـ Input)
+   📱 Mobile Responsiveness (الحل السحري للألوان هنا)
 ========================================== */
 @media (max-width: 768px) {
-  .drome-header-section {
-    margin-bottom: 12px;
-    margin-top: 10px;
-  }
-  .drome-main-title {
-    font-size: 1.8rem;
-    margin-bottom: 4px;
-    letter-spacing: 1px;
-  }
-  .drome-subtitle {
-    font-size: 0.72rem;
-    white-space: normal;
-    padding: 0 5px;
-  }
+    .drome-header-section { margin-bottom: 12px; margin-top: 10px; }
+    .drome-main-title { font-size: 1.8rem; margin-bottom: 4px; letter-spacing: 1px; }
+    .drome-subtitle { font-size: 0.72rem; white-space: normal; padding: 0 5px; }
+    
+    /* 🌟 الكارت شفاف عشان الصفحة تبقى سودة 🌟 */
+    .drome-chat-main-card {
+        background: transparent; 
+        border: none;
+        border-top: 1px solid rgba(241, 227, 200, 0.05); 
+        height: auto; 
+        flex-grow: 1; 
+        box-shadow: none;
+        border-radius: 0;
+    }
+    
+    .drome-chat-area { 
+        padding: 10px 0 0 0; 
+        justify-content: flex-start; 
+    }
 
-  .drome-chat-main-card {
-    border-radius: 16px;
-    border: 1px solid var(--accent-teal);
-    height: calc(100vh - 230px);
-  }
+    /* 🌟 عكس الألوان: رسالة اليوزر رمادي صريح 🌟 */
+    .user-bubble-content {
+        background: var(--maincolor, #161616); 
+    }
 
-  /* 🌟 تصغير الهوامش عشان المربع يفرش بعرض الشاشة كلها 🌟 */
-  .drome-input-wrapper {
-    padding: 10px 8px 12px;
-  }
+    /* 🌟 عكس الألوان: رسالة الكمبيوتر رمادي شفاف 🌟 */
+    .drome-bubble-content {
+        background: rgba(255, 255, 255, 0.06); 
+    }
+    
+    /* 🌟 عشان الـ Scrollbar جوه الشات يبقى متناسق مع الشاشة السودة 🌟 */
+    .chat-messages-container::-webkit-scrollbar-thumb {
+        border: 4px solid var(--dark-bg, #010a09); 
+    }
+    .chat-messages-container::-webkit-scrollbar-thumb:hover { 
+        border: 4px solid var(--dark-bg, #010a09);
+    }
+    
+    .drome-input-wrapper {
+        padding: 10px 12px 12px; 
+    }
+    
+    /* 🌟 عكس الألوان: صندوق الإدخال رجع رمادي 🌟 */
+    .drome-input-box { 
+        max-width: 100%; 
+        flex-wrap: nowrap; 
+        padding: 6px 6px 6px 8px; 
+        gap: 6px; 
+        border-radius: 24px;
+        background: var(--maincolor, #161616); /* صندوق رمادي */
+    }
 
-  .drome-input-box {
-    max-width: 100%;
-    flex-wrap: nowrap;
-    padding: 6px 6px;
-    gap: 6px;
-    border-radius: 24px;
-  }
+    /* 🌟 لون زرار الفلتر جوه الصندوق الرمادي 🌟 */
+    .dropdown-selected {
+        background: rgba(255, 255, 255, 0.04); /* لون خفيف يفرقه عن الصندوق */
+        height: 32px; 
+        padding: 0 12px; 
+        font-size: 0.78rem;
+        gap: 6px;
+    }
 
-  /* 🌟 توحيد كل الأطوال لـ 32 بيكسل عشان الاستقامة تكون مسطرة 🌟 */
-  .send-btn,
-  .inline-icon-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 1rem;
-    margin: 0;
-  }
+    .send-btn, .inline-icon-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+        margin: 0;
+    }
+    
+    .dropdowns-group { 
+        width: auto; 
+        order: 0; 
+        margin: 0;
+        gap: 6px;
+    }
 
-  .dropdowns-group {
-    width: auto;
-    order: 0;
-    margin: 0;
-    gap: 6px;
-  }
+    .drome-input-box textarea {
+        font-size: 0.85rem;
+        padding: 6px 4px;
+        min-width: 0; 
+    }
 
-  /* 🌟 رجعنا شياكة الـ Pill هنا بارتفاع مظبوط 🌟 */
-  .dropdown-selected {
-    height: 32px; /* مساوي للزراير */
-    padding: 0 12px; /* مساحة يمين وشمال كويسة */
-    font-size: 0.78rem;
-    gap: 6px;
-  }
-
-  /* 🌟 ظبطنا مساحة الكتابة والـ Placeholder 🌟 */
-  .drome-input-box textarea {
-    font-size: 0.85rem;
-    padding: 6px 4px;
-    min-width: 0; /* بيمنع إنه يطرد باقي العناصر بره */
-  }
-
-  /* الـ Placeholder هيفضل سطر واحد ومستحيل ينزل سطرين */
-  .drome-input-box textarea::placeholder {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 0.8rem;
-  }
-
-  .dropdown-list {
-    min-width: 120px;
-    bottom: calc(100% + 8px);
-  }
+    .dropdown-list {
+        min-width: 120px;
+        bottom: calc(100% + 8px);
+    }
 }
