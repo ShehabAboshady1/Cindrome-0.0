@@ -69,25 +69,26 @@
     </header>
 
     <main class="drome-wrapper">
-        
+
         <section class="drome-chat-area">
-            
+
             <div class="drome-header-section">
                 <h1 class="drome-main-title">DROME</h1>
                 <p class="drome-subtitle">Your AI companion for discovering movies, anime, and series.</p>
             </div>
 
             <div class="drome-chat-main-card">
-                
+
                 <div class="chat-messages-container" id="chatContainer">
                     <div class="chat-messages-inner" id="chatInner">
-                        
+
                         <div class="drome-empty-state" id="emptyState">
                             <img src="../assets/logos/cindrome-logo.png" alt="Cindrome Logo" class="drome-large-logo">
                             <h2 class="drome-welcome-text">How can I help you discover today?</h2>
-                            
+
                             <div class="suggested-prompts">
-                                <button class="prompt-btn" onclick="fillInput('Suggest a movie with a mind-bending plot twist.')">
+                                <button class="prompt-btn"
+                                    onclick="fillInput('Suggest a movie with a mind-bending plot twist.')">
                                     Suggest a movie with a mind-bending plot twist.
                                 </button>
                                 <button class="prompt-btn" onclick="fillInput('What should I watch after Dune?')">
@@ -96,7 +97,8 @@
                             </div>
                         </div>
 
-                        <div class="chat-bubble drome-chat-row typing-indicator-bubble" id="typingIndicator" style="display: none;">
+                        <div class="chat-bubble drome-chat-row typing-indicator-bubble" id="typingIndicator"
+                            style="display: none;">
                             <div class="drome-avatar">
                                 <img src="../assets/logos/cindrome-logo.png" alt="Cindrome">
                             </div>
@@ -108,14 +110,14 @@
                                 </div>
                             </div>
                         </div>
-                    
+
                     </div>
                 </div>
 
                 <div class="drome-input-wrapper">
-                    
+
                     <div class="drome-input-box">
-                        
+
                         <button class="inline-icon-btn" onclick="clearChat()" title="New Chat">
                             <i class="fa-solid fa-plus"></i>
                         </button>
@@ -128,15 +130,16 @@
                                 </summary>
                                 <ul class="dropdown-list">
                                     <li class="dropdown-item" onclick="selectFocus('Mixed')">Mixed</li>
-                                    <li class="dropdown-item" onclick="selectFocus('Movies Only')">Movies Only</li>
-                                    <li class="dropdown-item" onclick="selectFocus('Series Only')">TV Series Only</li>
-                                    <li class="dropdown-item" onclick="selectFocus('Anime Only')">Anime Only</li>
+                                    <li class="dropdown-item" onclick="selectFocus('Movies')">Movies</li>
+                                    <li class="dropdown-item" onclick="selectFocus('Series')">Series</li>
+                                    <li class="dropdown-item" onclick="selectFocus('Anime')">Anime</li>
                                 </ul>
                             </details>
                         </div>
 
-                        <textarea id="dromeInput" rows="1" placeholder="Type a message..." onkeydown="handleEnter(event)" oninput="autoResize(this)"></textarea>
-                        
+                        <textarea id="dromeInput" rows="1" placeholder="Type a message..."
+                            onkeydown="handleEnter(event)" oninput="autoResize(this)"></textarea>
+
                         <button class="send-btn" id="mainSendBtn" onclick="toggleSendOrStop()">
                             <i class="fa-solid fa-arrow-up" id="sendBtnIcon"></i>
                         </button>
@@ -190,8 +193,8 @@
         let replyTimeout;
 
         function autoResize(textarea) {
-            textarea.style.height = 'auto'; 
-            textarea.style.height = textarea.scrollHeight + 'px'; 
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
         }
 
         function toggleSendOrStop() {
@@ -243,15 +246,15 @@
                 </div>
             `;
             chatInner.insertBefore(userBubble, typingIndicator);
-            
-            input.value = ''; 
-            input.style.height = 'auto'; 
+
+            input.value = '';
+            input.style.height = 'auto';
 
             typingIndicator.style.display = 'flex';
-            chatContainer.scrollTop = chatContainer.scrollHeight; 
+            chatContainer.scrollTop = chatContainer.scrollHeight;
 
             replyTimeout = setTimeout(() => {
-                typingIndicator.style.display = 'none'; 
+                typingIndicator.style.display = 'none';
 
                 const dromeBubble = document.createElement('div');
                 dromeBubble.className = 'chat-bubble drome-chat-row';
@@ -265,7 +268,7 @@
                 chatContainer.scrollTop = chatContainer.scrollHeight;
 
                 finishGeneration();
-            }, 3000); 
+            }, 3000);
         }
 
         function finishGeneration() {
@@ -276,31 +279,31 @@
         function updateInputUI() {
             const sendBtnIcon = document.getElementById('sendBtnIcon');
             const inputField = document.getElementById('dromeInput');
-            
+
             if (isGenerating) {
-                sendBtnIcon.className = 'fa-solid fa-stop'; 
-                inputField.disabled = true; 
+                sendBtnIcon.className = 'fa-solid fa-stop';
+                inputField.disabled = true;
                 inputField.placeholder = "Drome is thinking...";
             } else {
-                sendBtnIcon.className = 'fa-solid fa-arrow-up'; 
-                inputField.disabled = false; 
+                sendBtnIcon.className = 'fa-solid fa-arrow-up';
+                inputField.disabled = false;
                 inputField.placeholder = "Type a message...";
                 inputField.focus();
             }
         }
 
         function fillInput(text) {
-            if (isGenerating) return; 
+            if (isGenerating) return;
             const inputField = document.getElementById('dromeInput');
             inputField.value = text;
-            autoResize(inputField); 
+            autoResize(inputField);
             sendMessage();
         }
 
         function handleEnter(event) {
-            if(event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault(); 
-                if (isGenerating) return; 
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                if (isGenerating) return;
                 sendMessage();
             }
         }
@@ -309,10 +312,10 @@
             const chatInner = document.getElementById('chatInner');
             const emptyState = document.getElementById('emptyState');
             const typingIndicator = document.getElementById('typingIndicator');
-            
+
             const bubbles = chatInner.querySelectorAll('.chat-bubble:not(.typing-indicator-bubble)');
             bubbles.forEach(b => b.remove());
-            
+
             if (emptyState) emptyState.style.display = 'block';
         }
 
@@ -321,7 +324,7 @@
             document.getElementById('contentDropdown').removeAttribute('open');
         }
 
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const dropdown = document.getElementById('contentDropdown');
             if (dropdown && dropdown.hasAttribute('open') && !dropdown.contains(event.target)) {
                 dropdown.removeAttribute('open');
@@ -330,4 +333,5 @@
 
     </script>
 </body>
+
 </html>
