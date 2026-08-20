@@ -53,7 +53,6 @@ body.drome-page {
     padding: 0 10px;
 }
 
-/* في اللابتوب الكارت رمادي والفقاعات سودا */
 .drome-chat-main-card {
     width: 100%;
     max-width: 900px; 
@@ -166,7 +165,6 @@ body.drome-page {
 
 .user-chat-row { justify-content: flex-end; }
 
-/* الستايل لللابتوب */
 .user-bubble-content {
     background: var(--dark-bg, #010a09); 
     border: 1px solid rgba(241, 227, 200, 0.08);
@@ -202,7 +200,6 @@ body.drome-page {
 
 .drome-avatar img { width: 20px; border-radius: 50%; }
 
-/* الستايل لللابتوب */
 .drome-bubble-content {
     background: rgba(255, 255, 255, 0.04); 
     border: 1px solid rgba(241, 227, 200, 0.08);
@@ -224,7 +221,6 @@ body.drome-page {
     width: 100%;
 }
 
-/* الستايل لللابتوب */
 .drome-input-box {
     width: 100%;
     max-width: 750px; 
@@ -341,7 +337,6 @@ body.drome-page {
 
 .css-dropdown summary::-webkit-details-marker { display: none; }
 
-/* الستايل لللابتوب */
 .dropdown-selected {
     display: flex;
     justify-content: space-between;
@@ -425,18 +420,17 @@ body.drome-page {
 }
 
 /* ==========================================
-   📱 Mobile Responsiveness (الحل السحري للألوان هنا)
+   📱 Mobile Responsiveness
 ========================================== */
 @media (max-width: 768px) {
     .drome-header-section { margin-bottom: 12px; margin-top: 10px; }
     .drome-main-title { font-size: 1.8rem; margin-bottom: 4px; letter-spacing: 1px; }
     .drome-subtitle { font-size: 0.72rem; white-space: normal; padding: 0 5px; }
     
-    /* 🌟 الكارت شفاف عشان الصفحة تبقى سودة 🌟 */
+    /* 🌟 شيلنا الـ border والـ border-top نهائياً للموبايل 🌟 */
     .drome-chat-main-card {
         background: transparent; 
-        border: none;
-        border-top: 1px solid rgba(241, 227, 200, 0.05); 
+        border: none; /* شيلنا البوردر والخط الفاصل نهائياً */
         height: auto; 
         flex-grow: 1; 
         box-shadow: none;
@@ -448,17 +442,14 @@ body.drome-page {
         justify-content: flex-start; 
     }
 
-    /* 🌟 عكس الألوان: رسالة اليوزر رمادي صريح 🌟 */
     .user-bubble-content {
         background: var(--maincolor, #161616); 
     }
 
-    /* 🌟 عكس الألوان: رسالة الكمبيوتر رمادي شفاف 🌟 */
     .drome-bubble-content {
         background: rgba(255, 255, 255, 0.06); 
     }
     
-    /* 🌟 عشان الـ Scrollbar جوه الشات يبقى متناسق مع الشاشة السودة 🌟 */
     .chat-messages-container::-webkit-scrollbar-thumb {
         border: 4px solid var(--dark-bg, #010a09); 
     }
@@ -470,19 +461,17 @@ body.drome-page {
         padding: 10px 12px 12px; 
     }
     
-    /* 🌟 عكس الألوان: صندوق الإدخال رجع رمادي 🌟 */
     .drome-input-box { 
         max-width: 100%; 
         flex-wrap: nowrap; 
         padding: 6px 6px 6px 8px; 
         gap: 6px; 
         border-radius: 24px;
-        background: var(--maincolor, #161616); /* صندوق رمادي */
+        background: var(--maincolor, #161616); 
     }
 
-    /* 🌟 لون زرار الفلتر جوه الصندوق الرمادي 🌟 */
     .dropdown-selected {
-        background: rgba(255, 255, 255, 0.04); /* لون خفيف يفرقه عن الصندوق */
+        background: rgba(255, 255, 255, 0.04); 
         height: 32px; 
         padding: 0 12px; 
         font-size: 0.78rem;
