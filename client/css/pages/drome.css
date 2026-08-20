@@ -420,26 +420,42 @@ body.drome-page {
 }
 
 /* ==========================================
-   📱 Mobile Responsiveness
+   📱 Mobile Responsiveness (التعديل الجذري والنهائي)
 ========================================== */
 @media (max-width: 768px) {
+    /* السماح للصفحة الأساسية بعمل Scroll طبيعي */
+    html, body.drome-page {
+        height: auto;
+        min-height: 100vh;
+    }
+
     .drome-header-section { margin-bottom: 12px; margin-top: 10px; }
     .drome-main-title { font-size: 1.8rem; margin-bottom: 4px; letter-spacing: 1px; }
     .drome-subtitle { font-size: 0.72rem; white-space: normal; padding: 0 5px; }
     
-    /* 🌟 شيلنا الـ border والـ border-top نهائياً للموبايل 🌟 */
+    /* 🌟 التعديل هنا: لغينا أي حاجة تحبس الشات، الكارت بقى مفتوح للنهاية 🌟 */
+    .drome-chat-area { 
+        height: auto;
+        min-height: calc(100vh - 70px); /* يطول براحته */
+        padding: 10px 0 0 0; 
+        justify-content: flex-start; 
+    }
+
     .drome-chat-main-card {
         background: transparent; 
-        border: none; /* شيلنا البوردر والخط الفاصل نهائياً */
-        height: auto; 
+        border: none; 
+        height: auto; /* يطول زي ما هو عايز */
+        min-height: calc(100vh - 130px); 
         flex-grow: 1; 
         box-shadow: none;
         border-radius: 0;
     }
-    
-    .drome-chat-area { 
-        padding: 10px 0 0 0; 
-        justify-content: flex-start; 
+
+    /* 🌟 التعديل هنا: منعنا السكرول الداخلي نهائياً، الشات بقى بيطول في الصفحة نفسها 🌟 */
+    .chat-messages-container {
+        overflow: visible; /* مفيش سكرول داخلي */
+        height: auto; /* يطول مع الرسايل */
+        padding-bottom: 20px;
     }
 
     .user-bubble-content {
@@ -450,15 +466,14 @@ body.drome-page {
         background: rgba(255, 255, 255, 0.06); 
     }
     
-    .chat-messages-container::-webkit-scrollbar-thumb {
-        border: 4px solid var(--dark-bg, #010a09); 
-    }
-    .chat-messages-container::-webkit-scrollbar-thumb:hover { 
-        border: 4px solid var(--dark-bg, #010a09);
-    }
-    
+    /* 🌟 التعديل السحري للإدخال: بقى لاصق (Sticky) تحت والرسائل بتطول من وراه 🌟 */
     .drome-input-wrapper {
-        padding: 10px 12px 12px; 
+        position: sticky;
+        bottom: 0;
+        background: var(--dark-bg, #010a09); /* خلفية سودة عشان تغطي الشات وهو بيسكرول */
+        z-index: 100;
+        padding: 10px 12px 16px; 
+        border-top: 1px solid rgba(241, 227, 200, 0.05); /* فاصل خفيف من فوق */
     }
     
     .drome-input-box { 
@@ -492,10 +507,12 @@ body.drome-page {
         gap: 6px;
     }
 
+    /* 🌟 التعديل العظيم: الـ Textarea هتطول بلا نهاية لأن شيلنا الـ max-height 🌟 */
     .drome-input-box textarea {
         font-size: 0.85rem;
         padding: 6px 4px;
         min-width: 0; 
+        max-height: none; /* تكبر بلا حدود وكل الكلام يفضل باين */
     }
 
     .dropdown-list {
