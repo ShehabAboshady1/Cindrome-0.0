@@ -43,29 +43,31 @@ html, body.drome-page {
     flex-direction: column;
     scroll-behavior: smooth;
     
-    /* 🌟 التعديل السحري: ده بيمنع جوجل كروم إنه يعمل ريفريش للصفحة بالكامل من فوق 🌟 */
+    /* 🌟 منع ريفريش جوجل كروم المزعج 🌟 */
     overscroll-behavior-y: contain; 
     
     scrollbar-width: thin; 
-    scrollbar-color: rgba(241, 227, 200, 0.15) transparent; 
+    scrollbar-color: var(--accent-teal) transparent; 
 }
 
 .chat-messages-container::-webkit-scrollbar { 
-    width: 8px; 
+    width: 10px; 
 }
 
 .chat-messages-container::-webkit-scrollbar-track { 
     background: transparent; 
-    margin: 20px 0; 
+    margin: 40px 0; 
 }
 
 .chat-messages-container::-webkit-scrollbar-thumb {
-    background-color: rgba(241, 227, 200, 0.15); 
-    border-radius: 10px; 
+    background-color: var(--accent-teal); 
+    border-radius: 10px;
+    border: 2px solid var(--dark-bg); 
+    background-clip: padding-box;
 }
 
 .chat-messages-container::-webkit-scrollbar-thumb:hover { 
-    background-color: var(--accent-teal); 
+    background-color: #0be3e3; 
 }
 
 .chat-messages-inner {
@@ -231,7 +233,8 @@ html, body.drome-page {
     width: 100%;
     max-width: 800px; 
     display: flex;
-    align-items: flex-end; 
+    /* 🌟 رجعت align-items لـ center عشان يتسنتروا بالمللي 🌟 */
+    align-items: center; 
     gap: 8px; 
     background: var(--maincolor, #161616); 
     border: 1px solid rgba(241, 227, 200, 0.15);
@@ -251,7 +254,8 @@ html, body.drome-page {
     font-size: 0.95rem; 
     outline: none;
     font-family: inherit;
-    padding: 8px; 
+    /* تظبيط البادينج عشان يكون متسنتر في النص بالظبط مع الأيقونات */
+    padding: 6px 8px; 
     min-width: 0; 
     resize: none; 
     overflow-y: auto; 
@@ -463,6 +467,8 @@ html, body.drome-page {
         gap: 6px; 
         border-radius: 24px;
         background: var(--maincolor, #161616); 
+        /* 🌟 تأكيد السنترة في الموبايل كمان 🌟 */
+        align-items: center; 
     }
 
     .dropdown-selected {
@@ -479,3 +485,23 @@ html, body.drome-page {
         font-size: 1rem;
         margin: 0;
     }
+    
+    .dropdowns-group { 
+        width: auto; 
+        order: 0; 
+        margin: 0;
+        gap: 6px;
+    }
+
+    .drome-input-box textarea {
+        font-size: 0.85rem;
+        padding: 6px 4px;
+        min-width: 0; 
+        max-height: 120px; 
+    }
+
+    .dropdown-list {
+        min-width: 120px;
+        bottom: calc(100% + 8px);
+    }
+}
