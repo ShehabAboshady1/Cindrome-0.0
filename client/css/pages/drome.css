@@ -1,118 +1,84 @@
 /* ==========================================================================
-   CINDROME - DROME AI CHATBOT STYLES (INVERTED COLORS & MINIMALIST UI)
+   CINDROME - DROME AI CHATBOT STYLES (GEMINI / NATIVE APP UX)
 ========================================================================== */
 
-body.drome-page {
+/* 🌟 منع الهزة نهائياً: تثبيت حجم الصفحة الأساسية 🌟 */
+html, body.drome-page {
     background-color: var(--dark-bg, #010a09); 
     color: var(--text-cream, #f1e3c8); 
+    height: 100dvh; /* ارتفاع الشاشة بالظبط بدون زيادة */
+    overflow: hidden; /* يمنع السكرول الخارجي المزعج والهزة */
+    margin: 0;
 }
 
 .drome-wrapper {
     display: flex;
     width: 100%;
     justify-content: center; 
+    height: calc(100dvh - 70px); /* المساحة بعد النافبار */
 }
 
 /* ==================================================
-   1. CHAT AREA & HEADER SECTION
+   1. CHAT AREA (Edge to Edge)
 ================================================== */
 .drome-chat-area {
-    height: calc(100vh - 70px); 
     display: flex;
     flex-direction: column;
     align-items: center;
     background: transparent; 
-    padding: 20px;
     width: 100%;
     max-width: 100%;
-}
-
-.drome-header-section {
-    text-align: center;
-    margin-bottom: 20px; 
-    flex-shrink: 0; 
-}
-
-.drome-main-title {
-    font-size: 2.8rem;
-    font-weight: 900;
-    color: var(--text-cream);
-    letter-spacing: 2px;
-    margin: 0 0 8px 0;
-    text-transform: uppercase;
-}
-
-.drome-subtitle {
-    font-size: 0.88rem; 
-    color: rgba(241, 227, 200, 0.7); 
-    margin: 0;
-    font-weight: 400;
-    letter-spacing: 0.3px;
-    white-space: normal; 
-    line-height: 1.4;
-    padding: 0 10px;
-}
-
-.drome-chat-main-card {
-    width: 100%;
-    max-width: 900px; 
-    flex-grow: 1; 
-    min-height: 0; 
-    background: var(--maincolor, #161616); 
-    border: 1px solid var(--accent-teal, #099e9e); 
-    border-radius: 24px; 
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(9, 158, 158, 0.15); 
-    display: flex;
-    flex-direction: column;
+    height: 100%;
+    position: relative;
 }
 
 /* ==================================================
    2. CHAT SCROLL & MESSAGES
 ================================================== */
+/* 🌟 السكرول بيحصل جوه الكونتينر ده بس، زي الواتس آب 🌟 */
 .chat-messages-container {
     flex-grow: 1;
-    overflow-y: auto;
     width: 100%;
-    padding: 30px 10px 20px 20px; 
+    padding: 30px 20px 0; 
+    overflow-y: auto; /* السكرول الناعم الداخلي */
+    display: flex;
+    flex-direction: column;
     scroll-behavior: smooth;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(9, 158, 158, 0.5) transparent;
 }
 
 .chat-messages-container::-webkit-scrollbar { width: 14px; }
-.chat-messages-container::-webkit-scrollbar-track { background: transparent; margin: 40px 0; }
+.chat-messages-container::-webkit-scrollbar-track { background: transparent; }
 .chat-messages-container::-webkit-scrollbar-thumb {
-    background: rgba(9, 158, 158, 0.5);
+    background: rgba(9, 158, 158, 0.3);
     border-radius: 10px;
-    border: 4px solid var(--maincolor, #161616); 
+    border: 4px solid var(--dark-bg); 
     background-clip: padding-box;
 }
 .chat-messages-container::-webkit-scrollbar-thumb:hover { 
-    background: var(--accent-teal); 
-    border: 4px solid var(--maincolor, #161616);
-    background-clip: padding-box;
+    background: rgba(9, 158, 158, 0.6); 
+    border: 4px solid var(--dark-bg);
 }
 
 .chat-messages-inner {
     width: 100%;
-    max-width: 750px; 
+    max-width: 800px; /* عرض مثالي للقراءة */
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    min-height: 100%; 
+    flex-grow: 1; 
 }
 
 /* ==================================================
    3. EMPTY STATE
 ================================================== */
 .drome-empty-state {
-    align-self: center; 
-    text-align: center;
     margin: auto 0; 
-    padding: 20px 0;
+    text-align: center;
+    padding: 40px 0;
     max-width: 650px;
     width: 100%;
+    align-self: center;
 }
 
 .drome-large-logo {
@@ -154,28 +120,29 @@ body.drome-page {
 }
 
 /* ==================================================
-   4. CHAT BUBBLES
+   4. CHAT BUBBLES (Gemini Style)
 ================================================== */
 .chat-bubble {
     display: flex;
-    gap: 12px; 
-    margin-bottom: 20px; 
+    gap: 16px; 
+    margin-bottom: 30px; 
     width: 100%;
 }
 
+/* --- رسالة اليوزر (كارت زي ما هو) --- */
 .user-chat-row { justify-content: flex-end; }
 
 .user-bubble-content {
-    background: var(--dark-bg, #010a09); 
+    background: var(--maincolor, #161616); /* كارت رمادي غامق */
     border: 1px solid rgba(241, 227, 200, 0.08);
     border-radius: 20px 20px 4px 20px; 
     padding: 12px 16px;
     max-width: 85%;
 }
 
-.user-bubble-content p, .drome-bubble-content p {
+.user-bubble-content p {
     margin: 0;
-    font-size: 0.85rem; 
+    font-size: 0.95rem; 
     line-height: 1.6;
     color: var(--text-cream);
     word-wrap: break-word;     
@@ -184,7 +151,11 @@ body.drome-page {
     white-space: pre-wrap;     
 }
 
-.drome-chat-row { justify-content: flex-start; align-items: flex-end; }
+/* --- رسالة الكمبيوتر (نص عادي بدون خلفية زي Gemini) --- */
+.drome-chat-row { 
+    justify-content: flex-start; 
+    align-items: flex-start; /* 🌟 اللوجو يتساوى مع بداية الكلام من فوق 🌟 */
+}
 
 .drome-avatar {
     width: 32px; 
@@ -196,44 +167,56 @@ body.drome-page {
     justify-content: center;
     flex-shrink: 0;
     border: 1px solid rgba(9, 158, 158, 0.3);
+    margin-top: 2px; /* تظبيطة للمحاذاة مع النص */
 }
 
 .drome-avatar img { width: 20px; border-radius: 50%; }
 
+/* 🌟 التعديل السحري: لغينا الكارت والخلفية تماماً 🌟 */
 .drome-bubble-content {
-    background: rgba(255, 255, 255, 0.04); 
-    border: 1px solid rgba(241, 227, 200, 0.08);
-    border-radius: 20px 20px 20px 4px; 
-    padding: 12px 16px;
-    max-width: 85%;
+    background: transparent; 
+    border: none;
+    border-radius: 0; 
+    padding: 0;
+    max-width: 100%; /* ياخد العرض كله براحته */
+    width: calc(100% - 48px); /* العرض ناقص مساحة اللوجو */
+}
+
+.drome-bubble-content p {
+    margin: 0;
+    font-size: 0.95rem; 
+    line-height: 1.8; /* 🌟 تكبير المسافة بين السطور عشان القراءة تبقى مريحة 🌟 */
+    color: var(--text-cream);
+    word-wrap: break-word;     
+    overflow-wrap: break-word; 
+    word-break: break-word;     
+    white-space: pre-wrap;     
 }
 
 /* ==================================================
-   5. INPUT BOX & TEXTAREA CONTROLS 
+   5. STICKY INPUT BOX & TEXTAREA CONTROLS 
 ================================================== */
 .drome-input-wrapper {
-    padding: 12px 20px 16px; 
+    width: 100%;
+    background: var(--dark-bg, #010a09); 
+    padding: 10px 20px 25px; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: transparent; 
-    position: relative;
-    width: 100%;
+    flex-shrink: 0; /* ميصغرش نهائي */
 }
 
 .drome-input-box {
     width: 100%;
-    max-width: 750px; 
+    max-width: 800px; 
     display: flex;
     align-items: flex-end; 
     gap: 8px; 
-    background: var(--dark-bg, #010a09); 
+    background: var(--maincolor, #161616); 
     border: 1px solid rgba(241, 227, 200, 0.15);
     border-radius: 24px; 
     padding: 8px 8px 8px 12px; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     transition: border-color 0.2s ease;
-    overflow: visible; 
 }
 
 .drome-input-box:focus-within,
@@ -244,14 +227,14 @@ body.drome-page {
     background: transparent;
     border: none;
     color: var(--text-cream);
-    font-size: 0.85rem; 
+    font-size: 0.95rem; 
     outline: none;
     font-family: inherit;
-    padding: 8px 8px; 
+    padding: 8px; 
     min-width: 0; 
     resize: none; 
     overflow-y: auto; 
-    max-height: 150px; 
+    max-height: 200px; 
     line-height: 1.5;
     box-sizing: border-box;
     scrollbar-width: none; 
@@ -294,8 +277,8 @@ body.drome-page {
     background: var(--accent-teal); 
     color: var(--dark-bg);
     border: none;
-    width: 34px; 
-    height: 34px;
+    width: 36px; 
+    height: 36px;
     border-radius: 50%; 
     display: flex;
     align-items: center;
@@ -311,10 +294,9 @@ body.drome-page {
 .drome-disclaimer {
     font-size: 0.7rem; 
     color: rgba(241, 227, 200, 0.4);
-    margin: 8px 0 0 0;
+    margin: 12px 0 0 0;
     text-align: center; 
     padding: 0 10px;
-    line-height: 1.3;
 }
 
 /* ==================================================
@@ -341,13 +323,13 @@ body.drome-page {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--dark-bg);
+    background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(241, 227, 200, 0.12);
     border-radius: 50px;
-    height: 34px;
+    height: 36px;
     padding: 0 14px; 
     color: var(--text-cream);
-    font-size: 0.8rem; 
+    font-size: 0.85rem; 
     font-weight: 600;
     cursor: pointer;
     list-style: none;
@@ -390,7 +372,7 @@ body.drome-page {
 .dropdown-item {
     padding: 8px 12px;
     color: rgba(241, 227, 200, 0.75);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 600;
     border-radius: 8px; 
     cursor: pointer;
@@ -406,9 +388,9 @@ body.drome-page {
 /* ==================================================
    7. TYPING DOTS ANIMATION
 ================================================== */
-.typing-dots { display: flex; align-items: center; gap: 4px; height: 18px; }
+.typing-dots { display: flex; align-items: center; gap: 4px; height: 20px; }
 .dot {
-    width: 4.5px; height: 4.5px; background-color: rgba(241, 227, 200, 0.6);
+    width: 5px; height: 5px; background-color: rgba(241, 227, 200, 0.6);
     border-radius: 50%; animation: typing 1.4s infinite ease-in-out;
 }
 .dot:nth-child(1) { animation-delay: 0s; }
@@ -420,60 +402,19 @@ body.drome-page {
 }
 
 /* ==========================================
-   📱 Mobile Responsiveness (التعديل الجذري والنهائي)
+   📱 Mobile Responsiveness 
 ========================================== */
 @media (max-width: 768px) {
-    /* السماح للصفحة الأساسية بعمل Scroll طبيعي */
-    html, body.drome-page {
-        height: auto;
-        min-height: 100vh;
-    }
-
-    .drome-header-section { margin-bottom: 12px; margin-top: 10px; }
-    .drome-main-title { font-size: 1.8rem; margin-bottom: 4px; letter-spacing: 1px; }
-    .drome-subtitle { font-size: 0.72rem; white-space: normal; padding: 0 5px; }
-    
-    /* 🌟 التعديل هنا: لغينا أي حاجة تحبس الشات، الكارت بقى مفتوح للنهاية 🌟 */
     .drome-chat-area { 
-        height: auto;
-        min-height: calc(100vh - 70px); /* يطول براحته */
         padding: 10px 0 0 0; 
-        justify-content: flex-start; 
     }
 
-    .drome-chat-main-card {
-        background: transparent; 
-        border: none; 
-        height: auto; /* يطول زي ما هو عايز */
-        min-height: calc(100vh - 130px); 
-        flex-grow: 1; 
-        box-shadow: none;
-        border-radius: 0;
-    }
-
-    /* 🌟 التعديل هنا: منعنا السكرول الداخلي نهائياً، الشات بقى بيطول في الصفحة نفسها 🌟 */
     .chat-messages-container {
-        overflow: visible; /* مفيش سكرول داخلي */
-        height: auto; /* يطول مع الرسايل */
-        padding-bottom: 20px;
+        padding: 20px 15px 0;
     }
 
-    .user-bubble-content {
-        background: var(--maincolor, #161616); 
-    }
-
-    .drome-bubble-content {
-        background: rgba(255, 255, 255, 0.06); 
-    }
-    
-    /* 🌟 التعديل السحري للإدخال: بقى لاصق (Sticky) تحت والرسائل بتطول من وراه 🌟 */
     .drome-input-wrapper {
-        position: sticky;
-        bottom: 0;
-        background: var(--dark-bg, #010a09); /* خلفية سودة عشان تغطي الشات وهو بيسكرول */
-        z-index: 100;
         padding: 10px 12px 16px; 
-        border-top: 1px solid rgba(241, 227, 200, 0.05); /* فاصل خفيف من فوق */
     }
     
     .drome-input-box { 
@@ -507,12 +448,11 @@ body.drome-page {
         gap: 6px;
     }
 
-    /* 🌟 التعديل العظيم: الـ Textarea هتطول بلا نهاية لأن شيلنا الـ max-height 🌟 */
     .drome-input-box textarea {
         font-size: 0.85rem;
         padding: 6px 4px;
         min-width: 0; 
-        max-height: none; /* تكبر بلا حدود وكل الكلام يفضل باين */
+        max-height: 120px; 
     }
 
     .dropdown-list {
