@@ -43,25 +43,29 @@ html, body.drome-page {
     flex-direction: column;
     scroll-behavior: smooth;
     
+    /* 🌟 التعديل السحري: ده بيمنع جوجل كروم إنه يعمل ريفريش للصفحة بالكامل من فوق 🌟 */
+    overscroll-behavior-y: contain; 
+    
     scrollbar-width: thin; 
-    scrollbar-color: var(--accent-teal) transparent; 
+    scrollbar-color: rgba(241, 227, 200, 0.15) transparent; 
 }
 
 .chat-messages-container::-webkit-scrollbar { 
-    width: 10px; 
+    width: 8px; 
 }
+
 .chat-messages-container::-webkit-scrollbar-track { 
     background: transparent; 
-    margin: 40px 0; 
+    margin: 20px 0; 
 }
+
 .chat-messages-container::-webkit-scrollbar-thumb {
-    background-color: var(--accent-teal); 
-    border-radius: 10px;
-    border: 2px solid var(--dark-bg); 
-    background-clip: padding-box;
+    background-color: rgba(241, 227, 200, 0.15); 
+    border-radius: 10px; 
 }
+
 .chat-messages-container::-webkit-scrollbar-thumb:hover { 
-    background-color: #0be3e3; 
+    background-color: var(--accent-teal); 
 }
 
 .chat-messages-inner {
@@ -72,6 +76,21 @@ html, body.drome-page {
     flex-direction: column;
     align-items: flex-start;
     flex-grow: 1; 
+}
+
+/* 🌟 ستايل مؤشر السحب للأسفل (Pull to refresh) 🌟 */
+.pull-to-refresh-indicator {
+    width: 100%;
+    height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--accent-teal);
+    font-weight: 600;
+    overflow: hidden;
+    transition: height 0.2s ease;
 }
 
 /* ==================================================
@@ -144,7 +163,6 @@ html, body.drome-page {
     max-width: 85%;
 }
 
-/* حجم الخط للابتوب */
 .user-bubble-content p {
     margin: 0;
     font-size: 0.95rem; 
@@ -185,7 +203,6 @@ html, body.drome-page {
     width: calc(100% - 48px); 
 }
 
-/* حجم الخط للابتوب */
 .drome-bubble-content p {
     margin: 0;
     font-size: 0.95rem; 
@@ -425,13 +442,11 @@ html, body.drome-page {
         padding: 20px 15px 0;
     }
 
-    /* 🌟 تصغير خط رسالة اليوزر في الموبايل 🌟 */
     .user-bubble-content p {
         font-size: 0.82rem; 
         line-height: 1.5;
     }
 
-    /* 🌟 تصغير خط رسالة الكمبيوتر في الموبايل 🌟 */
     .drome-bubble-content p {
         font-size: 0.82rem; 
         line-height: 1.6;
@@ -464,23 +479,3 @@ html, body.drome-page {
         font-size: 1rem;
         margin: 0;
     }
-    
-    .dropdowns-group { 
-        width: auto; 
-        order: 0; 
-        margin: 0;
-        gap: 6px;
-    }
-
-    .drome-input-box textarea {
-        font-size: 0.85rem;
-        padding: 6px 4px;
-        min-width: 0; 
-        max-height: 120px; 
-    }
-
-    .dropdown-list {
-        min-width: 120px;
-        bottom: calc(100% + 8px);
-    }
-}
