@@ -163,6 +163,7 @@
 
                 const chatContainer = document.getElementById('chatContainer');
                 chatContainer.scrollTop = chatContainer.scrollHeight; 
+                window.scrollTo(0, document.body.scrollHeight);
 
                 finishGeneration();
             } else {
@@ -173,6 +174,9 @@
         function sendMessage() {
             const input = document.getElementById('dromeInput');
             if (input.value.trim() === '' || isGenerating) return;
+
+            // 🌟 السطر السحري: بيجبر الكيبورد إنه يقفل فوراً في الموبايل أول ما تدوس إرسال 🌟
+            input.blur();
 
             isGenerating = true;
             updateInputUI();
@@ -237,7 +241,9 @@
                 sendBtnIcon.className = 'fa-solid fa-arrow-up'; 
                 inputField.disabled = false; 
                 inputField.placeholder = "Type a message...";
-                inputField.focus();
+                
+                // 🚫 السطر ده كان هو اللي بيفتح الكيبورد لوحده في الأندرويد، اتلغى خلاص! 🚫
+                // inputField.focus(); 
             }
         }
 
@@ -268,6 +274,7 @@
             if (emptyState) emptyState.style.display = 'block';
             const chatContainer = document.getElementById('chatContainer');
             chatContainer.scrollTop = 0;
+            window.scrollTo(0, 0);
         }
 
         function selectFocus(text) {
