@@ -1,0 +1,884 @@
+/* ==========================================================================
+   DETAILS PAGE STYLES (Cindrome)
+   ========================================================================== */
+
+/* --- General & Page Layout --- */
+body,
+.details-page {
+  background-color: var(--dark-bg, #080f0e);
+}
+body {
+  margin: 0;
+}
+.details-page {
+  color: var(--text-cream, #e2e8f0);
+  min-height: calc(100vh - 200px);
+}
+
+/* --- Hero Section (بدون border سفلي) --- */
+.details-hero {
+  position: relative;
+  padding: 40px 16px;
+  background: center/cover no-repeat;
+}
+
+.hero-content-left {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* --- Rating Star / Score Styling --- */
+.rating-star {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-cream, #e2e8f0);
+  font-weight: 600;
+}
+
+.rating-star::before {
+  content: "⭐";
+  font-size: 0.85rem;
+}
+
+.rating-star i {
+  color: #718096;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.82rem;
+  margin-left: 2px;
+}
+
+.poster-wrapper {
+  flex-shrink: 0;
+}
+
+.details-poster {
+  width: 150px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: block;
+}
+
+.media-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.media-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.release-year {
+  font-size: 1.2rem;
+  color: #718096;
+  font-weight: 400;
+}
+
+.meta-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #a0aec0;
+}
+
+.meta-dot {
+  color: #4a5568;
+}
+
+.badge-tag {
+  background: rgba(0, 180, 216, 0.15);
+  color: var(--accent-teal, #00b4d8);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* --- Action Buttons --- */
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px; /* 🌟 وحدنا المسافة بين الأيقونة والكلمة لكل الزراير 🌟 */
+  line-height: 1;
+}
+
+.btn-primary {
+  background-color: var(--accent-teal, #00b4d8);
+  color: #010a09;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 180, 216, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+/* 🌟 تظبيط زرار الـ Watchlist 🌟 */
+.watchlist-btn {
+  color: var(--text-cream);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* 🌟 المسافة الثابتة دي هتمنع التلزيق نهائياً 🌟 */
+}
+
+.watchlist-btn:hover {
+  color: var(--accent-teal);
+}
+
+.watchlist-btn i {
+  font-size: 0.9em; /* 🌟 صغرناها عشان تبقى متناسقة مع الكلمة بالظبط 🌟 */
+  transition: color 0.2s ease;
+  transform: translateY(2px); /* لغينا أي رفع أو تكبير كان بيبوظ الشكل */
+}
+
+/* 🌟 لما اليوزر يدوس عليه (حالة الـ Added) 🌟 */
+.watchlist-btn.added {
+  color: var(--accent-teal);
+  background: rgba(9, 158, 158, 0.15);
+  border-color: rgba(9, 158, 158, 0.3);
+}
+.btn-icon-only {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-cream, #e2e8f0);
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.btn-icon-only:hover {
+  background: rgba(0, 180, 216, 0.15);
+  color: var(--accent-teal, #00b4d8);
+  border-color: rgba(0, 180, 216, 0.3);
+}
+
+.btn-icon-only.liked,
+.btn-icon-only.active {
+  color: #e53e3e;
+  background: rgba(229, 62, 62, 0.15);
+  border-color: rgba(229, 62, 62, 0.3);
+}
+
+/* --- Continuous Vertical Content Layout --- */
+.details-content {
+  padding: 32px 16px 60px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.detail-section {
+  width: 100%;
+}
+
+/* ==========================================================================
+   🌟 DETAILS PANELS (CONTAINERS) 🌟
+========================================================================== */
+.details-panel {
+  background: rgba(22, 22, 22, 0.4);
+  border: 1px solid rgba(241, 227, 200, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* 🌟 تظبيط البادنج لقسم If You Liked Sherlock لعدم تمدد الارتفاع 🌟 */
+#sec-more-like-this.details-panel {
+  padding: 24px 24px 16px 24px;
+}
+#sec-more-like-this .carousel-section {
+  padding: 0;
+  margin: 0;
+}
+#sec-more-like-this .carousel-header {
+  margin-top: 0;
+}
+
+/* عناوين الأقسام البسيطة */
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent-teal, #00b4d8);
+  margin: 0 0 16px 0;
+  letter-spacing: 0.5px;
+}
+
+/* --- SECTION 1: Overview Styles --- */
+.short-summary {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #cbd5e0;
+  max-width: 680px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.mini-details-grid {
+  display: flex;
+  gap: 32px;
+}
+
+.mini-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  color: #718096;
+  text-transform: uppercase;
+}
+
+.detail-value {
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+/* --- SECTION 2: Seasons & Episodes Styles --- */
+.seasons-sub-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.season-btn {
+  background: #0d1817;
+  border: 1px solid #1a2625;
+  color: #a0aec0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.season-btn:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.season-btn.active {
+  background: var(--accent-teal, #00b4d8);
+  color: #010a09;
+  border-color: var(--accent-teal, #00b4d8);
+  font-weight: bold;
+}
+
+.season-content {
+  display: none;
+}
+
+.season-content.active {
+  display: block;
+}
+
+.minimal-ep-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 550px;
+}
+
+.ep-row.ep-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px;
+  background: #0d1817;
+  border-radius: 6px;
+  border: 1px solid #1a2625;
+  transition: all 0.2s ease;
+}
+
+.ep-link:hover {
+  background: #11201f;
+  border-color: var(--accent-teal, #00b4d8);
+  transform: translateX(4px);
+}
+
+.ep-num {
+  color: var(--accent-teal, #00b4d8);
+  font-size: 0.82rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.ep-info-flex {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  gap: 12px;
+}
+
+.ep-title {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #e2e8f0;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ep-time {
+  color: #718096;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+  margin-left: auto;
+  opacity: 0.85;
+}
+
+/* --- SECTION 3: Cast Carousel & Buttons Styles --- */
+.section-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.section-header-flex .section-title {
+  margin: 0;
+}
+
+.reviews-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.reviews-section-heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.reviews-section-actions {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.reviews-section-header .reviews-title {
+  margin: 0;
+}
+
+.reviews-section-header .carousel-controls {
+  padding-bottom: 0;
+  flex-shrink: 0;
+}
+
+/* الأزرار الدائرية الصغيرة الأنيقة */
+.carousel-controls {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 10px;
+}
+
+.carousel-btn {
+  background: #0d1817;
+  border: 1px solid #1a2625;
+  color: var(--accent-teal, #00b4d8);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.carousel-btn:hover {
+  background: var(--accent-teal, #00b4d8);
+  color: #010a09;
+  border-color: var(--accent-teal, #00b4d8);
+  transform: translateY(-1px);
+}
+
+.carousel-btn:active {
+  transform: scale(0.95);
+}
+
+.cast-carousel-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* السلايدر وإخفاء الـ Scrollbar */
+.cast-carousel {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 4px 0;
+
+  /* إخفاء السكرول بار نهائياً لكل المتصفحات */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.cast-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.cast-card {
+  flex: 0 0 95px;
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cast-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  background-color: #121d1c;
+  border: 2px solid #1a2625;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.cast-card:hover .cast-img {
+  transform: scale(1.05);
+  border-color: var(--accent-teal, #00b4d8);
+}
+
+.cast-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+  width: 100%;
+}
+
+.actor-name {
+  font-size: 0.78rem;
+  color: #e2e8f0;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.character-name {
+  font-size: 0.7rem;
+  color: #718096;
+}
+
+/* ==========================================================================
+   🌟 MINIMAL REVIEW CARDS (New Unified Design) 🌟
+========================================================================== */
+.reviews-list {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.reviews-list::-webkit-scrollbar {
+  display: none;
+}
+
+.minimal-review-card {
+  flex: 0 0 calc(50% - 8px); /* 🌟 بياخد نص الشاشة بالضبط على الديسكتوب 🌟 */
+  min-width: 320px; /* ميقلش عن الحجم ده أبداً */
+  position: relative; /* 🌟 مهم عشان نحط الـ Spoiler Badge صح 🌟 */
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(241, 227, 200, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.minimal-review-card:hover {
+  border-color: rgba(0, 180, 216, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.minimal-card-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.header-left-stack {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  padding-right: 80px; /* 🌟 مساحة عشان الـ Spoiler ميغطيش على الكلام 🌟 */
+}
+
+/* 🌟 تظبيط الـ Spoiler Badge دايماً أعلى اليمين في نفس صف العنوان 🌟 */
+.header-right-stack {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  flex-shrink: 0;
+}
+
+.review-micro-poster {
+  width: 48px;
+  height: 72px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.review-poster-link:hover .review-micro-poster {
+  transform: scale(1.05);
+}
+
+.review-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.review-media-title {
+  color: var(--accent-teal, #00b4d8);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.review-media-title:hover {
+  filter: brightness(1.2);
+}
+
+.review-rating-line .stars {
+  color: var(--text-cream, #e2e8f0);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+}
+
+.star-empty {
+  opacity: 0.2;
+}
+
+.review-author-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.review-micro-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(241, 227, 200, 0.1);
+}
+
+.review-author-username {
+  color: #718096;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.review-author-username:hover {
+  color: var(--text-cream, #e2e8f0);
+}
+
+.spoiler-badge {
+  background: rgba(0, 180, 216, 0.1);
+  color: var(--accent-teal, #00b4d8);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.minimal-card-body .review-body {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e0;
+}
+
+.minimal-card-body .review-body.blurred {
+  filter: blur(6px);
+  cursor: pointer;
+  user-select: none;
+  transition: filter 0.3s;
+}
+
+.minimal-card-body .review-body.blurred:hover {
+  filter: blur(4px);
+}
+
+.minimal-card-body .review-body.revealed {
+  filter: blur(0);
+  cursor: default;
+}
+
+.minimal-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  padding-top: 0;
+}
+
+.minimal-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.minimal-btn {
+  background: transparent;
+  border: none;
+  color: #718096;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.minimal-btn:hover {
+  color: var(--text-cream, #e2e8f0);
+}
+
+.minimal-btn i {
+  font-size: 1rem;
+}
+
+.minimal-read-link {
+  color: var(--accent-teal, #00b4d8);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: filter 0.2s;
+}
+
+.minimal-read-link:hover {
+  filter: brightness(1.2);
+}
+
+/* ==========================================================================
+   MOBILE ONLY FIXES (Media Query for max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* 1. منع الـ Horizontal Overflow */
+  html,
+  body,
+  main,
+  .details-page {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .details-page .nav-container {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin: 0 auto;
+  }
+
+  /* 2. الهيرو رأسي للموبايل */
+  .hero-content-left {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .media-info-left {
+    align-items: center;
+    width: 100%;
+  }
+
+  .details-poster {
+    width: 120px;
+  }
+
+  .meta-inline {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    line-height: 1.5;
+  }
+
+  .meta-dot {
+    display: none;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .btn-primary.log-btn {
+    flex: 1 1 100%;
+    padding: 12px;
+  }
+
+  .btn-secondary {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .btn-icon-only {
+    flex: 0 0 auto;
+  }
+
+  /* 3. ضبط المسافات للمحتوى الرأسي + تظبيط البانلز في الموبايل */
+  .details-content {
+    padding: 24px 16px 40px 16px;
+    gap: 32px;
+  }
+
+  .details-panel {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* 4. سكرول المواسم للموبايل */
+  .seasons-sub-nav {
+    display: flex;
+    justify-content: flex-start;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 6px;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .seasons-sub-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .season-btn {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+  }
+
+  /* 5. ضبط الحلقات */
+  .minimal-ep-list {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .ep-row.ep-link {
+    padding: 8px 12px;
+  }
+
+  .ep-title {
+    font-size: 0.82rem;
+  }
+
+  .ep-time {
+    font-size: 0.75rem;
+  }
+
+  /* 6. Cast Grid */
+  .cast-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    gap: 12px;
+  }
+
+  .cast-img {
+    width: 70px;
+    height: 70px;
+  }
+
+  /* 7. 🌟 تظبيط كارت المراجعة الجديد للموبايل 🌟 */
+  .minimal-review-card {
+    flex: 0 0 85%; /* 🌟 بياخد 85% من الشاشة فبيظهر طرف الكارت اللي بعده 🌟 */
+  }
+}

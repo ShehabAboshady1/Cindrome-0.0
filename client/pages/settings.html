@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome - Settings</title>
+    <link rel="icon" type="image/png" href="../assets/logos/cindrome-logo.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        const v = Date.now();
+        document.write(`
+        <link rel="stylesheet" href="../css/main.css?v=${v}">
+        <link rel="stylesheet" href="../css/navbar.css?v=${v}">
+        <link rel="stylesheet" href="../css/pages/settings.css?v=${v}">
+        <link rel="stylesheet" href="../css/modals.css?v=${v}">
+      `);
+    </script>
+</head>
+
+<body class="settings-page logged-in">
+    <header>
+        <nav class="bar">
+            <div class="nav-container">
+
+                <a href="../../index.html" class="logo-link">
+                    <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
+                </a>
+
+                <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+                <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+                <div class="right-bar">
+                    <!-- 1. روابط الـ Navigation العادية في الأول -->
+                    <a href="../../index.html" class="nav-item">Home</a>
+                    <a href="./discover.html" class="nav-item">Discover</a>
+                    <a href="./lists.html" class="nav-item">Lists</a>
+
+                    <div class="dropdown">
+                        <input type="checkbox" id="content-toggle" class="dropdown-checkbox">
+                        <label for="content-toggle" class="nav-item dropdown-label">Content ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./movies.html">Movies</a></li>
+                            <li><a href="./series.html">TV Series</a></li>
+                            <li><a href="./anime.html">Anime</a></li>
+                        </ul>
+                    </div>
+
+                    <a href="./drome.html" class="nav-item">Drome</a>
+
+                    <!-- 2. قايمة الأكونت (للمستخدمين بس) -->
+                    <div class="dropdown user-only">
+                        <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
+                        <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./profile.html">Profile</a></li>
+                            <li><a href="./diary.html">Diary</a></li>
+                            <li><a href="./watchlist.html">Watchlist</a></li>
+                            <li><a href="./sign-in.html" style="color: #ff4757;">Log out</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- 3. زراير الأكشن في الآخر خالص (Log / Sign in) -->
+
+                    <!-- 🔴 للزوار بس (شيلنا الخط السفلي) -->
+                    <a href="./sign-in.html" class="guest-only" style="text-decoration: none;">
+                        <button class="signin-btn">Sign in</button>
+                    </a>
+
+                    <!-- 🟢 للمستخدمين بس -->
+                    <button class="log-nav-btn user-only" id="navLogBtn">
+                        <i class="fa-solid fa-plus"></i> Log
+                    </button>
+                </div>
+
+                <!-- زرار البحث رجع مكانه وكلاسه الأصلي -->
+                <button type="button" class="search-trigger-btn" aria-label="Search">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+
+            </div>
+        </nav>
+    </header>
+
+    <main class="settings-wrapper">
+        <div class="settings-header">
+            <h1 class="settings-title">Settings</h1>
+            <p class="settings-subtitle">Manage your account security, privacy, and notifications.</p>
+        </div>
+
+        <div class="settings-container">
+            <!-- Sidebar Navigation -->
+            <aside class="settings-sidebar">
+                <button class="settings-tab-btn is-active" onclick="switchSettingsTab('account', this)">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Security</span>
+                </button>
+                <button class="settings-tab-btn" onclick="switchSettingsTab('privacy', this)">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>Privacy</span>
+                </button>
+                <button class="settings-tab-btn" onclick="switchSettingsTab('notifications', this)">
+                    <i class="fa-regular fa-bell"></i>
+                    <span>Alerts</span>
+                </button>
+            </aside>
+
+            <!-- Main Content Area -->
+            <section class="settings-content">
+
+                <!-- TAB 1: ACCOUNT SECURITY -->
+                <div id="tab-account" class="settings-panel active-panel">
+                    <h2 class="panel-title">Account Security</h2>
+
+                    <h3 class="panel-subtitle">Change Email Address</h3>
+                    <div class="settings-form-row">
+                        <div class="settings-form-group">
+                            <label class="settings-label">Current Email</label>
+                            <input type="email" class="settings-input" value="cindrome.me@gmail.com" readonly>
+                        </div>
+                        <div class="settings-form-group">
+                            <label class="settings-label">New Email</label>
+                            <input type="email" class="settings-input" placeholder="Enter new email address">
+                        </div>
+                    </div>
+                    <p class="input-hint" style="margin-top: -10px; margin-bottom: 20px;">
+                        <i class="fa-solid fa-circle-info"></i> For your security, a verification link will be sent to
+                        your current email first.
+                    </p>
+                    <div class="settings-actions-left">
+                        <button class="btn-secondary-action">Change Email</button>
+                    </div>
+
+                    <hr class="settings-divider">
+
+                    <h3 class="panel-subtitle">Change Password</h3>
+                    <div class="settings-form-group">
+                        <label class="settings-label">Current Password</label>
+                        <input type="password" class="settings-input" placeholder="Enter current password">
+                    </div>
+                    <div class="settings-form-row">
+                        <div class="settings-form-group">
+                            <label class="settings-label">New Password</label>
+                            <input type="password" class="settings-input" placeholder="New password">
+                        </div>
+                        <div class="settings-form-group">
+                            <label class="settings-label">Confirm Password</label>
+                            <input type="password" class="settings-input" placeholder="Confirm new password">
+                        </div>
+                    </div>
+                    <div class="settings-actions-left">
+                        <button class="btn-save">Update Password</button>
+                    </div>
+
+                    <hr class="settings-divider">
+
+                    <h3 class="panel-subtitle">Two-Factor Authentication (2FA)</h3>
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Enable 2FA</h4>
+                            <p class="toggle-desc">Require an extra security code sent to your email or mobile device
+                                when logging in.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <hr class="settings-divider">
+
+                    <h3 class="panel-subtitle danger-text">Danger Zone</h3>
+                    <p class="input-hint" style="margin-bottom: 12px;">Once you delete your account, there is no going
+                        back. All your reviews, lists, and diary logs will be permanently removed.</p>
+                    <button class="btn-danger">Delete Account</button>
+                </div>
+
+                <!-- TAB 2: PRIVACY -->
+                <div id="tab-privacy" class="settings-panel" style="display: none;">
+                    <h2 class="panel-title">Privacy Settings</h2>
+
+                    <p class="input-hint" style="margin-bottom: 24px;">Control who can see your activity and how your
+                        content is featured on Cindrome.</p>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Private Account</h4>
+                            <p class="toggle-desc">Only approved followers can see your profile, lists, and reviews.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <!-- فكرة الـ Featuring اللي اتفقنا عليها -->
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Allow Featuring</h4>
+                            <p class="toggle-desc">Allow Cindrome to feature your highly-rated lists and reviews on the
+                                Home page.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="btn-save">Save Privacy Settings</button>
+                    </div>
+                </div>
+
+                <!-- TAB 3: NOTIFICATIONS -->
+                <div id="tab-notifications" class="settings-panel" style="display: none;">
+                    <h2 class="panel-title">Email Notifications</h2>
+
+                    <p class="input-hint" style="margin-bottom: 24px;">Control which emails Cindrome sends to your
+                        inbox.</p>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">New Followers</h4>
+                            <p class="toggle-desc">Get an email when someone follows your account.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Review Interactions</h4>
+                            <p class="toggle-desc">Get an email when someone likes or comments on your review.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Cindrome Newsletter</h4>
+                            <p class="toggle-desc">Receive weekly updates on trending movies, series, and anime.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="btn-save">Save Notification Settings</button>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+
+            <a href="../../index.html" class="logo-link">
+                <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
+            </a>
+
+
+            <div class="footer-nav">
+                <a href="about.html" class="footer-link">About Us</a>
+                <span class="footer-divider"></span>
+                <div class="footer-socials">
+
+                    <a href="mailto:cindrome.me@gmail.com" class="social-icon" aria-label="Email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </a>
+
+                    <a href="https://www.instagram.com/cindromeapp/" target="_blank" class="social-icon"
+                        aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                        </svg>
+                    </a>
+
+                    <a href="https://x.com/CindromeApp" target="_blank" class="social-icon" aria-label="X">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- ========================================================= -->
+    <!-- 🌟 PREMIUM LOG MODAL (Contextual Mode) 🌟 -->
+    <!-- ========================================================= -->
+    <div class="log-modal-overlay" id="logModal" style="display: none;">
+        <div class="log-modal-container ">
+
+            <button class="close-modal-btn" id="closeLogModalBtn" aria-label="Close log modal">&times;</button>
+            <h2 class="modal-main-title">Log Content</h2>
+
+            <div class="log-global-search">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" placeholder="Name of movie, series, or anime...">
+            </div>
+
+            <div class="log-item-header">
+                <img src="../assets/posters/poster-sherlock.webp" alt="Sherlock" class="log-item-poster"
+                    onerror="this.src='https://image.tmdb.org/t/p/w200/8bZCaPAPPil3ea2c9xSsmfsibGB.jpg'">
+
+                <div class="log-item-info">
+                    <!-- تم استخدام الكلاس الموحد هنا -->
+                    <span class="type-badge series-badge">TV SERIES</span>
+                    <h3 class="log-item-title">Sherlock</h3>
+
+                    <div class="season-episode-selectors">
+                        <details class="css-dropdown">
+                            <summary class="dropdown-selected">
+                                <span id="seasonText">Season 1</span>
+                                <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="dropdown-list">
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 1
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 2
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 3
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 4
+                                </li>
+                            </ul>
+                        </details>
+
+                        <details class="css-dropdown">
+                            <summary class="dropdown-selected">
+                                <span id="episodeText">All Episodes</span>
+                                <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="dropdown-list">
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">All
+                                    Episodes</li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">Episode 1
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">Episode 2
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">Episode 3
+                                </li>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <form class="log-form" onsubmit="return false;">
+
+                <div class="log-toolbar">
+                    <div class="star-rating-input" id="starRating">
+                        <i class="fa-regular fa-star rate-star" data-index="0"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="1"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="2"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="3"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="4"></i>
+                    </div>
+
+                    <div class="toolbar-divider"></div>
+
+                    <div class="toolbar-actions">
+                        <button type="button" class="icon-toggle-btn" id="likeToggle" title="Like">
+                            <i class="fa-solid fa-heart"></i>
+                        </button>
+                        <button type="button" class="icon-toggle-btn" id="rewatchToggle" title="Rewatch">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                        <button type="button" class="icon-toggle-btn spoiler-btn" id="spoilerToggle"
+                            title="Contains Spoilers">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="review-group">
+                    <textarea id="reviewText" class="review-textarea"
+                        placeholder="Add your thoughts (Optional)..."></textarea>
+                </div>
+
+                <div class="log-footer">
+                    <div class="date-group">
+                        <input type="date" id="watchDate" class="date-picker-input" title="Watched On">
+                    </div>
+
+                    <div class="log-actions">
+                        <button type="button" class="btn-cancel" id="cancelLogBtn">Cancel</button>
+                        <button type="submit" class="btn-save-log">Log</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- ========================================================= -->
+    <!-- 🌟 GLOBAL SEARCH MODAL (EXACT DISCOVER CLONE) 🌟 -->
+    <!-- ========================================================= -->
+    <div class="search-modal-overlay" id="searchModal" style="display: none;">
+        <div class="search-modal-container">
+
+            <button class="close-modal-btn" aria-label="Close search">&times;</button>
+
+            <section class="g-search-section" aria-label="Content Filters">
+                <form class="g-filter-bar-container" role="search" onSubmit="return false;">
+
+                    <div class="g-filter-search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            aria-hidden="true">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="filterSearchInput" placeholder="Search title..."
+                            aria-label="Search title" autofocus>
+                    </div>
+
+                    <div class="g-filter-v-divider" role="separator"></div>
+
+                    <fieldset class="g-type-selector" aria-label="Content Type">
+                        <button class="g-type-pill active" type="button">All</button>
+                        <button class="g-type-pill" type="button">Anime</button>
+                        <button class="g-type-pill" type="button">Movies</button>
+                        <button class="g-type-pill" type="button">Series</button>
+                    </fieldset>
+
+                    <div class="g-filter-v-divider" role="separator"></div>
+
+                    <div class="g-dropdowns-group">
+
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Genre</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">All Genres</li>
+                                <li class="g-dropdown-item">Action</li>
+                                <li class="g-dropdown-item">Sci-Fi</li>
+                                <li class="g-dropdown-item">Drama</li>
+                                <li class="g-dropdown-item">Mystery</li>
+                                <li class="g-dropdown-item">Psychological</li>
+                                <li class="g-dropdown-item">Fantasy</li>
+                                <li class="g-dropdown-item">Comedy</li>
+                            </ul>
+                        </details>
+
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Rating</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">All Ratings</li>
+                                <li class="g-dropdown-item">★ 9.0+</li>
+                                <li class="g-dropdown-item">★ 8.0+</li>
+                                <li class="g-dropdown-item">★ 7.0+</li>
+                            </ul>
+                        </details>
+
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Sort By</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">Most Popular</li>
+                                <li class="g-dropdown-item">Top Rated</li>
+                                <li class="g-dropdown-item">Newest Releases</li>
+                            </ul>
+                        </details>
+
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Year</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">All Years</li>
+                                <li class="g-dropdown-item">2024 - 2026</li>
+                                <li class="g-dropdown-item">2020 - 2023</li>
+                                <li class="g-dropdown-item">2010 - 2019</li>
+                                <li class="g-dropdown-item">Classics</li>
+                            </ul>
+                        </details>
+
+                    </div>
+
+                    <button class="g-reset-filter-btn" type="reset" aria-label="Reset Filters" title="Reset Filters">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                            <path d="M3 3v5h5"></path>
+                        </svg>
+                    </button>
+
+                </form>
+            </section>
+        </div>
+    </div>
+    <script>
+        function switchSettingsTab(tabId, btnElement) {
+            // إخفاء كل المحتوى
+            document.querySelectorAll('.settings-panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+
+            // إظهار المحتوى المطلوب
+            document.getElementById('tab-' + tabId).style.display = 'block';
+
+            // تبديل الكلاس النشط للزراير
+            document.querySelectorAll('.settings-tab-btn').forEach(btn => {
+                btn.classList.remove('is-active');
+            });
+            btnElement.classList.add('is-active');
+        }
+    </script>
+</body>
+
+</html>

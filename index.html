@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome</title>
+    <link rel="icon" type="image/png" href="./client/assets/logos/cindrome-logo.png">
+    <script>
+        const v = Date.now();
+        document.write(`
+        <link rel="stylesheet" href="./client/css/main.css?v=${v}">
+        <link rel="stylesheet" href="./client/css/navbar.css?v=${v}">
+        <link rel="stylesheet" href="./client/css/hero.css?v=${v}">
+        <link rel="stylesheet" href="./client/css/cards.css?v=${v}">
+        <link rel="stylesheet" href="./client/css/lists-carousel.css?v=${v}">
+        <link rel="stylesheet" href="./client/css/carousel.css?v=${v}">
+        <link rel="stylesheet" href="./client/css/list.css?v=${v}">
+        <link rel="stylesheet" href="./client/css/modals.css?v=${v}">
+      `);
+
+    </script>
+
+</head>
+
+<body class="logged-in">
+    <header>
+        <nav class="bar">
+            <div class="nav-container">
+
+                <a href="./index.html" class="logo-link">
+                    <img class="logo" src="./client/assets/logos/no background logo.png" alt="Cindrome Logo">
+                </a>
+
+                <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+                <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+                <div class="right-bar">
+                    <!-- 1. روابط الـ Navigation العادية في الأول -->
+                    <a href="./index.html" class="nav-item">Home</a>
+                    <a href="./client/pages/discover.html" class="nav-item">Discover</a>
+                    <a href="./client/pages/lists.html" class="nav-item">Lists</a>
+
+                    <div class="dropdown">
+                        <input type="checkbox" id="content-toggle" class="dropdown-checkbox">
+                        <label for="content-toggle" class="nav-item dropdown-label">Content ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./client/pages/movies.html">Movies</a></li>
+                            <li><a href="./client/pages/series.html">TV Series</a></li>
+                            <li><a href="./client/pages/anime.html">Anime</a></li>
+                        </ul>
+                    </div>
+
+                    <a href="./client/pages/drome.html" class="nav-item">Drome</a>
+
+                    <!-- 2. قايمة الأكونت (للمستخدمين بس) -->
+                    <div class="dropdown user-only">
+                        <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
+                        <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./client/pages/profile.html">Profile</a></li>
+                            <li><a href="./client/pages/diary.html">Diary</a></li>
+                            <li><a href="./client/pages/watchlist.html">Watchlist</a></li>
+                            <li><a href="./client/pages/sign-in.html" style="color: #ff4757;">Log out</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- 3. زراير الأكشن في الآخر خالص (Log / Sign in) -->
+
+                    <!-- 🔴 للزوار بس (شيلنا الخط السفلي) -->
+                    <a href="./client/pages/sign-in.html" class="guest-only" style="text-decoration: none;">
+                        <button class="signin-btn">Sign in</button>
+                    </a>
+
+                    <!-- 🟢 للمستخدمين بس -->
+                    <button class="log-nav-btn user-only" id="navLogBtn">
+                        <i class="fa-solid fa-plus"></i> Log
+                    </button>
+                </div>
+
+                <!-- زرار البحث رجع مكانه وكلاسه الأصلي -->
+                <button type="button" class="search-trigger-btn" aria-label="Search">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section" style="background-image: url(./client/assets/backdrops/backdrop-odyssey1.webp)" ;>
+            <div class="hero-overlay"></div>
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="hero-tags">
+                        <span class="badge trending-badge">🔥 Trending #1</span>
+                        <span class="badge category-badge">Movie</span>
+                    </div>
+                    <h1 class="hero-title">The Odyssey</h1>
+                    <div class="hero-meta">
+                        <span class="rating">⭐ 8.5 <i>/ 10</i></span>
+                        <span class="meta-dot">•</span>
+                        <span class="duration">2h 58m</span>
+                        <span class="meta-dot">•</span>
+                        <span class="year">2026</span>
+                        <span class="meta-dot">•</span>
+                        <span class="genre">Action, Adventure, Drama</span>
+                    </div>
+                    <p class="hero-description">
+                        Follow the epic journey of Odysseus as he struggles to return home after the Trojan War, facing
+                        mythical beasts, ruthless gods, and impossible challenges.
+                    </p>
+                    <div class="hero-actions">
+                        <!-- زرار المشاهدة -->
+                        <a href="#" class="btn btn-primary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            View Movie
+                        </a>
+
+                        <!-- زرار الـ Watchlist من غير أي أيكونات -->
+                        <button type="button" class="btn btn-secondary">
+                            Add to Watchlist
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1️⃣ Trending Now (8 Cards) -->
+        <section class="carousel-section">
+            <div class="carousel-header">
+                <h2 class="carousel-title">🔥 Trending Now</h2>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                    <button class="carousel-btn" aria-label="Next">&#10095;</button>
+                </div>
+            </div>
+            <div class="carousel-track">
+                <!-- Card 1 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.5</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <!-- العنوان والـ Badge بقوا مع بعض في سطر -->
+                            <div class="title-row">
+                                <h3 class="card-title">The Odyssey</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+
+                            <!-- الـ Meta بقت واخدة السطر الكامل للتفاصيل بس -->
+                            <div class="meta-row">
+                                <span>2h 58m • 2026</span>
+                            </div>
+
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.5</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <!-- 1. العنوان والبادج في سطر منظم -->
+                            <div class="title-row">
+                                <h3 class="card-title">The Odyssey</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+
+                            <!-- 2. التفاصيل كاملة في سطرها الخاص مستريحة -->
+                            <div class="meta-row">
+                                <span>2h 58m • 2026</span>
+                            </div>
+
+                            <!-- 3. الأزرار -->
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.5</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <!-- 1. العنوان والبادج في سطر منظم -->
+                            <div class="title-row">
+                                <h3 class="card-title">The Odyssey</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+
+                            <!-- 2. التفاصيل كاملة في سطرها الخاص مستريحة -->
+                            <div class="meta-row">
+                                <span>2h 58m • 2026</span>
+                            </div>
+
+                            <!-- 3. الأزرار -->
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.5</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <!-- 1. العنوان والبادج في سطر منظم -->
+                            <div class="title-row">
+                                <h3 class="card-title">The Odyssey</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+
+                            <!-- 2. التفاصيل كاملة في سطرها الخاص مستريحة -->
+                            <div class="meta-row">
+                                <span>2h 58m • 2026</span>
+                            </div>
+
+                            <!-- 3. الأزرار -->
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.5</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <!-- 1. العنوان والبادج في سطر منظم -->
+                            <div class="title-row">
+                                <h3 class="card-title">The Odyssey</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+
+                            <!-- 2. التفاصيل كاملة في سطرها الخاص مستريحة -->
+                            <div class="meta-row">
+                                <span>2h 58m • 2026</span>
+                            </div>
+
+                            <!-- 3. الأزرار -->
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.5</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <!-- 1. العنوان والبادج في سطر منظم -->
+                            <div class="title-row">
+                                <h3 class="card-title">The Odyssey</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+
+                            <!-- 2. التفاصيل كاملة في سطرها الخاص مستريحة -->
+                            <div class="meta-row">
+                                <span>2h 58m • 2026</span>
+                            </div>
+
+                            <!-- 3. الأزرار -->
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.5</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <!-- 1. العنوان والبادج في سطر منظم -->
+                            <div class="title-row">
+                                <h3 class="card-title">The Odyssey</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+
+                            <!-- 2. التفاصيل كاملة في سطرها الخاص مستريحة -->
+                            <div class="meta-row">
+                                <span>2h 58m • 2026</span>
+                            </div>
+
+                            <!-- 3. الأزرار -->
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.5</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <!-- 1. العنوان والبادج في سطر منظم -->
+                            <div class="title-row">
+                                <h3 class="card-title">The Odyssey</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+
+                            <!-- 2. التفاصيل كاملة في سطرها الخاص مستريحة -->
+                            <div class="meta-row">
+                                <span>2h 58m • 2026</span>
+                            </div>
+
+                            <!-- 3. الأزرار -->
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2️⃣ Must-Watch Movies (8 Cards - Using 1 Image Asset & Correct IMDb Rating) -->
+        <section class="carousel-section">
+            <div class="carousel-header">
+                <h2 class="carousel-title">🎬 Must-Watch Movies</h2>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                    <button class="carousel-btn" aria-label="Next">&#10095;</button>
+                </div>
+            </div>
+            <div class="carousel-track">
+                <!-- Card 1 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>2h 15m • 2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>2h 15m • 2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>2h 15m • 2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>2h 15m • 2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>2h 15m • 2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>2h 15m • 2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>2h 15m • 2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">MOVIE</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                                <span class="age-badge">PG-13</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>2h 15m • 2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3️⃣ Binge-Worthy Series (8 Cards - The Boys) -->
+        <section class="carousel-section">
+            <div class="carousel-header">
+                <h2 class="carousel-title">📺 Top TV Shows</h2>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                    <button class="carousel-btn" aria-label="Next">&#10095;</button>
+                </div>
+            </div>
+            <div class="carousel-track">
+                <!-- Card 1 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">SERIES</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.7</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">The Boys</h3>
+                                <span class="age-badge">TV-MA</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>4 Seasons • 2019–2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">SERIES</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.7</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">The Boys</h3>
+                                <span class="age-badge">TV-MA</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>4 Seasons • 2019–2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">SERIES</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.7</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">The Boys</h3>
+                                <span class="age-badge">TV-MA</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>4 Seasons • 2019–2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">SERIES</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.7</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">The Boys</h3>
+                                <span class="age-badge">TV-MA</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>4 Seasons • 2019–2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">SERIES</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.7</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">The Boys</h3>
+                                <span class="age-badge">TV-MA</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>4 Seasons • 2019–2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">SERIES</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.7</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">The Boys</h3>
+                                <span class="age-badge">TV-MA</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>4 Seasons • 2019–2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">SERIES</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.7</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">The Boys</h3>
+                                <span class="age-badge">TV-MA</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>4 Seasons • 2019–2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">SERIES</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    8.7</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">The Boys</h3>
+                                <span class="age-badge">TV-MA</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>4 Seasons • 2019–2026</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4️⃣ Top Anime Picked for You (8 Cards - One Piece) -->
+        <section class="carousel-section">
+            <div class="carousel-header">
+                <h2 class="carousel-title">⚔️ Top Anime Picked for You</h2>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                    <button class="carousel-btn" aria-label="Next">&#10095;</button>
+                </div>
+            </div>
+            <div class="carousel-track">
+                <!-- Card 1 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    9.0</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">One Piece</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>1122 Eps • 1999–Present</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    9.0</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">One Piece</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>1122 Eps • 1999–Present</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    9.0</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">One Piece</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>1122 Eps • 1999–Present</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    9.0</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">One Piece</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>1122 Eps • 1999–Present</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    9.0</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">One Piece</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>1122 Eps • 1999–Present</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    9.0</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">One Piece</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>1122 Eps • 1999–Present</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    9.0</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">One Piece</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>1122 Eps • 1999–Present</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="content-card">
+                    <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                    9.0</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">One Piece</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row">
+                                <span>1122 Eps • 1999–Present</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="#" class="btn-details">Details</a>
+                                <button class="btn-watchlist" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 📂 User Custom Lists (3D Stack) -->
+        <section class="lists-section">
+            <div class="carousel-header">
+                <h2 class="carousel-title">📁 Top Community Lists</h2>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                    <button class="carousel-btn" aria-label="Next">&#10095;</button>
+                </div>
+            </div>
+
+            <div class="lists-track">
+
+                <!-- List Card 1 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                        <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                        <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="./client/pages/list.html" class="list-title">The Best Content Ever</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @Shehab</span>
+                                <span class="list-items-count">• 4 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn" title="Like List">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                        </path>
+                                    </svg>
+                                    <span>1.2k</span>
+                                </button>
+                                <button class="list-action-btn comment-btn" title="Comment">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                        </path>
+                                    </svg>
+                                    <span>84</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Card 2 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                        <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="./client/pages/list.html" class="list-title">Masterpiece Anime & Shows</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @Alex</span>
+                                <span class="list-items-count">• 12 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                        </path>
+                                    </svg>
+                                    <span>850</span>
+                                </button>
+                                <button class="list-action-btn comment-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                        </path>
+                                    </svg>
+                                    <span>42</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- List Card 3 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                        <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="./client/assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                        <img src="./client/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="./client/pages/list.html" class="list-title">The Best Content Ever</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @Shehab</span>
+                                <span class="list-items-count">• 4 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn" title="Like List">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                        </path>
+                                    </svg>
+                                    <span>1.2k</span>
+                                </button>
+                                <button class="list-action-btn comment-btn" title="Comment">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                        </path>
+                                    </svg>
+                                    <span>84</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Card 4 -->
+                <div class="list-card">
+                    <div class="poster-stack">
+                        <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                        <img src="./client/assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                        <img src="./client/assets/posters/poster-theboys.webp" alt="The Boys" class="stack-poster">
+                    </div>
+                    <div class="list-info">
+                        <a href="./client/pages/list.html" class="list-title">Masterpiece Anime & Shows</a>
+                        <div class="list-meta">
+                            <div>
+                                <span class="user-badge">By @Alex</span>
+                                <span class="list-items-count">• 12 Titles</span>
+                            </div>
+                            <div class="list-actions">
+                                <button class="list-action-btn like-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                        </path>
+                                    </svg>
+                                    <span>850</span>
+                                </button>
+                                <button class="list-action-btn comment-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                        </path>
+                                    </svg>
+                                    <span>42</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 🔻 Minimal Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <!-- 1. Logo -->
+            <a href="./index.html" class="logo-link">
+                <img class="logo" src="./client/assets/logos/no background logo.png" alt="Cindrome Logo">
+            </a>
+            <!-- 2. Links & Social Icons -->
+            <div class="footer-nav">
+                <a href="about.html" class="footer-link">About Us</a>
+                <span class="footer-divider"></span>
+                <div class="footer-socials">
+                    <!-- Email -->
+                    <a href="mailto:cindrome.me@gmail.com" class="social-icon" aria-label="Email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </a>
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/cindromeapp/" target="_blank" class="social-icon"
+                        aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                        </svg>
+                    </a>
+                    <!-- X (Twitter) -->
+                    <a href="https://x.com/CindromeApp" target="_blank" class="social-icon" aria-label="X">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3. Copyright -->
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- ========================================================= -->
+    <!-- 🌟 PREMIUM LOG MODAL (Contextual Mode) 🌟 -->
+    <!-- ========================================================= -->
+    <div class="log-modal-overlay" id="logModal" style="display: none;">
+        <div class="log-modal-container context-mode">
+
+            <button class="close-modal-btn" id="closeLogModalBtn" aria-label="Close log modal">&times;</button>
+            <h2 class="modal-main-title">Log Content</h2>
+
+            <div class="log-global-search">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" placeholder="Name of movie, series, or anime...">
+            </div>
+
+            <div class="log-item-header">
+                <img src="./client/assets/posters/poster-sherlock.webp" alt="Sherlock" class="log-item-poster"
+                    onerror="this.src='https://image.tmdb.org/t/p/w200/8bZCaPAPPil3ea2c9xSsmfsibGB.jpg'">
+
+                <div class="log-item-info">
+                    <!-- تم استخدام الكلاس الموحد هنا -->
+                    <span class="type-badge series-badge">TV SERIES</span>
+                    <h3 class="log-item-title">Sherlock</h3>
+
+                    <div class="season-episode-selectors">
+                        <details class="css-dropdown">
+                            <summary class="dropdown-selected">
+                                <span id="seasonText">Season 1</span>
+                                <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="dropdown-list">
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 1
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 2
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 3
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 4
+                                </li>
+                            </ul>
+                        </details>
+
+                        <details class="css-dropdown">
+                            <summary class="dropdown-selected">
+                                <span id="episodeText">All Episodes</span>
+                                <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="dropdown-list">
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">All
+                                    Episodes</li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">Episode 1
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">Episode 2
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">Episode 3
+                                </li>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <form class="log-form" onsubmit="return false;">
+
+                <div class="log-toolbar">
+                    <div class="star-rating-input" id="starRating">
+                        <i class="fa-regular fa-star rate-star" data-index="0"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="1"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="2"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="3"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="4"></i>
+                    </div>
+
+                    <div class="toolbar-divider"></div>
+
+                    <div class="toolbar-actions">
+                        <button type="button" class="icon-toggle-btn" id="likeToggle" title="Like">
+                            <i class="fa-solid fa-heart"></i>
+                        </button>
+                        <button type="button" class="icon-toggle-btn" id="rewatchToggle" title="Rewatch">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                        <button type="button" class="icon-toggle-btn spoiler-btn" id="spoilerToggle"
+                            title="Contains Spoilers">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="review-group">
+                    <textarea id="reviewText" class="review-textarea"
+                        placeholder="Add your thoughts (Optional)..."></textarea>
+                </div>
+
+                <div class="log-footer">
+                    <div class="date-group">
+                        <input type="date" id="watchDate" class="date-picker-input" title="Watched On">
+                    </div>
+
+                    <div class="log-actions">
+                        <button type="button" class="btn-cancel" id="cancelLogBtn">Cancel</button>
+                        <button type="submit" class="btn-save-log">Log</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- ========================================================= -->
+    <!-- 🌟 GLOBAL SEARCH MODAL (EXACT DISCOVER CLONE) 🌟 -->
+    <!-- ========================================================= -->
+    <div class="search-modal-overlay" id="searchModal" style="display: none;">
+        <div class="search-modal-container">
+
+            <button class="close-modal-btn" aria-label="Close search">&times;</button>
+
+            <section class="g-search-section" aria-label="Content Filters">
+                <form class="g-filter-bar-container" role="search" onSubmit="return false;">
+
+                    <div class="g-filter-search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            aria-hidden="true">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="filterSearchInput" placeholder="Search title..."
+                            aria-label="Search title" autofocus>
+                    </div>
+
+                    <div class="g-filter-v-divider" role="separator"></div>
+
+                    <fieldset class="g-type-selector" aria-label="Content Type">
+                        <button class="g-type-pill active" type="button">All</button>
+                        <button class="g-type-pill" type="button">Anime</button>
+                        <button class="g-type-pill" type="button">Movies</button>
+                        <button class="g-type-pill" type="button">Series</button>
+                    </fieldset>
+
+                    <div class="g-filter-v-divider" role="separator"></div>
+
+                    <div class="g-dropdowns-group">
+
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Genre</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">All Genres</li>
+                                <li class="g-dropdown-item">Action</li>
+                                <li class="g-dropdown-item">Sci-Fi</li>
+                                <li class="g-dropdown-item">Drama</li>
+                                <li class="g-dropdown-item">Mystery</li>
+                                <li class="g-dropdown-item">Psychological</li>
+                                <li class="g-dropdown-item">Fantasy</li>
+                                <li class="g-dropdown-item">Comedy</li>
+                            </ul>
+                        </details>
+
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Rating</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">All Ratings</li>
+                                <li class="g-dropdown-item">★ 9.0+</li>
+                                <li class="g-dropdown-item">★ 8.0+</li>
+                                <li class="g-dropdown-item">★ 7.0+</li>
+                            </ul>
+                        </details>
+
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Sort By</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">Most Popular</li>
+                                <li class="g-dropdown-item">Top Rated</li>
+                                <li class="g-dropdown-item">Newest Releases</li>
+                            </ul>
+                        </details>
+
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Year</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">All Years</li>
+                                <li class="g-dropdown-item">2024 - 2026</li>
+                                <li class="g-dropdown-item">2020 - 2023</li>
+                                <li class="g-dropdown-item">2010 - 2019</li>
+                                <li class="g-dropdown-item">Classics</li>
+                            </ul>
+                        </details>
+
+                    </div>
+
+                    <button class="g-reset-filter-btn" type="reset" aria-label="Reset Filters" title="Reset Filters">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                            <path d="M3 3v5h5"></path>
+                        </svg>
+                    </button>
+
+                </form>
+            </section>
+        </div>
+    </div>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+
+            // ==========================================
+            // 🌟 1. تفاعلات نافذة السيرش 🌟
+            // ==========================================
+            const searchTriggers = document.querySelectorAll('.search-trigger-btn');
+            const searchModal = document.getElementById('searchModal');
+            const closeSearchBtn = searchModal ? searchModal.querySelector('.close-modal-btn') : null;
+
+            if (searchModal) {
+                searchTriggers.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        searchModal.style.display = 'flex';
+                    });
+                });
+
+                if (closeSearchBtn) {
+                    closeSearchBtn.addEventListener('click', () => {
+                        searchModal.style.display = 'none';
+                    });
+                }
+            }
+
+            // ==========================================
+            // 🌟 2. تفاعلات نافذة الـ Log 🌟
+            // ==========================================
+            const logModal = document.getElementById('logModal');
+            const openLogBtn = document.getElementById('openLogModal'); // زرار הـ Hero
+            const navLogBtn = document.getElementById('navLogBtn'); // زرار الـ Navbar
+            const closeLogBtn = document.getElementById('closeLogModalBtn');
+            const cancelLogBtn = document.getElementById('cancelLogBtn');
+
+            function openLog() {
+                if (logModal) logModal.style.display = 'flex';
+            }
+
+            function closeLog() {
+                if (logModal) logModal.style.display = 'none';
+            }
+
+            if (openLogBtn) openLogBtn.addEventListener('click', openLog);
+            if (navLogBtn) navLogBtn.addEventListener('click', openLog);
+            if (closeLogBtn) closeLogBtn.addEventListener('click', closeLog);
+            if (cancelLogBtn) cancelLogBtn.addEventListener('click', closeLog);
+
+            // الإغلاق عند الضغط خارج النوافذ
+            window.addEventListener('click', (e) => {
+                if (e.target === searchModal) searchModal.style.display = 'none';
+                if (e.target === logModal) closeLog();
+            });
+
+            // ==========================================
+            // 🌟 3. لوجيك نافذة الـ Log الداخلي 🌟
+            // ==========================================
+            const dateInput = document.getElementById('watchDate');
+            if (dateInput) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
+
+            const toggleBtns = document.querySelectorAll('#logModal .icon-toggle-btn:not(.spoiler-btn)');
+            toggleBtns.forEach(btn => {
+                btn.addEventListener('click', () => btn.classList.toggle('active'));
+            });
+
+            const spoilerBtn = document.querySelector('#logModal .spoiler-btn');
+            if (spoilerBtn) {
+                spoilerBtn.addEventListener('click', () => spoilerBtn.classList.toggle('spoiler-active'));
+            }
+
+            // نظام تقييم النجوم
+            const stars = document.querySelectorAll('#logModal .rate-star');
+            let currentRating = 0;
+
+            function updateStars(value) {
+                stars.forEach((star, index) => {
+                    star.classList.remove('fa-solid', 'fa-regular', 'fa-star-half-stroke');
+                    if (value >= index + 1) {
+                        star.classList.add('fa-solid', 'fa-star');
+                    } else if (value === index + 0.5) {
+                        star.classList.add('fa-solid', 'fa-star-half-stroke');
+                    } else {
+                        star.classList.add('fa-regular', 'fa-star');
+                    }
+                });
+            }
+
+            stars.forEach((star, index) => {
+                star.addEventListener('mousemove', function (e) {
+                    const rect = this.getBoundingClientRect();
+                    const isHalf = (e.clientX - rect.left) < (rect.width / 2);
+                    const hoverValue = index + (isHalf ? 0.5 : 1);
+                    updateStars(hoverValue);
+                });
+
+                star.addEventListener('mouseout', function () {
+                    updateStars(currentRating);
+                });
+
+                star.addEventListener('click', function (e) {
+                    const rect = this.getBoundingClientRect();
+                    const isHalf = (e.clientX - rect.left) < (rect.width / 2);
+                    currentRating = index + (isHalf ? 0.5 : 1);
+                    updateStars(currentRating);
+                });
+            });
+
+            // إغلاق قوائم Dropdown المنسدلة للبحث عند النقر في الخارج
+            document.addEventListener('click', function (event) {
+                const dropdowns = document.querySelectorAll('.css-dropdown');
+                dropdowns.forEach(dropdown => {
+                    if (!dropdown.contains(event.target)) {
+                        dropdown.removeAttribute('open');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
