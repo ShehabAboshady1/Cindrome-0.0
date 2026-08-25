@@ -889,29 +889,55 @@ body {
     width: 70px;
     height: 70px;
   }
-  /* 7. 🌟 تظبيط كارت المراجعة الجديد للموبايل 🌟 */
+/* 7. 🌟 تظبيط كارت المراجعة للموبايل (بدون أي تداخل نهائياً) 🌟 */
   .minimal-review-card {
-    flex: 0 0 82%; /* الكارت هياخد 82% ويسيب 18% للكارت اللي بعده يبان */
-    min-width: 0; /* 🌟 السر هنا: لغينا الـ 320 بيكسل اللي كانت خانقة الشاشة 🌟 */
+    flex: 0 0 85%; /* 85% هو المقاس الذهبي اللي بيريح الكارت ويسيب طرف للي بعده */
+    min-width: 270px;
     padding: 16px;
     box-sizing: border-box;
   }
 
-  .header-right-stack {
-    top: 16px;
-    right: 16px;
+  /* 🌟 تحويل الهيدر لـ Flexbox طبيعي عشان السبويلر والعنوان ميركبوش على بعض 🌟 */
+  .minimal-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between; /* بيزق العنوان شمال والسبويلر يمين باحترام */
+    gap: 8px;
   }
 
   .header-left-stack {
-    padding-right: 75px;
+    padding-right: 0; /* لغينا البادينج القديم اللي كان بيعصر الكلام */
+    flex: 1; /* ياخد المساحة المتاحة بس */
+    min-width: 0; /* 🌟 بيسمح للعنوان الطويل إنه يتقص بدل ما يزق اللي جنبه 🌟 */
   }
 
+  .header-right-stack {
+    position: static; /* 🌟 نزلنا السبويلر من الطيران وبقى عنصر طبيعي مستحيل يتداخل 🌟 */
+  }
+
+  /* 🌟 منع اسم اليوزر الطويل إنه يخرج بره الكارت 🌟 */
+  .review-author-username {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* لو الاسم طويل هيحط ... في الآخره */
+    max-width: 110px; 
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  /* 🌟 إجبار الفوتر (الزراير) إنها تفضل على سطر واحد 🌟 */
   .minimal-card-footer {
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-wrap: nowrap; 
+    gap: 8px;
   }
 
+  .minimal-actions {
+    gap: 12px; /* قللنا المسافة بين اللايك والكومنت شوية */
+  }
+
+  .minimal-btn, 
   .minimal-read-link {
-    font-size: 0.8rem;
+    font-size: 0.78rem; /* صغرنا الخط ملي عشان يكفي الشاشة */
+    white-space: nowrap; /* 🌟 ممنوع النزول لسطر جديد نهائياً 🌟 */
   }
 }
