@@ -678,7 +678,7 @@ input:checked ~ .privacy-label {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 9999;
-  display: none; 
+  display: none;
   justify-content: center;
   align-items: center;
   padding: 15px;
@@ -686,12 +686,12 @@ input:checked ~ .privacy-label {
 
 .search-modal-container {
   width: 100%;
-  max-width: 1050px; 
+  max-width: 1050px;
   position: relative;
-  background: transparent; 
+  background: transparent;
   border: none;
   box-shadow: none;
-  padding: 0; 
+  padding: 0;
   animation: modalPopUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -730,7 +730,7 @@ input:checked ~ .privacy-label {
   border-radius: 100px;
   box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
   font-family: inherit;
-  width: max-content; 
+  width: max-content;
   max-width: 100%;
 }
 
@@ -774,7 +774,7 @@ input:checked ~ .privacy-label {
   font-family: inherit;
   font-size: 0.85rem;
   font-weight: 600;
-  width: 130px; 
+  width: 130px;
   letter-spacing: 0.3px;
 }
 
@@ -791,7 +791,7 @@ input:checked ~ .privacy-label {
   border: 1px solid rgba(241, 227, 200, 0.08);
   padding: 4px;
   border-radius: 50px;
-  margin: 0; 
+  margin: 0;
 }
 
 .g-type-pill {
@@ -866,7 +866,9 @@ input:checked ~ .privacy-label {
 .g-dropdown-arrow {
   font-size: 0.55rem;
   color: rgba(241, 227, 200, 0.6); /* 🌟 السهم رمادي فاتح افتراضياً 🌟 */
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
   display: inline-block;
 }
 
@@ -983,7 +985,7 @@ input:checked ~ .privacy-label {
 ========================================================================== */
 @media (max-width: 480px) {
   .log-modal-container {
-    padding: 20px 16px; 
+    padding: 20px 16px;
   }
 
   .log-item-header {
@@ -998,23 +1000,33 @@ input:checked ~ .privacy-label {
     height: 80px;
   }
 
-  /* 🌟 الدروب داونز: جنب بعض والكلام هيبان كامل من غير نقط 🌟 */
+  /* 🌟 التعديل الأخير للدروب داونز: ينزلوا تحت بعض بس يحافظوا على شياكتهم وحجمهم 🌟 */
   .season-episode-selectors {
     display: flex;
-    flex-wrap: nowrap;
-    gap: 8px;
+    flex-wrap: wrap; /* بيسمح ليهم ينزلوا تحت بعض لو اتزنقوا */
+    gap: 8px; /* مسافة شيك بينهم */
+    justify-content: flex-start; /* عشان لما ينزلوا تحت بعض يترصوا على الشمال بنضافة */
   }
 
   .css-dropdown {
-    width: auto; /* هياخد العرض اللي محتاجه عشان الكلمة تبان */
-    flex: 1; /* لو فيه مساحة فاضية هيمط فيها براحته */
+    flex: 0 1 auto; /* 🌟 السر هنا: لغينا المط، كده هياخدوا عرض الكلمة بس مستحيل يملوا الشاشة 🌟 */
+    max-width: 100%; /* حماية إضافية عشان مفيش حاجة تخرج بره */
   }
 
   .dropdown-selected {
-    padding: 6px 10px;
+    padding: 6px 12px;
     font-size: 0.75rem;
-    width: 100%;
+    width: max-content; /* البوكس هيحضن الكلمة والسهم بالظبط */
+    max-width: 100%;
     box-sizing: border-box;
+    gap: 12px; /* مسافة مرتاحة بين الكلمة والسهم */
+  }
+
+  /* بنلغي التلات نقط عشان الكلمة تبان كاملة دايماً */
+  .dropdown-selected span:first-child {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
   }
 
   /* 🌟 بنلغي التلات نقط (...) اللي كانت في الكود الأساسي 🌟 */
