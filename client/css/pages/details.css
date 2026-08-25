@@ -889,47 +889,80 @@ body {
     width: 70px;
     height: 70px;
   }
-  /* 7. 🌟 تظبيط كارت المراجعة للموبايل (مساحة واسعة وبدون قص) 🌟 */
+ /* 7. 🌟 تصغير الكارت بالكامل (Scale Down) للموبايل 🌟 */
   .minimal-review-card {
-    flex: 0 0 88%; /* 🌟 كبرنا الكارت عشان ميبقاش مضغوط، وهيسيب طرف صغير أوي للي بعده 🌟 */
-    padding: 16px;
+    flex: 0 0 82%; /* بياخد 82% ويسيب مساحة محترمة للكارت التاني */
+    min-width: 250px; /* حجم صغير وملموم */
+    padding: 12px; /* صغرنا الحواف الداخلية */
+    gap: 12px; /* صغرنا المسافة بين الهيدر والكلام والفوتر */
     box-sizing: border-box;
   }
 
-  /* 🌟 الهيدر طبيعي جداً بدون أي تداخل 🌟 */
-  .minimal-card-header {
-    display: flex;
-    justify-content: space-between; /* العنوان يمين والسبويلر شمال */
-    align-items: flex-start;
-    gap: 12px;
-  }
-
+  /* 🌟 تظبيط مسافات الهيدر 🌟 */
   .header-left-stack {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    padding-right: 0;
+    gap: 10px; /* صغرنا المسافة بين البوستر والكلام */
+    padding-right: 60px; /* مساحة أمان للسبويلر عشان ميركبوش على بعض */
   }
 
-  /* 🌟 رجعنا اسم اليوزر يبان كامل بدون الـ 3 نقط 🌟 */
-  .review-author-username {
-    white-space: normal;
-    overflow: visible;
-    max-width: 100%;
-  }
-
-  /* 🌟 تثبيت السبويلر في مكانه الطبيعي 🌟 */
   .header-right-stack {
-    position: static;
-    flex-shrink: 0; /* نمنعه إنه ينضغط أو يصغر */
+    top: 12px; /* اتظبطت مع البادينج الجديد */
+    right: 12px;
   }
 
-  /* 🌟 الفوتر ياخد راحته 🌟 */
+  /* 🌟 تصغير البوستر 🌟 */
+  .review-micro-poster {
+    width: 40px; /* كان 48 */
+    height: 60px; /* كان 72 */
+  }
+
+  /* 🌟 تصغير الخطوط (العنوان، النجوم، اسم اليوزر، السبويلر) 🌟 */
+  .review-media-title {
+    font-size: 0.9rem;
+  }
+  
+  .review-rating-line .stars {
+    font-size: 0.75rem;
+  }
+  
+  .review-micro-avatar {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .review-author-username {
+    font-size: 0.75rem;
+    white-space: normal; /* خليه يبان كامل */
+  }
+  
+  .spoiler-badge {
+    padding: 2px 6px;
+    font-size: 0.65rem;
+  }
+
+  /* 🌟 تصغير نص المراجعة 🌟 */
+  .minimal-card-body {
+    margin-bottom: 8px;
+  }
+  
+  .minimal-card-body .review-body {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  /* 🌟 تصغير الفوتر (الزراير) 🌟 */
   .minimal-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-    padding-top: 12px;
+    padding-top: 10px;
+  }
+  
+  .minimal-actions {
+    gap: 12px;
+  }
+  
+  .minimal-btn, .minimal-read-link {
+    font-size: 0.75rem;
+  }
+
+  .minimal-btn i {
+    font-size: 0.85rem;
   }
 }
