@@ -889,87 +889,47 @@ body {
     width: 70px;
     height: 70px;
   }
-  /* 7. 🌟 تظبيط وتوزيع كارت المراجعة في الموبايل (نهاية المشاكل) 🌟 */
+  /* 7. 🌟 تظبيط كارت المراجعة للموبايل (مساحة واسعة وبدون قص) 🌟 */
   .minimal-review-card {
-    flex: 0 0 85vw; /* 🌟 هياخد 85% من الشاشة دايماً ويسيب 15% للكارت اللي بعده 🌟 */
-    max-width: 320px; /* عشان ميبقاش ضخم في الشاشات العريضة */
+    flex: 0 0 88%; /* 🌟 كبرنا الكارت عشان ميبقاش مضغوط، وهيسيب طرف صغير أوي للي بعده 🌟 */
     padding: 16px;
     box-sizing: border-box;
   }
 
-  /* 🌟 الهيدر هيبقى الأساس اللي بيظبط التوزيعة 🌟 */
+  /* 🌟 الهيدر طبيعي جداً بدون أي تداخل 🌟 */
   .minimal-card-header {
-    position: relative; /* عشان نثبت السبويلر جواه براحتنا */
-    display: block; /* بنلغي الفليكس اللي كان بيعصرهم جنب بعض */
+    display: flex;
+    justify-content: space-between; /* العنوان يمين والسبويلر شمال */
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .header-left-stack {
     display: flex;
-    align-items: center; /* توسيط عمودي مع البوستر */
     gap: 12px;
-    width: 100%;
+    align-items: flex-start;
+    padding-right: 0;
   }
 
-  /* نكبر البوستر ملي بسيط عشان يملى العين مع التوزيعة الجديدة */
-  .review-micro-poster {
-    width: 52px;
-    height: 78px;
-  }
-
-  .review-info-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    flex: 1;
-    min-width: 0;
-    padding-right: 65px; /* 🌟 السطر السحري: بيحمي المساحة بتاعة السبويلر عشان الكلام ميدخلش فيه أبداً 🌟 */
-  }
-
-  /* 🌟 السماح للعنوان إنه ينزل سطر جديد بشياكة لو طويل بدل ما يتضغط 🌟 */
-  .review-media-title {
-    font-size: 1.05rem;
-    white-space: normal;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    line-height: 1.2;
-  }
-
+  /* 🌟 رجعنا اسم اليوزر يبان كامل بدون الـ 3 نقط 🌟 */
   .review-author-username {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 110px;
+    white-space: normal;
+    overflow: visible;
+    max-width: 100%;
   }
 
-  /* 🌟 السبويلر يصغر شوية ويثبت فوق يمين (مش هيتحرك من مكانه) 🌟 */
+  /* 🌟 تثبيت السبويلر في مكانه الطبيعي 🌟 */
   .header-right-stack {
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: static;
+    flex-shrink: 0; /* نمنعه إنه ينضغط أو يصغر */
   }
 
-  .spoiler-badge {
-    padding: 3px 6px;
-    font-size: 0.65rem;
-  }
-
-  /* 🌟 الفوتر ياخد راحته تحت خالص 🌟 */
+  /* 🌟 الفوتر ياخد راحته 🌟 */
   .minimal-card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: auto;
     padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05); /* خط شيك بيفصل الزراير عن الكلام */
-  }
-
-  .minimal-actions {
-    gap: 12px;
-  }
-
-  .minimal-btn,
-  .minimal-read-link {
-    font-size: 0.8rem;
   }
 }
