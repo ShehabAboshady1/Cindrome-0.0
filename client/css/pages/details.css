@@ -892,8 +892,8 @@ body {
 
 /* 7. 🌟 تظبيط كارت المراجعة الجديد للموبايل 🌟 */
   .minimal-review-card {
-    flex: 0 0 85%; 
-    min-width: 280px; 
+    flex: 0 0 75%; 
+    min-width: 260px; 
     padding: 16px; 
     box-sizing: border-box; /* ده اللي بيمنع الكارت يضرب ويتقطع */
   }
