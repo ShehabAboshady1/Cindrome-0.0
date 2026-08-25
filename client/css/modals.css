@@ -978,3 +978,73 @@ input:checked ~ .privacy-label {
     display: none;
   }
 }
+/* ==========================================================================
+   📱 MOBILE RESPONSIVE: LOG MODAL (Desktop Replica)
+========================================================================== */
+@media (max-width: 480px) {
+  /* 1. تقليل الهوامش الأساسية عشان ندي مساحة أكبر للعناصر */
+  .log-modal-container {
+    padding: 20px 16px; 
+  }
+
+  .log-item-header {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .log-item-poster {
+    width: 55px;
+    height: 80px;
+  }
+
+  /* 2. إجبار الدروب داونز يفضلوا جنب بعض زي اللابتوب */
+  .season-episode-selectors {
+    flex-wrap: nowrap; /* نمنعهم ينزلوا تحت بعض نهائي */
+    gap: 6px;
+  }
+
+  .dropdown-selected {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
+  /* 3. تظبيط النجوم والأيقونات في سطر واحد بدون Overflow */
+  .log-toolbar {
+    padding: 8px 12px;
+    gap: 10px;
+  }
+
+  .star-rating-input {
+    font-size: 1.15rem; /* تصغير النجوم */
+    gap: 2px;
+  }
+
+  .toolbar-actions {
+    gap: 12px;
+  }
+
+  .icon-toggle-btn {
+    font-size: 1rem;
+  }
+
+  /* 4. ترويض التاريخ عشان ميزقش الزراير لبرة */
+  .date-group {
+    padding: 6px 10px;
+  }
+
+  .date-picker-input {
+    font-size: 0.75rem;
+    width: 100px; /* 🌟 السر هنا: حجمنا التاريخ عشان يسيب مساحة للزراير 🌟 */
+  }
+
+  .log-actions {
+    gap: 8px;
+  }
+
+  .btn-cancel,
+  .btn-save-log {
+    height: 32px;
+    padding: 0 14px;
+    font-size: 0.8rem;
+  }
+}
