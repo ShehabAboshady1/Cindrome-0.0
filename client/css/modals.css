@@ -979,10 +979,9 @@ input:checked ~ .privacy-label {
   }
 }
 /* ==========================================================================
-   📱 MOBILE RESPONSIVE: LOG MODAL (Desktop Replica)
+   📱 MOBILE RESPONSIVE: LOG MODAL (Final Fixes)
 ========================================================================== */
 @media (max-width: 480px) {
-  /* 1. تقليل الهوامش الأساسية عشان ندي مساحة أكبر للعناصر */
   .log-modal-container {
     padding: 20px 16px; 
   }
@@ -990,6 +989,8 @@ input:checked ~ .privacy-label {
   .log-item-header {
     padding: 10px;
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .log-item-poster {
@@ -997,25 +998,40 @@ input:checked ~ .privacy-label {
     height: 80px;
   }
 
-  /* 2. إجبار الدروب داونز يفضلوا جنب بعض زي اللابتوب */
+  /* 🌟 الدروب داونز: جنب بعض والكلام هيبان كامل من غير نقط 🌟 */
   .season-episode-selectors {
-    flex-wrap: nowrap; /* نمنعهم ينزلوا تحت بعض نهائي */
-    gap: 6px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .css-dropdown {
+    width: auto; /* هياخد العرض اللي محتاجه عشان الكلمة تبان */
+    flex: 1; /* لو فيه مساحة فاضية هيمط فيها براحته */
   }
 
   .dropdown-selected {
     padding: 6px 10px;
     font-size: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  /* 3. تظبيط النجوم والأيقونات في سطر واحد بدون Overflow */
+  /* 🌟 بنلغي التلات نقط (...) اللي كانت في الكود الأساسي 🌟 */
+  .dropdown-selected span:first-child {
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  /* 🌟 النجوم والأيقونات: من غير space-between زي ما طلبت 🌟 */
   .log-toolbar {
     padding: 8px 12px;
-    gap: 10px;
+    gap: 16px; /* مسافة حلوة بينهم تفصلهم عن بعض */
+    justify-content: flex-start; /* ورا بعض طبيعي جداً */
   }
 
   .star-rating-input {
-    font-size: 1.15rem; /* تصغير النجوم */
+    font-size: 1.15rem;
     gap: 2px;
   }
 
@@ -1027,14 +1043,14 @@ input:checked ~ .privacy-label {
     font-size: 1rem;
   }
 
-  /* 4. ترويض التاريخ عشان ميزقش الزراير لبرة */
+  /* التاريخ والزراير */
   .date-group {
     padding: 6px 10px;
   }
 
   .date-picker-input {
     font-size: 0.75rem;
-    width: 100px; /* 🌟 السر هنا: حجمنا التاريخ عشان يسيب مساحة للزراير 🌟 */
+    width: 100px; /* ماسكينه عشان ميزقش الزراير */
   }
 
   .log-actions {
