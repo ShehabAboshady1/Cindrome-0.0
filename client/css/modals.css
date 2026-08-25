@@ -21,7 +21,15 @@ body {
   margin: 0;
   height: 100vh;
 }
-
+/* 🌟 إخفاء المربع الأزرق المزعج بتاع الأندرويد عند الضغط 🌟 */
+button,
+a,
+input,
+summary,
+.icon-toggle-btn,
+.dropdown-selected {
+  -webkit-tap-highlight-color: transparent;
+}
 /* ==========================================================================
    LOG MODAL OVERLAY & CONTAINER
 ========================================================================== */
