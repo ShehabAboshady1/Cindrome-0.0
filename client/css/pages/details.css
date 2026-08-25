@@ -966,4 +966,44 @@ body {
   .minimal-btn i {
     font-size: 0.85rem;
   }
+  /* ==========================================================================
+     🌟 تظبيط كروت (If You Liked) للموبايل - صفحة التفاصيل فقط 🌟
+  ========================================================================== */
+  .content-card {
+    flex: 0 0 115px; /* 🌟 السر هنا: صغرنا الكارت عشان يبان كارتين وحتة 🌟 */
+  }
+
+  .card-overlay {
+    padding: 6px;
+  }
+
+  .card-top-row {
+    height: 18px;
+  }
+
+  /* 🌟 تصغير الخطوط ملي بسيط عشان تناسب الكارت الجديد 🌟 */
+  .card-title {
+    font-size: 11px;
+  }
+
+  .age-badge {
+    font-size: 8px;
+    padding: 1px 3px;
+  }
+
+  .meta-row {
+    font-size: 9px;
+  }
+
+  /* 🌟 لمينا الزراير عشان متخبطش في بعضها 🌟 */
+  .btn-details {
+    font-size: 10px;
+    padding: 5px 0;
+  }
+
+  .btn-watchlist {
+    width: 22px;
+    height: 22px;
+    font-size: 12px; /* عشان الأيقونة أو الزائد جوه الزرار */
+  }
 }
