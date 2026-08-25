@@ -790,7 +790,18 @@ body {
   .meta-dot {
     display: none;
   }
+     .action-buttons .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    white-space: nowrap; /* السطر السحري اللي بيمنع الكلمة والأيقونة ينفصلوا */
+    gap: 6px;
+  }
 
+  .watchlist-btn i {
+    transform: translateY(0); /* تصفير أي إزاحة فوق أو تحت */
+  }
   .action-buttons {
     display: flex;
     flex-wrap: wrap;
