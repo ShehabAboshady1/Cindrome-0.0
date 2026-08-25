@@ -889,12 +889,12 @@ body {
     width: 70px;
     height: 70px;
   }
- /* 7. 🌟 تصغير الكارت بالكامل (Scale Down) للموبايل 🌟 */
+  /* 7. 🌟 تصغير الكارت بالكامل (Scale Down) للموبايل 🌟 */
   .minimal-review-card {
-    flex: 0 0 82%; /* بياخد 82% ويسيب مساحة محترمة للكارت التاني */
-    min-width: 250px; /* حجم صغير وملموم */
-    padding: 12px; /* صغرنا الحواف الداخلية */
-    gap: 12px; /* صغرنا المسافة بين الهيدر والكلام والفوتر */
+    flex: 0 0 75%; /* 🌟 قللناها من 82% لـ 75% عشان نبين ربع الكارت التاني بالظبط 🌟 */
+    min-width: 235px; /* 🌟 صغرنا الحد الأدنى كمان سنة عشان يكفي 🌟 */
+    padding: 12px;
+    gap: 12px;
     box-sizing: border-box;
   }
 
@@ -919,21 +919,21 @@ body {
   .review-media-title {
     font-size: 0.9rem;
   }
-  
+
   .review-rating-line .stars {
     font-size: 0.75rem;
   }
-  
+
   .review-micro-avatar {
     width: 16px;
     height: 16px;
   }
-  
+
   .review-author-username {
     font-size: 0.75rem;
     white-space: normal; /* خليه يبان كامل */
   }
-  
+
   .spoiler-badge {
     padding: 2px 6px;
     font-size: 0.65rem;
@@ -943,7 +943,7 @@ body {
   .minimal-card-body {
     margin-bottom: 8px;
   }
-  
+
   .minimal-card-body .review-body {
     font-size: 0.85rem;
     line-height: 1.4;
@@ -953,12 +953,13 @@ body {
   .minimal-card-footer {
     padding-top: 10px;
   }
-  
+
   .minimal-actions {
     gap: 12px;
   }
-  
-  .minimal-btn, .minimal-read-link {
+
+  .minimal-btn,
+  .minimal-read-link {
     font-size: 0.75rem;
   }
 
