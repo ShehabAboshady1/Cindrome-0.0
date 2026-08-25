@@ -69,37 +69,40 @@
   visibility: visible;
 }
 
+/* 1. 🌟 الصف اللي شايلهم 🌟 */
 .card-top-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 4px;
   width: 100%;
 }
 
+/* 2. 🌟 بادج النوع (مش مفعوص وخطه عريض) 🌟 */
 .type-badge {
+  display: inline-flex;
+  align-items: center; /* بيسنتر الكلمة في النص براحتها */
+  justify-content: center;
+  height: 22px; /* 🌟 ارتفاع ثابت زي التقييم بالظبط 🌟 */
+  padding: 0 6px; /* 🌟 لغينا البادينج اللي فوق وتحت عشان ميضغطش الكلمة 🌟 */
+  box-sizing: border-box;
   background-color: var(--accent-teal);
   color: #010a09;
   font-size: 9px;
-  font-weight: 800;
-  padding: 5px 6px;
+  font-weight: 900; /* 🌟 خط أعرض وأوضح 🌟 */
   border-radius: 4px;
-  letter-spacing: 0.5px;
-  line-height: 1;
-  flex-shrink: 0;
+  
   white-space: nowrap;
 }
 
+/* 3. 🌟 بوكس التقييم (متساوي مع البادج بالمللي) 🌟 */
 .rating-box {
   display: inline-flex;
   align-items: stretch;
+  height: 22px; /* 🌟 نفس الارتفاع بالظبط 🌟 */
+  box-sizing: border-box;
   border: 1px solid var(--accent-teal);
   border-radius: 4px;
   overflow: hidden;
   background-color: #0d1a18;
-  height: 20px;
-  flex-shrink: 0;
-  width: max-content;
 }
 
 .rating-label {
