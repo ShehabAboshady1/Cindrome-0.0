@@ -295,10 +295,6 @@
 .profile-cards-wrapper::-webkit-scrollbar {
   display: none;
 }
-.profile-cards-wrapper .content-card {
-  flex: 0 0 160px;
-  min-width: 160px;
-}
 
 /* 🎬 CURRENTLY WATCHING LIST */
 .currently-watching-list {
