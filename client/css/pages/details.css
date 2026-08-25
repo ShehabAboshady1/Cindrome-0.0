@@ -537,9 +537,9 @@ body {
 }
 
 .minimal-review-card {
-  flex: 0 0 calc(50% - 8px); 
-  min-width: 320px; 
-  position: relative; 
+  flex: 0 0 calc(50% - 8px);
+  min-width: 320px;
+  position: relative;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(241, 227, 200, 0.05);
   border-radius: 12px;
@@ -547,7 +547,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .minimal-review-card:hover {
@@ -568,7 +570,7 @@ body {
   align-items: center;
   flex: 1;
   min-width: 0;
-  padding-right: 80px; 
+  padding-right: 80px;
 }
 
 .header-right-stack {
@@ -662,12 +664,12 @@ body {
   align-items: center;
   gap: 6px;
 }
-
-/* 🌟 هنا التعديل الجديد لضبط مساحة الكلام عشان تزق الفوتر 🌟 */
+/* 🌟 نخلي مساحة الكلام تتمدد عشان تزق الفوتر دايماً لتحت 🌟 */
 .minimal-card-body {
-  flex-grow: 1; 
+  flex-grow: 1; /* ده اللي بياخد المساحة الفاضية */
   display: flex;
   flex-direction: column;
+  margin-bottom: 12px;
 }
 
 .minimal-card-body .review-body {
@@ -677,29 +679,29 @@ body {
   color: #cbd5e0;
 }
 
+/* أكواد البلور زي ما هي */
 .minimal-card-body .review-body.blurred {
   filter: blur(6px);
   cursor: pointer;
   user-select: none;
   transition: filter 0.3s;
 }
-
 .minimal-card-body .review-body.blurred:hover {
   filter: blur(4px);
 }
-
 .minimal-card-body .review-body.revealed {
   filter: blur(0);
   cursor: default;
 }
 
-/* 🌟 هنا التعديل لتثبيت الزراير دايماً في قاع الكارت 🌟 */
+/* 🌟 تثبيت الفوتر في القاع عشان الزراير متبقاش طايرة 🌟 */
 .minimal-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto; 
+  margin-top: auto; /* 🌟 السطر السحري اللي بيثبتهم كلهم على نفس الخط تحت 🌟 */
   padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.05); /* خط شيك بيفصل الفوتر */
 }
 
 .minimal-actions {
@@ -775,32 +777,32 @@ body {
     text-align: center;
     gap: 16px;
   }
-  
+
   .watchlist-btn i {
     transform: translateY(0); /* تصفير أي إزاحة فوق أو تحت */
   }
-  
+
   .media-info-left {
     align-items: center;
     width: 100%;
   }
-  
+
   .details-poster {
     width: 120px;
   }
-  
+
   .meta-inline {
     justify-content: center;
     flex-wrap: wrap;
     gap: 8px 10px;
     line-height: 1.5;
   }
-  
+
   .meta-dot {
     display: none;
   }
 
-/* 🌟 تثبيت زراير الأكشن في الموبايل بدون تضخيم وبدون Important 🌟 */
+  /* 🌟 تثبيت زراير الأكشن في الموبايل بدون تضخيم وبدون Important 🌟 */
   .action-buttons {
     display: flex;
     flex-wrap: wrap;
@@ -819,13 +821,11 @@ body {
   .btn-icon-only {
     padding: 8px 12px;
   }
-  
 
   .btn-secondary {
     flex: 1;
     justify-content: center;
   }
-
 
   /* 3. ضبط المسافات للمحتوى الرأسي + تظبيط البانلز في الموبايل */
   .details-content {
@@ -889,30 +889,29 @@ body {
     width: 70px;
     height: 70px;
   }
-
-/* 7. 🌟 تظبيط كارت المراجعة الجديد للموبايل 🌟 */
+  /* 7. 🌟 تظبيط كارت المراجعة الجديد للموبايل 🌟 */
   .minimal-review-card {
-    flex: 0 0 75%; 
-    min-width: 260px; 
-    padding: 16px; 
-    box-sizing: border-box; /* ده اللي بيمنع الكارت يضرب ويتقطع */
+    flex: 0 0 82%; /* الكارت هياخد 82% ويسيب 18% للكارت اللي بعده يبان */
+    min-width: 0; /* 🌟 السر هنا: لغينا الـ 320 بيكسل اللي كانت خانقة الشاشة 🌟 */
+    padding: 16px;
+    box-sizing: border-box;
   }
 
   .header-right-stack {
-    top: 16px; 
+    top: 16px;
     right: 16px;
   }
 
   .header-left-stack {
-    padding-right: 75px; 
+    padding-right: 75px;
   }
 
   .minimal-card-footer {
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     gap: 12px;
   }
 
   .minimal-read-link {
-    font-size: 0.8rem; 
+    font-size: 0.8rem;
   }
 }
