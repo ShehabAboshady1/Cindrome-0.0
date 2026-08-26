@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CINDROME - DISCOVER PAGE (PERFECT 2-COLUMN MOBILE FIX)
+   CINDROME - DISCOVER PAGE (CLEANED FROM CARD OVERRIDES)
    ========================================================================== */
 
 /* 1. Global Setup */
@@ -303,22 +303,14 @@ body {
   box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
   width: 100%;
 }
-
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  justify-items: center;
-}
-
-.cards-grid .content-card {
-  flex: unset;
+  /* السطر السحري ده بيرصهم جنب بعض، ولو المساحة قلت عن 150 بيكسل للكارت بينزله السطر اللي بعده */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px; /* مسافة شيك بين الكروت */
+  justify-items: center; /* بيوسطن الكروت في الخانات بتاعتها */
   width: 100%;
-  max-width: 165px;
-  aspect-ratio: 2 / 3;
-  border-radius: 8px;
 }
-
 /* ==========================================================================
    4. PAGINATION BAR COMPONENT
    ========================================================================== */
@@ -427,19 +419,18 @@ body {
     padding: 14px 12px;
     border-radius: 14px;
   }
-
-  /* 
-     تثبيت كارتين (2) فقط في كل صف لكل الموبايلات لراحة العين ووضوح التفاصيل
-  */
+  /* 🌟 الحل العبقري: استغلال المساحة كاملة بدون فراغات وبدون ما الكروت تضرب 🌟 */
   .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
     gap: 12px;
+    width: 100%;
   }
 
   .cards-grid .content-card {
-    max-width: 100%;
+    width: 100%;
+    max-width: 100%; /* عشان الكارت يلتزم بحجم الخانة بتاعته بالظبط */
   }
-
   .filter-v-divider {
     display: none;
   }
@@ -477,7 +468,7 @@ body {
     font-size: 0.8rem;
   }
 
- /* 🌟 التعديل الذكي للفلاتر: Fluid Wrap عشان تبقى محندقة ومفيهاش مساحات فاضية 🌟 */
+  /* 🌟 التعديل الذكي للفلاتر: Fluid Wrap عشان تبقى محندقة ومفيهاش مساحات فاضية 🌟 */
   .dropdowns-group {
     order: 4;
     width: 100%;
@@ -502,8 +493,8 @@ body {
 
   /* حماية للكلمات الطويلة عشان تنزل سطر جوه الزرار لو الشاشة ضاقت */
   .dropdown-selected span:first-child {
-    white-space: normal; 
-    word-break: break-word; 
+    white-space: normal;
+    word-break: break-word;
   }
 
   .pagination-container {
