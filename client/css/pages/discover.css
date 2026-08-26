@@ -172,84 +172,61 @@ body {
   font-weight: 700;
 }
 
-/* Dropdowns Group */
+/* ==========================================================================
+   NATIVE SELECT DROPDOWNS (Cross-Browser Styling)
+   ========================================================================== */
 .dropdowns-group {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.css-dropdown {
+/* الحاوية اللي بتشيل الزرار والسهم */
+.native-dropdown {
   position: relative;
-  font-family: inherit;
-  width: 135px;
+  display: inline-block;
+  width: max-content;
 }
 
-.css-dropdown summary::-webkit-details-marker {
-  display: none;
-}
-
-.dropdown-selected {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* ستايل الزرار نفسه */
+.native-dropdown select {
+  appearance: none; /* بيمسح الشكل البلدي بتاع المتصفح */
+  -webkit-appearance: none;
   background: var(--dark-bg);
   border: 1px solid rgba(241, 227, 200, 0.12);
   border-radius: 50px;
-  padding: 8px 16px;
+  padding: 8px 32px 8px 16px; /* مساحة على اليمين عشان السهم */
   color: var(--text-cream);
   font-size: 0.85rem;
   font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  list-style: none;
+  outline: none;
   transition: all 0.25s ease;
-  user-select: none;
 }
 
-.dropdown-selected:hover,
-.css-dropdown[open] .dropdown-selected {
+.native-dropdown select:hover,
+.native-dropdown select:focus {
   border-color: var(--accent-teal);
   box-shadow: 0 0 10px rgba(9, 158, 158, 0.25);
 }
 
-.dropdown-arrow {
+/* السهم الصغير */
+.native-dropdown .dropdown-arrow {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 0.55rem;
   color: var(--accent-teal);
-  transition: transform 0.3s ease;
+  pointer-events: none; /* عشان اليوزر لو داس على السهم يدوس على القايمة نفسها */
 }
 
-.css-dropdown[open] .dropdown-arrow {
-  transform: rotate(180deg);
-}
-
-.dropdown-list {
-  position: absolute;
-  top: 120%;
-  left: 0;
-  width: 100%;
+/* تلوين الخيارات للديسكتوب */
+.native-dropdown select option {
   background: var(--maincolor);
-  border: 1px solid rgba(241, 227, 200, 0.15);
-  border-radius: 16px;
-  box-shadow: 0 15px 35px rgba(1, 10, 9, 0.95);
-  list-style: none;
-  padding: 6px;
-  margin: 0;
-  z-index: 50;
-}
-
-.dropdown-item {
-  padding: 8px 12px;
-  color: rgba(241, 227, 200, 0.75);
-  font-size: 0.82rem;
-  font-weight: 600;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.dropdown-item:hover {
-  background: rgba(9, 158, 158, 0.18);
   color: var(--text-cream);
+  font-weight: 600;
 }
 
 /* Reset Button */
@@ -468,33 +445,29 @@ body {
     font-size: 0.8rem;
   }
 
-  /* 🌟 التعديل الذكي للفلاتر: Fluid Wrap عشان تبقى محندقة ومفيهاش مساحات فاضية 🌟 */
+/* 🌟 السكرول الأفقي الجميل في الموبايل من غير أي مشاكل 🌟 */
   .dropdowns-group {
     order: 4;
     width: 100%;
-    display: flex; /* لغينا الـ grid */
-    flex-wrap: wrap; /* بيسمح ليهم ينزلوا تحت بعض لما يتزنقوا */
-    gap: 8px; /* مسافة متناسقة */
-    justify-content: flex-start;
+    display: flex;
+    flex-wrap: nowrap; /* ممنوع الكسر لتحت */
+    overflow-x: auto; /* سكرول أفقي */
+    gap: 12px;
+    padding-bottom: 8px; /* مساحة لشريط السكرول */
+    -webkit-overflow-scrolling: touch; /* نعومة سكرول الآيفون */
   }
 
-  .css-dropdown {
-    width: max-content; /* الفلتر بياخد مقاس الكلمة بالظبط */
-    max-width: 100%;
+  /* تصميم شريط السكرول */
+  .dropdowns-group::-webkit-scrollbar {
+    height: 3px;
   }
-
-  /* تظبيط البوكس الداخلي عشان يقفل على الكلمة */
-  .dropdown-selected {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 6px 12px;
-    gap: 8px;
+  .dropdowns-group::-webkit-scrollbar-track {
+    background: rgba(241, 227, 200, 0.05);
+    border-radius: 10px;
   }
-
-  /* حماية للكلمات الطويلة عشان تنزل سطر جوه الزرار لو الشاشة ضاقت */
-  .dropdown-selected span:first-child {
-    white-space: normal;
-    word-break: break-word;
+  .dropdowns-group::-webkit-scrollbar-thumb {
+    background: var(--accent-teal);
+    border-radius: 10px;
   }
 
   .pagination-container {
