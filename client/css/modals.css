@@ -686,10 +686,10 @@ input:checked ~ .privacy-label {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 9999;
-  display: none; 
+  display: none;
   justify-content: center;
   /* 🌟 السر هنا: غيرنا center لـ flex-start عشان نرفعه لفوق 🌟 */
-  align-items: flex-start; 
+  align-items: flex-start;
   /* 🌟 ضفنا مسافة من فوق عشان ميلزقش في سقف الشاشة 🌟 */
   padding-top: 15vh; /* تقدر تزودها أو تنقصها لو عايزه ينزل أو يطلع شوية */
   padding-left: 15px;
@@ -979,15 +979,32 @@ input:checked ~ .privacy-label {
     padding: 6px 12px;
     font-size: 0.8rem;
   }
+  /* 🌟 التعديل النهائي الذكي: Flex Wrap (زي ما طلبت بالظبط) 🌟 */
   .g-dropdowns-group {
     order: 4;
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap; /* 🌟 ده الـ Wrapping اللي قولت عليه: بيزحلقهم للسطر اللي تحته لو اتزنقوا 🌟 */
+    gap: 8px; /* مسافة شيك وموحدة بين كل فلتر والتاني (أفقياً ورأسياً) */
+    justify-content: flex-start; /* بيبدأوا رص من الشمال */
   }
+
   .g-css-dropdown {
+    width: max-content; /* 🌟 السر هنا: الفلتر هياخد مقاس الكلمة + السهم بالظبط، ولا ملي زيادة 🌟 */
+    max-width: 100%; /* حماية أخيرة عشان لو الكلمة خرافية الطول، متخرجش برا الشاشة */
+  }
+
+  .g-dropdown-selected {
     width: 100%;
+    box-sizing: border-box;
+    padding: 6px 12px;
+    gap: 8px; /* مسافة محندقة بين الكلمة والسهم */
+  }
+
+  /* 🌟 عشان لو الكلمة طويلة جدا جدا، تنزل سطر جوه الزرار بدل ما تبوظ الدنيا 🌟 */
+  .g-dropdown-selected span:first-child {
+    white-space: normal;
+    word-break: break-word;
   }
   .g-filter-v-divider {
     display: none;
