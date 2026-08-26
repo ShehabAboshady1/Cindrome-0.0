@@ -21,13 +21,15 @@ body {
   margin: 0;
   height: 100vh;
 }
-/* 🌟 إخفاء المربع الأزرق المزعج بتاع الأندرويد عند الضغط 🌟 */
+/* 🌟 إخفاء المربع الأزرق المزعج بتاع الأندرويد عند الضغط (شامل النجوم) 🌟 */
 button,
 a,
 input,
 summary,
 .icon-toggle-btn,
-.dropdown-selected {
+.dropdown-selected,
+.star-rating-input,
+.rate-star {
   -webkit-tap-highlight-color: transparent;
 }
 /* ==========================================================================
