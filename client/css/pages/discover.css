@@ -477,16 +477,33 @@ body {
     font-size: 0.8rem;
   }
 
+ /* 🌟 التعديل الذكي للفلاتر: Fluid Wrap عشان تبقى محندقة ومفيهاش مساحات فاضية 🌟 */
   .dropdowns-group {
     order: 4;
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    display: flex; /* لغينا الـ grid */
+    flex-wrap: wrap; /* بيسمح ليهم ينزلوا تحت بعض لما يتزنقوا */
+    gap: 8px; /* مسافة متناسقة */
+    justify-content: flex-start;
   }
 
   .css-dropdown {
+    width: max-content; /* الفلتر بياخد مقاس الكلمة بالظبط */
+    max-width: 100%;
+  }
+
+  /* تظبيط البوكس الداخلي عشان يقفل على الكلمة */
+  .dropdown-selected {
     width: 100%;
+    box-sizing: border-box;
+    padding: 6px 12px;
+    gap: 8px;
+  }
+
+  /* حماية للكلمات الطويلة عشان تنزل سطر جوه الزرار لو الشاشة ضاقت */
+  .dropdown-selected span:first-child {
+    white-space: normal; 
+    word-break: break-word; 
   }
 
   .pagination-container {
