@@ -686,10 +686,15 @@ input:checked ~ .privacy-label {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 9999;
-  display: none;
+  display: none; 
   justify-content: center;
-  align-items: center;
-  padding: 15px;
+  /* 🌟 السر هنا: غيرنا center لـ flex-start عشان نرفعه لفوق 🌟 */
+  align-items: flex-start; 
+  /* 🌟 ضفنا مسافة من فوق عشان ميلزقش في سقف الشاشة 🌟 */
+  padding-top: 15vh; /* تقدر تزودها أو تنقصها لو عايزه ينزل أو يطلع شوية */
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
 }
 
 .search-modal-container {
