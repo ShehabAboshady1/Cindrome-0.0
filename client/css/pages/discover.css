@@ -36,7 +36,7 @@ body {
 
 .discover-subtitle {
   font-size: 0.95rem;
-  color: rgba(241, 227, 200, 0.6);
+  color: var(--accent-teal);
   max-width: 500px;
   margin: 0 auto;
   line-height: 1.5;
