@@ -15,11 +15,11 @@
         <link rel="stylesheet" href="../css/main.css?v=${v}">
         <link rel="stylesheet" href="../css/navbar.css?v=${v}">
         <link rel="stylesheet" href="../css/hero.css?v=${v}">
-        <link rel="stylesheet" href="../css/cards.css?v=${v}">
         <link rel="stylesheet" href="../css/lists-carousel.css?v=${v}">
         <link rel="stylesheet" href="../css/carousel.css?v=${v}">
         <link rel="stylesheet" href="../css/pages/discover.css?v=${v}">
         <link rel="stylesheet" href="../css/modals.css?v=${v}">
+        <link rel="stylesheet" href="../css/cards.css?v=${v}">
       `);
     </script>
 </head>
@@ -129,68 +129,67 @@
 
             <div class="filter-v-divider" role="separator"></div>
 
-            <!-- 3. Pure CSS Dropdowns Group -->
+            <!-- 3. Native OS Dropdowns Group -->
             <div class="dropdowns-group">
 
                 <!-- Genre Dropdown -->
-                <details class="css-dropdown">
-                    <summary class="dropdown-selected">
-                        <span>Genre</span>
-                        <span class="dropdown-arrow" aria-hidden="true">▼</span>
-                    </summary>
-                    <ul class="dropdown-list">
-                        <li class="dropdown-item">All Genres</li>
-                        <li class="dropdown-item">Action</li>
-                        <li class="dropdown-item">Sci-Fi</li>
-                        <li class="dropdown-item">Drama</li>
-                        <li class="dropdown-item">Mystery</li>
-                        <li class="dropdown-item">Psychological</li>
-                        <li class="dropdown-item">Fantasy</li>
-                        <li class="dropdown-item">Comedy</li>
-                    </ul>
-                </details>
+                <div class="native-dropdown">
+                    <select aria-label="Genre">
+                        <option value="" disabled selected hidden>Genre</option>
+                        <option value="all">All Genres</option>
+                        <option value="action">Action</option>
+                        <option value="scifi">Sci-Fi</option>
+                        <option value="drama">Drama</option>
+                        <option value="mystery">Mystery</option>
+                        <option value="psychological">Psychological</option>
+                        <option value="fantasy">Fantasy</option>
+                        <option value="comedy">Comedy</option>
+                    </select>
+                    <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                </div>
 
                 <!-- Rating Dropdown -->
-                <details class="css-dropdown">
-                    <summary class="dropdown-selected">
-                        <span>Rating</span>
-                        <span class="dropdown-arrow" aria-hidden="true">▼</span>
-                    </summary>
-                    <ul class="dropdown-list">
-                        <li class="dropdown-item">All Ratings</li>
-                        <li class="dropdown-item">★ 9.0+</li>
-                        <li class="dropdown-item">★ 8.0+</li>
-                        <li class="dropdown-item">★ 7.0+</li>
-                    </ul>
-                </details>
+                <div class="native-dropdown">
+                    <select aria-label="Rating">
+                        <option value="" disabled selected hidden>Rating</option>
+                        <option value="all">All Ratings</option>
+                        <option value="9">★ 9.0+</option>
+                        <option value="8">★ 8.0+</option>
+                        <option value="7">★ 7.0+</option>
+                    </select>
+                    <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                </div>
 
                 <!-- Sort By Dropdown -->
-                <details class="css-dropdown">
-                    <summary class="dropdown-selected">
-                        <span>Sort By</span>
-                        <span class="dropdown-arrow" aria-hidden="true">▼</span>
-                    </summary>
-                    <ul class="dropdown-list">
-                        <li class="dropdown-item">Most Popular</li>
-                        <li class="dropdown-item">Top Rated</li>
-                        <li class="dropdown-item">Newest Releases</li>
-                    </ul>
-                </details>
+                <div class="native-dropdown">
+                    <select aria-label="Sort By">
+                        <option value="" disabled selected hidden>Sort By</option>
+                        <option value="popular">Popular</option>
+                        <option value="rating">Rating</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                    <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                </div>
 
                 <!-- Year Dropdown -->
-                <details class="css-dropdown">
-                    <summary class="dropdown-selected">
-                        <span>Year</span>
-                        <span class="dropdown-arrow" aria-hidden="true">▼</span>
-                    </summary>
-                    <ul class="dropdown-list">
-                        <li class="dropdown-item">All Years</li>
-                        <li class="dropdown-item">2024 - 2026</li>
-                        <li class="dropdown-item">2020 - 2023</li>
-                        <li class="dropdown-item">2010 - 2019</li>
-                        <li class="dropdown-item">Classics</li>
-                    </ul>
-                </details>
+                <div class="native-dropdown">
+                    <select aria-label="Year">
+                        <option value="" disabled selected hidden>Year</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2010s">2010s</option>
+                        <option value="2000s">2000s</option>
+                        <option value="90s">90s</option>
+                        <option value="80s">80s</option>
+                        <option value="classics">Classics</option>
+                    </select>
+                    <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                </div>
 
             </div>
 
