@@ -411,11 +411,11 @@
   
   /* 🌟 الحل النهائي والقطعي: القايمة هتنزل 똑عرض الزرار أبوها بالظبط من غير ما تفرش 🌟 */
   .diary-filter-section .dropdown-list {
-      left: 0 !important;
-      right: auto !important;
-      transform: none !important;
-      width: 100% !important;     /* 👈 نفس العرض بالمللي */
-      min-width: 100% !important; /* 👈 يمنعها تعرض أو تكش */
+      left: 0;
+      right: auto;
+      transform: none;
+      width: 100%;     /* 👈 نفس العرض بالمللي */
+      min-width: 100%; /* 👈 يمنعها تعرض أو تكش */
       box-sizing: border-box;
       padding: 6px 2px;
   }
