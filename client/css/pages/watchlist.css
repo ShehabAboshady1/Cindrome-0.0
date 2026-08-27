@@ -1,0 +1,431 @@
+/* ==========================================================================
+   CINDROME - WATCHLIST PAGE (UNIFIED & NO OVERFLOW)
+   ========================================================================== */
+
+/* 🌟 1. GLOBAL SETUP (OVERFLOW FIX) 🌟 */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden; /* الضربة القاضية لعفريت السكرول الأفقي */
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* ==========================================================================
+   2. HEADER & META SECTION
+   ========================================================================== */
+.watchlist-main-section {
+  width: 100%;
+  padding-top: 40px;
+  min-height: 70vh;
+}
+
+.watchlist-header-section {
+  width: 100%;
+  margin: 0 auto 20px auto;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.watchlist-title {
+  font-size: 2.8rem; 
+  font-weight: 800;
+  color: var(--text-cream);
+  letter-spacing: 2px;
+  margin: 0;
+  text-align: center;
+}
+
+.grid-header-meta {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(241, 227, 200, 0.08); 
+}
+
+.grid-count-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-cream);
+  letter-spacing: 0.5px;
+  border-left: 4px solid var(--accent-teal);
+  padding-left: 10px;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   3. FILTER BAR SECTION (UNIFIED WITH DISCOVER)
+   ========================================================================== */
+.discover-filter-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px 15px;
+  margin-bottom: 25px;
+  position: relative;
+  z-index: 10;
+}
+
+.filter-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(22, 22, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  padding: 8px 20px;
+  border-radius: 100px;
+  box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
+  font-family: inherit;
+  position: relative;
+  z-index: 11;
+}
+
+.filter-v-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(241, 227, 200, 0.12);
+}
+
+.filter-search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--dark-bg);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 50px;
+  padding: 8px 16px;
+  transition: all 0.25s ease;
+}
+
+.filter-search-box:focus-within {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 12px rgba(9, 158, 158, 0.35);
+}
+
+.filter-search-box .search-icon {
+  width: 15px;
+  height: 15px;
+  stroke: var(--text-cream);
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.filter-search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-cream);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  width: 130px;
+  letter-spacing: 0.3px;
+}
+
+.filter-search-box input::placeholder {
+  color: var(--text-cream);
+  opacity: 0.45;
+  font-weight: 500;
+}
+
+.type-selector {
+  display: flex;
+  background: var(--dark-bg);
+  border: 1px solid rgba(241, 227, 200, 0.08);
+  padding: 4px;
+  border-radius: 50px;
+}
+
+.type-pill {
+  background: transparent;
+  border: none;
+  color: var(--text-cream);
+  opacity: 0.65;
+  padding: 6px 18px;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.type-pill:hover {
+  opacity: 1;
+}
+
+.type-pill.active {
+  background: var(--maincolor);
+  color: var(--text-cream);
+  opacity: 1;
+  border: 1px solid var(--accent-teal);
+  box-shadow: 0 0 10px rgba(9, 158, 158, 0.35);
+  font-weight: 700;
+}
+
+.dropdowns-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.css-dropdown {
+  position: relative;
+  font-family: inherit;
+  width: max-content; 
+}
+
+.css-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.dropdown-selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--dark-bg);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 50px;
+  padding: 8px 16px;
+  gap: 10px;
+  color: var(--text-cream);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.dropdown-selected:hover,
+.css-dropdown[open] .dropdown-selected {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 10px rgba(9, 158, 158, 0.25);
+}
+
+.dropdown-arrow {
+  font-size: 0.55rem;
+  color: var(--accent-teal);
+  transition: transform 0.3s ease;
+}
+
+.css-dropdown[open] .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  min-width: 100%;
+  width: max-content; 
+  background: var(--maincolor);
+  border: 1px solid rgba(241, 227, 200, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(1, 10, 9, 0.95);
+  list-style: none;
+  padding: 6px;
+  margin: 0;
+  z-index: 50;
+  
+  /* 🌟 الأكواد اللي كانت ناقصة عشان السكرول بار يختفي ويبقى شيك 🌟 */
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: none; /* بيخفيه في فايرفوكس */
+}
+
+.dropdown-list::-webkit-scrollbar {
+  display: none; /* بيخفيه في كروم وسفاري */
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  color: rgba(241, 227, 200, 0.75);
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(9, 158, 158, 0.18);
+  color: var(--text-cream);
+}
+
+.reset-filter-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-cream);
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.reset-filter-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.reset-filter-btn:hover {
+  opacity: 1;
+  background-color: rgba(9, 158, 158, 0.15);
+  color: var(--accent-teal);
+  transform: rotate(-90deg) scale(1.08);
+}
+
+/* ==========================================================================
+   4. WATCHLIST GRID SECTION
+   ========================================================================== */
+.watchlist-grid-section {
+  width: 92%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 0 30px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.watchlist-grid-container {
+  background: rgba(22, 22, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 20px;
+  padding: 24px 20px;
+  box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
+  width: 100%;
+}
+
+.watchlist-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 16px;
+  justify-items: center;
+}
+
+.watchlist-cards-grid .mini-content-card {
+  width: 100%;
+  max-width: 120px; 
+  flex: unset;
+}
+
+/* ==========================================================================
+   5. RESPONSIVE BREAKPOINT (MOBILE <= 920px)
+   ========================================================================== */
+@media (max-width: 920px) {
+  .watchlist-title {
+    font-size: 1.8rem;
+  }
+
+  .watchlist-grid-section {
+    width: 95%;
+  }
+
+  .watchlist-grid-container {
+    padding: 14px 12px;
+    border-radius: 14px;
+  }
+
+  .watchlist-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    gap: 12px;
+  }
+  .watchlist-cards-grid .mini-content-card {
+    max-width: 100%;
+  }
+  .filter-v-divider {
+    display: none;
+  }
+
+  .filter-bar-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-radius: 20px;
+    padding: 12px;
+    width: 100%;
+  }
+
+  .filter-search-box {
+    order: 1;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .reset-filter-btn {
+    order: 2;
+    background: rgba(241, 227, 200, 0.05);
+    border: 1px solid rgba(241, 227, 200, 0.1);
+  }
+
+  .type-selector {
+    order: 3;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .type-pill {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  /* 🌟 رصة 2x2 مفرودة بالكامل (UNIFIED) 🌟 */
+  .dropdowns-group {
+    order: 4;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .dropdowns-group .css-dropdown {
+    width: 100%;
+    display: block; 
+  }
+
+  .dropdowns-group .dropdown-selected {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+  }
+
+  /* توسيط الخيارات جوه القايمة */
+  .dropdowns-group .dropdown-item {
+    text-align: center;
+  }
+
+  /* تظبيط القوايم وتوسيطها تحت الزرار بالمللي */
+  .dropdowns-group .dropdown-list {
+    min-width: 120px; 
+    width: max-content; 
+    max-width: 85vw;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .dropdowns-group .css-dropdown:nth-child(even) .dropdown-list {
+    left: 50%;
+    right: auto;
+  }
+}
