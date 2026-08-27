@@ -505,21 +505,25 @@ body {
     padding: 8px 14px;
   }
 
-  /* 🌟 السحر الجديد: توسيط الخيارات جوه القايمة عشان تليق مع الزرار المتسنتر 🌟 */
+  /* توسيط الخيارات جوه القايمة */
   .dropdowns-group .dropdown-item {
     text-align: center;
   }
 
-  /* تظبيط القوايم عشان تفتح بشياكة فوق الكروت */
+  /* 🌟 تظبيط القوايم عشان تفتح بشياكة ومقاسها يبقى محندق على قد الكلمة 🌟 */
   .dropdowns-group .dropdown-list {
-    min-width: 100%;
+    min-width: 120px; /* عرض صغير ومحندق */
+    width: max-content; /* بياخد مساحة الكلام بالظبط */
     max-width: 85vw;
+    /* السحر هنا: بنسنتر القايمة بالظبط تحت الزرار */
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  /* الفلترين اللي على اليمين يفتحوا لجوه عشان ميعملوش Overflow */
+  /* لغينا الخواص القديمة بتاعة الفلاتر اللي على اليمين عشان التسنتر بيظبطهم كلهم */
   .dropdowns-group .css-dropdown:nth-child(even) .dropdown-list {
-    left: auto;
-    right: 0;
+    left: 50%;
+    right: auto;
   }
 
   .pagination-container {
