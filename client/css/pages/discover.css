@@ -480,38 +480,44 @@ body {
     font-size: 0.8rem;
   }
 
-  /* 🌟 الفلاتر بشكلها الطبيعي (بدون مط ولا مساحات فاضية) 🌟 */
+  /* 🌟 رصة 2x2 مفرودة بالكامل بدون أي فراغات 🌟 */
   .dropdowns-group {
     order: 4;
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* بيسنترهم في النص شكلها أشيك بكتير */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
 
-  .css-dropdown {
-    width: max-content; /* مقاس الكلمة بس بدون أي إجبار */
+  .dropdowns-group .css-dropdown {
+    width: 100%;
+    display: block; 
   }
 
-  .dropdown-selected {
-    width: max-content;
+  /* الزرار متسنتر */
+  .dropdowns-group .dropdown-selected {
+    width: 100%;
     box-sizing: border-box;
     display: flex;
-    justify-content: center; /* مفيش مساحات شاسعة بين الكلمة والسهم */
+    justify-content: center;
     align-items: center;
-    gap: 8px; /* مسافة شيك وصغيرة جداً */
+    gap: 8px;
     padding: 8px 14px;
   }
 
-  /* تظبيط القوايم عشان تفتح بشياكة فوق الكروت */
-  .dropdown-list {
-    min-width: 140px;
-    max-width: 85vw; /* حماية لو الكلمة طويلة */
+  /* 🌟 السحر الجديد: توسيط الخيارات جوه القايمة عشان تليق مع الزرار المتسنتر 🌟 */
+  .dropdowns-group .dropdown-item {
+    text-align: center;
   }
 
-  /* الفلترين اللي في الآخر يفتحوا لجوه عشان ميعملوش Overflow */
-  .css-dropdown:nth-last-child(-n+2) .dropdown-list {
+  /* تظبيط القوايم عشان تفتح بشياكة فوق الكروت */
+  .dropdowns-group .dropdown-list {
+    min-width: 100%;
+    max-width: 85vw;
+  }
+
+  /* الفلترين اللي على اليمين يفتحوا لجوه عشان ميعملوش Overflow */
+  .dropdowns-group .css-dropdown:nth-child(even) .dropdown-list {
     left: auto;
     right: 0;
   }
