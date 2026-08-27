@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CINDROME - DISCOVER PAGE (CLEANED FROM CARD OVERRIDES)
+   CINDROME - DISCOVER PAGE (FINAL CLEAN VERSION)
    ========================================================================== */
 
 /* 1. Global Setup */
@@ -173,7 +173,7 @@ body {
 }
 
 /* ==========================================================================
-   NATIVE SELECT DROPDOWNS (Cross-Browser Styling)
+   PURE CSS DROPDOWNS (DESKTOP)
    ========================================================================== */
 .dropdowns-group {
   display: flex;
@@ -181,52 +181,86 @@ body {
   gap: 12px;
 }
 
-/* الحاوية اللي بتشيل الزرار والسهم */
-.native-dropdown {
+.css-dropdown {
   position: relative;
-  display: inline-block;
-  width: max-content;
+  font-family: inherit;
+  width: max-content; 
 }
 
-/* ستايل الزرار نفسه */
-.native-dropdown select {
-  appearance: none; /* بيمسح الشكل البلدي بتاع المتصفح */
-  -webkit-appearance: none;
+.css-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.dropdown-selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: var(--dark-bg);
   border: 1px solid rgba(241, 227, 200, 0.12);
   border-radius: 50px;
-  padding: 8px 32px 8px 16px; /* مساحة على اليمين عشان السهم */
+  padding: 8px 16px;
+  gap: 10px;
   color: var(--text-cream);
   font-size: 0.85rem;
   font-weight: 600;
-  font-family: inherit;
   cursor: pointer;
-  outline: none;
+  list-style: none;
   transition: all 0.25s ease;
+  user-select: none;
 }
 
-.native-dropdown select:hover,
-.native-dropdown select:focus {
+.dropdown-selected:hover,
+.css-dropdown[open] .dropdown-selected {
   border-color: var(--accent-teal);
   box-shadow: 0 0 10px rgba(9, 158, 158, 0.25);
 }
 
-/* السهم الصغير */
-.native-dropdown .dropdown-arrow {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
+.dropdown-arrow {
   font-size: 0.55rem;
   color: var(--accent-teal);
-  pointer-events: none; /* عشان اليوزر لو داس على السهم يدوس على القايمة نفسها */
+  transition: transform 0.3s ease;
 }
 
-/* تلوين الخيارات للديسكتوب */
-.native-dropdown select option {
+.css-dropdown[open] .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  min-width: 100%;
+  width: max-content; 
   background: var(--maincolor);
-  color: var(--text-cream);
+  border: 1px solid rgba(241, 227, 200, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(1, 10, 9, 0.95);
+  list-style: none;
+  padding: 6px;
+  margin: 0;
+  z-index: 50;
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.dropdown-list::-webkit-scrollbar {
+  display: none;
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  color: rgba(241, 227, 200, 0.75);
+  font-size: 0.82rem;
   font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(9, 158, 158, 0.18);
+  color: var(--text-cream);
 }
 
 /* Reset Button */
@@ -282,12 +316,12 @@ body {
 }
 .cards-grid {
   display: grid;
-  /* السطر السحري ده بيرصهم جنب بعض، ولو المساحة قلت عن 150 بيكسل للكارت بينزله السطر اللي بعده */
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px; /* مسافة شيك بين الكروت */
-  justify-items: center; /* بيوسطن الكروت في الخانات بتاعتها */
+  gap: 16px;
+  justify-items: center;
   width: 100%;
 }
+
 /* ==========================================================================
    4. PAGINATION BAR COMPONENT
    ========================================================================== */
@@ -396,7 +430,7 @@ body {
     padding: 14px 12px;
     border-radius: 14px;
   }
-  /* 🌟 الحل العبقري: استغلال المساحة كاملة بدون فراغات وبدون ما الكروت تضرب 🌟 */
+
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
@@ -406,8 +440,9 @@ body {
 
   .cards-grid .content-card {
     width: 100%;
-    max-width: 100%; /* عشان الكارت يلتزم بحجم الخانة بتاعته بالظبط */
+    max-width: 100%;
   }
+  
   .filter-v-divider {
     display: none;
   }
@@ -445,29 +480,40 @@ body {
     font-size: 0.8rem;
   }
 
-/* 🌟 السكرول الأفقي الجميل في الموبايل من غير أي مشاكل 🌟 */
+  /* 🌟 MOBILE FILTERS: SOLID CONTROL PANEL (NO GAPS, NO CLIPPING) 🌟 */
   .dropdowns-group {
     order: 4;
     width: 100%;
-    display: flex;
-    flex-wrap: nowrap; /* ممنوع الكسر لتحت */
-    overflow-x: auto; /* سكرول أفقي */
-    gap: 12px;
-    padding-bottom: 8px; /* مساحة لشريط السكرول */
-    -webkit-overflow-scrolling: touch; /* نعومة سكرول الآيفون */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* بيقسم المساحة بالنص بالمللي */
+    gap: 10px;
   }
 
-  /* تصميم شريط السكرول */
-  .dropdowns-group::-webkit-scrollbar {
-    height: 3px;
+  .css-dropdown {
+    width: 100%; /* الزرار بياخد مساحته كاملة مفيش فراغات */
   }
-  .dropdowns-group::-webkit-scrollbar-track {
-    background: rgba(241, 227, 200, 0.05);
-    border-radius: 10px;
+
+  .dropdown-selected {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 14px;
   }
-  .dropdowns-group::-webkit-scrollbar-thumb {
-    background: var(--accent-teal);
-    border-radius: 10px;
+
+  .dropdown-list {
+    position: absolute;
+    top: 120%;
+    width: max-content;
+    min-width: 100%;
+    max-width: 85vw; /* عشان لو الكلمة طويلة متخرجش بره الشاشة */
+    z-index: 100;
+  }
+
+  /* 🌟 السحر هنا: الفلترين اللي على اليمين يفتحوا ناحية الشمال 🌟 */
+  .css-dropdown:nth-child(even) .dropdown-list {
+    left: auto;
+    right: 0;
   }
 
   .pagination-container {
