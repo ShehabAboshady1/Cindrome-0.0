@@ -366,7 +366,6 @@
 .diary-square-btn.delete-btn:hover svg {
   color: #ff4757;
 }
-
 /* ==========================================================================
    📱 DIARY MOBILE RESPONSIVE
 ========================================================================== */
@@ -381,25 +380,28 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap; 
-    width: 100%;
+    width: max-content; 
+    max-width: 100%;
+    margin: 0 auto; 
     gap: 6px; 
-    justify-content: space-between;
+    justify-content: center;
     padding: 8px 10px;
     border-radius: 50px; 
   }
 
+  /* 🌟 السر هنا: اديناهم عرض ثابت عشان الزراير والقوايم يبقوا مقاس واحد 🌟 */
   .diary-filter-section .css-dropdown {
-    flex: 1; 
-    min-width: 0;
+    min-width: 95px; 
+    width: max-content;
+    flex: none;
   }
 
   .diary-filter-section .dropdown-selected {
     justify-content: center;
-    width: 100%;
-    padding: 6px 4px;
+    width: 100%; /* هياخد عرض الـ 95px بالكامل */
+    padding: 6px 4px; 
     font-size: 0.75rem; 
     gap: 4px;
-    /* 🌟 شيلنا إخفاء الحدود والخلفية، عشان يرجعوا متحددين وشيك زي اللابتوب 🌟 */
   }
   
   .diary-filter-section .filter-v-divider {
@@ -408,13 +410,33 @@
     align-self: center;
   }
   
-  /* 🌟 سنترة الـ 3 قوايم تحت الكلمات بتاعتهم بالمللي وتظبيط عرضهم 🌟 */
+  /* 🌟 القايمة هتاخد نفس عرض الزرار بالظبط (100%) 🌟 */
   .diary-filter-section .css-dropdown .dropdown-list {
+      width: 100%; 
+      min-width: 100%; 
+      box-sizing: border-box;
+      padding: 6px 2px;
+  }
+
+  /* قايمة السنة (شمال) تفتح لجوه */
+  .diary-filter-section .css-dropdown:first-child .dropdown-list {
+      left: 0;
+      right: auto;
+      transform: none;
+  }
+
+  /* قايمة الشهر (في النص) متسنترة بالظبط تحت زرارها */
+  .diary-filter-section .css-dropdown:nth-child(3) .dropdown-list {
       left: 50%;
       right: auto;
       transform: translateX(-50%);
-      min-width: 120px; 
-      box-sizing: border-box; /* عشان القايمة متفرش وتطلع أعرض من الزرار */
+  }
+
+  /* قايمة التاريخ (يمين) تفتح لجوه */
+  .diary-filter-section .css-dropdown:last-child .dropdown-list {
+      left: auto;
+      right: 0;
+      transform: none;
   }
 
   /* 2. Container & Row Tuning */
