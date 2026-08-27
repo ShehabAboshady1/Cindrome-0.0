@@ -480,38 +480,38 @@ body {
     font-size: 0.8rem;
   }
 
-  /* 🌟 MOBILE FILTERS: SOLID CONTROL PANEL (NO GAPS, NO CLIPPING) 🌟 */
+  /* 🌟 الفلاتر بشكلها الطبيعي (بدون مط ولا مساحات فاضية) 🌟 */
   .dropdowns-group {
     order: 4;
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* بيقسم المساحة بالنص بالمللي */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* بيسنترهم في النص شكلها أشيك بكتير */
     gap: 10px;
   }
 
   .css-dropdown {
-    width: 100%; /* الزرار بياخد مساحته كاملة مفيش فراغات */
+    width: max-content; /* مقاس الكلمة بس بدون أي إجبار */
   }
 
   .dropdown-selected {
-    width: 100%;
+    width: max-content;
     box-sizing: border-box;
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* مفيش مساحات شاسعة بين الكلمة والسهم */
+    align-items: center;
+    gap: 8px; /* مسافة شيك وصغيرة جداً */
     padding: 8px 14px;
   }
 
+  /* تظبيط القوايم عشان تفتح بشياكة فوق الكروت */
   .dropdown-list {
-    position: absolute;
-    top: 120%;
-    width: max-content;
-    min-width: 100%;
-    max-width: 85vw; /* عشان لو الكلمة طويلة متخرجش بره الشاشة */
-    z-index: 100;
+    min-width: 140px;
+    max-width: 85vw; /* حماية لو الكلمة طويلة */
   }
 
-  /* 🌟 السحر هنا: الفلترين اللي على اليمين يفتحوا ناحية الشمال 🌟 */
-  .css-dropdown:nth-child(even) .dropdown-list {
+  /* الفلترين اللي في الآخر يفتحوا لجوه عشان ميعملوش Overflow */
+  .css-dropdown:nth-last-child(-n+2) .dropdown-list {
     left: auto;
     right: 0;
   }
