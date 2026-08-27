@@ -97,7 +97,7 @@
   color: var(--accent-teal);
 }
 
-/* 🌟 تظبيط القايمة هنا (السر كله في box-sizing والسنترة) 🌟 */
+/* 🌟 السنترة والتظبيط في اللابتوب 🌟 */
 .diary-filter-section .dropdown-list {
   position: absolute;
   top: 120%;
@@ -105,7 +105,7 @@
   transform: translateX(-50%);
   min-width: 100%;
   width: max-content;
-  box-sizing: border-box; /* 👈 بيمنع القايمة تعرض بسبب الـ padding */
+  box-sizing: border-box;
   background: var(--maincolor);
   border: 1px solid rgba(241, 227, 200, 0.15);
   border-radius: 16px;
@@ -366,12 +366,12 @@
 .diary-square-btn.delete-btn:hover svg {
   color: #ff4757;
 }
+
 /* ==========================================================================
    📱 DIARY MOBILE RESPONSIVE
 ========================================================================== */
 @media (max-width: 768px) {
   
-  /* 1. Filter Bar Fix (Desktop Feel on Mobile) */
   .diary-filter-section {
     padding: 10px 5px;
   }
@@ -380,26 +380,25 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap; 
-    width: max-content; 
-    max-width: 100%;
+    width: 100%; /* 🌟 بيفرد بعرض الشاشة عشان الزراير تاخد راحتها 🌟 */
     margin: 0 auto; 
     gap: 6px; 
-    justify-content: center;
+    justify-content: space-between;
     padding: 8px 10px;
     border-radius: 50px; 
   }
 
-  /* 🌟 السر هنا: اديناهم عرض ثابت عشان الزراير والقوايم يبقوا مقاس واحد 🌟 */
+  /* 🌟 الزراير هتتقسم بالتساوي (كل زرار ياخد تلت المساحة) 🌟 */
   .diary-filter-section .css-dropdown {
-    min-width: 95px; 
-    width: max-content;
-    flex: none;
+    flex: 1; 
+    width: auto;
+    min-width: 0;
   }
 
   .diary-filter-section .dropdown-selected {
     justify-content: center;
-    width: 100%; /* هياخد عرض الـ 95px بالكامل */
-    padding: 6px 4px; 
+    width: 100%; 
+    padding: 6px 2px; 
     font-size: 0.75rem; 
     gap: 4px;
   }
@@ -410,33 +409,15 @@
     align-self: center;
   }
   
-  /* 🌟 القايمة هتاخد نفس عرض الزرار بالظبط (100%) 🌟 */
-  .diary-filter-section .css-dropdown .dropdown-list {
-      width: 100%; 
-      min-width: 100%; 
+  /* 🌟 الحل النهائي والقطعي: القايمة هتنزل 똑عرض الزرار أبوها بالظبط من غير ما تفرش 🌟 */
+  .diary-filter-section .dropdown-list {
+      left: 0 !important;
+      right: auto !important;
+      transform: none !important;
+      width: 100% !important;     /* 👈 نفس العرض بالمللي */
+      min-width: 100% !important; /* 👈 يمنعها تعرض أو تكش */
       box-sizing: border-box;
       padding: 6px 2px;
-  }
-
-  /* قايمة السنة (شمال) تفتح لجوه */
-  .diary-filter-section .css-dropdown:first-child .dropdown-list {
-      left: 0;
-      right: auto;
-      transform: none;
-  }
-
-  /* قايمة الشهر (في النص) متسنترة بالظبط تحت زرارها */
-  .diary-filter-section .css-dropdown:nth-child(3) .dropdown-list {
-      left: 50%;
-      right: auto;
-      transform: translateX(-50%);
-  }
-
-  /* قايمة التاريخ (يمين) تفتح لجوه */
-  .diary-filter-section .css-dropdown:last-child .dropdown-list {
-      left: auto;
-      right: 0;
-      transform: none;
   }
 
   /* 2. Container & Row Tuning */
