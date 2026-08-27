@@ -690,10 +690,9 @@ input:checked ~ .privacy-label {
   z-index: 9999;
   display: none;
   justify-content: center;
-  /* 🌟 السر هنا: غيرنا center لـ flex-start عشان نرفعه لفوق 🌟 */
   align-items: flex-start;
-  /* 🌟 ضفنا مسافة من فوق عشان ميلزقش في سقف الشاشة 🌟 */
-  padding-top: 15vh; /* تقدر تزودها أو تنقصها لو عايزه ينزل أو يطلع شوية */
+  /* 🌟 ظبطنا الوزنة هنا: 12vh هتخليه فوق بس سايب مساحة محترمة لزرار القفل 🌟 */
+  padding-top: 12vh; 
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 15px;
@@ -847,7 +846,7 @@ input:checked ~ .privacy-label {
 .g-css-dropdown {
   position: relative;
   font-family: inherit;
-  width: max-content; /* 🌟 بيلغي المساحة الكبيرة وبيحضن الكلمة 🌟 */
+  width: max-content; 
 }
 
 .g-css-dropdown summary::-webkit-details-marker {
@@ -858,7 +857,7 @@ input:checked ~ .privacy-label {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.04); /* 🌟 الخلفية الرمادي الأهدى 🌟 */
+  background: rgba(255, 255, 255, 0.04); 
   border: 1px solid rgba(241, 227, 200, 0.12);
   border-radius: 50px;
   padding: 8px 14px;
@@ -869,7 +868,7 @@ input:checked ~ .privacy-label {
   list-style: none;
   transition: all 0.25s ease;
   user-select: none;
-  gap: 8px; /* مسافة بسيطة ومناسبة بين الكلمة والسهم */
+  gap: 8px; 
 }
 
 .g-dropdown-selected:hover,
@@ -880,18 +879,17 @@ input:checked ~ .privacy-label {
 
 .g-dropdown-arrow {
   font-size: 0.55rem;
-  color: rgba(241, 227, 200, 0.6); /* 🌟 السهم رمادي فاتح افتراضياً 🌟 */
-  transition:
-    transform 0.3s ease,
-    color 0.3s ease;
+  color: rgba(241, 227, 200, 0.6); 
+  transition: transform 0.3s ease, color 0.3s ease;
   display: inline-block;
 }
 
 .g-css-dropdown[open] .g-dropdown-arrow {
   transform: rotate(180deg);
-  color: var(--accent-teal); /* 🌟 السهم أكسنت لما يتداس ويبص لفوق 🌟 */
+  color: var(--accent-teal); 
 }
 
+/* 🌟 تظبيط القايمة وإخفاء السكرول بار 🌟 */
 .g-dropdown-list {
   position: absolute;
   top: 120%;
@@ -906,6 +904,13 @@ input:checked ~ .privacy-label {
   padding: 6px;
   margin: 0;
   z-index: 50;
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: none; /* إخفاء لفايرفوكس */
+}
+
+.g-dropdown-list::-webkit-scrollbar {
+  display: none; /* إخفاء لكروم وسفاري */
 }
 
 .g-dropdown-item {
@@ -952,7 +957,7 @@ input:checked ~ .privacy-label {
   transform: rotate(-90deg) scale(1.08);
 }
 
-/* --- Mobile Layout --- */
+/* --- Mobile Layout (Exact Discover Clone 2x2) --- */
 @media (max-width: 930px) {
   .g-filter-bar-container {
     display: flex;
@@ -981,33 +986,56 @@ input:checked ~ .privacy-label {
     padding: 6px 12px;
     font-size: 0.8rem;
   }
-  /* 🌟 التعديل النهائي الذكي: Flex Wrap (زي ما طلبت بالظبط) 🌟 */
+
+  /* 🌟 رصة 2x2 مفرودة ومتسنترة 🌟 */
   .g-dropdowns-group {
     order: 4;
     width: 100%;
-    display: flex;
-    flex-wrap: wrap; /* 🌟 ده الـ Wrapping اللي قولت عليه: بيزحلقهم للسطر اللي تحته لو اتزنقوا 🌟 */
-    gap: 8px; /* مسافة شيك وموحدة بين كل فلتر والتاني (أفقياً ورأسياً) */
-    justify-content: flex-start; /* بيبدأوا رص من الشمال */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
-  .g-css-dropdown {
-    width: max-content; /* 🌟 السر هنا: الفلتر هياخد مقاس الكلمة + السهم بالظبط، ولا ملي زيادة 🌟 */
-    max-width: 100%; /* حماية أخيرة عشان لو الكلمة خرافية الطول، متخرجش برا الشاشة */
+  .g-dropdowns-group .g-css-dropdown {
+    width: 100%;
+    display: block; 
   }
 
-  .g-dropdown-selected {
+  .g-dropdowns-group .g-dropdown-selected {
     width: 100%;
     box-sizing: border-box;
-    padding: 6px 12px;
-    gap: 8px; /* مسافة محندقة بين الكلمة والسهم */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
   }
 
   /* 🌟 عشان لو الكلمة طويلة جدا جدا، تنزل سطر جوه الزرار بدل ما تبوظ الدنيا 🌟 */
-  .g-dropdown-selected span:first-child {
+  .g-dropdowns-group .g-dropdown-selected span:first-child {
     white-space: normal;
     word-break: break-word;
   }
+
+  /* توسيط الخيارات جوه القايمة */
+  .g-dropdowns-group .g-dropdown-item {
+    text-align: center;
+  }
+
+  /* تظبيط القوايم وتوسيطها تحت الزرار بالمللي */
+  .g-dropdowns-group .g-dropdown-list {
+    min-width: 120px; 
+    width: max-content; 
+    max-width: 85vw;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .g-dropdowns-group .g-css-dropdown:nth-child(even) .g-dropdown-list {
+    left: 50%;
+    right: auto;
+  }
+  
   .g-filter-v-divider {
     display: none;
   }
