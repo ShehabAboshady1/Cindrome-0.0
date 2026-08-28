@@ -459,14 +459,14 @@
   align-items: flex-start;
   border-bottom: 1px solid rgba(241, 227, 200, 0.05);
   padding-bottom: 14px;
-  gap: 10px; /* 👈 عشان يمنع التداخل */
+  gap: 10px; 
 }
 
 .header-left-stack {
   display: flex;
   gap: 14px;
-  flex: 1; /* 👈 يملأ المساحة الفاضية */
-  min-width: 0; /* 👈 السر اللي بيمنع الـ Overflow! */
+  flex: 1; 
+  min-width: 0; 
 }
 
 .review-poster-link {
@@ -489,7 +489,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  min-width: 0; /* 👈 تكملة سر منع الـ Overflow */
+  min-width: 0; 
 }
 
 .review-media-title {
@@ -499,7 +499,7 @@
   text-decoration: none;
   transition: color 0.2s ease;
   line-height: 1.1;
-  word-wrap: break-word; /* 👈 يجبر العنوان الطويل ينزل سطر */
+  word-wrap: break-word; 
 }
 .review-media-title:hover {
   text-decoration: underline;
@@ -562,7 +562,7 @@
 }
 
 .header-right-stack {
-  flex-shrink: 0; /* 👈 بيحمي الـ Spoiler من الانكماش */
+  flex-shrink: 0; 
 }
 
 .spoiler-badge {
@@ -1326,13 +1326,13 @@
 
   /* 🌟 REVIEWS MOBILE FIXES 🌟 */
   .minimal-card-header {
-    gap: 8px; /* تباعد أمان في الموبايل */
+    gap: 8px; 
   }
   .review-media-title {
-    font-size: 1.05rem; /* تصغير سِنة بسيطة */
+    font-size: 1.05rem; 
   }
   .minimal-actions {
-    gap: 10px; /* تقليل المسافة بين اللايك والكومنت */
+    gap: 10px; 
   }
   .minimal-btn {
     font-size: 0.75rem;
@@ -1350,13 +1350,19 @@
     flex: 1;
     min-width: 0;
   }
+  
   .filter-label {
     font-size: 0.65rem;
     white-space: nowrap;
+    text-align: center; 
   }
+  
   .custom-select-trigger {
     padding: 8px 6px;
     font-size: 0.7rem;
+    justify-content: center; 
+    gap: 6px;
+    border-radius: 50px; /* 🌟 شكل أسطواني Modern 🌟 */
   }
   .custom-select-trigger span {
     white-space: nowrap;
@@ -1366,9 +1372,11 @@
   .custom-select-trigger i {
     font-size: 0.6em;
   }
+  
   .custom-option {
     font-size: 0.75rem;
     padding: 8px 10px;
+    text-align: center; 
   }
 
   .profile-reviews-container,
