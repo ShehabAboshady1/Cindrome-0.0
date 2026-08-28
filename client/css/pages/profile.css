@@ -296,28 +296,55 @@
   display: none;
 }
 
-/* 🎬 CURRENTLY WATCHING LIST */
+/* ==================================================
+   🎬 CURRENTLY WATCHING LIST (Global Styles)
+   ================================================== */
 .currently-watching-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px; 
   margin-top: 10px;
+  max-height: 260px; /* 🌟 السر هنا: أقصى ارتفاع للابتوب عشان ميفرشش لتحت 🌟 */
+  overflow-y: auto;
+  padding-right: 8px; /* 🌟 مسافة للسكرول بار عشان مياكلش من الكارت 🌟 */
+  scrollbar-width: thin; /* 🌟 للفايرفوكس 🌟 */
+  scrollbar-color: rgba(9, 158, 158, 0.6) rgba(255, 255, 255, 0.03); 
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 🌟 شريط سكرول شيك جداً وواضح دايماً في اللابتوب والموبايل 🌟 */
+.currently-watching-list::-webkit-scrollbar {
+  width: 5px;
+  -webkit-appearance: none;
+}
+.currently-watching-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+}
+.currently-watching-list::-webkit-scrollbar-thumb {
+  background: rgba(9, 158, 158, 0.6); /* 🌟 لون Teal مميز ومفيش فيه شفافية كاملة عشان يفضل باين 🌟 */
+  border-radius: 10px;
+  border: 1px solid rgba(22, 22, 22, 0.8); /* 🌟 بيدي إحساس إنه 3D شوية 🌟 */
+}
+.currently-watching-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-teal);
 }
 
 .tracking-item {
   display: flex;
-  gap: 14px;
+  gap: 10px; 
   background-color: var(--dark-bg, #010a09);
-  padding: 10px;
+  padding: 8px; 
   border-radius: 8px;
   border: 1px solid rgba(241, 227, 200, 0.08);
   align-items: center;
+  flex-shrink: 0; /* 🌟 بيمنع الكروت تفعص بعض لو زادوا عن المساحة 🌟 */
 }
 
 .tracking-poster {
-  width: 55px;
+  width: 42px; 
   aspect-ratio: 2 / 3;
-  border-radius: 6px;
+  border-radius: 4px;
   object-fit: cover;
 }
 
@@ -336,7 +363,7 @@
 }
 
 .tracking-header h3 {
-  font-size: 0.9rem;
+  font-size: 0.85rem; 
   font-weight: 600;
   margin: 0;
 }
@@ -346,7 +373,7 @@
 .media-title-link:active {
   color: var(--text-cream);
   text-decoration: none !important;
-  font-size: medium;
+  font-size: inherit; 
 }
 
 .media-title-link:hover {
@@ -354,8 +381,8 @@
 }
 
 .tag {
-  font-size: 0.65rem;
-  padding: 2px 6px;
+  font-size: 0.6rem; 
+  padding: 2px 5px;
   border-radius: 4px;
   font-weight: 600;
   background-color: rgba(9, 158, 158, 0.18);
@@ -364,13 +391,13 @@
 }
 
 .progress-text {
-  font-size: 0.75rem;
+  font-size: 0.65rem; 
   color: rgba(241, 227, 200, 0.6);
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .progress-bar {
-  height: 5px;
+  height: 4px; 
   background-color: rgba(241, 227, 200, 0.1);
   border-radius: 10px;
   overflow: hidden;
@@ -1189,6 +1216,7 @@
     grid-template-columns: 1fr;
     display: flex;
     flex-direction: column;
+    gap: 12px; 
   }
 
   .profile-sidebar {
@@ -1207,8 +1235,8 @@
   #overview-sidebar-content .sidebar-card {
     background-color: rgba(22, 22, 22, 0.4);
     border: 1px solid rgba(241, 227, 200, 0.08);
-    padding: 12px 2px; /* قللنا البادنج الجانبي عشان ندي مساحة أكبر للكلام */
-    margin-bottom: 16px;
+    padding: 12px 2px; 
+    margin-bottom: 0px; 
     border-radius: 10px;
   }
 
@@ -1230,21 +1258,19 @@
   }
 
   .qs-row {
-    flex-direction: column-reverse; /* الرقم فوق والكلمة تحته */
+    flex-direction: column-reverse; 
     align-items: center; 
     background: transparent; 
     padding: 0;
     border: none;
-    flex: 1; /* متقسمين بالتساوي للباقيين */
+    flex: 1; 
     position: relative; 
   }
 
-  /* 🌟 السر هنا: الخانة الأولى تاخد مساحة أكبر براحتها عشان كلماتها أطول 🌟 */
   .qs-row:first-child {
     flex: 1.4; 
   }
 
-  /* 🌟 الفواصل الطولية هتتظبط تلقائي بناءً على الـ Flex 🌟 */
   .qs-row:not(:last-child)::after {
     content: "";
     position: absolute;
@@ -1266,11 +1292,16 @@
   }
 
   .qs-row strong {
-    font-size: 0.9rem; /* صغرنا الرقم سِنة عشان يكفي مرتاح */
+    font-size: 0.9rem; 
     color: var(--accent-teal);
     margin-bottom: 3px;
     white-space: nowrap;
     font-weight: 800;
+  }
+
+  /* 🎬 CURRENTLY WATCHING LIST (Mobile Adjustments) */
+  .currently-watching-list {
+    max-height: 210px; /* 🌟 ارتفاع أصغر شوية في الموبايل 🌟 */
   }
 
   .filters-row {
