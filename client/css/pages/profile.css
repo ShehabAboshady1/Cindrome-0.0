@@ -1357,20 +1357,26 @@
     text-align: center; 
   }
   
+  /* 🌟 السنترة المثالية هنا 🌟 */
   .custom-select-trigger {
-    padding: 8px 6px;
+    padding: 8px 10px;
     font-size: 0.7rem;
-    justify-content: center; 
-    gap: 6px;
-    border-radius: 50px; /* 🌟 شكل أسطواني Modern 🌟 */
+    justify-content: center; /* يخلي المحتوى يروح للنص */
+    border-radius: 50px; 
+    position: relative; /* عشان السهم يعرف مكانه */
   }
+  
   .custom-select-trigger span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 0 10px; /* مسافة أمان عشان ميخبطش في السهم */
   }
+  
   .custom-select-trigger i {
     font-size: 0.6em;
+    position: absolute; /* السحر كله هنا: بنفصل السهم عن السنترة */
+    right: 10px; /* بنثبته أقصى اليمين */
   }
   
   .custom-option {
