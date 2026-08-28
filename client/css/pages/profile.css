@@ -304,15 +304,14 @@
   flex-direction: column;
   gap: 10px; 
   margin-top: 10px;
-  max-height: 260px; /* 🌟 السر هنا: أقصى ارتفاع للابتوب عشان ميفرشش لتحت 🌟 */
+  max-height: 260px; 
   overflow-y: auto;
-  padding-right: 8px; /* 🌟 مسافة للسكرول بار عشان مياكلش من الكارت 🌟 */
-  scrollbar-width: thin; /* 🌟 للفايرفوكس 🌟 */
+  padding-right: 8px; 
+  scrollbar-width: thin; 
   scrollbar-color: rgba(9, 158, 158, 0.6) rgba(255, 255, 255, 0.03); 
   -webkit-overflow-scrolling: touch;
 }
 
-/* 🌟 شريط سكرول شيك جداً وواضح دايماً في اللابتوب والموبايل 🌟 */
 .currently-watching-list::-webkit-scrollbar {
   width: 5px;
   -webkit-appearance: none;
@@ -322,9 +321,9 @@
   border-radius: 10px;
 }
 .currently-watching-list::-webkit-scrollbar-thumb {
-  background: rgba(9, 158, 158, 0.6); /* 🌟 لون Teal مميز ومفيش فيه شفافية كاملة عشان يفضل باين 🌟 */
+  background: rgba(9, 158, 158, 0.6); 
   border-radius: 10px;
-  border: 1px solid rgba(22, 22, 22, 0.8); /* 🌟 بيدي إحساس إنه 3D شوية 🌟 */
+  border: 1px solid rgba(22, 22, 22, 0.8); 
 }
 .currently-watching-list::-webkit-scrollbar-thumb:hover {
   background: var(--accent-teal);
@@ -338,7 +337,7 @@
   border-radius: 8px;
   border: 1px solid rgba(241, 227, 200, 0.08);
   align-items: center;
-  flex-shrink: 0; /* 🌟 بيمنع الكروت تفعص بعض لو زادوا عن المساحة 🌟 */
+  flex-shrink: 0; 
 }
 
 .tracking-poster {
@@ -453,17 +452,21 @@
   border-color: rgba(9, 158, 158, 0.3);
 }
 
+/* 🌟 REVIEW HEADER FIXES FOR OVERFLOW 🌟 */
 .minimal-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   border-bottom: 1px solid rgba(241, 227, 200, 0.05);
   padding-bottom: 14px;
+  gap: 10px; /* 👈 عشان يمنع التداخل */
 }
 
 .header-left-stack {
   display: flex;
   gap: 14px;
+  flex: 1; /* 👈 يملأ المساحة الفاضية */
+  min-width: 0; /* 👈 السر اللي بيمنع الـ Overflow! */
 }
 
 .review-poster-link {
@@ -486,6 +489,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0; /* 👈 تكملة سر منع الـ Overflow */
 }
 
 .review-media-title {
@@ -495,6 +499,7 @@
   text-decoration: none;
   transition: color 0.2s ease;
   line-height: 1.1;
+  word-wrap: break-word; /* 👈 يجبر العنوان الطويل ينزل سطر */
 }
 .review-media-title:hover {
   text-decoration: underline;
@@ -557,7 +562,7 @@
 }
 
 .header-right-stack {
-  flex-shrink: 0;
+  flex-shrink: 0; /* 👈 بيحمي الـ Spoiler من الانكماش */
 }
 
 .spoiler-badge {
@@ -1231,7 +1236,6 @@
     border-width: 4px;
   }
 
-  /* 🌟 Watch Stats Super Compact (1 Row with Dividers) 🌟 */
   #overview-sidebar-content .sidebar-card {
     background-color: rgba(22, 22, 22, 0.4);
     border: 1px solid rgba(241, 227, 200, 0.08);
@@ -1299,9 +1303,42 @@
     font-weight: 800;
   }
 
-  /* 🎬 CURRENTLY WATCHING LIST (Mobile Adjustments) */
   .currently-watching-list {
-    max-height: 210px; /* 🌟 ارتفاع أصغر شوية في الموبايل 🌟 */
+    max-height: 210px; 
+    overflow-y: auto;
+    padding-right: 4px; 
+  }
+  
+  .currently-watching-list::-webkit-scrollbar {
+    width: 4px;
+  }
+  .currently-watching-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+  }
+  .currently-watching-list::-webkit-scrollbar-thumb {
+    background: rgba(9, 158, 158, 0.3);
+    border-radius: 10px;
+  }
+  .currently-watching-list::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-teal);
+  }
+
+  /* 🌟 REVIEWS MOBILE FIXES 🌟 */
+  .minimal-card-header {
+    gap: 8px; /* تباعد أمان في الموبايل */
+  }
+  .review-media-title {
+    font-size: 1.05rem; /* تصغير سِنة بسيطة */
+  }
+  .minimal-actions {
+    gap: 10px; /* تقليل المسافة بين اللايك والكومنت */
+  }
+  .minimal-btn {
+    font-size: 0.75rem;
+  }
+  .minimal-read-link {
+    font-size: 0.75rem;
   }
 
   .filters-row {
