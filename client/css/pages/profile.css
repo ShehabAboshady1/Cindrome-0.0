@@ -425,14 +425,42 @@
   gap: 24px;
   width: 100%;
   align-items: flex-start;
+  /* 🌟 التعديلات لقتل السكرول العرضي وتنظيم المساحة 🌟 */
+  box-sizing: border-box;
+  max-height: 650px; 
+  overflow-y: auto;
+  overflow-x: hidden; /* 👈 منع السكرول العرضي تماماً */
+  padding-right: 12px; 
+  scrollbar-width: thin; 
+  scrollbar-color: rgba(9, 158, 158, 0.6) rgba(255, 255, 255, 0.03); 
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 🌟 شريط السكرول البريميم للتقييمات 🌟 */
+.minimal-reviews-feed::-webkit-scrollbar {
+  width: 6px;
+  -webkit-appearance: none;
+}
+.minimal-reviews-feed::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+}
+.minimal-reviews-feed::-webkit-scrollbar-thumb {
+  background: rgba(9, 158, 158, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(22, 22, 22, 0.8);
+}
+.minimal-reviews-feed::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-teal);
 }
 
 .review-divider {
   border: 0;
   height: 1px;
   background: rgba(241, 227, 200, 0.08);
-  margin: 0 10px;
-  width: 100%;
+  margin: 0 auto; /* 👈 منع الـ Margin إنه يخرج بره الشاشة */
+  width: calc(100% - 20px); /* 👈 تعديل العرض عشان ميسببش Overflow */
+  flex-shrink: 0;
 }
 
 .minimal-review-card {
@@ -446,6 +474,7 @@
   transition: border-color 0.2s ease;
   width: 100%;
   box-sizing: border-box;
+  flex-shrink: 0; 
 }
 
 .minimal-review-card:hover {
@@ -1325,6 +1354,11 @@
   }
 
   /* 🌟 REVIEWS MOBILE FIXES 🌟 */
+  .minimal-reviews-feed {
+    max-height: 600px; 
+    padding-right: 8px; 
+  }
+
   .minimal-card-header {
     gap: 8px; 
   }
@@ -1357,26 +1391,25 @@
     text-align: center; 
   }
   
-  /* 🌟 السنترة المثالية هنا 🌟 */
   .custom-select-trigger {
     padding: 8px 10px;
     font-size: 0.7rem;
-    justify-content: center; /* يخلي المحتوى يروح للنص */
+    justify-content: center; 
     border-radius: 50px; 
-    position: relative; /* عشان السهم يعرف مكانه */
+    position: relative; 
   }
   
   .custom-select-trigger span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 0 10px; /* مسافة أمان عشان ميخبطش في السهم */
+    padding: 0 10px; 
   }
   
   .custom-select-trigger i {
     font-size: 0.6em;
-    position: absolute; /* السحر كله هنا: بنفصل السهم عن السنترة */
-    right: 10px; /* بنثبته أقصى اليمين */
+    position: absolute; 
+    right: 10px; 
   }
   
   .custom-option {
