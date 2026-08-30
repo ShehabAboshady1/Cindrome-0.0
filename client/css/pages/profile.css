@@ -308,7 +308,7 @@
   overflow-y: auto;
   padding-right: 8px; 
   scrollbar-width: thin; 
-  scrollbar-color: rgba(9, 158, 158, 0.6) rgba(255, 255, 255, 0.03); 
+  scrollbar-color: rgba(9, 158, 158, 0.6) transparent; 
   -webkit-overflow-scrolling: touch;
 }
 
@@ -317,16 +317,15 @@
   -webkit-appearance: none;
 }
 .currently-watching-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
+  background: transparent;
+  margin: 10px 0; 
 }
 .currently-watching-list::-webkit-scrollbar-thumb {
-  background: rgba(9, 158, 158, 0.6); 
+  background-color: rgba(9, 158, 158, 0.5); 
   border-radius: 10px;
-  border: 1px solid rgba(22, 22, 22, 0.8); 
 }
 .currently-watching-list::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-teal);
+  background-color: var(--accent-teal);
 }
 
 .tracking-item {
@@ -425,30 +424,27 @@
   gap: 24px;
   width: 100%;
   align-items: flex-start;
-  /* 🌟 التعديلات لقتل السكرول العرضي وتنظيم المساحة 🌟 */
   box-sizing: border-box;
   max-height: 650px; 
   overflow-y: auto;
-  overflow-x: hidden; /* 👈 منع السكرول العرضي تماماً */
+  overflow-x: hidden; 
   padding-right: 12px; 
   scrollbar-width: thin; 
-  scrollbar-color: rgba(9, 158, 158, 0.6) rgba(255, 255, 255, 0.03); 
+  scrollbar-color: rgba(9, 158, 158, 0.6) transparent; 
   -webkit-overflow-scrolling: touch;
 }
 
-/* 🌟 شريط السكرول البريميم للتقييمات 🌟 */
 .minimal-reviews-feed::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
   -webkit-appearance: none;
 }
 .minimal-reviews-feed::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
+  background: transparent; 
+  margin: 15px 0; 
 }
 .minimal-reviews-feed::-webkit-scrollbar-thumb {
-  background: rgba(9, 158, 158, 0.6);
-  border-radius: 10px;
-  border: 1px solid rgba(22, 22, 22, 0.8);
+  background-color: rgba(9, 158, 158, 0.5);
+  border-radius: 10px; 
 }
 .minimal-reviews-feed::-webkit-scrollbar-thumb:hover {
   background: var(--accent-teal);
@@ -458,8 +454,8 @@
   border: 0;
   height: 1px;
   background: rgba(241, 227, 200, 0.08);
-  margin: 0 auto; /* 👈 منع الـ Margin إنه يخرج بره الشاشة */
-  width: calc(100% - 20px); /* 👈 تعديل العرض عشان ميسببش Overflow */
+  margin: 0 auto; 
+  width: calc(100% - 20px); 
   flex-shrink: 0;
 }
 
@@ -481,7 +477,6 @@
   border-color: rgba(9, 158, 158, 0.3);
 }
 
-/* 🌟 REVIEW HEADER FIXES FOR OVERFLOW 🌟 */
 .minimal-card-header {
   display: flex;
   justify-content: space-between;
@@ -1264,6 +1259,53 @@
     height: 130px;
     border-width: 4px;
   }
+  
+  /* 🌟 GLOBAL HEADER SCALING (للهيدر في الأقسام كلها) 🌟 */
+  .profile-box-header {
+    flex-wrap: nowrap;
+    gap: 8px; 
+  }
+  .profile-box-title {
+    font-size: 1.05rem; /* 👈 تصغير العنوان */
+    white-space: nowrap;
+  }
+  .profile-box-title i {
+    margin-right: 4px;
+  }
+  .carousel-controls {
+    gap: 6px; /* 👈 تصغير المسافة بين الأسهم */
+  }
+  .carousel-btn {
+    width: 30px; /* 👈 تصغير الأزرار */
+    height: 30px;
+    font-size: 0.8rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 🌟 LISTS SECTION MOBILE FIXES 🌟 */
+  #panel-lists .profile-title-with-action {
+    gap: 8px; /* 👈 تقليل المسافة بين عنوان Lists وزرار الـ Create */
+    flex: 1;
+    min-width: 0; 
+  }
+  #panel-lists .profile-create-list-btn {
+    padding: 4px 12px; /* 👈 تصغير الزرار لـ كبسولة */
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+  
+  /* 🌟 LISTS CARDS PEEK EFFECT 🌟 */
+  .lists-track {
+    gap: 12px; /* 👈 مسافة أضيق بين الكروت */
+  }
+  .list-card {
+    width: 75vw; /* 👈 الكارت ياخد 75% عشان اللي بعده يظهر */
+    max-width: 280px; 
+    flex-shrink: 0;
+  }
 
   #overview-sidebar-content .sidebar-card {
     background-color: rgba(22, 22, 22, 0.4);
@@ -1342,11 +1384,11 @@
     width: 4px;
   }
   .currently-watching-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 10px;
+    background: transparent;
+    margin: 10px 0;
   }
   .currently-watching-list::-webkit-scrollbar-thumb {
-    background: rgba(9, 158, 158, 0.3);
+    background-color: rgba(9, 158, 158, 0.5);
     border-radius: 10px;
   }
   .currently-watching-list::-webkit-scrollbar-thumb:hover {
@@ -1357,6 +1399,21 @@
   .minimal-reviews-feed {
     max-height: 600px; 
     padding-right: 8px; 
+  }
+
+  .minimal-reviews-feed::-webkit-scrollbar {
+    width: 4px;
+  }
+  .minimal-reviews-feed::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 15px 0;
+  }
+  .minimal-reviews-feed::-webkit-scrollbar-thumb {
+    background-color: rgba(9, 158, 158, 0.5);
+    border-radius: 10px;
+  }
+  .minimal-reviews-feed::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-teal);
   }
 
   .minimal-card-header {
