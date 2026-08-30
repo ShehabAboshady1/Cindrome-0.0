@@ -35,7 +35,6 @@
                 <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
 
                 <div class="right-bar">
-                    <!-- 1. روابط الـ Navigation العادية في الأول -->
                     <a href="../../index.html" class="nav-item">Home</a>
                     <a href="./discover.html" class="nav-item">Discover</a>
                     <a href="./lists.html" class="nav-item">Lists</a>
@@ -52,7 +51,6 @@
 
                     <a href="./drome.html" class="nav-item">Drome</a>
 
-                    <!-- 2. قايمة الأكونت (للمستخدمين بس) -->
                     <div class="dropdown user-only">
                         <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
                         <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
@@ -63,23 +61,16 @@
                             <li><a href="./sign-in.html" style="color: #ff4757;">Log out</a></li>
                         </ul>
                     </div>
-                </div> <!-- 👈 قفلة الـ right-bar هنا -->
+                </div> 
 
-                <!-- ========================================================= -->
-                <!-- 🌟 3. زراير الأكشن طلعناها بره القايمة عشان تفضل باينة دايماً 🌟 -->
-                <!-- ========================================================= -->
-
-                <!-- 🔴 للزوار بس -->
                 <a href="./sign-in.html" class="guest-only" style="text-decoration: none;">
                     <button class="signin-btn">Sign in</button>
                 </a>
 
-                <!-- 🟢 للمستخدمين بس -->
                 <button class="log-nav-btn user-only" id="navLogBtn">
                     <i class="fa-solid fa-plus"></i> Log
                 </button>
 
-                <!-- زرار البحث رجع مكانه وكلاسه الأصلي -->
                 <button type="button" class="search-trigger-btn" aria-label="Search">
                     <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -139,7 +130,6 @@
                         </div>
                     </div>
 
-                    <!-- Spoiler Badge -->
                     <div class="card-spoiler-badge">
                         <i class="fa-solid fa-triangle-exclamation"></i> Spoiler
                     </div>
@@ -149,8 +139,6 @@
 
                 <!-- Review Text -->
                 <div id="reviewTextWrapper" class="review-text-wrapper is-spoiler" onclick="revealReviewSpoiler()">
-
-                    <!-- الـ title متشال والماوس سهم عادي -->
                     <div class="review-text blurred-text">
                         <p>
                             Absolute cinematic masterpiece. The pacing is phenomenal, and Antony Starr deserves all the
@@ -169,13 +157,27 @@
                     </div>
                 </div>
 
-                <!-- Actions -->
+                <hr class="actions-divider">
+
+                <!-- 🌟 Actions (Like & Share) 🌟 -->
                 <div class="review-actions-bar">
-                    <button class="action-btn like-btn is-liked"><i class="fa-solid fa-heart"></i>
-                        <span>1.2k</span></button>
-                    <!-- Share Nodes -->
-                    <button class="action-btn share-btn" aria-label="Share Review"><i
-                            class="fa-solid fa-share-nodes"></i></button>
+                    <!-- Like SVG Button (With Click Action) -->
+                    <button class="action-btn like-btn" aria-label="Like Review" onclick="this.classList.toggle('is-liked')">
+                        <svg class="interactive-svg like-svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        <span class="action-count">1.2k</span>
+                    </button>
+                    <!-- Share SVG Button -->
+                    <button class="action-btn share-btn" aria-label="Share Review">
+                        <svg class="interactive-svg share-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                    </button>
                 </div>
             </article>
 
@@ -280,7 +282,6 @@
                 <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
             </a>
 
-
             <div class="footer-nav">
                 <a href="about.html" class="footer-link">About Us</a>
                 <span class="footer-divider"></span>
@@ -313,10 +314,10 @@
                 </div>
             </div>
 
-
             <p class="footer-copy">&copy; 2026 All rights reserved.</p>
         </div>
     </footer>
+    
     <!-- ========================================================= -->
     <!-- 🌟 PREMIUM LOG MODAL (Contextual Mode) 🌟 -->
     <!-- ========================================================= -->
@@ -336,7 +337,6 @@
                     onerror="this.src='https://image.tmdb.org/t/p/w200/8bZCaPAPPil3ea2c9xSsmfsibGB.jpg'">
 
                 <div class="log-item-info">
-                    <!-- تم استخدام الكلاس الموحد هنا -->
                     <span class="type-badge series-badge">TV SERIES</span>
                     <h3 class="log-item-title">Sherlock</h3>
 
@@ -423,7 +423,8 @@
             </form>
         </div>
     </div>
-        <!-- ========================================================= -->
+    
+    <!-- ========================================================= -->
     <!-- 🌟 GLOBAL SEARCH MODAL (EXACT DISCOVER CLONE) 🌟 -->
     <!-- ========================================================= -->
     <div class="search-modal-overlay" id="searchModal" style="display: none;">
@@ -538,6 +539,7 @@
             </section>
         </div>
     </div>
+    
     <!-- Script للـ Spoiler -->
     <script>
         function revealReviewSpoiler() {
