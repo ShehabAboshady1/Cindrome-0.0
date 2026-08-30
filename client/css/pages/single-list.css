@@ -410,22 +410,28 @@
 
 @media (max-width: 768px) {
     .single-list-title { 
-        font-size: 1.8rem; 
+        font-size: 1.6rem; 
         line-height: 1.2; 
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
     
+    /* 🌟 تصغير وتجميع الميتا داتا اللي تحت العنوان 🌟 */
     .list-meta-info {
-        flex-wrap: wrap;
-        font-size: 0.85rem;
-        gap: 8px 12px;
+        flex-wrap: nowrap;
+        font-size: 0.75rem; /* تصغير الخط أكتر */
+        gap: 6px;
+    }
+    .list-author-avatar {
+        width: 22px; /* تصغير صورة الأفاتار */
+        height: 22px;
     }
     .list-author-name, .list-update-date {
         white-space: nowrap; 
     }
     
+    /* 🌟 تقليل مساحة البوكس من الجناب عشان السطر ياخد راحته 🌟 */
     .single-list-grid-container {
-        padding: 14px 12px;
+        padding: 14px 8px; /* تقليل البادنج العرضي */
         border-radius: 14px;
     }
 
@@ -438,55 +444,52 @@
         max-width: 100%;
     }
 
-    /* 🌟 الرصة المظبوطة في صف واحد من غير ولا important 🌟 */
+    /* 🌟 السطر الإعجازي (Micro-UI) 🌟 */
     .list-inline-header {
         flex-wrap: nowrap; 
-        gap: 8px;
+        gap: 4px; /* عصر المسافات */
         padding-bottom: 12px;
-        overflow-x: auto; 
-        scrollbar-width: none; 
-        -ms-overflow-style: none;
-    }
-    .list-inline-header::-webkit-scrollbar {
-        display: none;
     }
     
+    /* مجموعة الشمال (العداد والنسبة) */
     .header-meta-left {
         flex-wrap: nowrap;
-        gap: 6px;
-        flex-shrink: 0;
+        gap: 4px;
+        flex-shrink: 1; /* يقدر يصغر لو الشاشة ضاقت */
     }
 
     /* تصغير "20 Titles" */
     .grid-count-text {
-        font-size: 0.9rem; 
-        padding-left: 6px;
-        border-left-width: 3px;
+        font-size: 0.8rem; /* تصغير قوي */
+        padding-left: 5px;
+        border-left-width: 2px;
         white-space: nowrap;
     }
 
     /* تصغير كبسولة النسبة */
     .list-user-progress {
-        padding: 4px 8px; 
-        gap: 4px;
+        padding: 3px 6px; 
+        gap: 3px;
         white-space: nowrap;
     }
-    .progress-eye-icon { width: 13px; height: 13px; }
-    .progress-numbers, .progress-percentage { font-size: 0.75rem; }
+    .progress-eye-icon { width: 12px; height: 12px; }
+    .progress-numbers, .progress-percentage { font-size: 0.7rem; }
 
     /* مجموعة اليمين (الزراير) */
     .single-list-actions-inline {
         flex-wrap: nowrap;
-        gap: 6px;
-        flex-shrink: 0;
+        gap: 4px;
+        flex-shrink: 0; /* زراير التفاعل مبتصغرش عن حجمها */
     }
     
+    /* تصغير زراير التفاعل لكبسولات صغيرة جداً */
     .list-action-btn {
-        padding: 4px 10px;
-        font-size: 0.8rem;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        gap: 4px;
         white-space: nowrap;
     }
-    .list-action-btn svg { width: 13px; height: 13px; }
+    .list-action-btn svg { width: 12px; height: 12px; }
 
     /* إظهار زراير الموبايل للكروت بشفافية */
     .single-list-cards-grid .mini-content-card .mini-card-bar {
