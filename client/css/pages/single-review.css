@@ -26,7 +26,7 @@
     max-height: 800px;
     background-size: cover;
     background-position: center top; 
-    background-attachment: scroll;
+    background-attachment: scroll !important; /* 🌟 إجبار الصورة إنها تسكرول مع الصفحة 🌟 */
     z-index: 0;
 }
 
