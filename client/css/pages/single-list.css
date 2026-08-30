@@ -409,7 +409,20 @@
 }
 
 @media (max-width: 768px) {
-    .single-list-title { font-size: 1.8rem; }
+    .single-list-title { 
+        font-size: 1.8rem; 
+        line-height: 1.2; 
+        margin-bottom: 12px;
+    }
+    
+    .list-meta-info {
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+        gap: 8px 12px;
+    }
+    .list-author-name, .list-update-date {
+        white-space: nowrap; 
+    }
     
     .single-list-grid-container {
         padding: 14px 12px;
@@ -425,26 +438,57 @@
         max-width: 100%;
     }
 
+    /* 🌟 الرصة المظبوطة في صف واحد من غير ولا important 🌟 */
     .list-inline-header {
-        flex-direction: row; 
-        align-items: center;
-        gap: 10px;
+        flex-wrap: nowrap; 
+        gap: 8px;
+        padding-bottom: 12px;
+        overflow-x: auto; 
+        scrollbar-width: none; 
+        -ms-overflow-style: none;
+    }
+    .list-inline-header::-webkit-scrollbar {
+        display: none;
     }
     
     .header-meta-left {
-        flex: 1; 
-        gap: 8px;
+        flex-wrap: nowrap;
+        gap: 6px;
+        flex-shrink: 0;
     }
 
+    /* تصغير "20 Titles" */
+    .grid-count-text {
+        font-size: 0.9rem; 
+        padding-left: 6px;
+        border-left-width: 3px;
+        white-space: nowrap;
+    }
+
+    /* تصغير كبسولة النسبة */
+    .list-user-progress {
+        padding: 4px 8px; 
+        gap: 4px;
+        white-space: nowrap;
+    }
+    .progress-eye-icon { width: 13px; height: 13px; }
+    .progress-numbers, .progress-percentage { font-size: 0.75rem; }
+
+    /* مجموعة اليمين (الزراير) */
     .single-list-actions-inline {
+        flex-wrap: nowrap;
         gap: 6px;
+        flex-shrink: 0;
     }
     
     .list-action-btn {
-        padding: 6px 10px;
+        padding: 4px 10px;
+        font-size: 0.8rem;
+        white-space: nowrap;
     }
+    .list-action-btn svg { width: 13px; height: 13px; }
 
-    /* 🌟 إظهار زراير الموبايل بشفافية هادية (بدون important وبدون تدرج) 🌟 */
+    /* إظهار زراير الموبايل للكروت بشفافية */
     .single-list-cards-grid .mini-content-card .mini-card-bar {
         opacity: 1;
         visibility: visible;
