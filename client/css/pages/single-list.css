@@ -89,6 +89,33 @@
 }
 
 /* ==========================================
+   🌟 Custom Styles for the New Info Button & Mobile Tap State 🌟
+========================================== */
+.mini-bar-btn.btn-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+.mini-bar-btn.btn-info:hover {
+    color: var(--accent-teal);
+}
+
+/* 🌟 This handles the mobile tap to show the bar 🌟 */
+.mini-content-card.show-bar .mini-card-bar {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+/* ==========================================
    3. Grid Header (عداد الأفلام + زراير التفاعل)
 ========================================== */
 .list-inline-header {
@@ -415,23 +442,21 @@
         margin-bottom: 10px;
     }
     
-    /* 🌟 تصغير وتجميع الميتا داتا اللي تحت العنوان 🌟 */
     .list-meta-info {
         flex-wrap: nowrap;
-        font-size: 0.75rem; /* تصغير الخط أكتر */
+        font-size: 0.75rem;
         gap: 6px;
     }
     .list-author-avatar {
-        width: 22px; /* تصغير صورة الأفاتار */
+        width: 22px; 
         height: 22px;
     }
     .list-author-name, .list-update-date {
         white-space: nowrap; 
     }
     
-    /* 🌟 تقليل مساحة البوكس من الجناب عشان السطر ياخد راحته 🌟 */
     .single-list-grid-container {
-        padding: 14px 8px; /* تقليل البادنج العرضي */
+        padding: 14px 8px;
         border-radius: 14px;
     }
 
@@ -444,29 +469,25 @@
         max-width: 100%;
     }
 
-    /* 🌟 السطر الإعجازي (Micro-UI) 🌟 */
     .list-inline-header {
         flex-wrap: nowrap; 
-        gap: 4px; /* عصر المسافات */
+        gap: 4px;
         padding-bottom: 12px;
     }
     
-    /* مجموعة الشمال (العداد والنسبة) */
     .header-meta-left {
         flex-wrap: nowrap;
         gap: 4px;
-        flex-shrink: 1; /* يقدر يصغر لو الشاشة ضاقت */
+        flex-shrink: 1;
     }
 
-    /* تصغير "20 Titles" */
     .grid-count-text {
-        font-size: 0.8rem; /* تصغير قوي */
+        font-size: 0.8rem; 
         padding-left: 5px;
         border-left-width: 2px;
         white-space: nowrap;
     }
 
-    /* تصغير كبسولة النسبة */
     .list-user-progress {
         padding: 3px 6px; 
         gap: 3px;
@@ -475,14 +496,12 @@
     .progress-eye-icon { width: 12px; height: 12px; }
     .progress-numbers, .progress-percentage { font-size: 0.7rem; }
 
-    /* مجموعة اليمين (الزراير) */
     .single-list-actions-inline {
         flex-wrap: nowrap;
         gap: 4px;
-        flex-shrink: 0; /* زراير التفاعل مبتصغرش عن حجمها */
+        flex-shrink: 0;
     }
     
-    /* تصغير زراير التفاعل لكبسولات صغيرة جداً */
     .list-action-btn {
         padding: 4px 8px;
         font-size: 0.75rem;
@@ -491,15 +510,7 @@
     }
     .list-action-btn svg { width: 12px; height: 12px; }
 
-    /* إظهار زراير الموبايل للكروت بشفافية */
-    .single-list-cards-grid .mini-content-card .mini-card-bar {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
-    }
+    /* 🌟 أزلنا إظهار الشريط إجبارياً من هنا عشان الـ Tap يشتغل صح 🌟 */
 
     .add-comment-box {
         gap: 10px;
