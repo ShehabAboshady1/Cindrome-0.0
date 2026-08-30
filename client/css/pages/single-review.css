@@ -26,7 +26,7 @@
     max-height: 800px;
     background-size: cover;
     background-position: center top; 
-    background-attachment: scroll !important; /* 🌟 إجبار الصورة إنها تسكرول مع الصفحة 🌟 */
+    background-attachment: scroll !important; 
     z-index: 0;
 }
 
@@ -39,7 +39,7 @@
         rgba(8, 15, 14, 0.4) 40%, 
         rgba(8, 15, 14, 0.95) 80%, 
         var(--dark-bg, #080f0e) 100%
-    ); /* 🌟 التدرج بيقفل بلون صلب بسرعة عشان الصورة ماتظهرش من تحت الكلام 🌟 */
+    ); 
 }
 
 /* ==================================================
@@ -268,33 +268,83 @@
     margin-bottom: 0;
 }
 
-/* Actions Bar Inside Card */
+/* ==================================================
+   🌟 ACTION BUTTONS & SVGS (Micro-Interactions) 🌟
+   ================================================== */
+
+.actions-divider {
+    border: 0;
+    height: 1px;
+    background: rgba(241, 227, 200, 0.08);
+    margin: 20px 0 15px 0;
+}
+
 .review-actions-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
 }
 
 .action-btn {
     background: transparent;
     border: none;
-    color: rgba(241, 227, 200, 0.5);
-    font-size: 1rem;
-    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 0;
+    padding: 4px 8px;
+    border-radius: 6px;
     transition: all 0.2s ease;
 }
 
-.action-btn:hover {
+/* 🌟 لون النص (عدد اللايكات) ثابت ومابيتأثرش بالـ Hover 🌟 */
+.action-count {
+    color: rgba(241, 227, 200, 0.5); 
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* 🌟 مقاسات الـ SVGs في اللابتوب (أصغر وأشيك) 🌟 */
+.interactive-svg {
+    width: 18px; 
+    height: 18px;
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), fill 0.2s ease, stroke 0.2s ease, color 0.2s ease;
+}
+
+/* زرار الشير (لونه هادي ولما تعمل هوفر بينور كريمي) */
+.share-svg {
+    color: rgba(241, 227, 200, 0.5);
+}
+.share-btn:hover .share-svg {
     color: var(--text-cream);
 }
 
-.like-btn.is-liked, .like-btn:hover { color: #ff4757; }
+/* 🌟 تفاصيل زرار اللايك والقلب 🌟 */
+/* 1. الديفولت: القلب مليان كريمي (Solid Fill) */
+.like-btn .like-svg {
+    fill: var(--text-cream); 
+    stroke: var(--text-cream);
+    color: var(--text-cream);
+}
+
+/* 2. الهوفر: القلب بس بيقلب أحمر (من غير الرقم) */
+.like-btn:hover .like-svg {
+    fill: #ff4757;
+    stroke: #ff4757;
+    color: #ff4757;
+}
+
+/* 3. كليك (Active/Liked State): القلب أحمر صريح */
+.like-btn.is-liked .like-svg {
+    fill: #ff4757;
+    stroke: #ff4757;
+    color: #ff4757;
+}
+
+/* أنميشن الضغطة للزرارين */
+.action-btn:active .interactive-svg {
+    transform: scale(0.75); 
+}
 
 /* ==================================================
    5. COMMENTS SECTION 
@@ -560,7 +610,7 @@
     .card-user-header {
         flex-wrap: nowrap; 
         align-items: flex-start;
-        gap: 8px; /* قللنا المسافة شوية */
+        gap: 8px; 
     }
 
     .reviewer-meta-inside {
@@ -573,9 +623,8 @@
         height: 36px;
     }
 
-    /* 🌟 الحل الأشيك للاسم الطويل: تصغير الفونت بدل ما نقصه 🌟 */
     .card-username a {
-        font-size: 0.85rem; /* صغرنا الخط عشان ياخد مساحته براحته */
+        font-size: 0.85rem; 
         white-space: normal;
         word-wrap: break-word;
     }
@@ -583,11 +632,11 @@
     .card-rating-date {
         flex-wrap: wrap; 
         gap: 6px;
-        font-size: 0.75rem; /* صغرنا النجوم والتاريخ نسبة وتناسب */
+        font-size: 0.75rem; 
     }
 
     .card-spoiler-badge {
-        font-size: 0.7rem; /* صغرنا البادج عشان يظبط مع الاسم الجديد */
+        font-size: 0.7rem; 
         padding: 4px 8px;
         flex-shrink: 0; 
         align-self: flex-start;
@@ -607,32 +656,117 @@
         margin-bottom: 12px;
     }
 
-    .review-actions-bar {
-        margin-top: 15px;
+    /* 🌟 زراير الأكشن في الموبايل 🌟 */
+    .actions-divider {
+        margin: 15px 0 10px 0;
+    }
+
+    .action-btn {
+        padding: 4px 0; 
+    }
+
+    .action-count {
+        font-size: 0.95rem; /* صغرنا الرقم سيكا في الموبايل */
+    }
+
+    .interactive-svg {
+        width: 20px; /* أكبر سيكا من اللابتوب عشان سهولة الضغط (Tap Target) بس أصغر من الأول */
+        height: 20px;
+    }
+
+    /* تصغير قسم الكومنتات */
+    .comments-title {
+        font-size: 1.2rem;
+    }
+
+    .comments-title span {
+        font-size: 0.9rem;
     }
 
     .add-comment-row {
-        gap: 10px;
+        gap: 8px;
         width: 100%;
         box-sizing: border-box;
+        margin-bottom: 20px;
     }
 
     .comment-avatar {
-        width: 36px;
-        height: 36px;
+        width: 30px; 
+        height: 30px;
     }
 
     .comment-input-pill {
         min-width: 0; 
         box-sizing: border-box;
+        padding: 4px 4px 4px 15px; 
     }
 
     .comment-inline-input {
         min-width: 0; 
         width: 100%;
+        font-size: 0.82rem; 
+    }
+
+    .send-comment-btn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .send-comment-btn svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .comments-list {
+        gap: 20px; 
+    }
+
+    .comment-thread {
+        gap: 12px;
+    }
+
+    .single-comment {
+        gap: 10px;
+    }
+
+    .comment-header {
+        gap: 6px;
+    }
+
+    .comment-user {
+        font-size: 0.82rem; 
+    }
+
+    .comment-badge {
+        font-size: 0.55rem;
+        padding: 2px 6px;
+    }
+
+    .comment-time {
+        font-size: 0.75rem;
+    }
+
+    .comment-text {
+        font-size: 0.82rem; 
+        line-height: 1.4;
+    }
+
+    .comment-interactions {
+        gap: 12px;
+        margin-top: 2px;
+    }
+
+    .interaction-btn {
+        font-size: 0.75rem;
+        gap: 4px;
+    }
+
+    .interaction-btn i {
+        font-size: 0.8rem; 
     }
 
     .nested-replies {
-        margin-left: 20px;
+        margin-left: 24px; 
+        gap: 12px;
     }
 }
