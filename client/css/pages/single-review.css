@@ -3,9 +3,15 @@
    ========================================================================== */
 
 .single-review-page {
-    background-color: var(--dark-bg);
+    background-color: var(--dark-bg, #080f0e);
     color: var(--text-cream);
     min-height: 100vh;
+}
+
+/* 🌟 تأمين الصفحة عشان الخلفية تتحرك مع السكرول وماتثبتش 🌟 */
+.single-review-main {
+    position: relative;
+    width: 100%;
 }
 
 /* ==================================================
@@ -20,6 +26,7 @@
     max-height: 800px;
     background-size: cover;
     background-position: center top; 
+    background-attachment: scroll;
     z-index: 0;
 }
 
@@ -29,10 +36,10 @@
     background: linear-gradient(
         to bottom, 
         transparent 0%, 
-        rgba(1, 10, 9, 0.4) 50%, 
-        rgba(1, 10, 9, 0.9) 85%, 
-        var(--dark-bg) 100%
-    );
+        rgba(8, 15, 14, 0.4) 40%, 
+        rgba(8, 15, 14, 0.95) 80%, 
+        var(--dark-bg, #080f0e) 100%
+    ); /* 🌟 التدرج بيقفل بلون صلب بسرعة عشان الصورة ماتظهرش من تحت الكلام 🌟 */
 }
 
 /* ==================================================
@@ -100,7 +107,6 @@
     font-weight: 600;
 }
 
-/* Episode & Season Pill */
 .episode-meta-pill {
     display: inline-block;
     align-self: flex-start;
@@ -490,7 +496,6 @@
    📱 MOBILE RESPONSIVENESS
    ================================================== */
 @media (max-width: 768px) {
-    /* 🌟 تأمين الشاشة كلها من الأوفر فلو بالعرض 🌟 */
     html, body {
         overflow-x: hidden;
         max-width: 100vw;
@@ -505,7 +510,7 @@
         padding-top: 90px; 
         padding-left: 15px;
         padding-right: 15px;
-        box-sizing: border-box; /* أمان إضافي للمسافات الداخلية */
+        box-sizing: border-box; 
     }
 
     .external-movie-header {
@@ -555,42 +560,38 @@
     .card-user-header {
         flex-wrap: nowrap; 
         align-items: flex-start;
-        gap: 10px;
+        gap: 8px; /* قللنا المسافة شوية */
     }
 
     .reviewer-meta-inside {
-        gap: 10px;
+        gap: 8px;
         flex: 1;
-        min-width: 0; /* 🌟 السر هنا: يخلي العنصر ينكمش بدل ما يزق اللي جنبه بره الشاشة 🌟 */
     }
     
-    .card-user-details {
-        min-width: 0; /* إجبار المحتوى الداخلي إنه ينكمش كمان */
-    }
-    
-    .card-username {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis; /* هيحط 3 نقط لو الاسم طويل جداً */
-        display: block; 
+    .card-avatar {
+        width: 36px;
+        height: 36px;
     }
 
-    .card-avatar {
-        width: 38px;
-        height: 38px;
+    /* 🌟 الحل الأشيك للاسم الطويل: تصغير الفونت بدل ما نقصه 🌟 */
+    .card-username a {
+        font-size: 0.85rem; /* صغرنا الخط عشان ياخد مساحته براحته */
+        white-space: normal;
+        word-wrap: break-word;
     }
 
     .card-rating-date {
         flex-wrap: wrap; 
         gap: 6px;
+        font-size: 0.75rem; /* صغرنا النجوم والتاريخ نسبة وتناسب */
     }
 
     .card-spoiler-badge {
-        font-size: 0.75rem;
+        font-size: 0.7rem; /* صغرنا البادج عشان يظبط مع الاسم الجديد */
         padding: 4px 8px;
         flex-shrink: 0; 
         align-self: flex-start;
-        margin-top: 4px;
+        margin-top: 2px;
     }
 
     .card-divider {
@@ -622,7 +623,7 @@
     }
 
     .comment-input-pill {
-        min-width: 0; /* 🌟 بيمنع الـ input من التمدد الإجباري اللي بيكسر عرض الشاشة 🌟 */
+        min-width: 0; 
         box-sizing: border-box;
     }
 
