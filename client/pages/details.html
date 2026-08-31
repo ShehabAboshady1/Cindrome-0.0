@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome - Sherlock</title>
+    <link rel="icon" type="image/png" href="../assets/logos/cindrome-logo.png">
+    <script>
+        const v = Date.now();
+        document.write(`
+        <link rel="stylesheet" href="../css/main.css?v=${v}">
+        <link rel="stylesheet" href="../css/navbar.css?v=${v}">
+        <link rel="stylesheet" href="../css/hero.css?v=${v}">
+        <link rel="stylesheet" href="../css/lists-carousel.css?v=${v}">
+        <link rel="stylesheet" href="../css/carousel.css?v=${v}">
+        <link rel="stylesheet" href="../css/pages/details.css?v=${v}">
+        <link rel="stylesheet" href="../css/reviews.css?v=${v}">
+        <link rel="stylesheet" href="../css/modals.css?v=${v}">
+        <link rel="stylesheet" href="../css/cards.css?v=${v}">
+      `);
+    </script>
+</head>
+
+<body class="logged-in">
+    <!-- Navbar -->
+    <header>
+        <nav class="bar">
+            <div class="nav-container">
+
+                <a href="../../index.html" class="logo-link">
+                    <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
+                </a>
+
+                <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+                <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+                <div class="right-bar">
+                    <!-- 1. روابط الـ Navigation العادية في الأول -->
+                    <a href="../../index.html" class="nav-item">Home</a>
+                    <a href="./discover.html" class="nav-item">Discover</a>
+                    <a href="./lists.html" class="nav-item">Lists</a>
+
+                    <div class="dropdown">
+                        <input type="checkbox" id="content-toggle" class="dropdown-checkbox">
+                        <label for="content-toggle" class="nav-item dropdown-label">Content ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./movies.html">Movies</a></li>
+                            <li><a href="./series.html">TV Series</a></li>
+                            <li><a href="./anime.html">Anime</a></li>
+                        </ul>
+                    </div>
+
+                    <a href="./drome.html" class="nav-item">Drome</a>
+
+                    <!-- 2. قايمة الأكونت (للمستخدمين بس) -->
+                    <div class="dropdown user-only">
+                        <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
+                        <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
+                        <ul class="dropdown-menu">
+                            <li><a href="./profile.html">Profile</a></li>
+                            <li><a href="./diary.html">Diary</a></li>
+                            <li><a href="./watchlist.html">Watchlist</a></li>
+                            <li><a href="./sign-in.html" style="color: #ff4757;">Log out</a></li>
+                        </ul>
+                    </div>
+                </div> <!-- 👈 قفلة الـ right-bar هنا -->
+
+                <!-- ========================================================= -->
+                <!-- 🌟 3. زراير الأكشن طلعناها بره القايمة عشان تفضل باينة دايماً 🌟 -->
+                <!-- ========================================================= -->
+
+                <!-- 🔴 للزوار بس -->
+                <a href="./sign-in.html" class="guest-only" style="text-decoration: none;">
+                    <button class="signin-btn">Sign in</button>
+                </a>
+
+                <!-- 🟢 للمستخدمين بس -->
+                <button class="log-nav-btn user-only" id="navLogBtn">
+                    <i class="fa-solid fa-plus"></i> Log
+                </button>
+
+                <!-- زرار البحث رجع مكانه وكلاسه الأصلي -->
+                <button type="button" class="search-trigger-btn" aria-label="Search">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+
+            </div>
+        </nav>
+    </header>
+
+    <main class="details-page">
+
+        <!-- HERO SECTION -->
+        <section class="details-hero"
+            style="background-image: linear-gradient(rgba(8,15,14,0.88), rgba(8,15,14,0.88)), url('../assets/backdrops/backdrop-sherlock.webp'); background-position: center; background-size: cover;">
+            <div class="nav-container hero-content-left">
+                <div class="poster-wrapper">
+                    <img src="../assets/posters/poster-sherlock.webp" alt="Sherlock Poster" class="details-poster">
+                </div>
+
+                <div class="media-info-left">
+                    <h1 class="media-title">Sherlock <span class="release-year">2010</span></h1>
+
+                    <div class="meta-inline">
+                        <span class="badge-tag">TV Series</span>
+                        <span class="meta-dot">•</span>
+                        <span class="rating-star">9.1 <i>/ 10</i></span>
+                        <span class="meta-dot">•</span>
+                        <span>4 Seasons</span>
+                        <span class="meta-dot">•</span>
+                        <span>Crime, Mystery</span>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary log-btn" id="openLogModal">+ Log</button>
+
+                        <button class="btn btn-secondary watchlist-btn" title="Add to Watchlist">
+                            <i class="fa-regular fa-bookmark"></i> <span class="btn-text">Watchlist</span>
+                        </button>
+
+                        <!-- 🌟 أيقونة اللايك بقت مفرغة ولما بتدوس عليها الـ CSS بيقلبها لونها أحمر 🌟 -->
+                        <button class="btn btn-icon-only like-btn-hero" title="Like">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN CONTENT -->
+        <section class="nav-container details-content">
+
+            <!-- 1. OVERVIEW SECTION -->
+            <div class="detail-section details-panel" id="sec-overview">
+                <h3 class="section-title">Overview</h3>
+                <p class="short-summary">A modern revival of Arthur Conan Doyle's detective stories. Eccentric sleuth
+                    Sherlock Holmes and Dr. John Watson solve complex crimes in 21st-century London.</p>
+                <div class="mini-details-grid">
+                    <div class="mini-detail-item">
+                        <span class="detail-label">Creators</span>
+                        <span class="detail-value">Steven Moffat, Mark Gatiss</span>
+                    </div>
+                    <div class="mini-detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">Ended</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. SEASONS & EPISODES SECTION -->
+            <div class="detail-section details-panel" id="sec-episodes">
+                <h3 class="section-title">Episodes</h3>
+
+                <!-- 🌟 استبدلنا الـ onclick بـ data-target للـ JS النظيف 🌟 -->
+                <div class="seasons-sub-nav">
+                    <button class="season-btn active" data-target="season-1">Season 1</button>
+                    <button class="season-btn" data-target="season-2">Season 2</button>
+                    <button class="season-btn" data-target="season-3">Season 3</button>
+                    <button class="season-btn" data-target="season-4">Season 4</button>
+                </div>
+
+                <!-- Season 1 -->
+                <div class="season-content active" id="season-1">
+                    <div class="minimal-ep-list">
+                        <a href="episode-details.html?s=1&ep=1" class="ep-row ep-link">
+                            <span class="ep-num">E01</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">A Study in Pink</span>
+                                <span class="ep-time">88 min</span>
+                            </div>
+                        </a>
+                        <a href="episode-details.html?s=1&ep=2" class="ep-row ep-link">
+                            <span class="ep-num">E02</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">The Blind Banker</span>
+                                <span class="ep-time">89 min</span>
+                            </div>
+                        </a>
+                        <a href="episode-details.html?s=1&ep=3" class="ep-row ep-link">
+                            <span class="ep-num">E03</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">The Great Game</span>
+                                <span class="ep-time">89 min</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Season 2 -->
+                <div class="season-content" id="season-2">
+                    <div class="minimal-ep-list">
+                        <a href="episode-details.html?s=2&ep=1" class="ep-row ep-link">
+                            <span class="ep-num">E01</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">A Scandal in Belgravia</span>
+                                <span class="ep-time">89 min</span>
+                            </div>
+                        </a>
+                        <a href="episode-details.html?s=2&ep=2" class="ep-row ep-link">
+                            <span class="ep-num">E02</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">The Hounds of Baskerville</span>
+                                <span class="ep-time">88 min</span>
+                            </div>
+                        </a>
+                        <a href="episode-details.html?s=2&ep=3" class="ep-row ep-link">
+                            <span class="ep-num">E03</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">The Reichenbach Fall</span>
+                                <span class="ep-time">88 min</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Season 3 -->
+                <div class="season-content" id="season-3">
+                    <div class="minimal-ep-list">
+                        <a href="episode-details.html?s=3&ep=1" class="ep-row ep-link">
+                            <span class="ep-num">E01</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">The Empty Hearse</span>
+                                <span class="ep-time">86 min</span>
+                            </div>
+                        </a>
+                        <a href="episode-details.html?s=3&ep=2" class="ep-row ep-link">
+                            <span class="ep-num">E02</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">The Sign of Three</span>
+                                <span class="ep-time">86 min</span>
+                            </div>
+                        </a>
+                        <a href="episode-details.html?s=3&ep=3" class="ep-row ep-link">
+                            <span class="ep-num">E03</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">His Last Vow</span>
+                                <span class="ep-time">89 min</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Season 4 -->
+                <div class="season-content" id="season-4">
+                    <div class="minimal-ep-list">
+                        <a href="episode-details.html?s=4&ep=1" class="ep-row ep-link">
+                            <span class="ep-num">E01</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">The Six Thatchers</span>
+                                <span class="ep-time">88 min</span>
+                            </div>
+                        </a>
+                        <a href="episode-details.html?s=4&ep=2" class="ep-row ep-link">
+                            <span class="ep-num">E02</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">The Lying Detective</span>
+                                <span class="ep-time">88 min</span>
+                            </div>
+                        </a>
+                        <a href="episode-details.html?s=4&ep=3" class="ep-row ep-link">
+                            <span class="ep-num">E03</span>
+                            <div class="ep-info-flex">
+                                <span class="ep-title">The Final Problem</span>
+                                <span class="ep-time">89 min</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. CAST SECTION -->
+            <div class="detail-section details-panel" id="sec-cast">
+                <div class="section-header-flex">
+                    <h3 class="section-title">Cast</h3>
+                    <div class="carousel-controls">
+                        <!-- تم إضافة الأيديهات للـ JS -->
+                        <button class="carousel-btn prev-btn" id="castPrev" aria-label="Previous">❮</button>
+                        <button class="carousel-btn next-btn" id="castNext" aria-label="Next">❯</button>
+                    </div>
+                </div>
+
+                <div class="cast-carousel-wrapper">
+                    <div class="cast-carousel" id="castCarousel">
+                        <article class="cast-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGedxMZhdljGrnIMiFRhoTPZZHuGl80NdVGuUyjMpVmQ&s=10"
+                                alt="Benedict Cumberbatch" class="cast-img">
+                            <div class="cast-info">
+                                <strong class="actor-name">Benedict Cumberbatch</strong>
+                                <span class="character-name">Sherlock Holmes</span>
+                            </div>
+                        </article>
+
+                        <article class="cast-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwYPCqGW8BIfdc91KP6-2RwIMdkk9dguyeOUzpzY016g&s=10"
+                                alt="Martin Freeman" class="cast-img">
+                            <div class="cast-info">
+                                <strong class="actor-name">Martin Freeman</strong>
+                                <span class="character-name">Dr. John Watson</span>
+                            </div>
+                        </article>
+
+                        <article class="cast-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAlCdb8Y0f2lxOv3jye4dmEolGQNx9pHuJFNYrjkAdVg&s=10"
+                                alt="Andrew Scott" class="cast-img">
+                            <div class="cast-info">
+                                <strong class="actor-name">Andrew Scott</strong>
+                                <span class="character-name">Jim Moriarty</span>
+                            </div>
+                        </article>
+
+                        <article class="cast-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGedxMZhdljGrnIMiFRhoTPZZHuGl80NdVGuUyjMpVmQ&s=10"
+                                alt="Rupert Graves" class="cast-img">
+                            <div class="cast-info">
+                                <strong class="actor-name">Rupert Graves</strong>
+                                <span class="character-name">DI Greg Lestrade</span>
+                            </div>
+                        </article>
+
+                        <article class="cast-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwYPCqGW8BIfdc91KP6-2RwIMdkk9dguyeOUzpzY016g&s=10"
+                                alt="Una Stubbs" class="cast-img">
+                            <div class="cast-info">
+                                <strong class="actor-name">Una Stubbs</strong>
+                                <span class="character-name">Mrs. Hudson</span>
+                            </div>
+                        </article>
+
+                        <article class="cast-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAlCdb8Y0f2lxOv3jye4dmEolGQNx9pHuJFNYrjkAdVg&s=10"
+                                alt="Louise Brealey" class="cast-img">
+                            <div class="cast-info">
+                                <strong class="actor-name">Louise Brealey</strong>
+                                <span class="character-name">Molly Hooper</span>
+                            </div>
+                        </article>
+
+                        <article class="cast-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGedxMZhdljGrnIMiFRhoTPZZHuGl80NdVGuUyjMpVmQ&s=10"
+                                alt="Mark Gatiss" class="cast-img">
+                            <div class="cast-info">
+                                <strong class="actor-name">Mark Gatiss</strong>
+                                <span class="character-name">Mycroft Holmes</span>
+                            </div>
+                        </article>
+
+                        <article class="cast-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwYPCqGW8BIfdc91KP6-2RwIMdkk9dguyeOUzpzY016g&s=10"
+                                alt="Amanda Abbington" class="cast-img">
+                            <div class="cast-info">
+                                <strong class="actor-name">Amanda Abbington</strong>
+                                <span class="character-name">Mary Watson</span>
+                            </div>
+                        </article>
+
+                        <article class="cast-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAlCdb8Y0f2lxOv3jye4dmEolGQNx9pHuJFNYrjkAdVg&s=10"
+                                alt="Lara Pulver" class="cast-img">
+                            <div class="cast-info">
+                                <strong class="actor-name">Lara Pulver</strong>
+                                <span class="character-name">Irene Adler</span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. REVIEWS SECTION -->
+            <div class="detail-section details-panel" id="sec-reviews">
+                <div class="reviews-section-header">
+                    <div class="reviews-section-heading">
+                        <h3 class="reviews-title">Reviews</h3>
+                    </div>
+                    <div class="reviews-section-actions">
+                        <!-- تم إضافة الأيديهات للـ JS -->
+                        <div class="carousel-controls">
+                            <button class="carousel-btn" id="reviewPrev" aria-label="Previous reviews" type="button">&#10094;</button>
+                            <button class="carousel-btn" id="reviewNext" aria-label="Next reviews" type="button">&#10095;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reviews-list" id="reviewsRow">
+
+                    <!-- Review 1 -->
+                    <article class="minimal-review-card">
+                        <div class="minimal-card-header">
+                            <div class="header-left-stack">
+                                <a href="item-detail.html" class="review-poster-link" title="Sherlock">
+                                    <img src="../assets/posters/poster-sherlock.webp" class="review-micro-poster"
+                                        alt="Sherlock">
+                                </a>
+                                <div class="review-info-content">
+                                    <a href="item-detail.html" class="review-media-title">Sherlock</a>
+                                    <div class="review-rating-line">
+                                        <div class="stars" title="5 Stars">
+                                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                                class="star-full">★</span><span class="star-full">★</span><span
+                                                class="star-full">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="review-author-line">
+                                        <a href="profile.html" class="review-avatar-link">
+                                            <img src="../assets/profile-avatar.jpg" alt="Shehab"
+                                                class="review-micro-avatar">
+                                        </a>
+                                        <a href="profile.html" class="review-author-username">@Shehab_Aboshady</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="minimal-card-body">
+                            <p class="review-body">
+                                Sharp writing and brilliant performance by Benedict! The pacing in season 2 is absolute
+                                perfection.
+                            </p>
+                        </div>
+                        <div class="minimal-card-footer">
+                            <div class="minimal-actions">
+                                <button class="minimal-btn"><i class="fa-regular fa-heart"></i> 350</button>
+                                <a href="single-review.html" class="minimal-btn"><i class="fa-regular fa-comment"></i>
+                                    12</a>
+                            </div>
+                            <a href="single-review.html" class="minimal-read-link">Read Full Review <i
+                                    class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                    </article>
+
+                    <!-- Review 2 (Spoiler) -->
+                    <article class="minimal-review-card">
+                        <div class="minimal-card-header">
+                            <div class="header-left-stack">
+                                <a href="item-detail.html" class="review-poster-link" title="Sherlock">
+                                    <img src="../assets/posters/poster-sherlock.webp" class="review-micro-poster"
+                                        alt="Sherlock">
+                                </a>
+                                <div class="review-info-content">
+                                    <a href="item-detail.html" class="review-media-title">Sherlock</a>
+                                    <div class="review-rating-line">
+                                        <div class="stars" title="4 Stars">
+                                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                                class="star-full">★</span><span class="star-full">★</span><span
+                                                class="star-empty">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="review-author-line">
+                                        <a href="profile.html" class="review-avatar-link">
+                                            <img src="../assets/profile-avatar.jpg" alt="Shehab"
+                                                class="review-micro-avatar">
+                                        </a>
+                                        <a href="profile.html" class="review-author-username">@Shehab_Aboshady</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header-right-stack">
+                                <span class="spoiler-badge"><i class="fa-solid fa-triangle-exclamation"></i>
+                                    Spoiler</span>
+                            </div>
+                        </div>
+                        <div class="minimal-card-body">
+                            <!-- 🌟 استبدلنا الـ onclick بكلاس والـ JS هيتكفل بيه 🌟 -->
+                            <p class="review-body blurred" 
+                                data-full-text="Moriarty's rooftop showdown was insane! Sherlock's fake death was executed perfectly.">
+                                Click to reveal review containing spoilers for season 2 finale.
+                            </p>
+                        </div>
+                        <div class="minimal-card-footer">
+                            <div class="minimal-actions">
+                                <button class="minimal-btn"><i class="fa-regular fa-heart"></i> 42</button>
+                                <a href="single-review.html" class="minimal-btn"><i class="fa-regular fa-comment"></i>
+                                    5</a>
+                            </div>
+                            <a href="single-review.html" class="minimal-read-link">Read Full Review <i
+                                    class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                    </article>
+
+                    <!-- Review 3 -->
+                    <article class="minimal-review-card">
+                        <div class="minimal-card-header">
+                            <div class="header-left-stack">
+                                <a href="item-detail.html" class="review-poster-link" title="Sherlock">
+                                    <img src="../assets/posters/poster-sherlock.webp" class="review-micro-poster"
+                                        alt="Sherlock">
+                                </a>
+                                <div class="review-info-content">
+                                    <a href="item-detail.html" class="review-media-title">Sherlock</a>
+                                    <div class="review-rating-line">
+                                        <div class="stars" title="5 Stars">
+                                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                                class="star-full">★</span><span class="star-full">★</span><span
+                                                class="star-full">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="review-author-line">
+                                        <a href="profile.html" class="review-avatar-link">
+                                            <img src="../assets/profile-avatar.jpg" alt="Shehab"
+                                                class="review-micro-avatar">
+                                        </a>
+                                        <a href="profile.html" class="review-author-username">@Shehab_Aboshady</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="minimal-card-body">
+                            <p class="review-body">
+                                Mind-blowing cinematography and complex narrative. Mind-bending from start to finish!
+                            </p>
+                        </div>
+                        <div class="minimal-card-footer">
+                            <div class="minimal-actions">
+                                <button class="minimal-btn"><i class="fa-regular fa-heart"></i> 18</button>
+                                <a href="single-review.html" class="minimal-btn"><i class="fa-regular fa-comment"></i>
+                                    3</a>
+                            </div>
+                            <a href="single-review.html" class="minimal-read-link">Read Full Review <i
+                                    class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                    </article>
+
+                    <!-- Review 4 -->
+                    <article class="minimal-review-card">
+                        <div class="minimal-card-header">
+                            <div class="header-left-stack">
+                                <a href="item-detail.html" class="review-poster-link" title="Sherlock">
+                                    <img src="../assets/posters/poster-sherlock.webp" class="review-micro-poster"
+                                        alt="Sherlock">
+                                </a>
+                                <div class="review-info-content">
+                                    <a href="item-detail.html" class="review-media-title">Sherlock</a>
+                                    <div class="review-rating-line">
+                                        <div class="stars" title="5 Stars">
+                                            <span class="star-full">★</span><span class="star-full">★</span><span
+                                                class="star-full">★</span><span class="star-full">★</span><span
+                                                class="star-full">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="review-author-line">
+                                        <a href="profile.html" class="review-avatar-link">
+                                            <img src="../assets/profile-avatar.jpg" alt="Shehab"
+                                                class="review-micro-avatar">
+                                        </a>
+                                        <a href="profile.html" class="review-author-username">@Shehab_Aboshady</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="minimal-card-body">
+                            <p class="review-body">
+                                Season 1 is a masterpiece of atmospheric crime drama and philosophical dialogue.
+                            </p>
+                        </div>
+                        <div class="minimal-card-footer">
+                            <div class="minimal-actions">
+                                <button class="minimal-btn"><i class="fa-regular fa-heart"></i> 31</button>
+                                <a href="single-review.html" class="minimal-btn"><i class="fa-regular fa-comment"></i>
+                                    8</a>
+                            </div>
+                            <a href="single-review.html" class="minimal-read-link">Read Full Review <i
+                                    class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+            <!-- 5. MORE LIKE THIS SECTION -->
+            <div class="detail-section details-panel" id="sec-more-like-this">
+                <section class="carousel-section">
+                    <div class="carousel-header">
+                        <h2 class="carousel-title" style="color: var(--accent-teal, #00b4d8);">If You Liked Sherlock
+                        </h2>
+                        <div class="carousel-controls">
+                            <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                            <button class="carousel-btn" aria-label="Next">&#10095;</button>
+                        </div>
+                    </div>
+                    <div class="carousel-track">
+                        <!-- Card 1 -->
+                        <div class="content-card">
+                            <img src="../assets/posters/poster-dark.webp" alt="Dark" class="card-poster">
+                            <div class="card-overlay">
+                                <div class="card-top-row">
+                                    <span class="type-badge">SERIES</span>
+                                    <div class="rating-box"><span class="rating-label">IMDb</span><span
+                                            class="rating-score">⭐ 8.7</span></div>
+                                </div>
+                                <div class="card-bottom-content">
+                                    <div class="title-row">
+                                        <h3 class="card-title">Dark</h3>
+                                        <span class="age-badge">TV-MA</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span>3 Seasons • 2017</span>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="details.html?id=dark" class="btn-details">Details</a>
+                                        <button class="btn-watchlist" title="Toggle Watchlist">
+                                            <span class="icon-plus">+</span>
+                                            <span class="icon-minus">-</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="content-card">
+                            <img src="../assets/posters/poster-truedetective.webp" alt="True Detective"
+                                class="card-poster">
+                            <div class="card-overlay">
+                                <div class="card-top-row">
+                                    <span class="type-badge">SERIES</span>
+                                    <div class="rating-box"><span class="rating-label">IMDb</span><span
+                                            class="rating-score">⭐ 8.9</span></div>
+                                </div>
+                                <div class="card-bottom-content">
+                                    <div class="title-row">
+                                        <h3 class="card-title">True Detective</h3>
+                                        <span class="age-badge">TV-MA</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span>4 Seasons • 2014</span>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="details.html?id=truedetective" class="btn-details">Details</a>
+                                        <button class="btn-watchlist" title="Toggle Watchlist">
+                                            <span class="icon-plus">+</span>
+                                            <span class="icon-minus">-</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="content-card">
+                            <img src="../assets/posters/poster-dark.webp" alt="Dark" class="card-poster">
+                            <div class="card-overlay">
+                                <div class="card-top-row">
+                                    <span class="type-badge">SERIES</span>
+                                    <div class="rating-box"><span class="rating-label">IMDb</span><span
+                                            class="rating-score">⭐ 8.7</span></div>
+                                </div>
+                                <div class="card-bottom-content">
+                                    <div class="title-row">
+                                        <h3 class="card-title">Dark</h3>
+                                        <span class="age-badge">TV-MA</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span>3 Seasons • 2017</span>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="details.html?id=dark" class="btn-details">Details</a>
+                                        <button class="btn-watchlist" title="Toggle Watchlist">
+                                            <span class="icon-plus">+</span>
+                                            <span class="icon-minus">-</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="content-card">
+                            <img src="../assets/posters/poster-truedetective.webp" alt="True Detective"
+                                class="card-poster">
+                            <div class="card-overlay">
+                                <div class="card-top-row">
+                                    <span class="type-badge">SERIES</span>
+                                    <div class="rating-box"><span class="rating-label">IMDb</span><span
+                                            class="rating-score">⭐ 8.9</span></div>
+                                </div>
+                                <div class="card-bottom-content">
+                                    <div class="title-row">
+                                        <h3 class="card-title">True Detective</h3>
+                                        <span class="age-badge">TV-MA</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span>4 Seasons • 2014</span>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="details.html?id=truedetective" class="btn-details">Details</a>
+                                        <button class="btn-watchlist" title="Toggle Watchlist">
+                                            <span class="icon-plus">+</span>
+                                            <span class="icon-minus">-</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5 -->
+                        <div class="content-card">
+                            <img src="../assets/posters/poster-dark.webp" alt="Dark" class="card-poster">
+                            <div class="card-overlay">
+                                <div class="card-top-row">
+                                    <span class="type-badge">SERIES</span>
+                                    <div class="rating-box"><span class="rating-label">IMDb</span><span
+                                            class="rating-score">⭐ 8.7</span></div>
+                                </div>
+                                <div class="card-bottom-content">
+                                    <div class="title-row">
+                                        <h3 class="card-title">Dark</h3>
+                                        <span class="age-badge">TV-MA</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span>3 Seasons • 2017</span>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="details.html?id=dark" class="btn-details">Details</a>
+                                        <button class="btn-watchlist" title="Toggle Watchlist">
+                                            <span class="icon-plus">+</span>
+                                            <span class="icon-minus">-</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <a href="../../index.html" class="logo-link">
+                <img class="logo" src="../assets/logos/no background logo.png" alt="Cindrome Logo">
+            </a>
+
+            <div class="footer-nav">
+                <a href="about.html" class="footer-link">About Us</a>
+                <span class="footer-divider"></span>
+                <div class="footer-socials">
+                    <a href="mailto:cindrome.me@gmail.com" class="social-icon" aria-label="Email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </a>
+                    <a href="https://www.instagram.com/cindromeapp/" target="_blank" class="social-icon"
+                        aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                        </svg>
+                    </a>
+                    <a href="https://x.com/CindromeApp" target="_blank" class="social-icon" aria-label="X">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ========================================================= -->
+    <!-- 🌟 PREMIUM LOG MODAL (Contextual Mode) 🌟 -->
+    <!-- ========================================================= -->
+    <div class="log-modal-overlay" id="logModal" style="display: none;">
+        <div class="log-modal-container context-mode">
+
+            <button class="close-modal-btn" id="closeLogModalBtn" aria-label="Close log modal">&times;</button>
+            <h2 class="modal-main-title">Log Content</h2>
+
+            <div class="log-global-search">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" placeholder="Name of movie, series, or anime...">
+            </div>
+
+            <div class="log-item-header">
+                <img src="../assets/posters/poster-sherlock.webp" alt="Sherlock" class="log-item-poster"
+                    onerror="this.src='https://image.tmdb.org/t/p/w200/8bZCaPAPPil3ea2c9xSsmfsibGB.jpg'">
+
+                <div class="log-item-info">
+                    <!-- تم استخدام الكلاس الموحد هنا -->
+                    <span class="type-badge series-badge">TV SERIES</span>
+                    <h3 class="log-item-title">Sherlock</h3>
+
+                    <div class="season-episode-selectors">
+                        <details class="css-dropdown">
+                            <summary class="dropdown-selected">
+                                <span id="seasonText">Season 1</span>
+                                <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="dropdown-list">
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 1
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 2
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 3
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season 4
+                                </li>
+                            </ul>
+                        </details>
+
+                        <details class="css-dropdown">
+                            <summary class="dropdown-selected">
+                                <span id="episodeText">All Episodes</span>
+                                <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="dropdown-list">
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">All
+                                    Episodes</li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">Episode 1
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">Episode 2
+                                </li>
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">Episode 3
+                                </li>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <form class="log-form" onsubmit="return false;">
+
+                <div class="log-toolbar">
+                    <div class="star-rating-input" id="starRating">
+                        <i class="fa-regular fa-star rate-star" data-index="0"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="1"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="2"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="3"></i>
+                        <i class="fa-regular fa-star rate-star" data-index="4"></i>
+                    </div>
+
+                    <div class="toolbar-divider"></div>
+
+                    <div class="toolbar-actions">
+                        <button type="button" class="icon-toggle-btn" id="likeToggle" title="Like">
+                            <i class="fa-solid fa-heart"></i>
+                        </button>
+                        <button type="button" class="icon-toggle-btn" id="rewatchToggle" title="Rewatch">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                        <button type="button" class="icon-toggle-btn spoiler-btn" id="spoilerToggle"
+                            title="Contains Spoilers">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="review-group">
+                    <textarea id="reviewText" class="review-textarea"
+                        placeholder="Add your thoughts (Optional)..."></textarea>
+                </div>
+
+                <div class="log-footer">
+                    <div class="date-group">
+                        <input type="date" id="watchDate" class="date-picker-input" title="Watched On">
+                    </div>
+
+                    <div class="log-actions">
+                        <button type="button" class="btn-cancel" id="cancelLogBtn">Cancel</button>
+                        <button type="submit" class="btn-save-log">Log</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- ========================================================= -->
+    <!-- 🌟 GLOBAL SEARCH MODAL (EXACT DISCOVER CLONE) 🌟 -->
+    <!-- ========================================================= -->
+    <div class="search-modal-overlay" id="searchModal" style="display: none;">
+        <div class="search-modal-container">
+
+            <button class="close-modal-btn" aria-label="Close search">&times;</button>
+
+            <section class="g-search-section" aria-label="Content Filters">
+                <form class="g-filter-bar-container" role="search" onSubmit="return false;">
+
+                    <div class="g-filter-search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            aria-hidden="true">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="filterSearchInput" placeholder="Search title..."
+                            aria-label="Search title" autofocus>
+                    </div>
+
+                    <div class="g-filter-v-divider" role="separator"></div>
+
+                    <fieldset class="g-type-selector" aria-label="Content Type">
+                        <button class="g-type-pill active" type="button">All</button>
+                        <button class="g-type-pill" type="button">Anime</button>
+                        <button class="g-type-pill" type="button">Movies</button>
+                        <button class="g-type-pill" type="button">Series</button>
+                    </fieldset>
+
+                    <div class="g-filter-v-divider" role="separator"></div>
+
+                    <div class="g-dropdowns-group">
+
+                        <!-- Genre Dropdown -->
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Genre</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">Action</li>
+                                <li class="g-dropdown-item">Sci-Fi</li>
+                                <li class="g-dropdown-item">Drama</li>
+                                <li class="g-dropdown-item">Mystery</li>
+                                <li class="g-dropdown-item">Psychological</li>
+                                <li class="g-dropdown-item">Fantasy</li>
+                                <li class="g-dropdown-item">Comedy</li>
+                            </ul>
+                        </details>
+
+                        <!-- Rating Dropdown -->
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Rating</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">★ 9.0+</li>
+                                <li class="g-dropdown-item">★ 8.0+</li>
+                                <li class="g-dropdown-item">★ 7.0+</li>
+                                <li class="g-dropdown-item">★ 6.0+</li>
+                                <li class="g-dropdown-item">★ 5.0+</li>
+                                <li class="g-dropdown-item">Lower</li>
+                            </ul>
+                        </details>
+
+                        <!-- Sort By Dropdown -->
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Sort By</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">Newest</li>
+                                <li class="g-dropdown-item">Popular</li>
+                                <li class="g-dropdown-item">Rating</li>
+                            </ul>
+                        </details>
+
+                        <!-- Year Dropdown -->
+                        <details class="g-css-dropdown">
+                            <summary class="g-dropdown-selected">
+                                <span>Year</span>
+                                <span class="g-dropdown-arrow" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="g-dropdown-list">
+                                <li class="g-dropdown-item">2026</li>
+                                <li class="g-dropdown-item">2025</li>
+                                <li class="g-dropdown-item">2024</li>
+                                <li class="g-dropdown-item">2023</li>
+                                <li class="g-dropdown-item">2022</li>
+                                <li class="g-dropdown-item">2021</li>
+                                <li class="g-dropdown-item">2020</li>
+                                <li class="g-dropdown-item">2010s</li>
+                                <li class="g-dropdown-item">2000s</li>
+                                <li class="g-dropdown-item">90s</li>
+                                <li class="g-dropdown-item">80s</li>
+                                <li class="g-dropdown-item">Classics</li>
+                            </ul>
+                        </details>
+
+                    </div>
+
+                    <button class="g-reset-filter-btn" type="reset" aria-label="Reset Filters" title="Reset Filters">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                            <path d="M3 3v5h5"></path>
+                        </svg>
+                    </button>
+
+                </form>
+            </section>
+        </div>
+    </div>
+    
+    <!-- 🌟 الروابط الأساسية للمشروع 🌟 -->
+    <script src="../js/modals.js"></script>
+    <script src="../js/carousel.js"></script>
+    <script src="../js/index-page.js"></script> 
+    <!-- 🌟 الجافاسكريبت الجديد بتاع صفحة التفاصيل 🌟 -->
+    <script src="../js/details-page.js"></script> 
+</body>
+
+</html>

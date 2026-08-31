@@ -1,0 +1,475 @@
+/* ==========================================================================
+   CINDROME - DIARY PAGE (COMPACT ROW LAYOUT WITH EMOJIS & VERTICAL ACTIONS)
+========================================================================== */
+
+.diary-main-wrapper {
+  width: 92%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  min-height: 70vh;
+}
+
+/* Header & Subtitle */
+.diary-header-box {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.diary-teal-subtitle {
+  color: var(--accent-teal);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   DIARY EXCLUSIVE FILTER BAR (Fully Isolated & Independent)
+========================================================================== */
+.diary-filter-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.diary-filter-section .filter-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(22, 22, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  padding: 8px 20px;
+  border-radius: 100px;
+  box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
+  width: max-content; 
+  max-width: 100%;
+}
+
+.diary-filter-section .css-dropdown {
+  position: relative;
+  font-family: inherit;
+  width: max-content;
+}
+
+.diary-filter-section summary::-webkit-details-marker {
+  display: none;
+}
+
+.diary-filter-section .dropdown-selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 50px;
+  padding: 8px 14px;
+  color: var(--text-cream);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  transition: all 0.25s ease;
+  gap: 10px;
+}
+
+.diary-filter-section .dropdown-selected:hover,
+.diary-filter-section .css-dropdown[open] .dropdown-selected {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 10px rgba(9, 158, 158, 0.25);
+}
+
+.diary-filter-section .dropdown-arrow {
+  font-size: 0.55rem;
+  color: rgba(241, 227, 200, 0.6);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.diary-filter-section .css-dropdown[open] .dropdown-arrow {
+  transform: rotate(180deg);
+  color: var(--accent-teal);
+}
+
+.diary-filter-section .dropdown-list {
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 100%;
+  width: max-content;
+  box-sizing: border-box;
+  background: var(--maincolor);
+  border: 1px solid rgba(241, 227, 200, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(1, 10, 9, 0.95);
+  list-style: none;
+  padding: 6px;
+  margin: 0;
+  z-index: 50;
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.diary-filter-section .dropdown-list::-webkit-scrollbar {
+  display: none;
+}
+
+.diary-filter-section .dropdown-item {
+  padding: 8px 12px;
+  color: rgba(241, 227, 200, 0.75);
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.diary-filter-section .dropdown-item:hover {
+  background: rgba(9, 158, 158, 0.18);
+  color: var(--text-cream);
+}
+
+.diary-filter-section .filter-v-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(241, 227, 200, 0.12);
+}
+
+/* ==========================================================================
+   DIARY ENTRIES & ROWS
+========================================================================== */
+.diary-list-container {
+  background: rgba(22, 22, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diary-month-divider {
+  color: var(--accent-teal);
+  font-size: 1rem;
+  font-weight: 700;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(9, 158, 158, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.diary-month-divider:not(:first-child) {
+  margin-top: 16px;
+}
+
+.diary-entry-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: rgba(1, 10, 9, 0.5);
+  border: 1px solid rgba(241, 227, 200, 0.08);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: all 0.4s ease; /* Transition زادت للنعومة في الاختفاء */
+}
+
+/* 🌟 أنيميشن الاختفاء لما اليوزر يدوس مسح 🌟 */
+.diary-entry-row.fade-out {
+  opacity: 0;
+  transform: scale(0.95) translateX(40px);
+  pointer-events: none;
+}
+
+.diary-entry-row:hover:not(.fade-out) {
+  background: rgba(1, 10, 9, 0.85);
+  border-color: rgba(9, 158, 158, 0.35);
+  transform: translateX(4px);
+}
+
+.diary-date-num {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: rgba(241, 227, 200, 0.5);
+  flex: 0 0 30px;
+  text-align: right;
+  padding-top: 2px;
+}
+
+.diary-entry-row .mini-content-card {
+  flex: 0 0 55px;
+  width: 55px;
+}
+.diary-entry-row .mini-top-rating {
+  font-size: 7.5px;
+  padding: 2px 4px;
+}
+
+.diary-details-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 2px;
+}
+
+.diary-movie-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.diary-item-title-link {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-cream);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.diary-item-title-link:hover {
+  color: var(--accent-teal);
+  text-decoration: underline;
+}
+
+.diary-item-year {
+  font-size: 0.75rem;
+  color: rgba(241, 227, 200, 0.5);
+  font-weight: 500;
+}
+
+.diary-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.stars {
+  color: var(--text-cream, #e2e8f0);
+  letter-spacing: 1.5px;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.star-full { color: var(--text-cream, #e2e8f0); }
+
+.star-half {
+  position: relative;
+  display: inline-block;
+  color: transparent;
+}
+
+.star-half::after {
+  content: "★";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--text-cream, #e2e8f0);
+  width: 50%;
+  overflow: hidden;
+}
+
+.diary-status-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-svg {
+  width: 14px;
+  height: 14px;
+  color: rgba(241, 227, 200, 0.4); 
+  cursor: default;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+.status-svg.liked { color: #ff4757; }
+
+.diary-user-review {
+  font-size: 0.82rem;
+  color: rgba(241, 227, 200, 0.75);
+  font-style: italic;
+  margin: 2px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.diary-actions-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.diary-square-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.diary-square-btn svg {
+  width: 14px;
+  height: 14px;
+  color: rgba(241, 227, 200, 0.6); 
+  transition: color 0.2s ease;
+}
+
+.diary-square-btn.edit-btn:hover {
+  background: rgba(9, 158, 158, 0.15);
+  border-color: rgba(9, 158, 158, 0.3);
+}
+
+.diary-square-btn.edit-btn:hover svg {
+  color: var(--accent-teal);
+}
+
+/* 🌟 تظبيط زرار المسح عشان ينور أحمر خطر 🌟 */
+.diary-square-btn.delete-btn:hover {
+  background: rgba(255, 71, 87, 0.15);
+  border-color: rgba(255, 71, 87, 0.3);
+}
+
+.diary-square-btn.delete-btn:hover svg {
+  color: #ff4757;
+}
+
+/* ==========================================================================
+   📱 DIARY MOBILE RESPONSIVE
+========================================================================== */
+@media (max-width: 768px) {
+  
+  .diary-filter-section { padding: 10px 5px; }
+  
+  .diary-filter-section .filter-bar-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap; 
+    width: 100%; 
+    margin: 0 auto; 
+    gap: 6px; 
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 50px; 
+  }
+
+  .diary-filter-section .css-dropdown {
+    flex: 1; 
+    width: auto;
+    min-width: 0;
+  }
+
+  .diary-filter-section .dropdown-selected {
+    justify-content: center;
+    width: 100%; 
+    padding: 6px 2px; 
+    font-size: 0.75rem; 
+    gap: 4px;
+  }
+  
+  .diary-filter-section .filter-v-divider {
+    display: block; 
+    height: 18px;
+    align-self: center;
+  }
+  
+  .diary-filter-section .dropdown-list {
+      left: 0;
+      right: auto;
+      transform: none;
+      width: 100%;    
+      min-width: 100%; 
+      box-sizing: border-box;
+      padding: 6px 2px;
+  }
+
+  .diary-list-container { padding: 12px 8px; }
+
+  .diary-entry-row {
+    gap: 8px;
+    padding: 10px 8px;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+
+  .diary-date-num {
+    flex: 0 0 20px;
+    font-size: 1.1rem;
+    padding-top: 2px;
+  }
+
+  .diary-entry-row .mini-content-card {
+    flex: 0 0 48px;
+    width: 48px;
+  }
+
+  .diary-details-col {
+    padding-right: 0;
+    padding-top: 0;
+    flex: 1;
+    min-width: 0; 
+  }
+
+  .diary-movie-heading {
+    flex-wrap: nowrap; 
+    align-items: baseline;
+  }
+  .diary-item-title-link {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.95rem;
+    max-width: 80%; 
+  }
+  .diary-item-year {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+  }
+
+  .diary-user-review {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: normal; 
+    text-overflow: ellipsis;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin-top: 4px;
+    opacity: 0.85;
+    width: 100%;
+  }
+
+  .diary-actions-col {
+    gap: 6px;
+    margin-left: auto;
+  }
+  .diary-square-btn { padding: 4px; }
+  .diary-square-btn svg { width: 14px; height: 14px; }
+}
