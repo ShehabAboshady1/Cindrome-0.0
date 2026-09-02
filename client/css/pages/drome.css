@@ -676,12 +676,6 @@ body.drome-page {
     min-width: 0;
     max-height: 120px;
   }
-
-  .drome-input-box .dropdown-list {
-    min-width: 120px;
-    bottom: calc(100% + 8px);
-    top: auto;
-  }
   /* ==========================================
        🌟 تصغير كارت الاقتراح ليتناسب مع الموبايل 🌟
     ========================================== */
