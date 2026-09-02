@@ -649,7 +649,12 @@ body.drome-page {
     font-size: 0.78rem;
     gap: 6px;
   }
-
+  .drome-input-box .dropdown-list {
+    min-width: auto; /* لغينا العرض الإجباري اللي كان 120px */
+    width: max-content; /* العرض يبقى على قد أطول كلمة بالظبط */
+    bottom: calc(100% + 8px);
+    top: auto;
+  }
   .send-btn,
   .inline-icon-btn {
     width: 32px;
