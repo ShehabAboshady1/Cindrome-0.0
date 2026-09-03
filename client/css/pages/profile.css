@@ -2,12 +2,12 @@
    CINDROME PROFILE PAGE STYLES
    ========================================================================== */
 
-/* PRIVACY STATE LOGIC */
-.genre-lock-group {
+/* 🌟 PRIVACY STATE LOGIC (Zero !important) 🌟 */
+.user-meta-row {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  flex-shrink: 0;
+  flex-wrap: nowrap;
 }
 
 .private-badge {
@@ -37,6 +37,7 @@ body.is-private .private-badge {
   display: none;
 }
 
+/* تأثير التغبيش الثقيل عند زيارة حساب خاص */
 body.is-private.profile-page-other .profile-restricted-wrapper {
   overflow: hidden;
   min-height: 480px;
@@ -881,7 +882,6 @@ body.is-private.profile-page-other .profile-private-overlay {
   gap: 6px;
 }
 
-/* إزالة الخط السفلي عن أزرار القوائم وروابط الكومنتات */
 .lists-track .list-action-btn,
 .list-card a.comment-btn,
 .list-action-btn.comment-btn {
@@ -1365,8 +1365,45 @@ body.is-private.profile-page-other .profile-private-overlay {
     width: 100%;
   }
 
-  .profile-main-row,
-  .user-titles,
+  .profile-main-row {
+    justify-content: center;
+  }
+
+  .user-titles {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .user-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    max-width: 100%;
+  }
+
+  .username {
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .genre-badge {
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    white-space: nowrap;
+  }
+
+  .private-badge {
+    width: 20px;
+    height: 20px;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+  }
+
   .profile-stats {
     justify-content: center;
   }
