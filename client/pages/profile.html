@@ -105,8 +105,11 @@
                 <div class="user-titles">
                     <h1 class="display-name">Shehab Aboshady</h1>
                     <span class="username">@Shehab_Aboshady</span>
-                    <span class="genre-badge"><i class="fa-solid fa-film"></i> Sci-Fi & Shonen</span>
-                    <span class="private-badge" title="Private Account"><i class="fa-solid fa-lock"></i></span>
+                    <!-- تجميع التصنيف مع القفل لمنع النزول في سطر مستقل -->
+                    <div class="genre-lock-group">
+                        <span class="genre-badge"><i class="fa-solid fa-film"></i> Sci-Fi & Shonen</span>
+                        <span class="private-badge" title="Private Account"><i class="fa-solid fa-lock"></i></span>
+                    </div>
                 </div>
 
                 <div class="profile-actions-inline">
@@ -153,10 +156,9 @@
         </div>
     </div>
 
-    <!-- 🌟 الحاوية الجامعة لما تحت الهيدر لتطبيق الـ Blurring والـ Overlay الزجاجي 🌟 -->
+    <!-- الحاوية المجمعة للمحتوى الخاص بالتغبيش -->
     <div class="profile-restricted-wrapper">
 
-        <!-- بطاقة القفل العائمة فوق التغبيش -->
         <div class="profile-private-overlay">
             <div class="private-lock-icon">
                 <i class="fa-solid fa-lock"></i>
@@ -195,7 +197,6 @@
                         </div>
 
                         <div class="profile-cards-wrapper" id="favoritesRow">
-                            <!-- Card 1 -->
                             <div class="content-card">
                                 <img src="../assets/posters/poster-vinlandsaga.webp" alt="Vinland Saga" class="card-poster">
                                 <div class="card-overlay">
@@ -222,7 +223,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card 2 -->
                             <div class="content-card">
                                 <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
                                     alt="Interstellar" class="card-poster">
@@ -250,7 +250,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card 3 -->
                             <div class="content-card">
                                 <img src="../assets/posters/poster-dune2.webp" alt="Dune: Part Two" class="card-poster">
                                 <div class="card-overlay">
@@ -277,7 +276,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card 4 -->
                             <div class="content-card">
                                 <img src="../assets/posters/poster-breakingbad.webp" alt="Breaking Bad" class="card-poster">
                                 <div class="card-overlay">
@@ -304,7 +302,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card 5 -->
                             <div class="content-card">
                                 <img src="../assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
                                 <div class="card-overlay">
@@ -339,411 +336,408 @@
                         <div class="currently-watching-list">
                             <div class="tracking-item">
                                 <a href="details.html" style="display: flex; flex-shrink: 0;">
-                                <img src="../assets/posters/poster-jjk.webp" alt="Jujutsu Kaisen"
-                                    class="tracking-poster">
-                            </a>
-                            <div class="tracking-info">
-                                <div class="tracking-header">
-                                    <h3><a href="details.html" class="media-title-link">Jujutsu Kaisen</a></h3>
-                                    <span class="tag anime-tag">Anime</span>
-                                </div>
-                                <p class="progress-text">Episode 12 of 24</p>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 50%;"></div>
+                                    <img src="../assets/posters/poster-jjk.webp" alt="Jujutsu Kaisen"
+                                        class="tracking-poster">
+                                </a>
+                                <div class="tracking-info">
+                                    <div class="tracking-header">
+                                        <h3><a href="details.html" class="media-title-link">Jujutsu Kaisen</a></h3>
+                                        <span class="tag anime-tag">Anime</span>
+                                    </div>
+                                    <p class="progress-text">Episode 12 of 24</p>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 50%;"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="tracking-item">
-                            <a href="details.html" style="display: flex; flex-shrink: 0;">
-                                <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/7V0Ebks0GgpKvQ7QbLAIdX5dos4.jpg"
-                                    alt="House of the Dragon" class="tracking-poster">
-                            </a>
-                            <div class="tracking-info">
-                                <div class="tracking-header">
-                                    <h3><a href="details.html" class="media-title-link">House Of The Dragon</a></h3>
-                                    <span class="tag tv-tag">Series</span>
-                                </div>
-                                <p class="progress-text">Season 2 • Episode 5</p>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 62%;"></div>
+                            <div class="tracking-item">
+                                <a href="details.html" style="display: flex; flex-shrink: 0;">
+                                    <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/7V0Ebks0GgpKvQ7QbLAIdX5dos4.jpg"
+                                        alt="House of the Dragon" class="tracking-poster">
+                                </a>
+                                <div class="tracking-info">
+                                    <div class="tracking-header">
+                                        <h3><a href="details.html" class="media-title-link">House Of The Dragon</a></h3>
+                                        <span class="tag tv-tag">Series</span>
+                                    </div>
+                                    <p class="progress-text">Season 2 • Episode 5</p>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 62%;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- TAB 2: REVIEWS PANEL -->
-            <div id="panel-reviews" class="profile-tab-panel" style="display: none;">
-                <div class="profile-reviews-container">
-                    <div class="profile-box-header" style="margin-bottom: 25px;">
-                        <h2 class="profile-box-title"><i class="fa-solid fa-pen-to-square"></i> Reviews</h2>
-                    </div>
+                <!-- TAB 2: REVIEWS PANEL -->
+                <div id="panel-reviews" class="profile-tab-panel" style="display: none;">
+                    <div class="profile-reviews-container">
+                        <div class="profile-box-header" style="margin-bottom: 25px;">
+                            <h2 class="profile-box-title"><i class="fa-solid fa-pen-to-square"></i> Reviews</h2>
+                        </div>
 
-                    <div class="minimal-reviews-feed">
-                        <!-- Review Card 1 -->
-                        <article class="minimal-review-card">
-                            <div class="minimal-card-header">
-                                <div class="header-left-stack">
-                                    <a href="details.html" class="review-poster-link" title="The Boys">
-                                        <img src="../assets/posters/poster-theboys.webp" class="review-micro-poster"
-                                            alt="The Boys">
-                                    </a>
+                        <div class="minimal-reviews-feed">
+                            <article class="minimal-review-card">
+                                <div class="minimal-card-header">
+                                    <div class="header-left-stack">
+                                        <a href="details.html" class="review-poster-link" title="The Boys">
+                                            <img src="../assets/posters/poster-theboys.webp" class="review-micro-poster"
+                                                alt="The Boys">
+                                        </a>
 
-                                    <div class="review-info-content">
-                                        <a href="details.html" class="review-media-title">The Boys</a>
+                                        <div class="review-info-content">
+                                            <a href="details.html" class="review-media-title">The Boys</a>
 
-                                        <div class="review-rating-line">
-                                            <div class="stars" title="4.5 Stars">
-                                                <span class="star-full">★</span><span class="star-full">★</span><span
-                                                    class="star-full">★</span><span class="star-full">★</span><span
-                                                    class="star-half">★</span>
+                                            <div class="review-rating-line">
+                                                <div class="stars" title="4.5 Stars">
+                                                    <span class="star-full">★</span><span class="star-full">★</span><span
+                                                        class="star-full">★</span><span class="star-full">★</span><span
+                                                        class="star-half">★</span>
+                                                </div>
+                                                <i class="fa-solid fa-heart favorite-heart" title="Favorited"></i>
                                             </div>
-                                            <i class="fa-solid fa-heart favorite-heart" title="Favorited"></i>
-                                        </div>
 
-                                        <div class="review-author-line">
-                                            <a href="profile.html" class="review-avatar-link">
-                                                <img src="../assets/avatars/shehab.jpg" alt="Shehab"
-                                                    class="review-micro-avatar"
-                                                    onerror="this.src='../assets/profile-avatar.jpg'">
-                                            </a>
-                                            <a href="profile.html" class="review-author-username">@Shehab_Aboshady</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="header-right-stack"></div>
-                            </div>
-
-                            <div class="minimal-card-body">
-                                <p class="review-body"
-                                    data-full-text="Absolute cinematic masterpiece. The pacing is phenomenal, and Antony Starr deserves all the awards for his performance as Homelander. I can't wait for the next season! The way they handle modern superhero tropes is just brilliant. It completely subverts expectations while keeping you on the edge of your seat.">
-                                    Absolute cinematic masterpiece. The pacing is phenomenal, and Antony Starr deserves
-                                    all the awards for his performance as Homelander. I can't wait for the next season!
-                                    The way they handle modern superhero tropes is just brilliant. It completely
-                                    subverts expectations while keeping you on the edge of your seat.
-                                </p>
-                            </div>
-
-                            <div class="minimal-card-footer">
-                                <div class="minimal-actions">
-                                    <button class="minimal-btn review-like-btn" title="Like Review">
-                                        <i class="fa-regular fa-heart"></i> <span>1.2k</span>
-                                    </button>
-                                    <a href="single-review.html" class="minimal-btn"><i
-                                            class="fa-regular fa-comment"></i> 84</a>
-                                </div>
-                                <a href="./single-review.html" class="minimal-read-link">Read More <i
-                                        class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                            </div>
-                        </article>
-
-                        <hr class="review-divider">
-
-                        <!-- Review Card 2 -->
-                        <article class="minimal-review-card">
-                            <div class="minimal-card-header">
-                                <div class="header-left-stack">
-                                    <a href="details.html" class="review-poster-link" title="Spider-Man">
-                                        <img src="../assets/posters/poster-spiderman.webp" class="review-micro-poster"
-                                            alt="Spider-Man">
-                                    </a>
-                                    <div class="review-info-content">
-                                        <a href="details.html" class="review-media-title">Spider-Man: Across the
-                                            Spider-Verse</a>
-                                        <div class="review-rating-line">
-                                            <div class="stars" title="5 Stars">
-                                                <span class="star-full">★</span><span class="star-full">★</span><span
-                                                    class="star-full">★</span><span class="star-full">★</span><span
-                                                    class="star-full">★</span>
+                                            <div class="review-author-line">
+                                                <a href="profile.html" class="review-avatar-link">
+                                                    <img src="../assets/avatars/shehab.jpg" alt="Shehab"
+                                                        class="review-micro-avatar"
+                                                        onerror="this.src='../assets/profile-avatar.jpg'">
+                                                </a>
+                                                <a href="profile.html" class="review-author-username">@Shehab_Aboshady</a>
                                             </div>
                                         </div>
-                                        <div class="review-author-line">
-                                            <a href="profile.html" class="review-avatar-link">
-                                                <img src="../assets/avatars/shehab.jpg" alt="Shehab"
-                                                    class="review-micro-avatar"
-                                                    onerror="this.src='../assets/profile-avatar.jpg'">
+                                    </div>
+                                    <div class="header-right-stack"></div>
+                                </div>
+
+                                <div class="minimal-card-body">
+                                    <p class="review-body"
+                                        data-full-text="Absolute cinematic masterpiece. The pacing is phenomenal, and Antony Starr deserves all the awards for his performance as Homelander. I can't wait for the next season! The way they handle modern superhero tropes is just brilliant. It completely subverts expectations while keeping you on the edge of your seat.">
+                                        Absolute cinematic masterpiece. The pacing is phenomenal, and Antony Starr deserves
+                                        all the awards for his performance as Homelander. I can't wait for the next season!
+                                        The way they handle modern superhero tropes is just brilliant. It completely
+                                        subverts expectations while keeping you on the edge of your seat.
+                                    </p>
+                                </div>
+
+                                <div class="minimal-card-footer">
+                                    <div class="minimal-actions">
+                                        <button class="minimal-btn review-like-btn" title="Like Review">
+                                            <i class="fa-regular fa-heart"></i> <span>1.2k</span>
+                                        </button>
+                                        <a href="single-review.html" class="minimal-btn"><i
+                                                class="fa-regular fa-comment"></i> 84</a>
+                                    </div>
+                                    <a href="./single-review.html" class="minimal-read-link">Read More <i
+                                            class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                </div>
+                            </article>
+
+                            <hr class="review-divider">
+
+                            <article class="minimal-review-card">
+                                <div class="minimal-card-header">
+                                    <div class="header-left-stack">
+                                        <a href="details.html" class="review-poster-link" title="Spider-Man">
+                                            <img src="../assets/posters/poster-spiderman.webp" class="review-micro-poster"
+                                                alt="Spider-Man">
+                                        </a>
+                                        <div class="review-info-content">
+                                            <a href="details.html" class="review-media-title">Spider-Man: Across the
+                                                Spider-Verse</a>
+                                            <div class="review-rating-line">
+                                                <div class="stars" title="5 Stars">
+                                                    <span class="star-full">★</span><span class="star-full">★</span><span
+                                                        class="star-full">★</span><span class="star-full">★</span><span
+                                                        class="star-full">★</span>
+                                                </div>
+                                            </div>
+                                            <div class="review-author-line">
+                                                <a href="profile.html" class="review-avatar-link">
+                                                    <img src="../assets/avatars/shehab.jpg" alt="Shehab"
+                                                        class="review-micro-avatar"
+                                                        onerror="this.src='../assets/profile-avatar.jpg'">
+                                                </a>
+                                                <a href="profile.html" class="review-author-username">@Shehab_Aboshady</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="header-right-stack">
+                                        <span class="spoiler-badge"><i class="fa-solid fa-triangle-exclamation"></i>
+                                            Spoiler</span>
+                                    </div>
+                                </div>
+
+                                <div class="minimal-card-body">
+                                    <p class="review-body blurred" onclick="revealSpoiler(this)"
+                                        data-full-text="The ending left me completely speechless! The animation and the music are pure perfection.">
+                                        The ending left me completely speechless! The animation and the music are pure
+                                        perfection.
+                                    </p>
+                                </div>
+
+                                <div class="minimal-card-footer">
+                                    <div class="minimal-actions">
+                                        <button class="minimal-btn review-like-btn" title="Like Review">
+                                            <i class="fa-regular fa-heart"></i> <span>350</span>
+                                        </button>
+                                        <a href="single-review.html" class="minimal-btn"><i
+                                                class="fa-regular fa-comment"></i> 12</a>
+                                    </div>
+                                    <a href="single-review.html" class="minimal-read-link">Read More <i
+                                            class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: LISTS PANEL -->
+                <div id="panel-lists" class="profile-tab-panel" style="display: none;">
+                    <div class="profile-lists-container">
+
+                        <div class="profile-box-header">
+                            <div class="profile-title-with-action">
+                                <h2 class="profile-box-title" style="margin-bottom: 0;"><i
+                                        class="fa-solid fa-list-check"></i> Lists</h2>
+                                <button id="openCreateListBtnProfile" class="profile-create-list-btn self-only">
+                                    <i class="fa-solid fa-plus"></i> Create
+                                </button>
+                            </div>
+
+                            <div class="carousel-controls">
+                                <button class="carousel-btn" aria-label="Previous lists" type="button"
+                                    onclick="scrollLists(-1)">&#10094;</button>
+                                <button class="carousel-btn" aria-label="Next lists" type="button"
+                                    onclick="scrollLists(1)">&#10095;</button>
+                            </div>
+                        </div>
+
+                        <div class="lists-track" id="listsRow">
+                            <!-- List Card 1 -->
+                            <div class="list-card">
+                                <div class="poster-stack" onclick="window.location.href='single-list.html'">
+                                    <img src="../assets/posters/poster-vinlandsaga.webp" alt="Vinland Saga"
+                                        class="stack-poster">
+                                    <img src="../assets/posters/poster-jjk.webp" alt="Jujutsu Kaisen" class="stack-poster">
+                                    <img src="../assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
+                                    <img src="../assets/posters/poster-aot.webp" alt="Attack on Titan" class="stack-poster">
+                                </div>
+                                <div class="list-info">
+                                    <a href="single-list.html" class="list-title">Shonen Essentials</a>
+                                    <div class="list-meta">
+                                        <div>
+                                            <span class="user-badge">By <a href="profile.html"
+                                                    class="author-profile-link">@Shehab_Aboshady</a></span>
+                                            <span class="list-items-count">• 12 Items</span>
+                                        </div>
+                                        <div class="list-actions">
+                                            <button class="list-action-btn like-btn" title="Like List">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                                    </path>
+                                                </svg>
+                                                <span>1.2k</span>
+                                            </button>
+                                            <a href="single-list.html" class="list-action-btn comment-btn" title="Comments">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                                    </path>
+                                                </svg>
+                                                <span>84</span>
                                             </a>
-                                            <a href="profile.html" class="review-author-username">@Shehab_Aboshady</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="header-right-stack">
-                                    <span class="spoiler-badge"><i class="fa-solid fa-triangle-exclamation"></i>
-                                        Spoiler</span>
+                            </div>
+
+                            <!-- List Card 2 -->
+                            <div class="list-card">
+                                <div class="poster-stack" onclick="window.location.href='single-list.html'">
+                                    <img src="../assets/posters/poster-sherlock.webp" alt="Sherlock" class="stack-poster">
+                                    <img src="../assets/posters/poster-dark.webp" alt="Dark" class="stack-poster">
+                                    <img src="../assets/posters/poster-truedetective.webp" alt="True Detective"
+                                        class="stack-poster">
+                                    <img src="../assets/posters/poster-breakingbad.webp" alt="Breaking Bad"
+                                        class="stack-poster">
+                                </div>
+                                <div class="list-info">
+                                    <a href="single-list.html" class="list-title">Mind-Bending TV</a>
+                                    <div class="list-meta">
+                                        <div>
+                                            <span class="user-badge">By <a href="profile.html"
+                                                    class="author-profile-link">@Shehab_Aboshady</a></span>
+                                            <span class="list-items-count">• 9 Items</span>
+                                        </div>
+                                        <div class="list-actions">
+                                            <button class="list-action-btn like-btn" title="Like List">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                                    </path>
+                                                </svg>
+                                                <span>850</span>
+                                            </button>
+                                            <a href="single-list.html" class="list-action-btn comment-btn" title="Comments">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                                    </path>
+                                                </svg>
+                                                <span>42</span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="minimal-card-body">
-                                <p class="review-body blurred" onclick="revealSpoiler(this)"
-                                    data-full-text="The ending left me completely speechless! The animation and the music are pure perfection.">
-                                    The ending left me completely speechless! The animation and the music are pure
-                                    perfection.
-                                </p>
-                            </div>
-
-                            <div class="minimal-card-footer">
-                                <div class="minimal-actions">
-                                    <button class="minimal-btn review-like-btn" title="Like Review">
-                                        <i class="fa-regular fa-heart"></i> <span>350</span>
-                                    </button>
-                                    <a href="single-review.html" class="minimal-btn"><i
-                                            class="fa-regular fa-comment"></i> 12</a>
+                            <!-- List Card 3 -->
+                            <div class="list-card">
+                                <div class="poster-stack" onclick="window.location.href='single-list.html'">
+                                    <img src="../assets/posters/poster-dune2.webp" alt="Dune" class="stack-poster">
+                                    <img src="../assets/posters/poster-spiderman.webp" alt="Spider-Man"
+                                        class="stack-poster">
+                                    <img src="../assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                                    <img src="../assets/posters/poster-robinhood.webp" alt="Robin Hood"
+                                        class="stack-poster">
                                 </div>
-                                <a href="single-review.html" class="minimal-read-link">Read More <i
-                                        class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                            </div>
-                        </article>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 3: LISTS PANEL -->
-            <div id="panel-lists" class="profile-tab-panel" style="display: none;">
-                <div class="profile-lists-container">
-
-                    <div class="profile-box-header">
-                        <div class="profile-title-with-action">
-                            <h2 class="profile-box-title" style="margin-bottom: 0;"><i
-                                    class="fa-solid fa-list-check"></i> Lists</h2>
-                            <button id="openCreateListBtnProfile" class="profile-create-list-btn self-only">
-                                <i class="fa-solid fa-plus"></i> Create
-                            </button>
-                        </div>
-
-                        <div class="carousel-controls">
-                            <button class="carousel-btn" aria-label="Previous lists" type="button"
-                                onclick="scrollLists(-1)">&#10094;</button>
-                            <button class="carousel-btn" aria-label="Next lists" type="button"
-                                onclick="scrollLists(1)">&#10095;</button>
-                        </div>
-                    </div>
-
-                    <div class="lists-track" id="listsRow">
-                        <!-- List Card 1 -->
-                        <div class="list-card">
-                            <div class="poster-stack" onclick="window.location.href='single-list.html'">
-                                <img src="../assets/posters/poster-vinlandsaga.webp" alt="Vinland Saga"
-                                    class="stack-poster">
-                                <img src="../assets/posters/poster-jjk.webp" alt="Jujutsu Kaisen" class="stack-poster">
-                                <img src="../assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
-                                <img src="../assets/posters/poster-aot.webp" alt="Attack on Titan" class="stack-poster">
-                            </div>
-                            <div class="list-info">
-                                <a href="single-list.html" class="list-title">Shonen Essentials</a>
-                                <div class="list-meta">
-                                    <div>
-                                        <span class="user-badge">By <a href="profile.html"
-                                                class="author-profile-link">@Shehab_Aboshady</a></span>
-                                        <span class="list-items-count">• 12 Items</span>
-                                    </div>
-                                    <div class="list-actions">
-                                        <button class="list-action-btn like-btn" title="Like List">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path
-                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                                </path>
-                                            </svg>
-                                            <span>1.2k</span>
-                                        </button>
-                                        <a href="single-list.html" class="list-action-btn comment-btn" title="Comments">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path
-                                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
-                                                </path>
-                                            </svg>
-                                            <span>84</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- List Card 2 -->
-                        <div class="list-card">
-                            <div class="poster-stack" onclick="window.location.href='single-list.html'">
-                                <img src="../assets/posters/poster-sherlock.webp" alt="Sherlock" class="stack-poster">
-                                <img src="../assets/posters/poster-dark.webp" alt="Dark" class="stack-poster">
-                                <img src="../assets/posters/poster-truedetective.webp" alt="True Detective"
-                                    class="stack-poster">
-                                <img src="../assets/posters/poster-breakingbad.webp" alt="Breaking Bad"
-                                    class="stack-poster">
-                            </div>
-                            <div class="list-info">
-                                <a href="single-list.html" class="list-title">Mind-Bending TV</a>
-                                <div class="list-meta">
-                                    <div>
-                                        <span class="user-badge">By <a href="profile.html"
-                                                class="author-profile-link">@Shehab_Aboshady</a></span>
-                                        <span class="list-items-count">• 9 Items</span>
-                                    </div>
-                                    <div class="list-actions">
-                                        <button class="list-action-btn like-btn" title="Like List">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path
-                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                                </path>
-                                            </svg>
-                                            <span>850</span>
-                                        </button>
-                                        <a href="single-list.html" class="list-action-btn comment-btn" title="Comments">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path
-                                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
-                                                </path>
-                                            </svg>
-                                            <span>42</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- List Card 3 -->
-                        <div class="list-card">
-                            <div class="poster-stack" onclick="window.location.href='single-list.html'">
-                                <img src="../assets/posters/poster-dune2.webp" alt="Dune" class="stack-poster">
-                                <img src="../assets/posters/poster-spiderman.webp" alt="Spider-Man"
-                                    class="stack-poster">
-                                <img src="../assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
-                                <img src="../assets/posters/poster-robinhood.webp" alt="Robin Hood"
-                                    class="stack-poster">
-                            </div>
-                            <div class="list-info">
-                                <a href="single-list.html" class="list-title">Big Screen 2026</a>
-                                <div class="list-meta">
-                                    <div>
-                                        <span class="user-badge">By <a href="profile.html"
-                                                class="author-profile-link">@Shehab_Aboshady</a></span>
-                                        <span class="list-items-count">• 8 Items</span>
-                                    </div>
-                                    <div class="list-actions">
-                                        <button class="list-action-btn like-btn" title="Like List">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path
-                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                                </path>
-                                            </svg>
-                                            <span>5.6k</span>
-                                        </button>
-                                        <a href="single-list.html" class="list-action-btn comment-btn" title="Comments">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path
-                                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
-                                                </path>
-                                            </svg>
-                                            <span>312</span>
-                                        </a>
+                                <div class="list-info">
+                                    <a href="single-list.html" class="list-title">Big Screen 2026</a>
+                                    <div class="list-meta">
+                                        <div>
+                                            <span class="user-badge">By <a href="profile.html"
+                                                    class="author-profile-link">@Shehab_Aboshady</a></span>
+                                            <span class="list-items-count">• 8 Items</span>
+                                        </div>
+                                        <div class="list-actions">
+                                            <button class="list-action-btn like-btn" title="Like List">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                                    </path>
+                                                </svg>
+                                                <span>5.6k</span>
+                                            </button>
+                                            <a href="single-list.html" class="list-action-btn comment-btn" title="Comments">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                                    </path>
+                                                </svg>
+                                                <span>312</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-        </section>
+            </section>
 
-        <!-- SIDEBAR -->
-        <aside class="profile-sidebar" id="sidebar">
+            <!-- SIDEBAR -->
+            <aside class="profile-sidebar" id="sidebar">
 
-            <div id="overview-sidebar-content">
-                <div class="sidebar-card mobile-compact-stats">
-                    <h3 class="sidebar-card-title">Watch Stats</h3>
-                    <div class="quick-stats">
-                        <div class="qs-row">
-                            <span>Watch Time</span>
-                            <strong>1,420 hrs</strong>
-                        </div>
-                        <div class="qs-row">
-                            <span>Movies</span>
-                            <strong>512</strong>
-                        </div>
-                        <div class="qs-row">
-                            <span>Series</span>
-                            <strong>120</strong>
-                        </div>
-                        <div class="qs-row">
-                            <span>Anime</span>
-                            <strong>210</strong>
+                <div id="overview-sidebar-content">
+                    <div class="sidebar-card mobile-compact-stats">
+                        <h3 class="sidebar-card-title">Watch Stats</h3>
+                        <div class="quick-stats">
+                            <div class="qs-row">
+                                <span>Watch Time</span>
+                                <strong>1,420 hrs</strong>
+                            </div>
+                            <div class="qs-row">
+                                <span>Movies</span>
+                                <strong>512</strong>
+                            </div>
+                            <div class="qs-row">
+                                <span>Series</span>
+                                <strong>120</strong>
+                            </div>
+                            <div class="qs-row">
+                                <span>Anime</span>
+                                <strong>210</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="reviews-sidebar-content" style="display: none;">
-                <div class="sidebar-card">
+                <div id="reviews-sidebar-content" style="display: none;">
+                    <div class="sidebar-card">
 
-                    <div class="sidebar-card-header-flex">
-                        <h3 class="sidebar-card-title"><i class="fa-solid fa-filter"></i> Filter</h3>
-                        <div class="spoiler-toggle-wrapper">
-                            <span class="spoiler-toggle-label">Spoilers</span>
-                            <label class="theme-switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
+                        <div class="sidebar-card-header-flex">
+                            <h3 class="sidebar-card-title"><i class="fa-solid fa-filter"></i> Filter</h3>
+                            <div class="spoiler-toggle-wrapper">
+                                <span class="spoiler-toggle-label">Spoilers</span>
+                                <label class="theme-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                         </div>
+
+                        <div class="filters-row">
+                            <div class="filter-group">
+                                <label class="filter-label">Media Type</label>
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select-trigger">
+                                        <span>All</span>
+                                        <i class="fa-solid fa-chevron-down"></i>
+                                    </div>
+                                    <div class="custom-select-options">
+                                        <div class="custom-option selected" data-value="all">All</div>
+                                        <div class="custom-option" data-value="movies">Movies</div>
+                                        <div class="custom-option" data-value="series">Series</div>
+                                        <div class="custom-option" data-value="anime">Anime</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="filter-label">Rating</label>
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select-trigger">
+                                        <span>Any</span>
+                                        <i class="fa-solid fa-chevron-down"></i>
+                                    </div>
+                                    <div class="custom-select-options">
+                                        <div class="custom-option selected" data-value="any">Any</div>
+                                        <div class="custom-option" data-value="5">5 Stars</div>
+                                        <div class="custom-option" data-value="4">4+ Stars</div>
+                                        <div class="custom-option" data-value="3">3+ Stars</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="filter-label">Sort By</label>
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select-trigger">
+                                        <span>Newest</span>
+                                        <i class="fa-solid fa-chevron-down"></i>
+                                    </div>
+                                    <div class="custom-select-options">
+                                        <div class="custom-option selected" data-value="newest">Newest</div>
+                                        <div class="custom-option" data-value="oldest">Oldest</div>
+                                        <div class="custom-option" data-value="highest">Highest</div>
+                                        <div class="custom-option" data-value="lowest">Lowest</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-
-                    <div class="filters-row">
-                        <div class="filter-group">
-                            <label class="filter-label">Media Type</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger">
-                                    <span>All</span>
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </div>
-                                <div class="custom-select-options">
-                                    <div class="custom-option selected" data-value="all">All</div>
-                                    <div class="custom-option" data-value="movies">Movies</div>
-                                    <div class="custom-option" data-value="series">Series</div>
-                                    <div class="custom-option" data-value="anime">Anime</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="filter-group">
-                            <label class="filter-label">Rating</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger">
-                                    <span>Any</span>
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </div>
-                                <div class="custom-select-options">
-                                    <div class="custom-option selected" data-value="any">Any</div>
-                                    <div class="custom-option" data-value="5">5 Stars</div>
-                                    <div class="custom-option" data-value="4">4+ Stars</div>
-                                    <div class="custom-option" data-value="3">3+ Stars</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="filter-group">
-                            <label class="filter-label">Sort By</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger">
-                                    <span>Newest</span>
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </div>
-                                <div class="custom-select-options">
-                                    <div class="custom-option selected" data-value="newest">Newest</div>
-                                    <div class="custom-option" data-value="oldest">Oldest</div>
-                                    <div class="custom-option" data-value="highest">Highest</div>
-                                    <div class="custom-option" data-value="lowest">Lowest</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
 
-        </aside>
+            </aside>
 
-    </main>
+        </main>
 
-    </div> <!-- 👈 قفلة profile-restricted-wrapper -->
+    </div>
 
     <!-- FOOTER -->
     <footer class="site-footer">
