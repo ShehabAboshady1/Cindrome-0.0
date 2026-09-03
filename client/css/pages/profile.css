@@ -2,7 +2,14 @@
    CINDROME PROFILE PAGE STYLES
    ========================================================================== */
 
-/* 🌟 PRIVACY STATE LOGIC (Blurring & Requested States) 🌟 */
+/* PRIVACY STATE LOGIC */
+.genre-lock-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .private-badge {
   display: none;
   align-items: center;
@@ -14,6 +21,7 @@
   height: 24px;
   border-radius: 50%;
   font-size: 0.72rem;
+  flex-shrink: 0;
 }
 
 body.is-private .private-badge {
@@ -29,7 +37,6 @@ body.is-private .private-badge {
   display: none;
 }
 
-/* تأثير التغبيش الثقيل عند زيارة حساب خاص */
 body.is-private.profile-page-other .profile-restricted-wrapper {
   overflow: hidden;
   min-height: 480px;
@@ -224,7 +231,6 @@ body.is-private.profile-page-other .profile-private-overlay {
   transition: all 0.2s ease;
 }
 
-/* زرار Following المكتمل */
 .btn-follow.is-active,
 .btn-notify.is-active {
   background: var(--text-cream, #f1e3c8);
@@ -238,7 +244,6 @@ body.is-private.profile-page-other .profile-private-overlay {
   border-color: #e6d5b8;
 }
 
-/* زرار Requested للحساب الخاص */
 .btn-follow.is-requested {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-cream, #f1e3c8);
@@ -876,6 +881,20 @@ body.is-private.profile-page-other .profile-private-overlay {
   gap: 6px;
 }
 
+/* إزالة الخط السفلي عن أزرار القوائم وروابط الكومنتات */
+.lists-track .list-action-btn,
+.list-card a.comment-btn,
+.list-action-btn.comment-btn {
+  text-decoration: none;
+  color: inherit;
+}
+
+.lists-track .list-action-btn span,
+.list-card a.comment-btn span,
+.list-action-btn.comment-btn span {
+  text-decoration: none;
+}
+
 .list-action-btn.like-btn.liked svg {
   fill: #ff4757;
   stroke: #ff4757;
@@ -1499,14 +1518,14 @@ body.is-private.profile-page-other .profile-private-overlay {
   }
   .currently-watching-list::-webkit-scrollbar-track {
     background: transparent;
-    margin: 10px 0;
+    margin: 10px 0; 
   }
   .currently-watching-list::-webkit-scrollbar-thumb {
-    background-color: rgba(9, 158, 158, 0.5);
+    background-color: rgba(9, 158, 158, 0.5); 
     border-radius: 10px;
   }
   .currently-watching-list::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-teal);
+    background-color: var(--accent-teal);
   }
 
   .minimal-reviews-feed {
@@ -1518,12 +1537,12 @@ body.is-private.profile-page-other .profile-private-overlay {
     width: 4px;
   }
   .minimal-reviews-feed::-webkit-scrollbar-track {
-    background: transparent;
-    margin: 15px 0;
+    background: transparent; 
+    margin: 15px 0; 
   }
   .minimal-reviews-feed::-webkit-scrollbar-thumb {
-    background-color: rgba(9, 158, 158, 0.5);
-    border-radius: 10px;
+    background-color: rgba(9, 158, 158, 0.5); 
+    border-radius: 10px; 
   }
   .minimal-reviews-feed::-webkit-scrollbar-thumb:hover {
     background: var(--accent-teal);
