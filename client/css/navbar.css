@@ -1,0 +1,364 @@
+/* ==========================================================================
+   🌟 AUTHENTICATION STATES (سحر إخفاء وإظهار العناصر) 🌟
+========================================================================== */
+/* لو البودي واخد كلاس logged-out (زائر) -> اخفي أي حاجة تخص المستخدم */
+body.logged-out .user-only {
+  display: none;
+}
+
+/* لو البودي واخد كلاس logged-in (مسجل دخول) -> اخفي أي حاجة تخص الزائر */
+body.logged-in .guest-only {
+  display: none;
+}
+/* --- تثبيت الـ Header بأكمله في أعلى الصفحة --- */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.bar {
+  width: 100%;
+  background-color: var(--dark-bg);
+  border-bottom: 1px solid #1a2625;
+  height: 62px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.bar .logo {
+  max-width: 150px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* --- ترتيب عناصر الشاشات الكبيرة (Desktop) --- */
+.right-bar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  z-index: 2;
+  flex-shrink: 0;
+  margin-left: auto; /* 👈 يزق الروابط وزر السيرش في أقصى اليمين */
+}
+
+/* زرار العدسة المكبرة (على اللابتوب هيكون بعد الـ right-bar في أقصى اليمين) */
+.search-trigger-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-cream);
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.search-trigger-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--accent-teal);
+  transform: scale(1.08);
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* 🌟 تظبيط زراير الـ Sign In والـ Log الجديدة 🌟 */
+button.signin-btn,
+.log-nav-btn {
+  font-family: inherit;
+  font-weight: 700;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 50px; /* خليناهم كبسولة مودرن */
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+/* زرار تسجيل الدخول (شفاف بحواف) */
+button.signin-btn {
+  background-color: transparent;
+  color: var(--text-cream);
+  border: 1.5px solid rgba(241, 227, 200, 0.2);
+}
+button.signin-btn:hover {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+}
+
+/* زرار إضافة محتوى (الأساسي) */
+.log-nav-btn {
+  background-color: var(--accent-teal);
+  color: var(--dark-bg);
+}
+.log-nav-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(9, 158, 158, 0.3);
+  background-color: #0bd3d3;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: var(--text-cream);
+  font-weight: bold;
+  white-space: nowrap;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  color: var(--accent-teal);
+}
+
+/* إخفاء عناصر التحكم الخاصة بالموبايل افتراضياً */
+.menu-checkbox,
+.hamburger-btn,
+.dropdown-checkbox {
+  display: none;
+}
+
+/* --- تنسيق القوائم المنسدلة (الكمبيوتر) - 🌟 النسخة المودرن 🌟 --- */
+.dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background-color: var(--maincolor); /* لون بريميم بدل الأسود المباشر */
+  border: 1px solid rgba(241, 227, 200, 0.1); /* إطار ناعم */
+  list-style: none;
+  padding: 8px; /* مساحة داخلية أريح */
+  min-width: 170px;
+  border-radius: 12px; /* حواف دائرية ناعمة */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8); /* ظل أعمق */
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0.25s ease;
+}
+
+/* كوبري عشان الماوس ميفلتش */
+.dropdown::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 15px;
+}
+
+/* لغينا الخطوط الفاصلة اللي بتخلي الشكل قديم */
+.dropdown-menu li {
+  width: 100%;
+}
+.dropdown-menu li:not(:last-child) {
+  border-bottom: none;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 14px;
+  color: rgba(241, 227, 200, 0.85); /* لون أهدى شوية */
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px; /* حواف دائرية للينك نفسه لما نقف عليه */
+  white-space: nowrap;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  margin-bottom: 2px;
+}
+
+.dropdown-menu li a:hover {
+  background-color: rgba(9, 158, 158, 0.1); /* خلفية شفافة تركواز */
+  color: var(--accent-teal);
+}
+
+.dropdown:hover > .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(5px);
+}
+
+/* 🌟 توحيد شكل زرار الـ Sign in وزرار الـ Log 🌟 */
+button.signin-btn,
+.log-nav-btn {
+  background-color: var(--accent-teal);
+  color: var(--dark-bg);
+  border: none;
+  font-weight: 800;
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 8px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+button.signin-btn:hover,
+.log-nav-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(9, 158, 158, 0.4);
+  background-color: #0bd3d3;
+}
+
+/* --- Responsive للموبايل (Media Query) --- */
+@media (max-width: 1024px) {
+  .bar {
+    position: relative;
+    padding: 0;
+  }
+
+  .nav-container {
+    padding: 10px 16px;
+    gap: 12px;
+  }
+
+  .bar .logo {
+    max-width: 100px;
+  }
+
+  /* 🌟 ترتيب العناصر اللي بره القايمة 🌟 */
+  .nav-container > .guest-only,
+  .log-nav-btn {
+    order: 1;
+    margin-left: auto; /* بيزق الزرار والسيرش والهامبرجر لأقصى اليمين */
+  }
+
+  .signin-btn,
+  .log-nav-btn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+
+  .search-trigger-btn {
+    order: 2;
+    margin-left: 0; /* لغينا الـ auto عشان يلزق في الزرار */
+    padding: 6px;
+  }
+
+  .hamburger-btn {
+    display: block;
+    font-size: 24px;
+    color: var(--text-cream);
+    cursor: pointer;
+    line-height: 1;
+    z-index: 2;
+    order: 3;
+    margin-left: 4px;
+  }
+
+  .right-bar {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--dark-bg);
+    padding: 20px;
+    gap: 15px;
+    align-items: flex-start;
+    border-top: 1px solid #1a2625;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 999;
+    margin-left: 0;
+  }
+
+  .menu-checkbox:checked ~ .right-bar {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dropdown:hover > .dropdown-menu {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    display: none;
+  }
+
+  .dropdown .dropdown-menu {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    display: none;
+    background-color: transparent;
+    width: 100%;
+    margin-top: 8px;
+    box-shadow: none;
+    border: none;
+    border-left: 2px solid rgba(9, 158, 158, 0.3);
+    border-radius: 0;
+    padding: 0 0 0 10px;
+    transition: none;
+  }
+
+  .dropdown .dropdown-menu li a {
+    padding: 10px 15px;
+    color: var(--text-cream);
+    display: block;
+  }
+
+  .dropdown .dropdown-checkbox:checked ~ .dropdown-menu,
+  .dropdown:hover > .dropdown-checkbox:checked ~ .dropdown-menu {
+    display: block;
+  }
+}

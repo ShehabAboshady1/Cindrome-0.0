@@ -1,0 +1,545 @@
+/* ==========================================================================
+   CINDROME - SINGLE LIST PAGE SPECIFIC STYLES
+========================================================================== */
+
+.single-list-main-section {
+    width: 100%;
+    padding-top: 40px;
+    min-height: 70vh;
+}
+
+/* 1. Header Section (Clean, Text-only) */
+.single-list-header-section {
+    width: 92%;
+    max-width: 1320px;
+    margin: 0 auto 30px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.single-list-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--text-cream);
+    letter-spacing: 1px;
+    margin: 0 0 12px 0;
+}
+
+.list-meta-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: rgba(241, 227, 200, 0.6);
+}
+
+.list-author-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--accent-teal);
+}
+
+.list-author-name a {
+    color: var(--accent-teal);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.list-author-name a:hover { text-decoration: underline; }
+
+/* ==========================================
+   2. Grid Container & Layout 
+========================================== */
+.single-list-grid-section {
+    width: 92%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 0 30px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.single-list-grid-container {
+    background: rgba(22, 22, 22, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(241, 227, 200, 0.12);
+    border-radius: 20px;
+    padding: 24px 20px;
+    box-shadow: 0 14px 40px rgba(1, 10, 9, 0.75);
+    width: 100%;
+}
+
+.single-list-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 16px;
+    justify-items: center;
+}
+
+.single-list-cards-grid .mini-content-card {
+    width: 100%;
+    max-width: 120px;
+    flex: unset;
+}
+
+/* ==========================================
+   🌟 Custom Styles for the New Info Button & Mobile Tap State 🌟
+========================================== */
+.mini-bar-btn.btn-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+.mini-bar-btn.btn-info:hover {
+    color: var(--accent-teal);
+}
+
+/* 🌟 This handles the mobile tap to show the bar 🌟 */
+.mini-content-card.show-bar .mini-card-bar {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+/* ==========================================
+   3. Grid Header (عداد الأفلام + زراير التفاعل)
+========================================== */
+.list-inline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(241, 227, 200, 0.08);
+}
+
+.header-meta-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.grid-count-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-cream);
+    letter-spacing: 0.5px;
+    border-left: 4px solid var(--accent-teal);
+    padding-left: 10px;
+    line-height: 1.2;
+}
+
+/* User Progress (بدون بار) */
+.list-user-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(9, 158, 158, 0.1);
+    border: 1px solid rgba(9, 158, 158, 0.25);
+    padding: 4px 12px;
+    border-radius: 50px;
+}
+
+.progress-eye-icon {
+    width: 15px;
+    height: 15px;
+    color: var(--accent-teal);
+}
+
+.progress-numbers {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-cream);
+}
+
+.progress-percentage {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(241, 227, 200, 0.6);
+}
+
+/* Action Buttons */
+.single-list-actions-inline {
+    display: flex;
+    gap: 10px;
+}
+
+.list-action-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-cream);
+    padding: 6px 14px;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.list-action-btn svg { width: 16px; height: 16px; }
+.list-action-btn:hover {
+    background: rgba(9, 158, 158, 0.15);
+    border-color: var(--accent-teal);
+    color: var(--accent-teal);
+}
+.like-btn:hover {
+    background: rgba(255, 71, 87, 0.15);
+    border-color: #ff4757;
+    color: #ff4757;
+}
+
+/* ==========================================
+   4. MODERN COMMENTS SECTION 
+========================================== */
+.list-comments-wrapper {
+    width: 92%;
+    max-width: 900px;
+    margin: 30px auto 0 auto;
+}
+
+.comments-container {
+    background: transparent;
+    padding: 10px 0;
+}
+
+.comments-title {
+    font-size: 1.2rem;
+    color: var(--text-cream);
+    margin-bottom: 24px;
+    font-weight: 700;
+}
+
+.comments-count {
+    color: rgba(241, 227, 200, 0.5);
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* 🌟 Modern Comment Input Box 🌟 */
+.add-comment-box {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 30px;
+    align-items: flex-end;
+}
+
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(241, 227, 200, 0.2);
+    flex-shrink: 0;
+    margin-bottom: 4px;
+}
+
+.modern-input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(241, 227, 200, 0.15);
+    border-radius: 24px;
+    padding: 6px 8px 6px 16px;
+    transition: all 0.3s ease;
+}
+
+.modern-input-wrapper:focus-within {
+    border-color: var(--accent-teal);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 10px rgba(9, 158, 158, 0.15);
+}
+
+.comment-textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-cream);
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: none;
+    outline: none;
+    min-height: 24px;
+    max-height: 120px;
+    padding: 8px 0;
+    line-height: 1.4;
+}
+
+.comment-textarea::placeholder {
+    color: rgba(241, 227, 200, 0.4);
+}
+
+.modern-post-btn {
+    background: var(--accent-teal);
+    color: #fff;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+
+.modern-post-btn svg {
+    width: 16px;
+    height: 16px;
+    transform: translate(-1px, 1px);
+}
+
+.modern-post-btn:hover {
+    background: #087d7d;
+    transform: scale(1.08) rotate(5deg);
+}
+
+.comments-divider {
+    height: 1px;
+    background: rgba(241, 227, 200, 0.08);
+    margin: 0 0 24px 0;
+}
+
+/* قائمة التعليقات */
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.comment-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.single-comment {
+    display: flex;
+    gap: 12px;
+}
+
+.comment-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.comment-body {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(241, 227, 200, 0.05);
+    padding: 14px;
+    border-radius: 0 12px 12px 12px;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comment-user {
+    color: var(--text-cream);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.comment-badge {
+    background: rgba(9, 158, 158, 0.15);
+    color: var(--accent-teal);
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.comment-time {
+    color: rgba(241, 227, 200, 0.4);
+    font-size: 0.8rem;
+    margin-left: auto;
+}
+
+.comment-text {
+    color: rgba(241, 227, 200, 0.85);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 2px 0 6px 0;
+}
+
+.comment-interactions {
+    display: flex;
+    gap: 16px;
+}
+
+.interaction-btn {
+    background: transparent;
+    border: none;
+    color: rgba(241, 227, 200, 0.5);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.interaction-btn svg { width: 14px; height: 14px; }
+.interaction-btn:hover { color: var(--accent-teal); }
+
+.nested-replies {
+    margin-left: 52px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.reply-comment .comment-body {
+    border-radius: 12px;
+}
+
+.small-avatar {
+    width: 32px;
+    height: 32px;
+}
+
+/* ==========================================
+   📱 Mobile Responsiveness
+========================================== */
+@media (max-width: 920px) {
+    .single-list-title { font-size: 2.2rem; }
+    .single-list-header-section, .single-list-grid-section, .list-comments-wrapper { width: 95%; }
+}
+
+@media (max-width: 768px) {
+    .single-list-title { 
+        font-size: 1.6rem; 
+        line-height: 1.2; 
+        margin-bottom: 10px;
+    }
+    
+    .list-meta-info {
+        flex-wrap: nowrap;
+        font-size: 0.75rem;
+        gap: 6px;
+    }
+    .list-author-avatar {
+        width: 22px; 
+        height: 22px;
+    }
+    .list-author-name, .list-update-date {
+        white-space: nowrap; 
+    }
+    
+    .single-list-grid-container {
+        padding: 14px 8px;
+        border-radius: 14px;
+    }
+
+    .single-list-cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+        gap: 12px;
+    }
+
+    .single-list-cards-grid .mini-content-card {
+        max-width: 100%;
+    }
+
+    .list-inline-header {
+        flex-wrap: nowrap; 
+        gap: 4px;
+        padding-bottom: 12px;
+    }
+    
+    .header-meta-left {
+        flex-wrap: nowrap;
+        gap: 4px;
+        flex-shrink: 1;
+    }
+
+    .grid-count-text {
+        font-size: 0.8rem; 
+        padding-left: 5px;
+        border-left-width: 2px;
+        white-space: nowrap;
+    }
+
+    .list-user-progress {
+        padding: 3px 6px; 
+        gap: 3px;
+        white-space: nowrap;
+    }
+    .progress-eye-icon { width: 12px; height: 12px; }
+    .progress-numbers, .progress-percentage { font-size: 0.7rem; }
+
+    .single-list-actions-inline {
+        flex-wrap: nowrap;
+        gap: 4px;
+        flex-shrink: 0;
+    }
+    
+    .list-action-btn {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        gap: 4px;
+        white-space: nowrap;
+    }
+    .list-action-btn svg { width: 12px; height: 12px; }
+
+    /* 🌟 أزلنا إظهار الشريط إجبارياً من هنا عشان الـ Tap يشتغل صح 🌟 */
+
+    .add-comment-box {
+        gap: 10px;
+    }
+    
+    .comment-avatar {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .modern-input-wrapper {
+        padding: 4px 6px 4px 14px;
+        border-radius: 20px;
+    }
+    
+    .comment-textarea {
+        font-size: 0.9rem;
+        padding: 6px 0;
+    }
+    
+    .modern-post-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .modern-post-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .nested-replies { margin-left: 20px; }
+}
