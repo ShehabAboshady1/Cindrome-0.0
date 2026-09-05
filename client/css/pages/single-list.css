@@ -244,7 +244,7 @@
     display: flex;
     gap: 16px;
     margin-bottom: 30px;
-    align-items: flex-end;
+    align-items: center;
 }
 
 .comment-avatar {
@@ -254,18 +254,19 @@
     object-fit: cover;
     border: 1px solid rgba(241, 227, 200, 0.2);
     flex-shrink: 0;
-    margin-bottom: 4px;
 }
 
 .modern-input-wrapper {
     flex: 1;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(241, 227, 200, 0.15);
     border-radius: 24px;
-    padding: 6px 8px 6px 16px;
+    padding: 4px 6px 4px 16px;
     transition: all 0.3s ease;
+    min-height: 44px;
+    box-sizing: border-box;
 }
 
 .modern-input-wrapper:focus-within {
@@ -283,10 +284,10 @@
     font-size: 0.95rem;
     resize: none;
     outline: none;
-    min-height: 24px;
-    max-height: 120px;
-    padding: 8px 0;
+    padding: 0;
     line-height: 1.4;
+    min-height: unset;
+    height: auto;
 }
 
 .comment-textarea::placeholder {
@@ -297,8 +298,8 @@
     background: var(--accent-teal);
     color: var(--dark-bg, #010a09);
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -306,14 +307,14 @@
     cursor: pointer;
     transition: all 0.2s ease;
     flex-shrink: 0;
-    margin-left: 10px;
+    margin-left: 8px;
 }
 
 .modern-post-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
     stroke: var(--dark-bg, #010a09);
-    transform: translate(-1px, 1px);
+    transform: translate(-1px, 0);
 }
 
 .modern-post-btn:hover {
@@ -347,6 +348,7 @@
 
 .comment-content-wrapper {
     flex: 1;
+    min-width: 0; /* منع الخروج الأفقي عن الإطار */
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -392,6 +394,7 @@
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 2px 0 6px 0;
+    word-break: break-word;
 }
 
 .comment-interactions {
@@ -423,14 +426,45 @@
 }
 
 /* ==========================================
-   🌟 5. INLINE REPLY BOX STYLES (CENTERED) 🌟
+   5. INLINE REPLY BOX & NESTING
 ========================================== */
+.comment-mention {
+    color: var(--accent-teal, #099e9e);
+    font-weight: 700;
+    margin-right: 4px;
+    user-select: none;
+}
+
+.nested-replies {
+    margin-left: 52px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.sub-nested-replies {
+    margin-left: 42px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+    border-left: 2px solid rgba(9, 158, 158, 0.25);
+    padding-left: 14px;
+}
+
+.sub-reply-comment .small-avatar {
+    width: 26px;
+    height: 26px;
+}
+
 .inline-reply-box {
     display: none;
-    align-items: center; /* توسيط جميع عناصر سطر الرد أفقياً وعمودياً */
+    align-items: center;
     gap: 10px;
     margin-top: 10px;
     padding-top: 4px;
+    width: 100%;
+    box-sizing: border-box;
     animation: fadeInReply 0.25s ease;
 }
 
@@ -452,13 +486,11 @@
 .inline-reply-box .small-avatar {
     width: 28px;
     height: 28px;
-    margin-bottom: 0;
     flex-shrink: 0;
 }
 
-/* توسيط حقل الكتابة والزر الدائري تماماً داخل الكبسولة */
 .inline-reply-box .modern-input-wrapper {
-    align-items: center; /* ضبط المحاذاة الرأسية في المنتصف */
+    align-items: center;
     padding: 3px 6px 3px 14px;
     border-radius: 20px;
     min-height: 38px;
@@ -469,28 +501,21 @@
     font-size: 0.88rem;
     padding: 0;
     line-height: 1.4;
-    min-height: unset;
-    height: auto;
 }
 
-/* زر الإرسال الدائري وتوسيط أيقونة الطائرة الورقية */
 .inline-reply-box .modern-post-btn {
     width: 28px;
     height: 28px;
     margin-left: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .inline-reply-box .modern-post-btn svg {
     width: 13px;
     height: 13px;
     stroke: var(--dark-bg, #010a09);
-    transform: translate(-1px, 0); /* إزالة الميلان للأسفل وتوسيط السهم بصرياً */
+    transform: translate(-1px, 0);
 }
 
-/* زر الإلغاء */
 .reply-cancel-btn {
     background: transparent;
     border: none;
@@ -499,7 +524,6 @@
     font-weight: 600;
     cursor: pointer;
     padding: 4px 6px;
-    margin-bottom: 0; /* إزالة النزول لأسفل */
     transition: color 0.2s ease;
     white-space: nowrap;
 }
@@ -507,56 +531,19 @@
 .reply-cancel-btn:hover {
     color: #ff4757;
 }
-.reply-cancel-btn:hover {
-    color: #ff4757;
-}
-
-.nested-replies {
-    margin-left: 52px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
 
 .reply-comment .comment-body {
     border-radius: 12px;
 }
 
 .small-avatar {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
 }
+
 /* ==========================================
-   🌟 ACTIVE / TOGGLED STATES (JS HOOKS) 🌟
+   ACTIVE / TOGGLED STATES (JS HOOKS)
 ========================================== */
-/* ستايل المنشن التلقائي داخل الردود */
-.comment-mention {
-    color: var(--accent-teal, #099e9e);
-    font-weight: 700;
-    margin-right: 4px;
-    user-select: none;
-}
-.sub-nested-replies {
-    margin-left: 42px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 8px;
-    border-left: 2px solid rgba(9, 158, 158, 0.25);
-    padding-left: 14px;
-}
-
-.sub-reply-comment .small-avatar {
-    width: 26px;
-    height: 26px;
-}
-
-.comment-mention {
-    color: var(--accent-teal, #099e9e);
-    font-weight: 700;
-    margin-right: 4px;
-}
-/* زر الإعجاب بالقائمة الرئيسية */
 .list-action-btn.like-btn.is-liked {
     background: rgba(255, 71, 87, 0.15);
     border-color: #ff4757;
@@ -567,27 +554,23 @@
     stroke: #ff4757;
 }
 
-/* زر المشاركة عند النسخ */
 .list-action-btn.share-btn.is-copied {
     background: rgba(9, 158, 158, 0.2);
     border-color: var(--accent-teal);
     color: var(--accent-teal);
 }
 
-/* زر الإضافة للـ Watchlist في الكروت */
 .mini-bar-btn.btn-add.is-added {
     color: var(--accent-teal);
     background: rgba(9, 158, 158, 0.2);
     border-radius: 4px;
 }
 
-/* زر القلب/المفضلة في الكروت */
 .mini-bar-btn.btn-fav.is-favorited svg {
     fill: #ff4757;
     filter: drop-shadow(0 0 4px rgba(255, 71, 87, 0.4));
 }
 
-/* زر إعجاب التعليقات */
 .interaction-btn.is-liked {
     color: #ff4757;
 }
@@ -722,23 +705,21 @@
     .comment-avatar {
         width: 28px;
         height: 28px;
-        margin-bottom: 2px;
     }
     
     .modern-input-wrapper {
-        padding: 3px 6px 3px 12px;
+        padding: 2px 4px 2px 12px;
         border-radius: 18px;
+        min-height: 34px;
     }
     
     .comment-textarea {
         font-size: 0.82rem;
-        padding: 4px 0;
-        min-height: 20px;
     }
     
     .modern-post-btn {
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         margin-left: 6px;
     }
     
@@ -801,32 +782,54 @@
         height: 11px;
     }
 
-    /* صندوق الرد في الموبايل */
-    .inline-reply-box {
+    /* 🌟 الحل الجذري للتداخل وخروج الردود عن الشاشة في الموبايل 🌟 */
+    .nested-replies { 
+        margin-left: 10px;
+        gap: 8px;
+    }
+
+    .sub-nested-replies {
+        margin-left: 8px;
+        padding-left: 6px;
         gap: 6px;
+        border-left-width: 1.5px;
+    }
+
+    .inline-reply-box {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        gap: 4px;
         margin-top: 6px;
     }
 
     .inline-reply-box .small-avatar {
-        width: 20px;
-        height: 20px;
-        margin-bottom: 2px;
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
     }
 
     .inline-reply-box .modern-input-wrapper {
-        padding: 2px 4px 2px 10px;
-        border-radius: 16px;
+        min-width: 0;           /* يسمح للحقل بالانكماش وتجنب الـ Overflow */
+        flex: 1 1 auto;
+        padding: 2px 4px 2px 8px;
+        border-radius: 14px;
+        min-height: 28px;
+        box-sizing: border-box;
     }
 
     .inline-reply-box .comment-textarea {
-        font-size: 0.78rem;
-        padding: 2px 0;
+        min-width: 0;
+        width: 100%;
+        font-size: 0.75rem;
+        padding: 0;
     }
 
     .inline-reply-box .modern-post-btn {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
         margin-left: 4px;
+        flex-shrink: 0;
     }
 
     .inline-reply-box .modern-post-btn svg {
@@ -835,17 +838,18 @@
     }
 
     .reply-cancel-btn {
-        font-size: 0.68rem;
-        margin-bottom: 5px;
-    }
-
-    .nested-replies { 
-        margin-left: 16px;
-        gap: 10px;
+        font-size: 0.65rem;
+        padding: 2px 2px;
+        flex-shrink: 0;
     }
 
     .small-avatar {
         width: 22px;
         height: 22px;
+    }
+
+    .sub-reply-comment .small-avatar {
+        width: 18px;
+        height: 18px;
     }
 }
