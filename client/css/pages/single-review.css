@@ -275,7 +275,7 @@
 }
 
 /* ==================================================
-   🌟 ACTION BUTTONS & SVGS (Micro-Interactions) 🌟
+   ACTION BUTTONS & SVGS (Micro-Interactions)
    ================================================== */
 .actions-divider {
     border: 0;
@@ -349,7 +349,7 @@
 }
 
 /* ==================================================
-   5. MODERN COMMENTS SECTION (Matching Single List)
+   5. MODERN COMMENTS SECTION
    ================================================== */
 .list-comments-wrapper {
     width: 100%;
@@ -484,6 +484,7 @@
 
 .comment-content-wrapper {
     flex: 1;
+    min-width: 0; /* يمنع خروج المحتوى عن الفليكس */
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -522,6 +523,7 @@
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 2px 0 6px 0;
+    word-break: break-word;
 }
 
 .comment-interactions {
@@ -562,15 +564,22 @@
 }
 
 /* ==========================================
-   🌟 INLINE REPLY BOX (Centered) 🌟
+   INLINE REPLY BOX & NESTING
    ========================================== */
-   /* ستايل المنشن التلقائي داخل الردود */
 .comment-mention {
     color: var(--accent-teal, #099e9e);
     font-weight: 700;
     margin-right: 4px;
     user-select: none;
 }
+
+.nested-replies {
+    margin-left: 52px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
 .sub-nested-replies {
     margin-left: 42px;
     display: flex;
@@ -586,17 +595,14 @@
     height: 26px;
 }
 
-.comment-mention {
-    color: var(--accent-teal, #099e9e);
-    font-weight: 700;
-    margin-right: 4px;
-}
 .inline-reply-box {
     display: none;
     align-items: center;
     gap: 10px;
     margin-top: 10px;
     padding-top: 4px;
+    width: 100%;
+    box-sizing: border-box;
     animation: fadeInReply 0.25s ease;
 }
 
@@ -664,20 +670,13 @@
     color: #ff4757;
 }
 
-.nested-replies {
-    margin-left: 52px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
 .small-avatar {
     width: 30px;
     height: 30px;
 }
 
 /* ==================================================
-   📱 MOBILE RESPONSIVENESS
+   MOBILE RESPONSIVENESS
    ================================================== */
 @media (max-width: 768px) {
     html, body {
@@ -807,7 +806,7 @@
         height: 20px;
     }
 
-    /* 🌟 SCALING DOWN: قسم التعليقات على الموبايل 🌟 */
+    /* قسم التعليقات على الموبايل */
     .list-comments-wrapper {
         margin-top: 15px;
     }
@@ -901,31 +900,54 @@
         height: 11px;
     }
 
-    /* صندوق الرد في الموبايل */
-    .inline-reply-box {
+    /* 🌟 الحل الجذري للتداخل وخروج الردود عن الشاشة في الموبايل 🌟 */
+    .nested-replies { 
+        margin-left: 10px;
+        gap: 8px;
+    }
+
+    .sub-nested-replies {
+        margin-left: 8px;
+        padding-left: 6px;
         gap: 6px;
-        margin-top: 8px;
+        border-left-width: 1.5px;
+    }
+
+    .inline-reply-box {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        gap: 4px;
+        margin-top: 6px;
     }
 
     .inline-reply-box .small-avatar {
-        width: 22px;
-        height: 22px;
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
     }
 
     .inline-reply-box .modern-input-wrapper {
-        padding: 2px 4px 2px 10px;
-        border-radius: 16px;
-        min-height: 30px;
+        min-width: 0;           /* يسمح للحقل بالانكماش وتجنب الـ Overflow */
+        flex: 1 1 auto;
+        padding: 2px 4px 2px 8px;
+        border-radius: 14px;
+        min-height: 28px;
+        box-sizing: border-box;
     }
 
     .inline-reply-box .comment-textarea {
-        font-size: 0.78rem;
+        min-width: 0;
+        width: 100%;
+        font-size: 0.75rem;
+        padding: 0;
     }
 
     .inline-reply-box .modern-post-btn {
         width: 22px;
         height: 22px;
         margin-left: 4px;
+        flex-shrink: 0;
     }
 
     .inline-reply-box .modern-post-btn svg {
@@ -934,17 +956,18 @@
     }
 
     .reply-cancel-btn {
-        font-size: 0.7rem;
-        padding: 2px 4px;
-    }
-
-    .nested-replies { 
-        margin-left: 16px;
-        gap: 10px;
+        font-size: 0.65rem;
+        padding: 2px 2px;
+        flex-shrink: 0;
     }
 
     .small-avatar {
         width: 22px;
         height: 22px;
+    }
+
+    .sub-reply-comment .small-avatar {
+        width: 18px;
+        height: 18px;
     }
 }
