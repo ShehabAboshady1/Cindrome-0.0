@@ -1,0 +1,406 @@
+/* ==========================================================================
+   CINDROME AUTHENTICATION PAGES (SIGN IN / SIGN UP) STYLES
+   ========================================================================== */
+
+:root {
+  --maincolor: #161616;
+  --accent-teal: #099e9e;
+  --text-cream: #f1e3c8;
+  --dark-bg: #010a09;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--dark-bg);
+  color: var(--text-cream);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  position: relative;
+  overflow-x: hidden;
+
+  /* Ambient Background Glow */
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(9, 158, 158, 0.22) 0%, transparent 55%),
+    radial-gradient(circle at 85% 80%, rgba(9, 158, 158, 0.15) 0%, transparent 60%);
+}
+
+/* Container */
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  z-index: 1;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.auth-container.signup-container {
+  max-width: 620px;
+}
+
+/* Card Wrapper */
+.auth-card {
+  width: 100%;
+  background-color: rgba(22, 22, 22, 0.95);
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 20px;
+  padding: 32px 28px;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(9, 158, 158, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.signup-card {
+  padding: 28px 32px;
+}
+
+/* Header */
+.auth-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-logo {
+  height: 44px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.auth-title {
+  font-size: clamp(1.3rem, 4vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-cream);
+  margin-bottom: 4px;
+}
+
+.auth-subtitle {
+  font-size: clamp(0.8rem, 2.5vw, 0.85rem);
+  color: rgba(241, 227, 200, 0.6);
+  line-height: 1.3;
+}
+
+/* Form Layout */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-cream);
+}
+
+/* Inputs - تشمل text و email و password لمنع أي تشوه */
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: var(--dark-bg);
+  border: 1px solid rgba(241, 227, 200, 0.15);
+  border-radius: 8px;
+  color: var(--text-cream);
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 3px rgba(9, 158, 158, 0.2);
+}
+
+.form-group input::placeholder {
+  color: rgba(241, 227, 200, 0.3);
+}
+
+/* زر إظهار وإخفاء كلمة المرور */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  padding-right: 38px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: rgba(241, 227, 200, 0.4);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+  color: var(--accent-teal);
+}
+
+/* Password Requirements (0 !important) */
+.password-requirements {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0 0 2px 2px;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.req-title {
+  font-size: 0.73rem;
+  color: rgba(241, 227, 200, 0.75);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.req-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.req-item {
+  font-size: 0.72rem;
+  color: rgba(241, 227, 200, 0.45);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.2;
+  transition: all 0.2s ease;
+}
+
+.req-icon {
+  color: rgba(241, 227, 200, 0.45);
+  font-size: 0.8rem;
+  font-weight: bold;
+  width: 12px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+/* حالة اكتمال الشرط */
+.req-item.valid {
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+
+.req-item.valid .req-icon {
+  color: var(--accent-teal);
+}
+
+/* Field Validation Errors */
+.field-error-msg {
+  font-size: 0.72rem;
+  color: #ff4757;
+  min-height: 14px;
+  display: none;
+}
+
+.form-group.has-error input {
+  border-color: #ff4757;
+  box-shadow: 0 0 0 2px rgba(255, 71, 87, 0.2);
+}
+
+.form-group.has-error .field-error-msg,
+.field-error-msg.show {
+  display: block;
+}
+
+.terms-error {
+  text-align: left;
+  margin-top: -6px;
+}
+
+/* Toggle Switch */
+.form-options {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-container input {
+  display: none;
+}
+
+.toggle-slider {
+  width: 36px;
+  height: 18px;
+  background-color: rgba(241, 227, 200, 0.15);
+  border-radius: 20px;
+  position: relative;
+  transition: background-color 0.3s ease;
+  border: 1px solid rgba(241, 227, 200, 0.1);
+  flex-shrink: 0;
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--text-cream);
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-container input:checked + .toggle-slider {
+  background-color: var(--accent-teal);
+}
+
+.toggle-container input:checked + .toggle-slider::before {
+  transform: translateX(18px);
+  background-color: #ffffff;
+}
+
+.toggle-label {
+  font-size: 0.8rem;
+  color: rgba(241, 227, 200, 0.8);
+}
+
+/* Bottom Row */
+.signup-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  gap: 16px;
+}
+
+.signup-bottom-row .auth-btn {
+  width: auto;
+  min-width: 160px;
+  margin-top: 0;
+}
+
+/* Submit Button */
+.auth-btn {
+  width: 100%;
+  padding: 11px 20px;
+  margin-top: 6px;
+  background-color: var(--accent-teal);
+  color: var(--text-cream);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(9, 158, 158, 0.25);
+}
+
+.auth-btn:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 6px 16px rgba(9, 158, 158, 0.35);
+}
+
+.auth-btn:active {
+  transform: scale(0.98);
+}
+
+/* Footer Link */
+.auth-footer {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(241, 227, 200, 0.6);
+}
+
+.auth-footer a {
+  color: var(--text-cream);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-teal);
+  padding-bottom: 1px;
+  transition: color 0.2s ease;
+}
+
+.auth-footer a:hover {
+  color: var(--accent-teal);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 580px) {
+  body {
+    padding: 12px;
+  }
+
+  .auth-container.signup-container {
+    width: 92%;
+    max-width: 360px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .password-requirements {
+    padding-top: 2px;
+    margin-bottom: 6px;
+  }
+
+  .signup-bottom-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .signup-bottom-row .auth-btn {
+    width: 100%;
+  }
+
+  .signup-card {
+    padding: 22px 18px;
+  }
+}
