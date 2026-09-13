@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome - Drome AI</title>
+    <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css?v=${v}">
+    <link rel="stylesheet" href="css/navbar.css?v=${v}">
+    <link rel="stylesheet" href="css/pages/drome.css?v=${v}">
+    <link rel="stylesheet" href="css/modals.css?v=${v}">
+
+</head>
+
+<body class="drome-page logged-in">
+    <header>
+        <%- include("partials/navbar.ejs")%>
+    </header>
+
+    <main class="drome-wrapper">
+        <section class="drome-chat-area">
+            <div class="chat-messages-container" id="chatContainer">
+                <div class="chat-messages-inner" id="chatInner">
+
+                    <div id="pullToRefreshIndicator" class="pull-to-refresh-indicator">
+                        <i class="fa-solid fa-arrow-down"></i> <span>Pull down</span>
+                    </div>
+
+                    <div class="drome-empty-state" id="emptyState">
+                        <img src="assets/logos/cindrome-logo.png" alt="Cindrome Logo" class="drome-large-logo">
+                        <h2 class="drome-welcome-text">How can I help you discover today?</h2>
+
+                        <div class="suggested-prompts">
+                            <button class="prompt-btn" data-prompt="Suggest a movie with a mind-bending plot twist.">
+                                Suggest a movie with a mind-bending plot twist.
+                            </button>
+                            <button class="prompt-btn" data-prompt="What should I watch after Dune?">
+                                What should I watch after Dune?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 🌟 استبدلنا style=display:none بكلاس is-hidden للنظافة 🌟 -->
+                    <div class="chat-bubble drome-chat-row typing-indicator-bubble is-hidden" id="typingIndicator">
+                        <div class="drome-avatar">
+                            <img src="assets/logos/cindrome-logo.png" alt="Cindrome">
+                        </div>
+                        <div class="drome-bubble-content">
+                            <div class="typing-dots">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="drome-input-wrapper">
+                <div class="drome-input-box">
+                    <button class="inline-icon-btn" id="newChatBtn" title="New Chat">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+
+                    <div class="dropdowns-group">
+                        <details class="css-dropdown" id="contentDropdown">
+                            <summary class="dropdown-selected">
+                                <span id="currentFocusText">Mixed</span>
+                                <i class="fa-solid fa-chevron-up dropdown-arrow"></i>
+                            </summary>
+                            <ul class="dropdown-list" id="dromeFocusList">
+                                <li class="dropdown-item">Mixed</li>
+                                <li class="dropdown-item">Movies</li>
+                                <li class="dropdown-item">Series</li>
+                                <li class="dropdown-item">Anime</li>
+                            </ul>
+                        </details>
+                    </div>
+
+                    <textarea id="dromeInput" rows="1" placeholder="Type a message..."></textarea>
+
+                    <button class="send-btn" id="mainSendBtn">
+                        <i class="fa-solid fa-arrow-up" id="sendBtnIcon"></i>
+                    </button>
+                </div>
+                <p class="drome-disclaimer">Drome AI can make mistakes. Always check the ratings.</p>
+            </div>
+        </section>
+    </main>
+    <%- include("partials/modals/search-modal.ejs") %>
+        <%- include("partials/modals/log-modal.ejs") %>
+
+            <!-- ========================================================= -->
+            <!-- 🌟 TEMPLATES (لإبقاء الـ HTML خارج الجافاسكريبت) 🌟 -->
+            <!-- ========================================================= -->
+
+            <template id="userBubbleTemplate">
+                <div class="chat-bubble user-chat-row">
+                    <div class="user-bubble-content">
+                        <p class="message-text"></p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- قالب فقاعة الـ Drome (اللي هتشيل النص وجواها حاوية للكروت) -->
+            <template id="dromeBubbleTemplate">
+                <div class="chat-bubble drome-chat-row">
+                    <div class="drome-avatar"><img src="assets/logos/cindrome-logo.png" alt="Cindrome"></div>
+                    <div class="drome-bubble-content">
+                        <p class="message-text"></p>
+                        <!-- حاوية بتلف بالعرض عشان لو فيه أكتر من اقتراح -->
+                        <div class="chat-cards-row"></div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- قالب كارت الفيلم الفردي -->
+            <template id="chatMovieCardTemplate">
+                <div class="chat-movie-card">
+                    <img src="" alt="Poster" class="chat-movie-poster">
+                    <div class="chat-movie-info">
+                        <h4 class="chat-movie-title"></h4>
+                        <div class="chat-movie-meta">
+                            <span class="chat-movie-year"></span>
+                            <span>•</span>
+                            <span class="chat-movie-rating">⭐ <span class="rating-val"></span></span>
+                        </div>
+                        <div class="chat-movie-actions">
+                            <a href="#" class="chat-btn-details">Details</a>
+                            <button class="chat-btn-watchlist" title="Toggle Watchlist">
+                                <i class="fa-solid fa-plus icon-plus"></i>
+                                <i class="fa-solid fa-minus icon-minus" style="display: none;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template id="stopBubbleTemplate">
+                <div class="chat-bubble">
+                    <div class="stop-message-wrapper">
+                        <span class="stop-message-badge">
+                            <i class="fa-solid fa-circle-exclamation" style="margin-right: 4px;"></i> Generation stopped
+                        </span>
+                    </div>
+                </div>
+            </template>
+
+            <script src="js/modals.js"></script>
+            <script src="js/pages/drome.js"></script>
+</body>
+
+</html>

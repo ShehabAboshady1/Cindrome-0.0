@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome - Discover</title>
+    <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="css/main.css?v=${v}">
+    <link rel="stylesheet" href="css/navbar.css?v=${v}">
+    <link rel="stylesheet" href="css/hero.css?v=${v}">
+    <link rel="stylesheet" href="css/lists-carousel.css?v=${v}">
+    <link rel="stylesheet" href="css/carousel.css?v=${v}">
+    <link rel="stylesheet" href="css/pages/discover.css?v=${v}">
+    <link rel="stylesheet" href="css/modals.css?v=${v}">
+    <link rel="stylesheet" href="css/cards.css?v=${v}">
+
+</head>
+
+<body class="logged-in">
+
+    <header>
+        <%- include("partials/navbar.ejs") %>
+    </header>
+
+    <!-- ==========================================================================
+       DISCOVER PAGE HEADER (TITLE & SUBTITLE)
+       ========================================================================== -->
+    <section class="discover-header-section">
+        <h1 class="discover-title">Discover</h1>
+        <p class="discover-subtitle">Explore thousands of movies, anime, and series all in one place.</p>
+    </section>
+
+    <!-- ==========================================================================
+       DISCOVER FILTER BAR SECTION
+       ========================================================================== -->
+    <section class="discover-filter-section" aria-label="Content Filters">
+        <form class="filter-bar-container" role="search" onSubmit="return false;">
+
+            <!-- 1. Inline Search Box -->
+            <div class="filter-search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="filterSearchInput" placeholder="Search title..." aria-label="Search title">
+            </div>
+
+            <div class="filter-v-divider" role="separator"></div>
+
+            <!-- 2. Type Selector Pills -->
+            <fieldset class="type-selector" aria-label="Content Type">
+                <button class="type-pill active" type="button">All</button>
+                <button class="type-pill" type="button">Anime</button>
+                <button class="type-pill" type="button">Movies</button>
+                <button class="type-pill" type="button">Series</button>
+            </fieldset>
+
+            <div class="filter-v-divider" role="separator"></div>
+
+            <!-- Pure CSS Dropdowns Group -->
+            <div class="dropdowns-group">
+
+                <!-- Genre Dropdown -->
+                <details class="css-dropdown">
+                    <summary class="dropdown-selected">
+                        <span>Genre</span>
+                        <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                    </summary>
+                    <ul class="dropdown-list">
+                        <li class="dropdown-item">Action</li>
+                        <li class="dropdown-item">Sci-Fi</li>
+                        <li class="dropdown-item">Drama</li>
+                        <li class="dropdown-item">Mystery</li>
+                        <li class="dropdown-item">Psychological</li>
+                        <li class="dropdown-item">Fantasy</li>
+                        <li class="dropdown-item">Comedy</li>
+                    </ul>
+                </details>
+
+                <!-- Rating Dropdown -->
+                <details class="css-dropdown">
+                    <summary class="dropdown-selected">
+                        <span>Rating</span>
+                        <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                    </summary>
+                    <ul class="dropdown-list">
+                        <li class="dropdown-item">★ 9.0+</li>
+                        <li class="dropdown-item">★ 8.0+</li>
+                        <li class="dropdown-item">★ 7.0+</li>
+                        <li class="dropdown-item">★ 6.0+</li>
+                        <li class="dropdown-item">★ 5.0+</li>
+                        <li class="dropdown-item">Lower</li>
+                    </ul>
+                </details>
+
+                <!-- Sort By Dropdown -->
+                <details class="css-dropdown">
+                    <summary class="dropdown-selected">
+                        <span>Sort By</span>
+                        <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                    </summary>
+                    <ul class="dropdown-list">
+                        <li class="dropdown-item">Newest</li>
+                        <li class="dropdown-item">Popular</li>
+                        <li class="dropdown-item">Rating</li>
+                    </ul>
+                </details>
+
+                <!-- Year Dropdown -->
+                <details class="css-dropdown">
+                    <summary class="dropdown-selected">
+                        <span>Year</span>
+                        <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                    </summary>
+                    <ul class="dropdown-list">
+                        <li class="dropdown-item">2026</li>
+                        <li class="dropdown-item">2025</li>
+                        <li class="dropdown-item">2024</li>
+                        <li class="dropdown-item">2023</li>
+                        <li class="dropdown-item">2022</li>
+                        <li class="dropdown-item">2021</li>
+                        <li class="dropdown-item">2020</li>
+                        <li class="dropdown-item">2010s</li>
+                        <li class="dropdown-item">2000s</li>
+                        <li class="dropdown-item">90s</li>
+                        <li class="dropdown-item">80s</li>
+                        <li class="dropdown-item">Classics</li>
+                    </ul>
+                </details>
+
+            </div>
+            <!-- 4. Reset Button -->
+            <button class="reset-filter-btn" type="reset" aria-label="Reset Filters" title="Reset Filters">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                </svg>
+            </button>
+
+        </form>
+    </section>
+
+    <!-- ==========================================================================
+       MAIN CONTENT GRID & CARDS
+       ========================================================================== -->
+    <main class="discover-grid-section">
+        <div class="discover-grid-container">
+
+            <!-- Section Title Inside The Container -->
+            <div class="grid-header">
+                <h2 class="grid-title">All Content</h2>
+            </div>
+
+            <div class="cards-grid">
+                <!-- 1 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 2 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 3 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 4 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 5 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 6 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 7 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 8 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 9 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 10 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 11 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 12 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 13 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 14 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 15 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 16 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 17 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 18 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 19 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 20 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 21 -->
+                <article class="content-card">
+                    <img src="assets/posters/poster-fmab.webp" alt="Fullmetal Alchemist: Brotherhood Poster"
+                        class="card-poster">
+                    <div class="card-overlay">
+                        <div class="card-top-row">
+                            <span class="type-badge">ANIME</span>
+                            <div class="rating-box"><span class="rating-label">MAL</span><span class="rating-score">⭐
+                                    9.1</span></div>
+                        </div>
+                        <div class="card-bottom-content">
+                            <div class="title-row">
+                                <h3 class="card-title">Fullmetal Alchemist: Brotherhood</h3>
+                                <span class="age-badge">TV-14</span>
+                            </div>
+                            <div class="meta-row"><span>64 Episodes • 2009</span></div>
+                            <div class="card-actions">
+                                <a href="./details.html" class="btn-details">Details</a>
+                                <button class="btn-watchlist" type="button" title="Add to Watchlist">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+
+        <!-- Pagination Bar -->
+        <div class="pagination-section">
+            <nav class="pagination-container" aria-label="Page navigation">
+                <button class="page-btn prev-next disabled" disabled type="button">PREV</button>
+                <button class="page-btn active" type="button">1</button>
+                <button class="page-btn" type="button">2</button>
+                <button class="page-btn" type="button">3</button>
+
+                <span class="pagination-dots" aria-hidden="true">...</span>
+
+                <button class="page-btn" type="button">10</button>
+                <button class="page-btn prev-next" type="button">NEXT</button>
+            </nav>
+        </div>
+    </main>
+    <%- include("partials/footer.ejs") %>
+        <%- include("partials/modals/search-modal.ejs") %>
+            <%- include("partials/modals/log-modal.ejs") %>
+                <script src="js/modals.js"></script>
+                <script src="js/pages/discover-page.js"></script>
+</body>
+
+</html>

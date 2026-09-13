@@ -1,0 +1,110 @@
+<div class="log-modal-overlay" id="logModal" style="display: none;">
+    <div class="log-modal-container ">
+
+        <button class="close-modal-btn" id="closeLogModalBtn" aria-label="Close log modal">&times;</button>
+        <h2 class="modal-main-title">Log Content</h2>
+
+        <div class="log-global-search">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" placeholder="Name of movie, series, or anime...">
+        </div>
+
+        <div class="log-item-header">
+            <img src="assets/posters/poster-sherlock.webp" alt="Sherlock" class="log-item-poster"
+                onerror="this.src='https://image.tmdb.org/t/p/w200/8bZCaPAPPil3ea2c9xSsmfsibGB.jpg'">
+
+            <div class="log-item-info">
+                <!-- تم استخدام الكلاس الموحد هنا -->
+                <span class="type-badge series-badge">TV SERIES</span>
+                <h3 class="log-item-title">Sherlock</h3>
+
+                <div class="season-episode-selectors">
+                    <details class="css-dropdown">
+                        <summary class="dropdown-selected">
+                            <span id="seasonText">Season 1</span>
+                            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                        </summary>
+                        <ul class="dropdown-list">
+                            <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season
+                                1
+                            </li>
+                            <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season
+                                2
+                            </li>
+                            <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season
+                                3
+                            </li>
+                            <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">Season
+                                4
+                            </li>
+                        </ul>
+                    </details>
+
+                    <details class="css-dropdown">
+                        <summary class="dropdown-selected">
+                            <span id="episodeText">All Episodes</span>
+                            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                        </summary>
+                        <ul class="dropdown-list">
+                            <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">All
+                                Episodes</li>
+                            <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">
+                                Episode 1
+                            </li>
+                            <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">
+                                Episode 2
+                            </li>
+                            <li class="dropdown-item" onclick="selectDropdownOption(this, 'episodeText')">
+                                Episode 3
+                            </li>
+                        </ul>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+        <form class="log-form" onsubmit="return false;">
+
+            <div class="log-toolbar">
+                <div class="star-rating-input" id="starRating">
+                    <i class="fa-regular fa-star rate-star" data-index="0"></i>
+                    <i class="fa-regular fa-star rate-star" data-index="1"></i>
+                    <i class="fa-regular fa-star rate-star" data-index="2"></i>
+                    <i class="fa-regular fa-star rate-star" data-index="3"></i>
+                    <i class="fa-regular fa-star rate-star" data-index="4"></i>
+                </div>
+
+                <div class="toolbar-divider"></div>
+
+                <div class="toolbar-actions">
+                    <button type="button" class="icon-toggle-btn" id="likeToggle" title="Like">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+                    <button type="button" class="icon-toggle-btn" id="rewatchToggle" title="Rewatch">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <button type="button" class="icon-toggle-btn spoiler-btn" id="spoilerToggle"
+                        title="Contains Spoilers">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="review-group">
+                <textarea id="reviewText" class="review-textarea"
+                    placeholder="Add your thoughts (Optional)..."></textarea>
+            </div>
+
+            <div class="log-footer">
+                <div class="date-group">
+                    <input type="date" id="watchDate" class="date-picker-input" title="Watched On">
+                </div>
+
+                <div class="log-actions">
+                    <button type="button" class="btn-cancel" id="cancelLogBtn">Cancel</button>
+                    <button type="submit" class="btn-save-log">Log</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
