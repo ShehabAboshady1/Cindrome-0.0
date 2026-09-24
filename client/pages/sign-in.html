@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Cindrome</title>
+    <link rel="icon" type="image/png" href="../assets/logos/cindrome-logo.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../css/pages/sign-in.css">
+</head>
+
+<body>
+
+    <main class="auth-container">
+        <div class="auth-card">
+
+            <!-- اللوجو ورأس الكارت -->
+            <div class="auth-header">
+                <a href="../../index.html" class="auth-logo-link">
+                    <img src="../assets/logos/no background logo.png" alt="Cindrome Logo" class="auth-logo">
+                </a>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to continue to your Cindrome account</p>
+            </div>
+
+            <!-- نموذج الدخول -->
+            <form class="auth-form" id="signInForm" novalidate>
+
+                <!-- 🌟 حقل الإيميل أو اسم المستخدم 🌟 -->
+                <div class="form-group">
+                    <label for="loginInput">Email or Username</label>
+                    <input type="text" id="loginInput" placeholder="Username or email address" required autocomplete="username">
+                    <span class="field-error-msg" id="loginError"></span>
+                </div>
+
+                <!-- حقل كلمة السر مع زر العين -->
+                <div class="form-group">
+                    <div class="label-wrapper">
+                        <label for="password">Password</label>
+                        <a href="#" class="forgot-link">Forgot?</a>
+                    </div>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+                        <button type="button" class="toggle-password-btn" id="togglePasswordBtn" aria-label="Show password">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="field-error-msg" id="passwordError"></span>
+                </div>
+
+                <!-- خيار تذكرني -->
+                <div class="form-options">
+                    <label class="toggle-container">
+                        <input type="checkbox" id="remember">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Remember me</span>
+                    </label>
+                </div>
+
+                <!-- زرار تسجيل الدخول -->
+                <button type="submit" class="auth-btn" id="submitBtn">Sign In</button>
+
+            </form>
+
+            <!-- رابط الانتقال لإنشاء حساب -->
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="./sign-up.html">Sign up</a></p>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/pages/sign-in.js"></script>
+</body>
+
+</html>

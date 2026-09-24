@@ -1,0 +1,66 @@
+<nav class="bar">
+    <div class="nav-container">
+
+        <a href="/" class="logo-link">
+            <img class="logo" src="/assets/logos/no background logo.png" alt="Cindrome Logo">
+        </a>
+
+        <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+        <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
+
+        <div class="right-bar">
+            <!-- 1. روابط الـ Navigation العادية في الأول -->
+            <a href="/" class="nav-item">Home</a>
+            <a href="/discover" class="nav-item">Discover</a>
+            <a href="/lists" class="nav-item">Lists</a>
+
+            <div class="dropdown">
+                <input type="checkbox" id="content-toggle" class="dropdown-checkbox">
+                <label for="content-toggle" class="nav-item dropdown-label">Content ▾</label>
+                <ul class="dropdown-menu">
+                    <li><a href="/movies">Movies</a></li>
+                    <li><a href="/series">TV Series</a></li>
+                    <li><a href="/anime">Anime</a></li>
+                </ul>
+            </div>
+
+            <a href="/drome" class="nav-item">Drome</a>
+
+            <!-- 2. قايمة الأكونت (للمستخدمين بس) -->
+            <div class="dropdown user-only">
+                <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
+                <label for="account-toggle" class="nav-item dropdown-label">Account ▾</label>
+                <ul class="dropdown-menu">
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/diary">Diary</a></li>
+                    <li><a href="/watchlist">Watchlist</a></li>
+                    <li><a href="/sign-in" style="color: #ff4757;">Log out</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- 🌟 3. زراير الأكشن 🌟 -->
+        <!-- ========================================================= -->
+
+        <!-- 🔴 للزوار بس -->
+        <a href="/sign-in" class="guest-only" style="text-decoration: none;">
+            <button class="signin-btn">Sign in</button>
+        </a>
+
+        <!-- 🟢 للمستخدمين بس -->
+        <button class="log-nav-btn user-only" id="navLogBtn">
+            <i class="fa-solid fa-plus"></i> Log
+        </button>
+
+        <!-- زرار البحث -->
+        <button type="button" class="search-trigger-btn" aria-label="Search">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </button>
+
+    </div>
+</nav>

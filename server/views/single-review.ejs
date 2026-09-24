@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome - Review by @Shehab</title>
+    <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/pages/single-review.css">
+    <link rel="stylesheet" href="/css/modals.css">
+</head>
+
+<body class="single-review-page logged-in">
+    <!-- Navbar -->
+    <header>
+        <%- include("partials/navbar.ejs") %>
+    </header>
+
+    <!-- Main Content -->
+    <main class="single-review-main">
+
+        <!-- Backdrop Section -->
+        <section class="review-backdrop-wrapper"
+            style="background-image: url('https://media.themoviedb.org/t/p/w1000_and_h563_face/bI37vIHSH7o4IVkq37P8cfxQGMx.jpg');">
+            <div class="backdrop-gradient-overlay"></div>
+        </section>
+
+        <!-- Review Content Container -->
+        <section class="review-content-container">
+
+            <!-- 1. EXTERNAL MOVIE INFO -->
+            <div class="external-movie-header">
+                <a href="/details" class="external-poster-link">
+                    <img src="/assets/posters/poster-theboys.webp" alt="The Boys Poster" class="external-main-poster">
+                </a>
+
+                <div class="external-movie-info">
+                    <h1 class="external-movie-title"><a href="/details">The Boys</a> <span
+                            class="external-movie-year">(2019)</span></h1>
+                    <div class="episode-meta-pill">
+                        Season 1 • Episode 8 • "You Found Me"
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. THE REVIEW CARD -->
+            <article class="review-card-unified">
+
+                <!-- Card Header -->
+                <div class="card-user-header">
+
+                    <div class="reviewer-meta-inside">
+                        <a href="/profile"><img src="/assets/avatars/shehab.jpg" alt="Shehab" class="card-avatar"
+                                onerror="this.src='/assets/profile-avatar.jpg'"></a>
+                        <div class="card-user-details">
+                            <span class="card-username"><a href="/profile">@Shehab_Aboshady</a></span>
+                            <div class="card-rating-date">
+                                <span class="stars" title="4.5 Stars">★★★★<span class="half-star">★</span></span>
+                                <i class="fa-solid fa-heart favorite-heart" title="Favorited"></i>
+                                <span class="dot-divider">•</span>
+                                <span class="review-date">August 20, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-spoiler-badge" id="spoilerBadge">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Spoiler
+                    </div>
+                </div>
+
+                <hr class="card-divider">
+
+                <!-- Review Text -->
+                <div id="reviewTextWrapper" class="review-text-wrapper is-spoiler" title="Click to reveal spoiler">
+                    <div class="review-text blurred-text">
+                        <p>
+                            Absolute cinematic masterpiece. The pacing is phenomenal, and Antony Starr deserves all the
+                            awards for his performance as Homelander. I can't wait for the next season!
+                        </p>
+                        <p>
+                            What makes this show stand out isn't just the gore or the shock value, but the incredibly
+                            sharp writing that satirizes our current celebrity worship and corporate greed. The Boys
+                            takes the concept of "what if superheroes were real" and applies the most cynical, yet
+                            realistic, lens possible.
+                        </p>
+                        <p>
+                            Every character has layers. Butcher is despicable yet you root for him. Hughie is the moral
+                            compass constantly being corrupted. It’s a masterclass in character development.
+                        </p>
+                    </div>
+                </div>
+
+                <hr class="actions-divider">
+
+                <!-- 🌟 Actions (Like & Share) 🌟 -->
+                <div class="review-actions-bar">
+                    <!-- Like SVG Button -->
+                    <button class="action-btn like-btn" id="reviewLikeBtn" aria-label="Like Review">
+                        <svg class="interactive-svg like-svg" viewBox="0 0 24 24" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                            </path>
+                        </svg>
+                        <span class="action-count">1.2k</span>
+                    </button>
+                    <!-- Share SVG Button -->
+                    <button class="action-btn share-btn" id="reviewShareBtn" aria-label="Share Review"
+                        title="Copy link">
+                        <svg class="interactive-svg share-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                    </button>
+                </div>
+            </article>
+
+            <!-- 3. MODERN COMMENTS SECTION -->
+            <section id="comments-section" class="list-comments-wrapper">
+                <div class="comments-header-row">
+                    <h2 class="comments-title">Comments <span class="comments-count">42</span></h2>
+                </div>
+
+                <!-- إضافة تعليق رئيسي (Modern Inline Box) -->
+                <div class="add-comment-box">
+                    <img src="/assets/avatars/shehab.jpg" alt="My Avatar" class="comment-avatar"
+                        onerror="this.src='/assets/profile-avatar.jpg'">
+                    <div class="modern-input-wrapper">
+                        <textarea class="comment-textarea" placeholder="Add a comment." rows="1"></textarea>
+                        <button class="modern-post-btn" title="Post Comment">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <hr class="comments-divider">
+
+                <!-- قائمة التعليقات -->
+                <div class="comments-list">
+
+                    <!-- تعليق 1 مع رد نشط -->
+                    <div class="comment-thread">
+                        <div class="single-comment">
+                            <img src="/assets/avatars/shehab.jpg" alt="User" class="comment-avatar"
+                                onerror="this.src='/assets/profile-avatar.jpg'">
+                            <div class="comment-content-wrapper">
+                                <div class="comment-header">
+                                    <span class="comment-user">@Ahmed_Ali</span>
+                                    <span class="comment-time">2h</span>
+                                </div>
+                                <p class="comment-text">Great review! The tension in this specific episode was insane.
+                                </p>
+                                <div class="comment-interactions">
+                                    <button class="interaction-btn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                            </path>
+                                        </svg> 12
+                                    </button>
+                                    <button class="interaction-btn reply-trigger">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                            </path>
+                                        </svg> Reply
+                                    </button>
+                                </div>
+
+                                <!-- صندوق الرد المتداخل -->
+                                <div class="inline-reply-box">
+                                    <img src="/assets/avatars/shehab.jpg" alt="My Avatar"
+                                        class="comment-avatar small-avatar"
+                                        onerror="this.src='/assets/profile-avatar.jpg'">
+                                    <div class="modern-input-wrapper">
+                                        <textarea class="comment-textarea" placeholder="Reply to @Ahmed_Ali."
+                                            rows="1"></textarea>
+                                        <button class="modern-post-btn" title="Send Reply">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <button class="reply-cancel-btn" title="Cancel Reply">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nested Reply -->
+                        <div class="nested-replies">
+                            <div class="single-comment reply-comment">
+                                <img src="/assets/avatars/shehab.jpg" alt="Author" class="comment-avatar small-avatar"
+                                    onerror="this.src='/assets/profile-avatar.jpg'">
+                                <div class="comment-content-wrapper">
+                                    <div class="comment-header">
+                                        <span class="comment-user">@Shehab</span>
+                                        <span class="comment-badge">AUTHOR</span>
+                                        <span class="comment-time">1h</span>
+                                    </div>
+                                    <p class="comment-text">Totally agree. The writing subverts all the typical
+                                        superhero tropes we are used to.</p>
+                                    <div class="comment-interactions">
+                                        <button class="interaction-btn">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                                </path>
+                                            </svg> 5
+                                        </button>
+                                        <button class="interaction-btn reply-trigger">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                                </path>
+                                            </svg> Reply
+                                        </button>
+                                    </div>
+
+                                    <div class="inline-reply-box">
+                                        <img src="/assets/avatars/shehab.jpg" alt="My Avatar"
+                                            class="comment-avatar small-avatar"
+                                            onerror="this.src='/assets/profile-avatar.jpg'">
+                                        <div class="modern-input-wrapper">
+                                            <textarea class="comment-textarea" placeholder="Reply to @Shehab."
+                                                rows="1"></textarea>
+                                            <button class="modern-post-btn" title="Send Reply">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <button class="reply-cancel-btn" title="Cancel Reply">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- تعليق 2 -->
+                    <div class="comment-thread">
+                        <div class="single-comment">
+                            <img src="/assets/avatars/shehab.jpg" alt="User" class="comment-avatar"
+                                onerror="this.src='/assets/profile-avatar.jpg'">
+                            <div class="comment-content-wrapper">
+                                <div class="comment-header">
+                                    <span class="comment-user">@Nour99</span>
+                                    <span class="comment-time">5h</span>
+                                </div>
+                                <p class="comment-text">Antony Starr's acting is out of this world. W review.</p>
+                                <div class="comment-interactions">
+                                    <button class="interaction-btn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                            </path>
+                                        </svg> 3
+                                    </button>
+                                    <button class="interaction-btn reply-trigger">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                            </path>
+                                        </svg> Reply
+                                    </button>
+                                </div>
+
+                                <div class="inline-reply-box">
+                                    <img src="/assets/avatars/shehab.jpg" alt="My Avatar"
+                                        class="comment-avatar small-avatar"
+                                        onerror="this.src='/assets/profile-avatar.jpg'">
+                                    <div class="modern-input-wrapper">
+                                        <textarea class="comment-textarea" placeholder="Reply to @Nour99."
+                                            rows="1"></textarea>
+                                        <button class="modern-post-btn" title="Send Reply">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <button class="reply-cancel-btn" title="Cancel Reply">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </section>
+    </main>
+
+    <%- include("partials/footer.ejs") %>
+        <%- include("partials/modals/search-modal.ejs") %>
+            <%- include("partials/modals/log-modal.ejs") %>
+                <!-- Scripts -->
+                <script src="/js/modals.js"></script>
+                <script src="/js/pages/single-review.js"></script>
+</body>
+
+</html>

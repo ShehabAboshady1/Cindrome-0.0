@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cindrome - TV Series</title>
+    <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/hero.css">
+    <link rel="stylesheet" href="/css/cards.css">
+    <link rel="stylesheet" href="/css/lists-carousel.css">
+    <link rel="stylesheet" href="/css/carousel.css">
+    <link rel="stylesheet" href="/css/list.css">
+    <link rel="stylesheet" href="/css/modals.css">
+</head>
+
+<body class="logged-in">
+    <header>
+        <%- include("partials/navbar.ejs") %>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section" style="background-image: url(/assets/backdrops/backdrop-sherlock.webp);">
+        <div class="hero-overlay"></div>
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-tags">
+                    <span class="badge trending-badge">🔥 Trending #1</span>
+                    <span class="badge category-badge">TV Series</span>
+                </div>
+                <h1 class="hero-title">Sherlock</h1>
+                <div class="hero-meta">
+                    <span class="rating">⭐ 9.1 <i>/ 10</i></span>
+                    <span class="meta-dot">•</span>
+                    <span class="duration">4 Seasons • 13 Episodes</span>
+                    <span class="meta-dot">•</span>
+                    <span class="year">2010 – 2017</span>
+                    <span class="meta-dot">•</span>
+                    <span class="genre">Crime, Drama, Mystery</span>
+                </div>
+                <p class="hero-description">
+                    A modern update finds the famous sleuth and his doctor partner solving crime in 21st century London,
+                    utilizing sharp intellect, keen observation, and brilliant deduction.
+                </p>
+                <div class="hero-actions">
+                    <a href="/details" class="btn btn-primary">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z" />
+                        </svg>
+                        View Series
+                    </a>
+                    <!-- 🌟 زرار الـ Watchlist المتعدل 🌟 -->
+                    <button type="button" class="btn btn-secondary hero-watchlist-btn">
+                        <span class="default-content">Add to Watchlist</span>
+                        <span class="added-content"><i class="fa-solid fa-minus" style="margin-right: 6px;"></i>
+                            Added</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="carousel-section">
+        <div class="carousel-header">
+            <h2 class="carousel-title">🏆 Top Rated & Fan Favorites</h2>
+            <div class="carousel-controls">
+                <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                <button class="carousel-btn" aria-label="Next">&#10095;</button>
+            </div>
+        </div>
+        <div class="carousel-track">
+
+            <!-- Card 1: Sherlock -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-sherlock.webp" alt="Sherlock" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">SERIES</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                9.1</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Sherlock</h3>
+                            <span class="age-badge">TV-14</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>4 Seasons • 2010</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/details" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Breaking Bad -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-breakingbad.webp" alt="Breaking Bad" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">SERIES</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                9.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Breaking Bad</h3>
+                            <span class="age-badge">TV-MA</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>5 Seasons • 2008</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Game of Thrones -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-gameofthrones.webp" alt="Game of Thrones" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">SERIES</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                9.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Game of Thrones</h3>
+                            <span class="age-badge">TV-MA</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>8 Seasons • 2011</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Sherlock -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-sherlock.webp" alt="Sherlock" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">SERIES</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                9.1</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Sherlock</h3>
+                            <span class="age-badge">TV-14</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>4 Seasons • 2010</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/details" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: Breaking Bad -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-breakingbad.webp" alt="Breaking Bad" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">SERIES</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                9.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Breaking Bad</h3>
+                            <span class="age-badge">TV-MA</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>5 Seasons • 2008</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: Game of Thrones -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-gameofthrones.webp" alt="Game of Thrones" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">SERIES</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                9.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Game of Thrones</h3>
+                            <span class="age-badge">TV-MA</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>8 Seasons • 2011</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 7: Sherlock -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-sherlock.webp" alt="Sherlock" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">SERIES</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                9.1</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Sherlock</h3>
+                            <span class="age-badge">TV-14</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>4 Seasons • 2010</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/details" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8: Breaking Bad -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-breakingbad.webp" alt="Breaking Bad" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">SERIES</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                9.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Breaking Bad</h3>
+                            <span class="age-badge">TV-MA</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>5 Seasons • 2008</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Carousel Section 2: Action & Sci-Fi Blockbusters -->
+    <section class="carousel-section">
+        <div class="carousel-header">
+            <h2 class="carousel-title">⚡ Action & Sci-Fi Blockbusters</h2>
+            <div class="carousel-controls">
+                <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                <button class="carousel-btn" aria-label="Next">&#10095;</button>
+            </div>
+        </div>
+        <div class="carousel-track">
+
+            <!-- Card 1: Spider-Man -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 25m • 2026</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Dune Part Two -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-dune2.webp" alt="Dune: Part Two" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Dune: Part Two</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 46m • 2024</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Spider-Man -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 25m • 2026</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Dune Part Two -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-dune2.webp" alt="Dune: Part Two" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Dune: Part Two</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 46m • 2024</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: Spider-Man -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 25m • 2026</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: Dune Part Two -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-dune2.webp" alt="Dune: Part Two" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Dune: Part Two</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 46m • 2024</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 7: Spider-Man -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Spider-Man: Brand New Day</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 25m • 2026</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8: Dune Part Two -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-dune2.webp" alt="Dune: Part Two" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Dune: Part Two</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 46m • 2024</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Carousel Section 3: Crime, Mystery & Thriller -->
+    <section class="carousel-section">
+        <div class="carousel-header">
+            <h2 class="carousel-title">🕵️‍♂️ Crime, Mystery & Thriller</h2>
+            <div class="carousel-controls">
+                <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                <button class="carousel-btn" aria-label="Next">&#10095;</button>
+            </div>
+        </div>
+        <div class="carousel-track">
+
+            <!-- Card 1: Zodiac -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-zodiac.webp" alt="Zodiac" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.7</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Zodiac</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 37m • 2007</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Shutter Island -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-shutterisland.webp" alt="Shutter Island" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Shutter Island</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 18m • 2010</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Zodiac -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-zodiac.webp" alt="Zodiac" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.7</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Zodiac</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 37m • 2007</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Shutter Island -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-shutterisland.webp" alt="Shutter Island" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Shutter Island</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 18m • 2010</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: Zodiac -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-zodiac.webp" alt="Zodiac" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.7</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Zodiac</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 37m • 2007</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: Shutter Island -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-shutterisland.webp" alt="Shutter Island" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Shutter Island</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 18m • 2010</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 7: Zodiac -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-zodiac.webp" alt="Zodiac" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.7</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Zodiac</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 37m • 2007</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8: Shutter Island -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-shutterisland.webp" alt="Shutter Island" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                8.2</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">Shutter Island</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>2h 18m • 2010</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Carousel Section 4: Horror & Supernatural -->
+    <section class="carousel-section">
+        <div class="carousel-header">
+            <h2 class="carousel-title">👻 Horror & Supernatural</h2>
+            <div class="carousel-controls">
+                <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                <button class="carousel-btn" aria-label="Next">&#10095;</button>
+            </div>
+        </div>
+        <div class="carousel-track">
+
+            <!-- Card 1: The Conjuring -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-theconjuring.webp" alt="The Conjuring" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">The Conjuring</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>1h 52m • 2013</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: A Quiet Place -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-aquietplace.webp" alt="A Quiet Place" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">A Quiet Place</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>1h 30m • 2018</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: The Conjuring -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-theconjuring.webp" alt="The Conjuring" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">The Conjuring</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>1h 52m • 2013</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: A Quiet Place -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-aquietplace.webp" alt="A Quiet Place" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">A Quiet Place</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>1h 30m • 2018</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: The Conjuring -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-theconjuring.webp" alt="The Conjuring" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">The Conjuring</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>1h 52m • 2013</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: A Quiet Place -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-aquietplace.webp" alt="A Quiet Place" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">A Quiet Place</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>1h 30m • 2018</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 7: The Conjuring -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-theconjuring.webp" alt="The Conjuring" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">The Conjuring</h3>
+                            <span class="age-badge">R</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>1h 52m • 2013</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8: A Quiet Place -->
+            <div class="content-card">
+                <img src="/assets/posters/poster-aquietplace.webp" alt="A Quiet Place" class="card-poster">
+                <div class="card-overlay">
+                    <div class="card-top-row">
+                        <span class="type-badge">MOVIE</span>
+                        <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
+                                7.5</span></div>
+                    </div>
+                    <div class="card-bottom-content">
+                        <div class="title-row">
+                            <h3 class="card-title">A Quiet Place</h3>
+                            <span class="age-badge">PG-13</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>1h 30m • 2018</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-details">Details</a>
+                            <button class="btn-watchlist" title="Toggle Watchlist">
+                                <span class="icon-plus">+</span>
+                                <span class="icon-minus">-</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Lists Section: Fan-Made Movie Lists -->
+    <section class="lists-section">
+        <div class="carousel-header">
+            <h2 class="carousel-title">🍿 Fan-Made Movie Lists</h2>
+            <div class="carousel-controls">
+                <button class="carousel-btn" aria-label="Previous">&#10094;</button>
+                <button class="carousel-btn" aria-label="Next">&#10095;</button>
+            </div>
+        </div>
+
+        <div class="lists-track">
+
+            <!-- List Card 1: Ultimate Blockbusters 2026 -->
+            <div class="list-card">
+                <div class="poster-stack">
+                    <img src="/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                    <img src="/assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                    <img src="/assets/posters/poster-dune2.webp" alt="Dune 2" class="stack-poster">
+                    <img src="/assets/posters/poster-robinhood.webp" alt="The Death of Robin Hood" class="stack-poster">
+                </div>
+                <div class="list-info">
+                    <a href="/single-list" class="list-title">Ultimate Blockbusters 2026</a>
+                    <div class="list-meta">
+                        <div>
+                            <span class="user-badge">By @Shehab</span>
+                            <span class="list-items-count">• 10 Titles</span>
+                        </div>
+                        <div class="list-actions">
+                            <button class="list-action-btn like-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                    </path>
+                                </svg>
+                                <span>1.8k</span>
+                            </button>
+                            <a href="/single-list" class="list-action-btn comment-btn" title="Comment"
+                                style="text-decoration: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                    </path>
+                                </svg>
+                                <span>120</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List Card 2: Mind Benders & Dark Thrills -->
+            <div class="list-card">
+                <div class="poster-stack">
+                    <img src="/assets/posters/poster-shutterisland.webp" alt="Shutter Island" class="stack-poster">
+                    <img src="/assets/posters/poster-zodiac.webp" alt="Zodiac" class="stack-poster">
+                    <img src="/assets/posters/poster-theconjuring.webp" alt="The Conjuring" class="stack-poster">
+                    <img src="/assets/posters/poster-aquietplace.webp" alt="A Quiet Place" class="stack-poster">
+                </div>
+                <div class="list-info">
+                    <a href="/single-list" class="list-title">Mind Benders & Dark Thrills</a>
+                    <div class="list-meta">
+                        <div>
+                            <span class="user-badge">By @Alex</span>
+                            <span class="list-items-count">• 8 Titles</span>
+                        </div>
+                        <div class="list-actions">
+                            <button class="list-action-btn like-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                    </path>
+                                </svg>
+                                <span>890</span>
+                            </button>
+                            <a href="/single-list" class="list-action-btn comment-btn" title="Comment"
+                                style="text-decoration: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                    </path>
+                                </svg>
+                                <span>54</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List Card 3: Must-Watch Cinema Classics -->
+            <div class="list-card">
+                <div class="poster-stack">
+                    <img src="/assets/posters/poster-spiderman.webp" alt="Spider-Man" class="stack-poster">
+                    <img src="/assets/posters/poster-dune2.webp" alt="Dune 2" class="stack-poster">
+                    <img src="/assets/posters/poster-zodiac.webp" alt="Zodiac" class="stack-poster">
+                    <img src="/assets/posters/poster-odyssey.webp" alt="The Odyssey" class="stack-poster">
+                </div>
+                <div class="list-info">
+                    <a href="/single-list" class="list-title">Must-Watch Cinema Classics</a>
+                    <div class="list-meta">
+                        <div>
+                            <span class="user-badge">By @Sarah_M</span>
+                            <span class="list-items-count">• 15 Titles</span>
+                        </div>
+                        <div class="list-actions">
+                            <button class="list-action-btn like-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                    </path>
+                                </svg>
+                                <span>3.4k</span>
+                            </button>
+                            <a href="/single-list" class="list-action-btn comment-btn" title="Comment"
+                                style="text-decoration: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                    </path>
+                                </svg>
+                                <span>210</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List Card 4: Late Night Suspense -->
+            <div class="list-card">
+                <div class="poster-stack">
+                    <img src="/assets/posters/poster-theconjuring.webp" alt="The Conjuring" class="stack-poster">
+                    <img src="/assets/posters/poster-aquietplace.webp" alt="A Quiet Place" class="stack-poster">
+                    <img src="/assets/posters/poster-shutterisland.webp" alt="Shutter Island" class="stack-poster">
+                    <img src="/assets/posters/poster-robinhood.webp" alt="The Death of Robin Hood" class="stack-poster">
+                </div>
+                <div class="list-info">
+                    <a href="/single-list" class="list-title">Late Night Suspense</a>
+                    <div class="list-meta">
+                        <div>
+                            <span class="user-badge">By @JohnDoe</span>
+                            <span class="list-items-count">• 6 Titles</span>
+                        </div>
+                        <div class="list-actions">
+                            <button class="list-action-btn like-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                    </path>
+                                </svg>
+                                <span>650</span>
+                            </button>
+                            <a href="/single-list" class="list-action-btn comment-btn" title="Comment"
+                                style="text-decoration: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                    </path>
+                                </svg>
+                                <span>32</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <%- include("partials/footer.ejs") %>
+        <%- include("partials/modals/search-modal.ejs") %>
+            <%- include("partials/modals/log-modal.ejs") %>
+                <script src="/js/modals.js"></script>
+                <script src="/js/carousel.js"></script>
+                <script src="/js/pages/index-page.js"></script>
+</body>
+
+</html>

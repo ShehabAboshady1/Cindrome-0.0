@@ -1,0 +1,68 @@
+<div class="log-modal-overlay" id="createListModal" style="display: none;">
+    <div class="log-modal-container create-list-container">
+
+        <button class="close-modal-btn" id="closeCreateListBtn" aria-label="Close modal">&times;</button>
+        <h2 class="modal-main-title">Create New List</h2>
+
+        <form class="list-form" onsubmit="return false;">
+
+            <!-- 1. اسم الليستة -->
+            <div class="form-group-compact">
+                <label class="compact-label">List Name</label>
+                <input type="text" class="list-basic-input compact-input" placeholder="e.g., Top 10 Mind-Bending"
+                    autofocus>
+            </div>
+
+            <!-- 2. السطر المدمج (البحث + الخصوصية) -->
+            <div class="create-list-controls-row">
+                <!-- شريط البحث -->
+                <div class="log-global-search compact-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="addMovieSearch" placeholder="Type a movie/series and press Enter...">
+                </div>
+
+                <!-- التوجل -->
+                <div class="compact-toggle">
+                    <label for="privacyToggle" class="privacy-label">Make it private</label>
+                    <label class="theme-switch mini-switch">
+                        <input type="checkbox" id="privacyToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 3. الكونتينر اللي بيلم الكروت -->
+            <div class="added-items-container-box">
+                <div class="added-mini-cards-grid" id="addedItemsContainer">
+
+                    <!-- كارت 1 -->
+                    <div class="mini-content-card modal-mini-card" draggable="true">
+                        <div class="mini-card-media">
+                            <img src="../assets/posters/poster-aot.webp" class="mini-card-poster" alt="AOT"
+                                onerror="this.src='https://image.tmdb.org/t/p/w200/8bZCaPAPPil3ea2c9xSsmfsibGB.jpg'">
+                        </div>
+                        <button class="remove-mini-btn" title="Remove"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                    <!-- كارت 2 -->
+                    <div class="mini-content-card modal-mini-card" draggable="true">
+                        <div class="mini-card-media">
+                            <img src="../assets/posters/poster-sherlock.webp" class="mini-card-poster" alt="Sherlock"
+                                onerror="this.src='https://image.tmdb.org/t/p/w200/8bZCaPAPPil3ea2c9xSsmfsibGB.jpg'">
+                        </div>
+                        <button class="remove-mini-btn" title="Remove"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 4. أزرار الحفظ -->
+            <div class="log-footer" style="margin-top: 20px; justify-content: flex-end;">
+                <div class="log-actions">
+                    <button type="button" class="btn-cancel" id="cancelListBtn">Cancel</button>
+                    <button type="submit" class="btn-save-log">Create</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
