@@ -27,8 +27,8 @@
     </header>
 
     <main>
-        <!-- Hero Section -->
-        <section class="hero-section" style="background-image: url(assets/backdrops/backdrop-odyssey1.webp)" ;>
+        <section class="hero-section"
+            style="background-image: url('<%= heroMovie && heroMovie.backdrop ? heroMovie.backdrop : 'assets/backdrops/backdrop-odyssey1.webp' %>');">
             <div class="hero-overlay"></div>
             <div class="hero-container">
                 <div class="hero-content">
@@ -36,30 +36,37 @@
                         <span class="badge trending-badge">🔥 Trending #1</span>
                         <span class="badge category-badge">Movie</span>
                     </div>
-                    <h1 class="hero-title">The Odyssey</h1>
+                    <h1 class="hero-title">
+                        <%= heroMovie ? heroMovie.title : 'The Odyssey' %>
+                    </h1>
                     <div class="hero-meta">
-                        <span class="rating">⭐ 8.5 <i>/ 10</i></span>
+                        <span class="rating">⭐ <%= heroMovie ? heroMovie.score : '8.5' %> <i>/ 10</i></span>
                         <span class="meta-dot">•</span>
-                        <span class="duration">2h 58m</span>
+                        <span class="duration">
+                            <%= heroMovie ? heroMovie.duration : '2h 58m' %>
+                        </span>
                         <span class="meta-dot">•</span>
-                        <span class="year">2026</span>
+                        <span class="year">
+                            <%= heroMovie ? heroMovie.year : '2026' %>
+                        </span>
                         <span class="meta-dot">•</span>
-                        <span class="genre">Action, Adventure, Drama</span>
+                        <span class="genre">
+                            <%= heroMovie ? heroMovie.genres : 'Action, Adventure, Drama' %>
+                        </span>
                     </div>
                     <p class="hero-description">
-                        Follow the epic journey of Odysseus as he struggles to return home after the Trojan War, facing
-                        mythical beasts, ruthless gods, and impossible challenges.
+                        <%= heroMovie ? heroMovie.overview
+                            : 'Follow the epic journey of Odysseus as he struggles to return home after the Trojan War...'
+                            %>
                     </p>
                     <div class="hero-actions">
-                        <!-- زرار المشاهدة -->
-                        <a href="#" class="btn btn-primary">
+                        <a href="/details?id=<%= heroMovie ? heroMovie.id : '' %>&type=movie" class="btn btn-primary">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M8 5v14l11-7z" />
                             </svg>
                             View Movie
                         </a>
 
-                        <!-- 🌟 زرار الـ Watchlist المتعدل 🌟 -->
                         <button type="button" class="btn btn-secondary hero-watchlist-btn">
                             <span class="default-content">Add to Watchlist</span>
                             <span class="added-content"><i class="fa-solid fa-minus" style="margin-right: 6px;"></i>
@@ -80,233 +87,45 @@
                 </div>
             </div>
             <div class="carousel-track">
-                <!-- Card 1 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.5</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <!-- العنوان والـ Badge بقوا مع بعض في سطر -->
-                            <div class="title-row">
-                                <h3 class="card-title">The Odyssey</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-
-                            <!-- الـ Meta بقت واخدة السطر الكامل للتفاصيل بس -->
-                            <div class="meta-row">
-                                <span>2h 58m • 2026</span>
-                            </div>
-
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.5</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Odyssey</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 58m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
+                <% if (trendingNow && trendingNow.length> 0) { %>
+                    <% trendingNow.forEach(item=> { %>
+                        <div class="content-card">
+                            <img src="<%= item.poster %>" alt="<%= item.title %>" class="card-poster">
+                            <div class="card-overlay">
+                                <div class="card-top-row">
+                                    <span class="type-badge">
+                                        <%= item.type %>
+                                    </span>
+                                    <div class="rating-box"><span class="rating-label">TMDB</span><span
+                                            class="rating-score">⭐ <%= item.score %></span></div>
+                                </div>
+                                <div class="card-bottom-content">
+                                    <div class="title-row">
+                                        <h3 class="card-title">
+                                            <%= item.title %>
+                                        </h3>
+                                        <span class="age-badge">
+                                            <%= item.ageBadge %>
+                                        </span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span>
+                                            <%= item.subtitle %>
+                                        </span>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="/details?id=<%= item.id %>&type=<%= item.mediaType %>"
+                                            class="btn-details">Details</a>
+                                        <button class="btn-watchlist" title="Toggle Watchlist">
+                                            <span class="icon-plus">+</span>
+                                            <span class="icon-minus">-</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.5</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Odyssey</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 58m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.5</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Odyssey</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 58m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.5</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Odyssey</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 58m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.5</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Odyssey</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 58m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 7 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.5</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Odyssey</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 58m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 8 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-odyssey.webp" alt="The Odyssey" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.5</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Odyssey</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 58m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        <% }); %>
+                            <% } %>
             </div>
         </section>
 
@@ -320,229 +139,44 @@
                 </div>
             </div>
             <div class="carousel-track">
-                <!-- Card 1 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.1</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 15m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.1</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 15m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
+                <% if (mustWatchMovies && mustWatchMovies.length> 0) { %>
+                    <% mustWatchMovies.forEach(item=> { %>
+                        <div class="content-card">
+                            <img src="<%= item.poster %>" alt="<%= item.title %>" class="card-poster">
+                            <div class="card-overlay">
+                                <div class="card-top-row">
+                                    <span class="type-badge">
+                                        <%= item.type %>
+                                    </span>
+                                    <div class="rating-box"><span class="rating-label">TMDB</span><span
+                                            class="rating-score">⭐ <%= item.score %></span></div>
+                                </div>
+                                <div class="card-bottom-content">
+                                    <div class="title-row">
+                                        <h3 class="card-title">
+                                            <%= item.title %>
+                                        </h3>
+                                        <span class="age-badge">
+                                            <%= item.ageBadge %>
+                                        </span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span>
+                                            <%= item.subtitle %>
+                                        </span>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="/details?id=<%= item.id %>&type=movie" class="btn-details">Details</a>
+                                        <button class="btn-watchlist" title="Toggle Watchlist">
+                                            <span class="icon-plus">+</span>
+                                            <span class="icon-minus">-</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.1</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 15m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.1</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 15m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.1</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 15m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.1</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 15m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 7 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.1</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 15m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 8 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-spiderman.webp" alt="Spider-Man: Brand New Day" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">MOVIE</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.1</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">Spider-Man: Brand New Day</h3>
-                                <span class="age-badge">PG-13</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>2h 15m • 2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        <% }); %>
+                            <% } %>
             </div>
         </section>
 
@@ -556,229 +190,44 @@
                 </div>
             </div>
             <div class="carousel-track">
-                <!-- Card 1 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">SERIES</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.7</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Boys</h3>
-                                <span class="age-badge">TV-MA</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>4 Seasons • 2019–2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">SERIES</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.7</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Boys</h3>
-                                <span class="age-badge">TV-MA</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>4 Seasons • 2019–2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
+                <% if (topTVShows && topTVShows.length> 0) { %>
+                    <% topTVShows.forEach(item=> { %>
+                        <div class="content-card">
+                            <img src="<%= item.poster %>" alt="<%= item.title %>" class="card-poster">
+                            <div class="card-overlay">
+                                <div class="card-top-row">
+                                    <span class="type-badge">
+                                        <%= item.type %>
+                                    </span>
+                                    <div class="rating-box"><span class="rating-label">TMDB</span><span
+                                            class="rating-score">⭐ <%= item.score %></span></div>
+                                </div>
+                                <div class="card-bottom-content">
+                                    <div class="title-row">
+                                        <h3 class="card-title">
+                                            <%= item.title %>
+                                        </h3>
+                                        <span class="age-badge">
+                                            <%= item.ageBadge %>
+                                        </span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span>
+                                            <%= item.subtitle %>
+                                        </span>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="/details?id=<%= item.id %>&type=tv" class="btn-details">Details</a>
+                                        <button class="btn-watchlist" title="Toggle Watchlist">
+                                            <span class="icon-plus">+</span>
+                                            <span class="icon-minus">-</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">SERIES</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.7</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Boys</h3>
-                                <span class="age-badge">TV-MA</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>4 Seasons • 2019–2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">SERIES</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.7</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Boys</h3>
-                                <span class="age-badge">TV-MA</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>4 Seasons • 2019–2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">SERIES</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.7</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Boys</h3>
-                                <span class="age-badge">TV-MA</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>4 Seasons • 2019–2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">SERIES</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.7</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Boys</h3>
-                                <span class="age-badge">TV-MA</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>4 Seasons • 2019–2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 7 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">SERIES</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.7</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Boys</h3>
-                                <span class="age-badge">TV-MA</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>4 Seasons • 2019–2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 8 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-theboys.webp" alt="The Boys" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">SERIES</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    8.7</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">The Boys</h3>
-                                <span class="age-badge">TV-MA</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>4 Seasons • 2019–2026</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        <% }); %>
+                            <% } %>
             </div>
         </section>
 
@@ -792,229 +241,44 @@
                 </div>
             </div>
             <div class="carousel-track">
-                <!-- Card 1 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">ANIME</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    9.0</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">One Piece</h3>
-                                <span class="age-badge">TV-14</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>1122 Eps • 1999–Present</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">ANIME</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    9.0</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">One Piece</h3>
-                                <span class="age-badge">TV-14</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>1122 Eps • 1999–Present</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
+                <% if (topAnime && topAnime.length> 0) { %>
+                    <% topAnime.forEach(item=> { %>
+                        <div class="content-card">
+                            <img src="<%= item.poster %>" alt="<%= item.title %>" class="card-poster">
+                            <div class="card-overlay">
+                                <div class="card-top-row">
+                                    <span class="type-badge">
+                                        <%= item.type %>
+                                    </span>
+                                    <div class="rating-box"><span class="rating-label">TMDB</span><span
+                                            class="rating-score">⭐ <%= item.score %></span></div>
+                                </div>
+                                <div class="card-bottom-content">
+                                    <div class="title-row">
+                                        <h3 class="card-title">
+                                            <%= item.title %>
+                                        </h3>
+                                        <span class="age-badge">
+                                            <%= item.ageBadge %>
+                                        </span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span>
+                                            <%= item.subtitle %>
+                                        </span>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="/details?id=<%= item.id %>&type=tv" class="btn-details">Details</a>
+                                        <button class="btn-watchlist" title="Toggle Watchlist">
+                                            <span class="icon-plus">+</span>
+                                            <span class="icon-minus">-</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">ANIME</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    9.0</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">One Piece</h3>
-                                <span class="age-badge">TV-14</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>1122 Eps • 1999–Present</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">ANIME</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    9.0</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">One Piece</h3>
-                                <span class="age-badge">TV-14</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>1122 Eps • 1999–Present</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">ANIME</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    9.0</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">One Piece</h3>
-                                <span class="age-badge">TV-14</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>1122 Eps • 1999–Present</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">ANIME</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    9.0</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">One Piece</h3>
-                                <span class="age-badge">TV-14</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>1122 Eps • 1999–Present</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 7 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">ANIME</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    9.0</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">One Piece</h3>
-                                <span class="age-badge">TV-14</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>1122 Eps • 1999–Present</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 8 -->
-                <div class="content-card">
-                    <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
-                    <div class="card-overlay">
-                        <div class="card-top-row">
-                            <span class="type-badge">ANIME</span>
-                            <div class="rating-box"><span class="rating-label">IMDb</span><span class="rating-score">⭐
-                                    9.0</span></div>
-                        </div>
-                        <div class="card-bottom-content">
-                            <div class="title-row">
-                                <h3 class="card-title">One Piece</h3>
-                                <span class="age-badge">TV-14</span>
-                            </div>
-                            <div class="meta-row">
-                                <span>1122 Eps • 1999–Present</span>
-                            </div>
-                            <div class="card-actions">
-                                <a href="#" class="btn-details">Details</a>
-                                <button class="btn-watchlist" title="Toggle Watchlist">
-                                    <span class="icon-plus">+</span>
-                                    <span class="icon-minus">-</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        <% }); %>
+                            <% } %>
             </div>
         </section>
 

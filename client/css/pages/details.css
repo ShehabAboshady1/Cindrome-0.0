@@ -15,7 +15,7 @@ body {
   min-height: calc(100vh - 200px);
 }
 
-/* --- Hero Section (بدون border سفلي) --- */
+/* --- Hero Section --- */
 .details-hero {
   position: relative;
   padding: 40px 16px;
@@ -123,7 +123,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px; 
+  gap: 6px;
   line-height: 1;
 }
 
@@ -151,13 +151,13 @@ body {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* 🌟 تظبيط زرار الـ Watchlist في الهيرو 🌟 */
+/* زرار الـ Watchlist */
 .watchlist-btn {
   color: var(--text-cream);
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  gap: 8px; 
+  gap: 8px;
 }
 
 .watchlist-btn:hover {
@@ -165,15 +165,20 @@ body {
 }
 
 .watchlist-btn i {
-  font-size: 0.9em; 
+  font-size: 0.9em;
   transition: color 0.2s ease;
-  transform: translateY(2px); 
+  transform: translateY(2px);
 }
 
-/* التبديل بين كلمة Watchlist و Added باستخدام الـ CSS */
-.watchlist-btn .text-added { display: none; }
-.watchlist-btn.added .text-default { display: none; }
-.watchlist-btn.added .text-added { display: inline-block; }
+.watchlist-btn .text-added {
+  display: none;
+}
+.watchlist-btn.added .text-default {
+  display: none;
+}
+.watchlist-btn.added .text-added {
+  display: inline-block;
+}
 
 .watchlist-btn.added {
   color: var(--accent-teal);
@@ -181,10 +186,10 @@ body {
   border-color: rgba(9, 158, 158, 0.3);
 }
 
-/* --- زرار اللايك (والأزرار الأيقونية) في الهيرو --- */
+/* زرار اللايك في الهيرو */
 .btn-icon-only {
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-cream, #e2e8f0);
   padding: 8px 12px;
   font-size: 0.9rem;
@@ -198,18 +203,18 @@ body {
 
 .btn-icon-only.liked,
 .btn-icon-only.active {
-  color: #ff4757; 
-  background: rgba(255, 255, 255, 0.06); 
-  border-color: rgba(255, 255, 255, 0.1); 
+  color: #ff4757;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .btn-icon-only.liked i,
 .btn-icon-only.active i {
-  transform: scale(1.15); 
+  transform: scale(1.15);
   transition: transform 0.2s ease;
 }
 
-/* 🌟 تظبيط زراير الزائد والناقص للكروت (If You Liked) 🌟 */
+/* زراير الكروت */
 .btn-watchlist .icon-minus {
   display: none;
 }
@@ -220,12 +225,11 @@ body {
   display: inline-block;
 }
 
-/* 🌟 تظبيط لون القلب الأحمر في المراجعات (الرقم لن يتأثر) 🌟 */
 .minimal-btn.is-liked i {
   color: #ff4757;
 }
 
-/* --- Continuous Vertical Content Layout --- */
+/* Layout */
 .details-content {
   padding: 32px 16px 60px 16px;
   display: flex;
@@ -237,9 +241,7 @@ body {
   width: 100%;
 }
 
-/* ==========================================================================
-   🌟 DETAILS PANELS (CONTAINERS) 🌟
-========================================================================== */
+/* Details Panels */
 .details-panel {
   background: rgba(22, 22, 22, 0.4);
   border: 1px solid rgba(241, 227, 200, 0.05);
@@ -300,7 +302,7 @@ body {
   font-weight: 500;
 }
 
-/* --- SECTION 2: Seasons & Episodes Styles --- */
+/* --- SECTION 2: Seasons & Episodes (التصميم المحكم والمتجاوب الجديد) --- */
 .seasons-sub-nav {
   display: flex;
   gap: 10px;
@@ -342,29 +344,50 @@ body {
   display: block;
 }
 
+/* شبكة مدمجة من عمودين تقضي على الفراغ العريض الشاسع */
 .minimal-ep-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 550px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  max-width: 100%;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* شريط تمرير داخلي خفيف وأنيق */
+.minimal-ep-list::-webkit-scrollbar {
+  width: 5px;
+}
+.minimal-ep-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+.minimal-ep-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 180, 216, 0.2);
+  border-radius: 4px;
+}
+.minimal-ep-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-teal, #00b4d8);
 }
 
 .ep-row.ep-link {
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   padding: 10px 14px;
   background: #0d1817;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #1a2625;
   transition: all 0.2s ease;
+  min-width: 0;
 }
 
 .ep-link:hover {
   background: #11201f;
   border-color: var(--accent-teal, #00b4d8);
-  transform: translateX(4px);
+  transform: translateY(-2px);
 }
 
 .ep-num {
@@ -376,15 +399,15 @@ body {
 
 .ep-info-flex {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   min-width: 0;
-  gap: 12px;
+  gap: 10px;
 }
 
 .ep-title {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: #e2e8f0;
   flex: 1;
@@ -396,13 +419,12 @@ body {
 
 .ep-time {
   color: #718096;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   flex-shrink: 0;
-  margin-left: auto;
   opacity: 0.85;
 }
 
-/* --- SECTION 3: Cast Carousel & Buttons Styles --- */
+/* --- SECTION 3: Cast Carousel Styles --- */
 .section-header-flex {
   display: flex;
   align-items: center;
@@ -494,7 +516,7 @@ body {
 }
 
 .cast-card {
-  flex: 0 0 95px;
+  flex: 0 0 100px;
   background: transparent;
   border: none;
   display: flex;
@@ -503,18 +525,16 @@ body {
 }
 
 .cast-img {
-  width: 80px;
-  height: 80px;
+  width: 78px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  object-position: top center;
+  object-position: 50% 20%;
   background-color: #121d1c;
   border: 2px solid #1a2625;
   margin-bottom: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .cast-card:hover .cast-img {
@@ -542,9 +562,7 @@ body {
   color: #718096;
 }
 
-/* ==========================================================================
-   🌟 MINIMAL REVIEW CARDS (New Unified Design) 🌟
-========================================================================== */
+/* --- SECTION 4: Reviews Styles --- */
 .reviews-list {
   display: flex;
   gap: 16px;
@@ -570,9 +588,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .minimal-review-card:hover {
@@ -689,7 +705,7 @@ body {
 }
 
 .minimal-card-body {
-  flex-grow: 1; 
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   margin-bottom: 12px;
@@ -722,9 +738,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto; 
+  margin-top: auto;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05); 
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .minimal-actions {
@@ -800,7 +816,7 @@ body {
   }
 
   .watchlist-btn i {
-    transform: translateY(0); 
+    transform: translateY(0);
   }
 
   .media-info-left {
@@ -828,12 +844,12 @@ body {
     flex-wrap: wrap;
     gap: 10px;
     width: 100%;
-    justify-content: center; 
+    justify-content: center;
     margin-top: 12px;
   }
 
   .action-buttons .btn {
-    flex: 0 0 auto; 
+    flex: 0 0 auto;
     padding: 8px 16px;
     white-space: nowrap;
   }
@@ -879,13 +895,14 @@ body {
     font-size: 0.78rem;
   }
 
+  /* على الموبايل: تتحول شبكة الحلقات تلقائياً إلى عمود كامل مريح للمس */
   .minimal-ep-list {
-    width: 100%;
-    max-width: 100%;
+    grid-template-columns: 1fr;
+    max-height: 320px;
   }
 
   .ep-row.ep-link {
-    padding: 8px 12px;
+    padding: 10px 12px;
   }
 
   .ep-title {
@@ -896,37 +913,32 @@ body {
     font-size: 0.75rem;
   }
 
-  .cast-cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-    gap: 12px;
-  }
-
   .cast-img {
     width: 70px;
-    height: 70px;
+    height: 90px;
   }
 
   .minimal-review-card {
-    flex: 0 0 85%; 
-    min-width: 235px; 
+    flex: 0 0 85%;
+    min-width: 235px;
     padding: 12px;
     gap: 12px;
     box-sizing: border-box;
   }
 
   .header-left-stack {
-    gap: 10px; 
-    padding-right: 60px; 
+    gap: 10px;
+    padding-right: 60px;
   }
 
   .header-right-stack {
-    top: 12px; 
+    top: 12px;
     right: 12px;
   }
 
   .review-micro-poster {
-    width: 40px; 
-    height: 60px; 
+    width: 40px;
+    height: 60px;
   }
 
   .review-media-title {
@@ -944,7 +956,7 @@ body {
 
   .review-author-username {
     font-size: 0.75rem;
-    white-space: normal; 
+    white-space: normal;
   }
 
   .spoiler-badge {
