@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import axios from "axios";
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -1264,6 +1264,7 @@ app.get("/api/search", async (req, res) => {
     res.status(500).json([]);
   }
 });
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
