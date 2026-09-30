@@ -349,19 +349,30 @@ document.addEventListener("DOMContentLoaded", () => {
       updateStars(currentRating);
     });
   });
+
   const createListModal = document.getElementById("createListModal");
   const openCreateListBtn = document.getElementById("openCreateListBtn");
   const closeCreateListBtn = document.getElementById("closeCreateListBtn");
   const cancelListBtn = document.getElementById("cancelListBtn");
   const addedItemsContainer = document.getElementById("addedItemsContainer");
   const addMovieSearch = document.getElementById("addMovieSearch");
+  const listSearchResults = document.getElementById("listSearchResults");
+  const miniCardTemplate = document.getElementById("miniCardTemplate");
+  const listSearchItemTemplate = document.getElementById(
+    "listSearchItemTemplate",
+  );
+  let listSearchTimer = null;
 
   function openCreateModal() {
     if (createListModal) createListModal.style.display = "flex";
   }
 
   function closeCreateModal() {
-    if (createListModal) createListModal.style.display = "none";
+    if (createListModal) {
+      createListModal.style.display = "none";
+      if (listSearchResults) listSearchResults.style.display = "none";
+      if (addMovieSearch) addMovieSearch.value = "";
+    }
   }
 
   if (openCreateListBtn)
@@ -436,33 +447,91 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  if (addMovieSearch && addedItemsContainer) {
-    addMovieSearch.addEventListener("keypress", function (e) {
-      if (e.key === "Enter" && this.value.trim() !== "") {
-        e.preventDefault();
+  function addMediaToList(item) {
+    if (!miniCardTemplate || !addedItemsContainer) return;
 
-        const newCard = document.createElement("div");
-        newCard.className = "mini-content-card modal-mini-card";
-        newCard.draggable = true;
-        newCard.innerHTML = `
-            <div class="mini-card-media">
-                <img src="https://image.tmdb.org/t/p/w200/8bZCaPAPPil3ea2c9xSsmfsibGB.jpg" class="mini-card-poster" alt="New Item">
-            </div>
-            <button type="button" class="remove-mini-btn" title="Remove"><i class="fa-solid fa-xmark"></i></button>
-        `;
+    const clone = miniCardTemplate.content.cloneNode(true);
+    const card = clone.querySelector(".modal-mini-card");
+    const img = clone.querySelector(".mini-card-poster");
 
-        addedItemsContainer.prepend(newCard);
-        attachDragEvents(newCard);
-        this.value = "";
+    card.dataset.id = item.id;
+    card.dataset.type = item.mediaType;
+    img.src = item.poster;
+    img.alt = item.title;
+
+    attachDragEvents(card);
+    addedItemsContainer.prepend(card);
+
+    if (listSearchResults) {
+      listSearchResults.innerHTML = "";
+      listSearchResults.style.display = "none";
+    }
+    if (addMovieSearch) {
+      addMovieSearch.value = "";
+    }
+  }
+
+  if (addMovieSearch && listSearchResults && listSearchItemTemplate) {
+    addMovieSearch.addEventListener("input", function () {
+      const query = this.value.trim();
+      clearTimeout(listSearchTimer);
+
+      if (query.length < 2) {
+        listSearchResults.innerHTML = "";
+        listSearchResults.style.display = "none";
+        return;
+      }
+
+      listSearchTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+          const items = await res.json();
+
+          listSearchResults.innerHTML = "";
+
+          if (!Array.isArray(items) || items.length === 0) {
+            const noRes = document.createElement("div");
+            noRes.className = "search-result-item";
+            noRes.style.color = "#94a3b8";
+            noRes.style.fontSize = "13px";
+            noRes.style.justifyContent = "center";
+            noRes.textContent = "No results found";
+            listSearchResults.appendChild(noRes);
+            listSearchResults.style.display = "block";
+            return;
+          }
+
+          items.forEach((item) => {
+            const clone = listSearchItemTemplate.content.cloneNode(true);
+            const row = clone.querySelector(".search-result-item");
+            const thumb = clone.querySelector(".search-result-thumb");
+            const title = clone.querySelector(".search-result-title");
+            const meta = clone.querySelector(".search-result-meta");
+
+            thumb.src = item.poster;
+            title.textContent = item.title;
+            meta.textContent = `${item.badge} • ${item.year || "N/A"}`;
+
+            row.addEventListener("click", () => addMediaToList(item));
+            listSearchResults.appendChild(clone);
+          });
+
+          listSearchResults.style.display = "block";
+        } catch (err) {
+          listSearchResults.style.display = "none";
+        }
+      }, 300);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (
+        !addMovieSearch.contains(e.target) &&
+        !listSearchResults.contains(e.target)
+      ) {
+        listSearchResults.style.display = "none";
       }
     });
   }
-
-  window.addEventListener("click", (e) => {
-    if (e.target === searchModal) searchModal.style.display = "none";
-    if (e.target === logModal) closeLog();
-    if (e.target === createListModal) closeCreateModal();
-  });
 
   document.addEventListener("click", function (event) {
     const dropdowns = document.querySelectorAll(
@@ -705,6 +774,7 @@ document.addEventListener("DOMContentLoaded", () => {
       badge.textContent = item.badge.toUpperCase();
       ratingScore.textContent = `★ ${item.score}`;
       title.textContent = item.title;
+      title.title = item.title;
       meta.textContent = `${item.year} • ${item.badge}`;
       detailsLink.href = `/details?id=${item.id}&type=${item.mediaType}`;
 

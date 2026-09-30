@@ -621,6 +621,7 @@ summary,
 }
 
 .compact-search {
+  position: relative;
   flex-grow: 1;
   margin-bottom: 0;
   padding: 6px 14px;
@@ -629,6 +630,79 @@ summary,
 
 .compact-search input {
   font-size: 0.85rem;
+}
+
+.compact-search .search-results-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  max-height: 210px;
+  overflow-y: auto;
+  background: #0d1717;
+  border: 1px solid rgba(241, 227, 200, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65);
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.compact-search .search-results-dropdown::-webkit-scrollbar {
+  width: 4px;
+}
+
+.compact-search .search-results-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(241, 227, 200, 0.15);
+  border-radius: 10px;
+}
+
+.compact-search .search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid rgba(241, 227, 200, 0.05);
+}
+
+.compact-search .search-result-item:last-child {
+  border-bottom: none;
+}
+
+.compact-search .search-result-item:hover {
+  background: rgba(9, 158, 158, 0.12);
+}
+
+.compact-search .search-result-thumb {
+  width: 32px;
+  height: 46px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.compact-search .search-result-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: left;
+}
+
+.compact-search .search-result-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compact-search .search-result-meta {
+  font-size: 0.72rem;
+  color: var(--accent-teal);
+  margin-top: 2px;
 }
 
 .compact-toggle {
@@ -708,7 +782,7 @@ input:checked ~ .privacy-label {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(241, 227, 200, 0.08);
   border-radius: 12px;
-  padding: 14px;
+  padding: 12px;
   min-height: 140px;
 }
 
@@ -716,25 +790,63 @@ input:checked ~ .privacy-label {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  max-height: 180px;
+  max-height: 215px;
   overflow-y: auto;
-  padding-right: 5px;
-  padding-top: 5px;
+  padding-right: 6px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(9, 158, 158, 0.35) transparent;
 }
 
 .added-mini-cards-grid::-webkit-scrollbar {
   width: 4px;
 }
 
+.added-mini-cards-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .added-mini-cards-grid::-webkit-scrollbar-thumb {
-  background: rgba(241, 227, 200, 0.15);
+  background: rgba(9, 158, 158, 0.35);
   border-radius: 10px;
 }
 
+.added-mini-cards-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-teal);
+}
+
+.added-mini-cards-grid::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 .modal-mini-card {
-  flex: 0 0 70px;
-  width: 70px;
+  flex: 0 0 84px;
+  width: 84px;
+  position: relative;
   cursor: grab;
+  border-radius: 8px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.mini-card-media {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #11201f;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.mini-card-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .modal-mini-card.dragging {
@@ -743,18 +855,15 @@ input:checked ~ .privacy-label {
 }
 
 .modal-mini-card.drag-over {
-  border: 2px dashed var(--accent-teal);
+  outline: 2px dashed var(--accent-teal);
+  outline-offset: 2px;
   box-shadow: 0 0 15px rgba(9, 158, 158, 0.3);
 }
 
 .modal-mini-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   border-color: rgba(255, 255, 255, 0.08);
-}
-
-.modal-mini-card:hover .mini-card-poster {
-  transform: none;
 }
 
 .remove-mini-btn {
@@ -794,7 +903,6 @@ input:checked ~ .privacy-label {
   transform: scale(1.15);
   background: var(--maincolor);
 }
-
 /* ==========================================================================
    🌟 GLOBAL SEARCH MODAL SPECIFICS (EXACT DISCOVER MATCH) 🌟
 ========================================================================== */

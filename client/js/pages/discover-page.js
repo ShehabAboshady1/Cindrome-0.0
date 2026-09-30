@@ -1,156 +1,284 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ==========================================
-  // 🌟 1. تفاعلات الفلاتر (Type Selector Pills) 🌟
-  // ==========================================
-  const typePills = document.querySelectorAll(".type-pill");
+  const state = {
+    q: "",
+    type: "all",
+    genre: "all",
+    rating: "0",
+    sort: "popular",
+    year: "all",
+    page: 1,
+    totalPages: 1,
+  };
 
-  typePills.forEach((pill) => {
-    pill.addEventListener("click", function () {
-      typePills.forEach((p) => p.classList.remove("active"));
-      this.classList.add("active");
-    });
-  });
-
-  const resetFilterBtn = document.querySelector(".reset-filter-btn");
-  if (resetFilterBtn) {
-    resetFilterBtn.addEventListener("click", () => {
-      typePills.forEach((p) => p.classList.remove("active"));
-      if (typePills[0]) typePills[0].classList.add("active");
-
-      // إضافي: نرجع الـ Dropdowns للوضع الافتراضي لو حابب
-      const defaultTexts = ["Genre", "Rating", "Sort By", "Year"];
-      document
-        .querySelectorAll(".css-dropdown .dropdown-selected span:first-child")
-        .forEach((span, index) => {
-          if (defaultTexts[index]) span.textContent = defaultTexts[index];
-        });
-    });
-  }
-
-  // ==========================================
-  // 🌟 2. تشغيل الـ Dropdowns (اعتماد الاختيار) 🌟
-  // ==========================================
-  const dropdownItems = document.querySelectorAll(
-    ".css-dropdown .dropdown-item",
+  const searchInput = document.getElementById("discoverSearchInput");
+  const typePills = document.querySelectorAll(
+    "#discoverTypeSelector .type-pill",
   );
+  const resetBtn = document.getElementById("discoverResetBtn");
+  const cardsGrid = document.getElementById("discoverCardsGrid");
+  const statusMsg = document.getElementById("discoverStatusMsg");
+  const paginationNav = document.getElementById("discoverPagination");
+  const cardTemplate = document.getElementById("discoverCardTemplate");
+  const gridTitle = document.getElementById("discoverGridTitle");
 
-  dropdownItems.forEach((item) => {
-    item.addEventListener("click", function () {
-      // بنمسك القايمة الأساسية اللي اليوزر فاتحها
-      const details = this.closest("details");
-      // بنمسك الكلمة اللي ظاهرة فوق (Genre, Rating, إلخ)
-      const summaryText = details.querySelector(
-        ".dropdown-selected span:first-child",
-      );
+  let searchDebounceTimer = null;
 
-      // بنغير الكلمة اللي فوق باللي اليوزر اختاره
-      summaryText.textContent = this.textContent;
+  function setupDiscoverDropdown(dropdownId, textId, filterKey) {
+    const dropdown = document.getElementById(dropdownId);
+    const textSpan = document.getElementById(textId);
+    if (!dropdown || !textSpan) return;
 
-      // بنقفل القايمة بعد الاختيار
-      details.removeAttribute("open");
+    dropdown.querySelectorAll(".dropdown-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const val = item.getAttribute("data-value");
+        textSpan.textContent = item.textContent.trim();
+        dropdown.removeAttribute("open");
+        state[filterKey] = val;
+        state.page = 1;
+        fetchDiscoverData();
+      });
     });
-  });
+  }
 
-  // ==========================================
-  // 🌟 3. تفاعلات الكروت (Watchlist & Details) 🌟
-  // ==========================================
-  const watchlistBtns = document.querySelectorAll(".btn-watchlist");
+  setupDiscoverDropdown("discoverGenreDropdown", "discoverGenreText", "genre");
+  setupDiscoverDropdown(
+    "discoverRatingDropdown",
+    "discoverRatingText",
+    "rating",
+  );
+  setupDiscoverDropdown("discoverSortDropdown", "discoverSortText", "sort");
+  setupDiscoverDropdown("discoverYearDropdown", "discoverYearText", "year");
 
-  watchlistBtns.forEach((btn) => {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      this.classList.toggle("added");
+  if (typePills) {
+    typePills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        typePills.forEach((p) => p.classList.remove("active"));
+        pill.classList.add("active");
+        state.type = pill.getAttribute("data-type") || "all";
+        state.page = 1;
 
-      // تغيير النص من + لـ - من غير أي تغيير في الألوان
-      if (this.classList.contains("added")) {
-        this.textContent = "-";
-        this.title = "Remove from Watchlist";
+        if (gridTitle) {
+          if (state.type === "movie") gridTitle.textContent = "Movies";
+          else if (state.type === "tv") gridTitle.textContent = "Series";
+          else if (state.type === "anime") gridTitle.textContent = "Anime";
+          else gridTitle.textContent = "All Content";
+        }
+
+        fetchDiscoverData();
+      });
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      clearTimeout(searchDebounceTimer);
+      state.q = e.target.value.trim();
+      state.page = 1;
+
+      searchDebounceTimer = setTimeout(() => {
+        fetchDiscoverData();
+      }, 400);
+    });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      state.q = "";
+      state.type = "all";
+      state.genre = "all";
+      state.rating = "0";
+      state.sort = "popular";
+      state.year = "all";
+      state.page = 1;
+
+      if (searchInput) searchInput.value = "";
+
+      if (typePills) {
+        typePills.forEach((p) => p.classList.remove("active"));
+        if (typePills[0]) typePills[0].classList.add("active");
+      }
+
+      const gText = document.getElementById("discoverGenreText");
+      const rText = document.getElementById("discoverRatingText");
+      const sText = document.getElementById("discoverSortText");
+      const yText = document.getElementById("discoverYearText");
+
+      if (gText) gText.textContent = "Genre";
+      if (rText) rText.textContent = "Rating";
+      if (sText) sText.textContent = "Sort By";
+      if (yText) yText.textContent = "Year";
+      if (gridTitle) gridTitle.textContent = "All Content";
+
+      fetchDiscoverData();
+    });
+  }
+
+  async function fetchDiscoverData() {
+    if (!cardsGrid) return;
+
+    cardsGrid.innerHTML = "";
+    if (statusMsg) {
+      statusMsg.style.display = "block";
+      statusMsg.textContent = "Loading content...";
+    }
+
+    try {
+      const params = new URLSearchParams({
+        q: state.q,
+        type: state.type,
+        genre: state.genre,
+        rating: state.rating,
+        sort: state.sort,
+        year: state.year,
+        page: state.page,
+      });
+
+      const res = await fetch(`/api/discover?${params.toString()}`);
+      const data = await res.json();
+
+      state.totalPages = data.totalPages || 1;
+      renderCards(data.results || []);
+      renderPagination();
+    } catch (err) {
+      if (statusMsg) {
+        statusMsg.style.display = "block";
+        statusMsg.textContent = "Failed to load content. Please try again.";
+      }
+    }
+  }
+
+  function renderCards(items) {
+    cardsGrid.innerHTML = "";
+
+    if (!items || items.length === 0) {
+      if (statusMsg) {
+        statusMsg.style.display = "block";
+        statusMsg.textContent = "No content matches the selected filters.";
+      }
+      return;
+    }
+
+    if (statusMsg) {
+      statusMsg.style.display = "none";
+    }
+
+    items.forEach((item) => {
+      const clone = cardTemplate.content.cloneNode(true);
+      const poster = clone.querySelector(".card-poster");
+      const badge = clone.querySelector(".type-badge");
+      const ratingScore = clone.querySelector(".rating-score");
+      const title = clone.querySelector(".card-title");
+      const meta = clone.querySelector(".meta-row");
+      const detailsLink = clone.querySelector(".btn-details");
+
+      poster.src = item.poster;
+      poster.alt = item.title;
+      badge.textContent = item.badge.toUpperCase();
+      ratingScore.textContent = `★ ${item.score}`;
+      title.textContent = item.title;
+      title.title = item.title;
+      meta.textContent = `${item.genres} • ${item.year}`;
+      detailsLink.href = `/details?id=${item.id}&type=${item.mediaType}`;
+
+      cardsGrid.appendChild(clone);
+    });
+  }
+
+  function renderPagination() {
+    if (!paginationNav) return;
+    paginationNav.innerHTML = "";
+
+    if (state.totalPages <= 1) return;
+
+    // دالة مساعدة عشان تطلع الشاشة لفوق لشريط الفلاتر بسلاسة
+    function scrollToFilters() {
+      const filterSection = document.querySelector(".discover-filter-section");
+      if (filterSection) {
+        filterSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    // زرار PREV
+    const prevBtn = document.createElement("button");
+    prevBtn.className = `page-btn prev-next ${state.page === 1 ? "disabled" : ""}`;
+    prevBtn.type = "button";
+    prevBtn.textContent = "PREV";
+    if (state.page === 1) prevBtn.disabled = true;
+    prevBtn.onclick = () => {
+      if (state.page > 1) {
+        state.page--;
+        fetchDiscoverData();
+        scrollToFilters();
+      }
+    };
+    paginationNav.appendChild(prevBtn);
+
+    // أرقام الصفحات
+    const pages = getPaginationPages(state.page, state.totalPages);
+
+    pages.forEach((p) => {
+      if (p === "...") {
+        const dots = document.createElement("span");
+        dots.className = "pagination-dots";
+        dots.textContent = "...";
+        paginationNav.appendChild(dots);
       } else {
-        this.textContent = "+";
-        this.title = "Add to Watchlist";
+        const btn = document.createElement("button");
+        btn.className = `page-btn ${p === state.page ? "active" : ""}`;
+        btn.type = "button";
+        btn.textContent = p;
+        btn.onclick = () => {
+          if (p !== state.page) {
+            state.page = p;
+            fetchDiscoverData();
+            scrollToFilters();
+          }
+        };
+        paginationNav.appendChild(btn);
       }
     });
-  });
 
-  const detailsBtns = document.querySelectorAll(".btn-details");
+    // زرار NEXT
+    const nextBtn = document.createElement("button");
+    nextBtn.className = `page-btn prev-next ${state.page === state.totalPages ? "disabled" : ""}`;
+    nextBtn.type = "button";
+    nextBtn.textContent = "NEXT";
+    if (state.page === state.totalPages) nextBtn.disabled = true;
+    nextBtn.onclick = () => {
+      if (state.page < state.totalPages) {
+        state.page++;
+        fetchDiscoverData();
+        scrollToFilters();
+      }
+    };
+    paginationNav.appendChild(nextBtn);
+  }
 
-  detailsBtns.forEach((btn) => {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      window.location.href = "/details";
-    });
-  });
+  function getPaginationPages(current, total) {
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
 
-  // ==========================================
-  // 🌟 4. تفاعلات أرقام الصفحات (Pagination) 🌟
-  // ==========================================
-  const pageBtns = document.querySelectorAll(".page-btn:not(.prev-next)");
-  const prevBtn = document.querySelector(".page-btn.prev-next:first-child");
-  const nextBtn = document.querySelector(".page-btn.prev-next:last-child");
+    if (current <= 4) {
+      return [1, 2, 3, 4, 5, "...", total];
+    }
 
-  let currentPage = 1;
-  const maxPage = 10;
+    if (current >= total - 3) {
+      return [1, "...", total - 4, total - 3, total - 2, total - 1, total];
+    }
 
-  pageBtns.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      if (
-        this.classList.contains("disabled") ||
-        this.classList.contains("pagination-dots")
-      )
-        return;
+    return [1, "...", current - 1, current, current + 1, "...", total];
+  }
 
-      pageBtns.forEach((b) => b.classList.remove("active"));
-      this.classList.add("active");
-
-      currentPage = parseInt(this.textContent);
-      updatePrevNextState();
-    });
-  });
-
-  if (prevBtn) {
-    prevBtn.addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--;
-        updateActiveNumberInUI();
+  if (cardsGrid) {
+    cardsGrid.addEventListener("click", (e) => {
+      const btn = e.target.closest(".btn-watchlist");
+      if (btn) {
+        e.preventDefault();
+        btn.classList.toggle("added");
       }
     });
   }
 
-  if (nextBtn) {
-    nextBtn.addEventListener("click", () => {
-      if (currentPage < maxPage) {
-        currentPage++;
-        updateActiveNumberInUI();
-      }
-    });
-  }
-
-  function updateActiveNumberInUI() {
-    let foundBtn = Array.from(pageBtns).find(
-      (btn) => parseInt(btn.textContent) === currentPage,
-    );
-    if (foundBtn) {
-      pageBtns.forEach((b) => b.classList.remove("active"));
-      foundBtn.classList.add("active");
-    }
-    updatePrevNextState();
-  }
-
-  function updatePrevNextState() {
-    if (currentPage === 1) {
-      prevBtn.classList.add("disabled");
-      prevBtn.setAttribute("disabled", "true");
-    } else {
-      prevBtn.classList.remove("disabled");
-      prevBtn.removeAttribute("disabled");
-    }
-
-    if (currentPage === maxPage) {
-      nextBtn.classList.add("disabled");
-      nextBtn.setAttribute("disabled", "true");
-    } else {
-      nextBtn.classList.remove("disabled");
-      nextBtn.removeAttribute("disabled");
-    }
-  }
+  fetchDiscoverData();
 });

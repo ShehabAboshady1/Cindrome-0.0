@@ -41,7 +41,8 @@ const genreMap = {
 };
 
 // فاحص الكلمات الرياضية الذكي: يفحص قصة وعنوان العمل ديناميكياً لأي عمل حالي أو مستقبلي
-const sportsRegex = /\b(sport|sports|football|soccer|volleyball|basketball|boxing|boxer|baseball|tennis|skating|swimming|swimmer|table tennis|ping pong|badminton|rugby|judo|karate|wrestling|athlete|athletics|striker)\b/i;
+const sportsRegex =
+  /\b(sport|sports|football|soccer|volleyball|basketball|boxing|boxer|baseball|tennis|skating|swimming|swimmer|table tennis|ping pong|badminton|rugby|judo|karate|wrestling|athlete|athletics|striker)\b/i;
 
 const formatCard = (item, defaultType = "MOVIE", forcedGenre = null) => {
   let mediaType = item.media_type || (defaultType === "MOVIE" ? "movie" : "tv");
@@ -58,9 +59,7 @@ const formatCard = (item, defaultType = "MOVIE", forcedGenre = null) => {
   }
 
   // 1. استخراج أسماء التصنيفات الأساسية
-  let genres = (item.genre_ids || [])
-    .map((id) => genreMap[id])
-    .filter(Boolean);
+  let genres = (item.genre_ids || []).map((id) => genreMap[id]).filter(Boolean);
 
   // 2. معالجة الأنمي وحذف Animation لتجنب الحشو
   if (displayType === "ANIME") {
@@ -69,7 +68,8 @@ const formatCard = (item, defaultType = "MOVIE", forcedGenre = null) => {
 
   // 3. الفحص الذكي للرياضة: هل تذكر القصة أو العنوان أي رياضة؟
   const textContent = `${item.title || item.name || ""} ${item.overview || ""}`;
-  const isSportsContent = forcedGenre === "Sports" || sportsRegex.test(textContent);
+  const isSportsContent =
+    forcedGenre === "Sports" || sportsRegex.test(textContent);
 
   if (isSportsContent) {
     // إضافة Sports في البداية مع حذف أي تكرار
@@ -85,9 +85,10 @@ const formatCard = (item, defaultType = "MOVIE", forcedGenre = null) => {
   }
 
   const genreText =
-    selectedGenres.join(", ") ||
-    (displayType === "MOVIE" ? "Cinema" : "Drama");
-  const year = (item.release_date || item.first_air_date || "2026").split("-")[0];
+    selectedGenres.join(", ") || (displayType === "MOVIE" ? "Cinema" : "Drama");
+  const year = (item.release_date || item.first_air_date || "2026").split(
+    "-",
+  )[0];
 
   return {
     id: item.id,
@@ -163,7 +164,7 @@ app.get("/", async (req, res) => {
         `https://api.themoviedb.org/3/movie/${heroRaw.id}`,
         {
           params: { api_key: TMDB_API_KEY },
-        }
+        },
       );
       const d = heroDetailRes.data;
 
@@ -192,15 +193,23 @@ app.get("/", async (req, res) => {
     }
 
     const filteredTrending = trendingAllRes.data.results.filter(
-      (item) => item.vote_count >= 150 && item.vote_average >= 6.0
+      (item) => item.vote_count >= 150 && item.vote_average >= 6.0,
     );
 
     res.render("index.ejs", {
       heroMovie,
-      trendingNow: filteredTrending.slice(0, 8).map((i) => formatCard(i, "MOVIE")),
-      mustWatchMovies: mustWatchRes.data.results.slice(0, 8).map((i) => formatCard(i, "MOVIE")),
-      topTVShows: topTvRes.data.results.slice(0, 8).map((i) => formatCard(i, "SERIES")),
-      topAnime: topAnimeRes.data.results.slice(0, 8).map((i) => formatCard(i, "ANIME")),
+      trendingNow: filteredTrending
+        .slice(0, 8)
+        .map((i) => formatCard(i, "MOVIE")),
+      mustWatchMovies: mustWatchRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "MOVIE")),
+      topTVShows: topTvRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "SERIES")),
+      topAnime: topAnimeRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "ANIME")),
     });
   } catch (error) {
     console.error("[TMDB Index Error]:", error.response?.data || error.message);
@@ -224,43 +233,59 @@ app.get("/anime", async (req, res) => {
     const commonParams = {
       api_key: TMDB_API_KEY,
       with_original_language: "ja",
+      include_adult: false,
       page: 1,
     };
 
-    const [topRatedRes, sportsRes, mysteryRes, trendingRes] = await Promise.all([
-      axios.get(TMDB_URL, {
-        params: {
-          ...commonParams,
-          with_genres: "16",
-          sort_by: "vote_average.desc",
-          "vote_count.gte": 500,
-        },
-      }),
-      axios.get(TMDB_URL, {
-        params: {
-          ...commonParams,
-          with_genres: "16",
-          with_keywords: "6075",
-          sort_by: "popularity.desc",
-        },
-      }),
-      axios.get(TMDB_URL, {
-        params: {
-          ...commonParams,
-          with_genres: "16,9648",
-          sort_by: "popularity.desc",
-        },
-      }),
-      axios.get(TMDB_URL, {
-        params: {
-          ...commonParams,
-          with_genres: "16",
-          sort_by: "popularity.desc",
-        },
-      }),
-    ]);
+    const [topRatedRes, sportsRes, mysteryRes, trendingRes] = await Promise.all(
+      [
+        axios.get(TMDB_URL, {
+          params: {
+            ...commonParams,
+            with_genres: "16",
+            sort_by: "vote_average.desc",
+            "vote_count.gte": 500,
+          },
+        }),
+        axios.get(TMDB_URL, {
+          params: {
+            ...commonParams,
+            with_genres: "16",
+            with_keywords: "6075",
+            sort_by: "popularity.desc",
+            "vote_count.gte": 50,
+          },
+        }),
+        axios.get(TMDB_URL, {
+          params: {
+            ...commonParams,
+            with_genres: "16,9648",
+            sort_by: "popularity.desc",
+            "vote_count.gte": 50,
+          },
+        }),
+        axios.get(TMDB_URL, {
+          params: {
+            ...commonParams,
+            with_genres: "16",
+            sort_by: "popularity.desc",
+            "vote_count.gte": 150,
+          },
+        }),
+      ],
+    );
 
-    const featuredRaw = trendingRes.data.results[0];
+    const candidates = trendingRes.data.results || [];
+    const featuredRaw =
+      candidates.find(
+        (item) =>
+          item.backdrop_path &&
+          item.vote_count >= 200 &&
+          item.vote_average >= 7.0,
+      ) ||
+      candidates.find((item) => item.backdrop_path && item.vote_count >= 100) ||
+      candidates[0];
+
     let heroAnime = null;
 
     if (featuredRaw) {
@@ -268,7 +293,7 @@ app.get("/anime", async (req, res) => {
         `https://api.themoviedb.org/3/tv/${featuredRaw.id}`,
         {
           params: { api_key: TMDB_API_KEY },
-        }
+        },
       );
       const d = heroDetailRes.data;
 
@@ -296,9 +321,15 @@ app.get("/anime", async (req, res) => {
 
     res.render("anime.ejs", {
       heroAnime,
-      topRatedAnime: topRatedRes.data.results.slice(0, 10).map((i) => formatCard(i, "ANIME")),
-      actionAnime: sportsRes.data.results.slice(0, 10).map((i) => formatCard(i, "ANIME", "Sports")),
-      mysteryAnime: mysteryRes.data.results.slice(0, 10).map((i) => formatCard(i, "ANIME")),
+      topRatedAnime: topRatedRes.data.results
+        .slice(0, 10)
+        .map((i) => formatCard(i, "ANIME")),
+      actionAnime: sportsRes.data.results
+        .slice(0, 10)
+        .map((i) => formatCard(i, "ANIME", "Sports")),
+      mysteryAnime: mysteryRes.data.results
+        .slice(0, 10)
+        .map((i) => formatCard(i, "ANIME")),
     });
   } catch (error) {
     console.error("[TMDB Anime Error]:", error.response?.data || error.message);
@@ -310,7 +341,6 @@ app.get("/anime", async (req, res) => {
     });
   }
 });
-
 // ==========================================
 // 3. Route: Movies Page
 // ==========================================
@@ -320,6 +350,7 @@ app.get("/movies", async (req, res) => {
 
     const commonParams = {
       api_key: TMDB_API_KEY,
+      include_adult: false,
       page: 1,
     };
 
@@ -329,6 +360,7 @@ app.get("/movies", async (req, res) => {
           params: {
             ...commonParams,
             sort_by: "popularity.desc",
+            "vote_count.gte": 150,
           },
         }),
         axios.get(TMDB_MOVIE_URL, {
@@ -336,6 +368,7 @@ app.get("/movies", async (req, res) => {
             ...commonParams,
             primary_release_year: 2026,
             sort_by: "popularity.desc",
+            "vote_count.gte": 10,
           },
         }),
         axios.get(TMDB_MOVIE_URL, {
@@ -343,6 +376,7 @@ app.get("/movies", async (req, res) => {
             ...commonParams,
             with_genres: "28,878",
             sort_by: "popularity.desc",
+            "vote_count.gte": 100,
           },
         }),
         axios.get(TMDB_MOVIE_URL, {
@@ -350,6 +384,7 @@ app.get("/movies", async (req, res) => {
             ...commonParams,
             with_genres: "80,9648",
             sort_by: "popularity.desc",
+            "vote_count.gte": 100,
           },
         }),
         axios.get(TMDB_MOVIE_URL, {
@@ -357,11 +392,19 @@ app.get("/movies", async (req, res) => {
             ...commonParams,
             with_genres: "27",
             sort_by: "popularity.desc",
+            "vote_count.gte": 80,
           },
         }),
       ]);
 
-    const featuredRaw = trendingRes.data.results[0];
+    const candidates = trendingRes.data.results || [];
+    const featuredRaw =
+      candidates.find(
+        (m) => m.backdrop_path && m.vote_count >= 300 && m.vote_average >= 6.8,
+      ) ||
+      candidates.find((m) => m.backdrop_path && m.vote_count >= 150) ||
+      candidates[0];
+
     let heroMovie = null;
 
     if (featuredRaw) {
@@ -369,7 +412,7 @@ app.get("/movies", async (req, res) => {
         `https://api.themoviedb.org/3/movie/${featuredRaw.id}`,
         {
           params: { api_key: TMDB_API_KEY },
-        }
+        },
       );
       const d = heroDetailRes.data;
 
@@ -399,13 +442,24 @@ app.get("/movies", async (req, res) => {
 
     res.render("movies.ejs", {
       heroMovie,
-      latestMovies: latestRes.data.results.slice(0, 8).map((i) => formatCard(i, "MOVIE")),
-      actionSciFiMovies: actionSciFiRes.data.results.slice(0, 8).map((i) => formatCard(i, "MOVIE")),
-      thrillerMovies: thrillerRes.data.results.slice(0, 8).map((i) => formatCard(i, "MOVIE")),
-      horrorMovies: horrorRes.data.results.slice(0, 8).map((i) => formatCard(i, "MOVIE")),
+      latestMovies: latestRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "MOVIE")),
+      actionSciFiMovies: actionSciFiRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "MOVIE")),
+      thrillerMovies: thrillerRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "MOVIE")),
+      horrorMovies: horrorRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "MOVIE")),
     });
   } catch (error) {
-    console.error("[TMDB Movies Error]:", error.response?.data || error.message);
+    console.error(
+      "[TMDB Movies Error]:",
+      error.response?.data || error.message,
+    );
     res.render("movies.ejs", {
       heroMovie: null,
       latestMovies: [],
@@ -426,6 +480,7 @@ app.get("/series", async (req, res) => {
     const commonParams = {
       api_key: TMDB_API_KEY,
       without_genres: "16",
+      include_adult: false,
       page: 1,
     };
 
@@ -435,6 +490,7 @@ app.get("/series", async (req, res) => {
           params: {
             ...commonParams,
             sort_by: "popularity.desc",
+            "vote_count.gte": 200,
           },
         }),
         axios.get(TMDB_TV_URL, {
@@ -473,7 +529,14 @@ app.get("/series", async (req, res) => {
         }),
       ]);
 
-    const featuredRaw = trendingRes.data.results[0];
+    const candidates = trendingRes.data.results || [];
+    const featuredRaw =
+      candidates.find(
+        (t) => t.backdrop_path && t.vote_count >= 300 && t.vote_average >= 7.0,
+      ) ||
+      candidates.find((t) => t.backdrop_path && t.vote_count >= 150) ||
+      candidates[0];
+
     let heroSeries = null;
 
     if (featuredRaw) {
@@ -481,7 +544,7 @@ app.get("/series", async (req, res) => {
         `https://api.themoviedb.org/3/tv/${featuredRaw.id}`,
         {
           params: { api_key: TMDB_API_KEY },
-        }
+        },
       );
       const d = heroDetailRes.data;
 
@@ -517,13 +580,24 @@ app.get("/series", async (req, res) => {
 
     res.render("series.ejs", {
       heroSeries,
-      topRatedSeries: topRatedRes.data.results.slice(0, 8).map((i) => formatCard(i, "SERIES")),
-      actionSciFiSeries: actionSciFiRes.data.results.slice(0, 8).map((i) => formatCard(i, "SERIES")),
-      crimeSeries: crimeRes.data.results.slice(0, 8).map((i) => formatCard(i, "SERIES")),
-      mysterySeries: mysteryRes.data.results.slice(0, 8).map((i) => formatCard(i, "SERIES")),
+      topRatedSeries: topRatedRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "SERIES")),
+      actionSciFiSeries: actionSciFiRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "SERIES")),
+      crimeSeries: crimeRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "SERIES")),
+      mysterySeries: mysteryRes.data.results
+        .slice(0, 8)
+        .map((i) => formatCard(i, "SERIES")),
     });
   } catch (error) {
-    console.error("[TMDB Series Error]:", error.response?.data || error.message);
+    console.error(
+      "[TMDB Series Error]:",
+      error.response?.data || error.message,
+    );
     res.render("series.ejs", {
       heroSeries: null,
       topRatedSeries: [],
@@ -563,7 +637,7 @@ app.get("/details", async (req, res) => {
           `https://api.themoviedb.org/3/tv/${mediaId}/season/1`,
           {
             params: { api_key: TMDB_API_KEY },
-          }
+          },
         );
         season1Episodes = seasonRes.data.episodes || [];
       } catch (err) {
@@ -602,7 +676,7 @@ app.get("/details", async (req, res) => {
             c.job === "Original Creator" ||
             c.job === "Original Story" ||
             c.job === "Series Director" ||
-            c.job === "Director"
+            c.job === "Director",
         );
         if (animeCreator) {
           creatorLabel =
@@ -611,7 +685,10 @@ app.get("/details", async (req, res) => {
               ? "Original Manga"
               : "Director";
           creatorName = animeCreator.name;
-        } else if (d.production_companies && d.production_companies.length > 0) {
+        } else if (
+          d.production_companies &&
+          d.production_companies.length > 0
+        ) {
           creatorLabel = "Studio";
           creatorName = d.production_companies[0].name;
         }
@@ -627,10 +704,14 @@ app.get("/details", async (req, res) => {
       const hasSportsKw = kwList.some(
         (k) =>
           k.id === 6075 ||
-          (k.name && typeof k.name === "string" && k.name.toLowerCase().includes("sport"))
+          (k.name &&
+            typeof k.name === "string" &&
+            k.name.toLowerCase().includes("sport")),
       );
 
-      const hasSportsInText = sportsRegex.test(`${d.name || d.title || ""} ${d.overview || ""}`);
+      const hasSportsInText = sportsRegex.test(
+        `${d.name || d.title || ""} ${d.overview || ""}`,
+      );
 
       if (hasSportsKw || hasSportsInText) {
         genreNames = ["Sports", ...genreNames.filter((g) => g !== "Sports")];
@@ -645,7 +726,8 @@ app.get("/details", async (req, res) => {
       year: (d.release_date || d.first_air_date || "2026").split("-")[0],
       score: d.vote_average ? d.vote_average.toFixed(1) : "N/A",
       duration: durationText,
-      genres: genreNames.length > 0 ? genreNames.slice(0, 3).join(", ") : "Drama",
+      genres:
+        genreNames.length > 0 ? genreNames.slice(0, 3).join(", ") : "Drama",
       overview: d.overview || "No synopsis available at this time.",
       poster: d.poster_path
         ? `https://image.tmdb.org/t/p/w500${d.poster_path}`
@@ -668,12 +750,17 @@ app.get("/details", async (req, res) => {
       // تمرير كل كرت مقترح على دالة formatCard الموحدة الذكية
       recommendations: (d.recommendations?.results || [])
         .slice(0, 8)
-        .map((rec) => formatCard(rec, mediaType === "movie" ? "MOVIE" : "SERIES")),
+        .map((rec) =>
+          formatCard(rec, mediaType === "movie" ? "MOVIE" : "SERIES"),
+        ),
     };
 
     res.render("details.ejs", { media });
   } catch (error) {
-    console.error("[TMDB Details Error]:", error.response?.data || error.message);
+    console.error(
+      "[TMDB Details Error]:",
+      error.response?.data || error.message,
+    );
     res.redirect("/");
   }
 });
@@ -686,7 +773,7 @@ app.get("/api/tv/:id/season/:seasonNumber", async (req, res) => {
       `https://api.themoviedb.org/3/tv/${id}/season/${seasonNumber}`,
       {
         params: { api_key: TMDB_API_KEY },
-      }
+      },
     );
     res.json(response.data.episodes || []);
   } catch (error) {
@@ -697,7 +784,405 @@ app.get("/api/tv/:id/season/:seasonNumber", async (req, res) => {
 
 // المسارات الثابتة
 app.get("/diary", (req, res) => res.render("diary.ejs"));
-app.get("/discover", (req, res) => res.render("discover.ejs"));
+app.get("/discover", (req, res) => {
+  res.render("discover.ejs");
+});
+const TMDB_GENRES = {
+  28: "Action",
+  12: "Adventure",
+  16: "Animation",
+  35: "Comedy",
+  80: "Crime",
+  99: "Documentary",
+  18: "Drama",
+  10751: "Family",
+  14: "Fantasy",
+  36: "History",
+  27: "Horror",
+  10402: "Music",
+  9648: "Mystery",
+  10749: "Romance",
+  878: "Sci-Fi",
+  10770: "TV Movie",
+  53: "Thriller",
+  10752: "War",
+  37: "Western",
+  10759: "Action & Adventure",
+  10762: "Kids",
+  10763: "News",
+  10764: "Reality",
+  10765: "Sci-Fi & Fantasy",
+  10766: "Soap",
+  10767: "Talk",
+  10768: "War & Politics",
+};
+
+function formatDiscoverItem(item) {
+  const isAnime = item.original_language === "ja";
+  const isMovie = item.media_type === "movie" || item.title !== undefined;
+  let badge = "Series";
+  if (isMovie) badge = "Movie";
+  else if (isAnime) badge = "Anime";
+
+  const y =
+    (item.release_date || item.first_air_date || "").split("-")[0] || "N/A";
+  const score = item.vote_average ? item.vote_average.toFixed(1) : "NR";
+
+  const genres = (item.genre_ids || [])
+    .filter((id) => id !== 16)
+    .map((id) => TMDB_GENRES[id])
+    .filter(Boolean)
+    .slice(0, 2);
+
+  const genreDisplay =
+    genres.length > 0
+      ? genres.join(", ")
+      : badge === "Anime"
+        ? "Anime"
+        : "General";
+
+  return {
+    id: item.id,
+    title: item.title || item.name,
+    mediaType: isMovie ? "movie" : "tv",
+    badge: badge,
+    year: y,
+    genres: genreDisplay,
+    score: score,
+    poster: item.poster_path
+      ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+      : "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='255' viewBox='0 0 170 255'%3E%3Crect fill='%2311201f' width='170' height='255'/%3E%3Ctext fill='%23718096' font-family='sans-serif' font-size='14' dy='130' dx='45'%3ENo Poster%3C/text%3E%3C/svg%3E",
+  };
+}
+
+app.get("/api/discover", async (req, res) => {
+  try {
+    const {
+      q = "",
+      type = "all",
+      genre = "all",
+      rating = "0",
+      sort = "popular",
+      year = "all",
+      page = 1,
+    } = req.query;
+
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const ITEMS_PER_PAGE = 21;
+
+    const movieGenreMap = {
+      action: 28,
+      scifi: 878,
+      drama: 18,
+      mystery: 9648,
+      fantasy: 14,
+      comedy: 35,
+    };
+    const tvGenreMap = {
+      action: 10759,
+      scifi: 10765,
+      drama: 18,
+      mystery: 9648,
+      fantasy: 10765,
+      comedy: 35,
+    };
+
+    if (q.trim() !== "") {
+      const searchRes = await axios.get(
+        "https://api.themoviedb.org/3/search/multi",
+        {
+          params: { api_key: TMDB_API_KEY, query: q.trim(), page: pageNum },
+        },
+      );
+
+      let items = (searchRes.data.results || []).filter(
+        (it) => it.media_type === "movie" || it.media_type === "tv",
+      );
+
+      if (type === "movie")
+        items = items.filter((it) => it.media_type === "movie");
+      else if (type === "tv")
+        items = items.filter(
+          (it) => it.media_type === "tv" && it.original_language !== "ja",
+        );
+      else if (type === "anime")
+        items = items.filter((it) => it.original_language === "ja");
+
+      const results = items.slice(0, ITEMS_PER_PAGE).map(formatDiscoverItem);
+      return res.json({
+        results,
+        page: pageNum,
+        totalPages: Math.min(searchRes.data.total_pages || 1, 500),
+      });
+    }
+
+    function buildDiscoverParams(mediaType, targetPage) {
+      const params = { api_key: TMDB_API_KEY, page: targetPage };
+
+      if (sort === "newest") {
+        params.sort_by =
+          mediaType === "movie"
+            ? "primary_release_date.desc"
+            : "first_air_date.desc";
+      } else if (sort === "rating") {
+        params.sort_by = "vote_average.desc";
+        params["vote_count.gte"] = 100;
+      } else {
+        params.sort_by = "popularity.desc";
+      }
+
+      const minRating = parseFloat(rating);
+      if (minRating > 0) {
+        params["vote_average.gte"] = minRating;
+        if (minRating >= 8.0) params["vote_count.gte"] = 100;
+        else if (minRating >= 7.0) params["vote_count.gte"] = 50;
+        else params["vote_count.gte"] = 20;
+      }
+
+      if (year !== "all") {
+        const prefix =
+          mediaType === "movie" ? "primary_release_date" : "first_air_date";
+        if (year === "2010s") {
+          params[`${prefix}.gte`] = "2010-01-01";
+          params[`${prefix}.lte`] = "2019-12-31";
+        } else if (year === "2000s") {
+          params[`${prefix}.gte`] = "2000-01-01";
+          params[`${prefix}.lte`] = "2009-12-31";
+        } else if (year === "90s") {
+          params[`${prefix}.gte`] = "1990-01-01";
+          params[`${prefix}.lte`] = "1999-12-31";
+        } else if (year === "classics") {
+          params[`${prefix}.lte`] = "1989-12-31";
+        } else if (!isNaN(year)) {
+          if (mediaType === "movie")
+            params.primary_release_year = parseInt(year, 10);
+          else params.first_air_date_year = parseInt(year, 10);
+        }
+      }
+
+      if (genre !== "all") {
+        const gid =
+          mediaType === "movie" ? movieGenreMap[genre] : tvGenreMap[genre];
+        if (gid) params.with_genres = gid;
+      }
+
+      return params;
+    }
+
+    let rawItems = [];
+    let totalPages = 500;
+
+    if (type === "all") {
+      const [mInit, tInit] = await Promise.all([
+        axios.get("https://api.themoviedb.org/3/discover/movie", {
+          params: buildDiscoverParams("movie", 1),
+        }),
+        axios.get("https://api.themoviedb.org/3/discover/tv", {
+          params: {
+            ...buildDiscoverParams("tv", 1),
+            without_original_language: "ja",
+          },
+        }),
+      ]);
+
+      const movieTotal = mInit.data.total_results || 0;
+      const tvTotal = tInit.data.total_results || 0;
+      const totalResults = movieTotal + tvTotal;
+      totalPages = Math.min(Math.ceil(totalResults / ITEMS_PER_PAGE), 500);
+      // حساب عدد الكروت المخصصة للأفلام والمسلسلات في هذه الصفحة
+      let movieIndex = 0;
+      let tvIndex = 0;
+      let movieStart = 0;
+      let movieCount = 0;
+      let tvStart = 0;
+      let tvCount = 0;
+
+      for (let k = 1; k <= pageNum; k++) {
+        const mLeft = Math.max(0, movieTotal - movieIndex);
+        const tLeft = Math.max(0, tvTotal - tvIndex);
+
+        let mTake = Math.min(11, mLeft);
+        let tTake = Math.min(ITEMS_PER_PAGE - mTake, tLeft);
+
+        if (mTake + tTake < ITEMS_PER_PAGE && tLeft > tTake) {
+          tTake = Math.min(ITEMS_PER_PAGE - mTake, tLeft);
+        }
+        if (mTake + tTake < ITEMS_PER_PAGE && mLeft > mTake) {
+          mTake = Math.min(ITEMS_PER_PAGE - tTake, mLeft);
+        }
+
+        if (k === pageNum) {
+          movieStart = movieIndex;
+          movieCount = mTake;
+          tvStart = tvIndex;
+          tvCount = tTake;
+        }
+
+        movieIndex += mTake;
+        tvIndex += tTake;
+      }
+
+      // جلب المقاطع المطلوبة بدقة دون تكرار أو تفويت
+      async function fetchMediaSlice(mediaType, start, count, initData) {
+        if (count <= 0) return [];
+        const p1 = Math.floor(start / 20) + 1;
+        const p2 = Math.floor((start + count - 1) / 20) + 1;
+
+        const endpoint =
+          mediaType === "movie"
+            ? "https://api.themoviedb.org/3/discover/movie"
+            : "https://api.themoviedb.org/3/discover/tv";
+
+        const baseParams = buildDiscoverParams(mediaType, p1);
+        if (mediaType === "tv") baseParams.without_original_language = "ja";
+
+        const p1Promise =
+          p1 === 1
+            ? Promise.resolve(initData)
+            : axios.get(endpoint, { params: baseParams });
+        const p2Promise =
+          p1 !== p2
+            ? p2 === 1
+              ? Promise.resolve(initData)
+              : axios.get(endpoint, {
+                  params: {
+                    ...buildDiscoverParams(mediaType, p2),
+                    ...(mediaType === "tv"
+                      ? { without_original_language: "ja" }
+                      : {}),
+                  },
+                })
+            : Promise.resolve({ data: { results: [] } });
+
+        const [r1, r2] = await Promise.all([p1Promise, p2Promise]);
+        const list = [
+          ...(r1.data.results || []),
+          ...(r2.data.results || []),
+        ].map((it) => ({
+          ...it,
+          media_type: mediaType,
+        }));
+
+        const offset = start - (p1 - 1) * 20;
+        return list.slice(offset, offset + count);
+      }
+
+      const [moviesSlice, tvsSlice] = await Promise.all([
+        fetchMediaSlice("movie", movieStart, movieCount, mInit),
+        fetchMediaSlice("tv", tvStart, tvCount, tInit),
+      ]);
+
+      const combined = [];
+      const maxL = Math.max(moviesSlice.length, tvsSlice.length);
+      for (let i = 0; i < maxL; i++) {
+        if (moviesSlice[i]) combined.push(moviesSlice[i]);
+        if (tvsSlice[i]) combined.push(tvsSlice[i]);
+      }
+
+      rawItems = combined.slice(0, ITEMS_PER_PAGE);
+    } else if (type === "movie") {
+      const startIndex = (pageNum - 1) * ITEMS_PER_PAGE;
+      const p1 = Math.floor(startIndex / 20) + 1;
+      const p2 = Math.floor((startIndex + ITEMS_PER_PAGE - 1) / 20) + 1;
+
+      const [r1, r2] = await Promise.all([
+        axios.get("https://api.themoviedb.org/3/discover/movie", {
+          params: buildDiscoverParams("movie", p1),
+        }),
+        p1 !== p2
+          ? axios.get("https://api.themoviedb.org/3/discover/movie", {
+              params: buildDiscoverParams("movie", p2),
+            })
+          : Promise.resolve({ data: { results: [] } }),
+      ]);
+
+      const list = [...(r1.data.results || []), ...(r2.data.results || [])].map(
+        (m) => ({ ...m, media_type: "movie" }),
+      );
+      const offset = startIndex - (p1 - 1) * 20;
+      rawItems = list.slice(offset, offset + ITEMS_PER_PAGE);
+      totalPages = Math.min(
+        Math.ceil((r1.data.total_results || 500) / ITEMS_PER_PAGE),
+        500,
+      );
+    } else if (type === "tv") {
+      const startIndex = (pageNum - 1) * ITEMS_PER_PAGE;
+      const p1 = Math.floor(startIndex / 20) + 1;
+      const p2 = Math.floor((startIndex + ITEMS_PER_PAGE - 1) / 20) + 1;
+
+      const tvP1 = buildDiscoverParams("tv", p1);
+      tvP1.without_original_language = "ja";
+      const tvP2 = buildDiscoverParams("tv", p2);
+      tvP2.without_original_language = "ja";
+
+      const [r1, r2] = await Promise.all([
+        axios.get("https://api.themoviedb.org/3/discover/tv", { params: tvP1 }),
+        p1 !== p2
+          ? axios.get("https://api.themoviedb.org/3/discover/tv", {
+              params: tvP2,
+            })
+          : Promise.resolve({ data: { results: [] } }),
+      ]);
+
+      const list = [...(r1.data.results || []), ...(r2.data.results || [])].map(
+        (t) => ({ ...t, media_type: "tv" }),
+      );
+      const offset = startIndex - (p1 - 1) * 20;
+      rawItems = list.slice(offset, offset + ITEMS_PER_PAGE);
+      totalPages = Math.min(
+        Math.ceil((r1.data.total_results || 500) / ITEMS_PER_PAGE),
+        500,
+      );
+    } else if (type === "anime") {
+      const startIndex = (pageNum - 1) * ITEMS_PER_PAGE;
+      const p1 = Math.floor(startIndex / 20) + 1;
+      const p2 = Math.floor((startIndex + ITEMS_PER_PAGE - 1) / 20) + 1;
+
+      const animeP1 = buildDiscoverParams("tv", p1);
+      animeP1.with_original_language = "ja";
+      animeP1.with_genres = animeP1.with_genres
+        ? `16,${animeP1.with_genres}`
+        : 16;
+
+      const animeP2 = buildDiscoverParams("tv", p2);
+      animeP2.with_original_language = "ja";
+      animeP2.with_genres = animeP2.with_genres
+        ? `16,${animeP2.with_genres}`
+        : 16;
+
+      const [r1, r2] = await Promise.all([
+        axios.get("https://api.themoviedb.org/3/discover/tv", {
+          params: animeP1,
+        }),
+        p1 !== p2
+          ? axios.get("https://api.themoviedb.org/3/discover/tv", {
+              params: animeP2,
+            })
+          : Promise.resolve({ data: { results: [] } }),
+      ]);
+
+      const list = [...(r1.data.results || []), ...(r2.data.results || [])].map(
+        (t) => ({ ...t, media_type: "tv" }),
+      );
+      const offset = startIndex - (p1 - 1) * 20;
+      rawItems = list.slice(offset, offset + ITEMS_PER_PAGE);
+      totalPages = Math.min(
+        Math.ceil((r1.data.total_results || 500) / ITEMS_PER_PAGE),
+        500,
+      );
+    }
+
+    const results = rawItems.map(formatDiscoverItem);
+
+    res.json({
+      results,
+      page: pageNum,
+      totalPages,
+    });
+  } catch (error) {
+    res.status(500).json({ results: [], page: 1, totalPages: 1 });
+  }
+});
 app.get("/drome", (req, res) => res.render("drome.ejs"));
 app.get("/lists", (req, res) => res.render("lists.ejs"));
 app.get("/profile", (req, res) => res.render("profile.ejs"));
@@ -716,22 +1201,27 @@ app.get("/api/search", async (req, res) => {
       return res.json([]);
     }
 
-    const response = await axios.get("https://api.themoviedb.org/3/search/multi", {
-      params: {
-        api_key: TMDB_API_KEY,
-        query: query.trim(),
-        page: 1,
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/search/multi",
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          query: query.trim(),
+          page: 1,
+        },
       },
-    });
+    );
 
     let items = (response.data.results || []).filter(
-      (item) => item.media_type === "movie" || item.media_type === "tv"
+      (item) => item.media_type === "movie" || item.media_type === "tv",
     );
 
     if (filterType === "movie") {
       items = items.filter((item) => item.media_type === "movie");
     } else if (filterType === "tv") {
-      items = items.filter((item) => item.media_type === "tv" && item.original_language !== "ja");
+      items = items.filter(
+        (item) => item.media_type === "tv" && item.original_language !== "ja",
+      );
     } else if (filterType === "anime") {
       items = items.filter((item) => item.original_language === "ja");
     }
@@ -745,9 +1235,13 @@ app.get("/api/search", async (req, res) => {
         badge = "Anime";
       }
 
-      const rawYear = (item.release_date || item.first_air_date || "").split("-")[0];
+      const rawYear = (item.release_date || item.first_air_date || "").split(
+        "-",
+      )[0];
       const year = rawYear ? parseInt(rawYear, 10) : 0;
-      const score = item.vote_average ? parseFloat(item.vote_average.toFixed(1)) : 0;
+      const score = item.vote_average
+        ? parseFloat(item.vote_average.toFixed(1))
+        : 0;
 
       return {
         id: item.id,
