@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import axios from "axios";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
