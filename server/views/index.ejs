@@ -21,8 +21,7 @@
 
 </head>
 
-<body class="logged-in">
-    <header>
+<body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">    <header>
         <%- include("partials/navbar.ejs") %>
     </header>
 

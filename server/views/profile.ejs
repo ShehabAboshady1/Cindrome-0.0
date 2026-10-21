@@ -5,24 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - Profile</title>
-    <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
+    <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/navbar.css">
-    <link rel="stylesheet" href="css/hero.css">
-    <link rel="stylesheet" href="css/cards.css">
-    <link rel="stylesheet" href="css/lists-carousel.css">
-    <link rel="stylesheet" href="css/list.css">
-    <link rel="stylesheet" href="css/carousel.css">
-    <link rel="stylesheet" href="css/mini-card.css">
-    <link rel="stylesheet" href="css/pages/profile.css">
-    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/hero.css">
+    <link rel="stylesheet" href="/css/cards.css">
+    <link rel="stylesheet" href="/css/lists-carousel.css">
+    <link rel="stylesheet" href="/css/list.css">
+    <link rel="stylesheet" href="/css/carousel.css">
+    <link rel="stylesheet" href="/css/mini-card.css">
+    <link rel="stylesheet" href="/css/pages/profile.css">
+    <link rel="stylesheet" href="/css/modals.css">
 
 </head>
 
-<body class="profile-page-self logged-in">
+<body
+    class="<%= isSelf ? 'profile-page-self' : 'profile-page-other' %> <%= profileUser.is_private ? 'is-private' : '' %> <%= locals.user ? 'logged-in' : 'logged-out' %>">
     <header>
         <%- include("partials/navbar.ejs") %>
     </header>
@@ -35,18 +36,23 @@
     <!-- PROFILE HEADER -->
     <div class="profile-header-container">
         <div class="profile-avatar-wrapper">
-            <img src="assets/avatars/shehab.jpg" alt="Shehab Aboshady" class="profile-avatar"
-                onerror="this.src='assets/profile-avatar.jpg'">
+            <img src="/assets/avatars/shehab.jpg" alt="Shehab Aboshady" class="profile-avatar"
+                onerror="this.src='/assets/profile-avatar.jpg'">
         </div>
 
         <div class="profile-info-bar">
             <div class="profile-main-row">
                 <div class="user-titles">
-                    <h1 class="display-name">Shehab Aboshady</h1>
+                    <h1 class="display-name">
+                        <%= profileUser.display_name || profileUser.username %>
+                    </h1>
                     <!-- 🌟 الثلاثة عناصر مجمعين في صف واحد إجباري 🌟 -->
                     <div class="user-meta-row">
-                        <span class="username">@Shehab_Aboshady</span>
-                        <span class="genre-badge"><i class="fa-solid fa-film"></i> Sci-Fi & Shonen</span>
+                        <span class="username">@<%= profileUser.username %></span>
+                        <span class="genre-badge">
+                            <i class="fa-solid fa-film"></i>
+                            <%= favoriteGenres.length> 0 ? favoriteGenres.join(" & ") : "Cindrome Member" %>
+                        </span>
                         <span class="private-badge" title="Private Account"><i class="fa-solid fa-lock"></i></span>
                     </div>
                 </div>
@@ -74,8 +80,7 @@
             </div>
 
             <p class="user-bio">
-                Cinephile, anime watcher, and web dev. Tracking my journey through movies, TV shows, and weekly anime
-                episodes.
+                <%= profileUser.bio || "No bio yet. Welcome to my Cindrome profile!" %>
             </p>
 
             <div class="profile-stats">
@@ -139,7 +144,7 @@
 
                         <div class="profile-cards-wrapper" id="favoritesRow">
                             <div class="content-card">
-                                <img src="assets/posters/poster-vinlandsaga.webp" alt="Vinland Saga"
+                                <img src="/assets/posters/poster-vinlandsaga.webp" alt="Vinland Saga"
                                     class="card-poster">
                                 <div class="card-overlay">
                                     <div class="card-top-row">
@@ -193,7 +198,7 @@
                             </div>
 
                             <div class="content-card">
-                                <img src="assets/posters/poster-dune2.webp" alt="Dune: Part Two" class="card-poster">
+                                <img src="/assets/posters/poster-dune2.webp" alt="Dune: Part Two" class="card-poster">
                                 <div class="card-overlay">
                                     <div class="card-top-row">
                                         <span class="type-badge">MOVIE</span>
@@ -219,7 +224,7 @@
                             </div>
 
                             <div class="content-card">
-                                <img src="assets/posters/poster-breakingbad.webp" alt="Breaking Bad"
+                                <img src="/assets/posters/poster-breakingbad.webp" alt="Breaking Bad"
                                     class="card-poster">
                                 <div class="card-overlay">
                                     <div class="card-top-row">
@@ -246,7 +251,7 @@
                             </div>
 
                             <div class="content-card">
-                                <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
+                                <img src="/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
                                 <div class="card-overlay">
                                     <div class="card-top-row">
                                         <span class="type-badge">ANIME</span>
@@ -279,7 +284,7 @@
                         <div class="currently-watching-list">
                             <div class="tracking-item">
                                 <a href="/details" style="display: flex; flex-shrink: 0;">
-                                    <img src="assets/posters/poster-jjk.webp" alt="Jujutsu Kaisen"
+                                    <img src="/assets/posters/poster-jjk.webp" alt="Jujutsu Kaisen"
                                         class="tracking-poster">
                                 </a>
                                 <div class="tracking-info">
@@ -325,7 +330,7 @@
                                 <div class="minimal-card-header">
                                     <div class="header-left-stack">
                                         <a href="/details" class="review-poster-link" title="The Boys">
-                                            <img src="assets/posters/poster-theboys.webp" class="review-micro-poster"
+                                            <img src="/assets/posters/poster-theboys.webp" class="review-micro-poster"
                                                 alt="The Boys">
                                         </a>
 
@@ -343,9 +348,9 @@
 
                                             <div class="review-author-line">
                                                 <a href="/profile" class="review-avatar-link">
-                                                    <img src="assets/avatars/shehab.jpg" alt="Shehab"
+                                                    <img src="/assets/avatars/shehab.jpg" alt="Shehab"
                                                         class="review-micro-avatar"
-                                                        onerror="this.src='assets/profile-avatar.jpg'">
+                                                        onerror="this.src='/assets/profile-avatar.jpg'">
                                                 </a>
                                                 <a href="/profile" class="review-author-username">@Shehab_Aboshady</a>
                                             </div>
@@ -385,7 +390,7 @@
                                 <div class="minimal-card-header">
                                     <div class="header-left-stack">
                                         <a href="/details" class="review-poster-link" title="Spider-Man">
-                                            <img src="assets/posters/poster-spiderman.webp" class="review-micro-poster"
+                                            <img src="/assets/posters/poster-spiderman.webp" class="review-micro-poster"
                                                 alt="Spider-Man">
                                         </a>
                                         <div class="review-info-content">
@@ -400,9 +405,9 @@
                                             </div>
                                             <div class="review-author-line">
                                                 <a href="/profile" class="review-avatar-link">
-                                                    <img src="assets/avatars/shehab.jpg" alt="Shehab"
+                                                    <img src="/assets/avatars/shehab.jpg" alt="Shehab"
                                                         class="review-micro-avatar"
-                                                        onerror="this.src='assets/profile-avatar.jpg'">
+                                                        onerror="this.src='/assets/profile-avatar.jpg'">
                                                 </a>
                                                 <a href="/profile" class="review-author-username">@Shehab_Aboshady</a>
                                             </div>
@@ -463,11 +468,13 @@
                             <!-- List Card 1 -->
                             <div class="list-card">
                                 <div class="poster-stack" onclick="window.location.href='/single-list'">
-                                    <img src="assets/posters/poster-vinlandsaga.webp" alt="Vinland Saga"
+                                    <img src="/assets/posters/poster-vinlandsaga.webp" alt="Vinland Saga"
                                         class="stack-poster">
-                                    <img src="assets/posters/poster-jjk.webp" alt="Jujutsu Kaisen" class="stack-poster">
-                                    <img src="assets/posters/poster-onepiece.webp" alt="One Piece" class="stack-poster">
-                                    <img src="assets/posters/poster-aot.webp" alt="Attack on Titan"
+                                    <img src="/assets/posters/poster-jjk.webp" alt="Jujutsu Kaisen"
+                                        class="stack-poster">
+                                    <img src="/assets/posters/poster-onepiece.webp" alt="One Piece"
+                                        class="stack-poster">
+                                    <img src="/assets/posters/poster-aot.webp" alt="Attack on Titan"
                                         class="stack-poster">
                                 </div>
                                 <div class="list-info">
@@ -505,11 +512,11 @@
                             <!-- List Card 2 -->
                             <div class="list-card">
                                 <div class="poster-stack" onclick="window.location.href='/single-list'">
-                                    <img src="assets/posters/poster-sherlock.webp" alt="Sherlock" class="stack-poster">
-                                    <img src="assets/posters/poster-dark.webp" alt="Dark" class="stack-poster">
-                                    <img src="assets/posters/poster-truedetective.webp" alt="True Detective"
+                                    <img src="/assets/posters/poster-sherlock.webp" alt="Sherlock" class="stack-poster">
+                                    <img src="/assets/posters/poster-dark.webp" alt="Dark" class="stack-poster">
+                                    <img src="/assets/posters/poster-truedetective.webp" alt="True Detective"
                                         class="stack-poster">
-                                    <img src="assets/posters/poster-breakingbad.webp" alt="Breaking Bad"
+                                    <img src="/assets/posters/poster-breakingbad.webp" alt="Breaking Bad"
                                         class="stack-poster">
                                 </div>
                                 <div class="list-info">
@@ -547,12 +554,12 @@
                             <!-- List Card 3 -->
                             <div class="list-card">
                                 <div class="poster-stack" onclick="window.location.href='/single-list'">
-                                    <img src="assets/posters/poster-dune2.webp" alt="Dune" class="stack-poster">
-                                    <img src="assets/posters/poster-spiderman.webp" alt="Spider-Man"
+                                    <img src="/assets/posters/poster-dune2.webp" alt="Dune" class="stack-poster">
+                                    <img src="/assets/posters/poster-spiderman.webp" alt="Spider-Man"
                                         class="stack-poster">
-                                    <img src="assets/posters/poster-odyssey.webp" alt="The Odyssey"
+                                    <img src="/assets/posters/poster-odyssey.webp" alt="The Odyssey"
                                         class="stack-poster">
-                                    <img src="assets/posters/poster-robinhood.webp" alt="Robin Hood"
+                                    <img src="/assets/posters/poster-robinhood.webp" alt="Robin Hood"
                                         class="stack-poster">
                                 </div>
                                 <div class="list-info">
@@ -705,16 +712,26 @@
                 <div class="modal-body">
 
                     <div class="edit-visuals-wrapper">
-                        <div class="edit-banner-box">
-                            <div class="edit-img-overlay">
+                        <!-- 🌟 حقول رفع الملفات المخفية 🌟 -->
+                        <input type="file" id="backdropUpload" accept="image/*" style="display: none;">
+                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+
+                        <!-- صورة الغلاف (Backdrop) -->
+                        <div class="edit-banner-box" id="editBannerPreview"
+                            style="background-image: url('<%= profileUser.backdrop_url || '/assets/default-backdrop.jpg' %>'); background-size: cover; background-position: center;">
+                            <!-- لما نضغط هنا، هنشغل حقل الـ backdrop -->
+                            <div class="edit-img-overlay" onclick="document.getElementById('backdropUpload').click();">
                                 <i class="fa-solid fa-camera"></i>
                             </div>
                         </div>
 
+                        <!-- الصورة الشخصية (Avatar) -->
                         <div class="edit-avatar-box">
-                            <img src="assets/avatars/shehab.jpg" alt="Avatar" class="edit-avatar-img"
-                                onerror="this.src='assets/profile-avatar.jpg'">
-                            <div class="edit-img-overlay">
+                            <img src="<%= profileUser.avatar_url || '/assets/profile-avatar.jpg' %>" alt="Avatar"
+                                class="edit-avatar-img" id="editAvatarPreview"
+                                onerror="this.src='/assets/profile-avatar.jpg'">
+                            <!-- لما نضغط هنا، هنشغل حقل الـ avatar -->
+                            <div class="edit-img-overlay" onclick="document.getElementById('avatarUpload').click();">
                                 <i class="fa-solid fa-camera"></i>
                             </div>
                         </div>
@@ -722,21 +739,21 @@
 
                     <div class="edit-form-group">
                         <label>Display Name</label>
-                        <input type="text" class="edit-input" value="Shehab Aboshady">
+                        <input type="text" class="edit-input"
+                            value="<%= profileUser.display_name || profileUser.username %>">
                     </div>
 
                     <div class="edit-form-group">
                         <label>Username</label>
                         <div class="input-with-prefix">
                             <span class="input-prefix">@</span>
-                            <input type="text" class="edit-input" value="Shehab_Aboshady">
+                            <input type="text" class="edit-input" value="<%= profileUser.username %>">
                         </div>
                     </div>
 
                     <div class="edit-form-group">
                         <label>Bio</label>
-                        <textarea class="edit-input edit-textarea"
-                            rows="3">Cinephile, anime watcher, and web dev. Tracking my journey through movies, TV shows, and weekly anime episodes.</textarea>
+                        <textarea class="edit-input edit-textarea" rows="3"><%= profileUser.bio || '' %></textarea>
                     </div>
 
                     <div class="edit-form-row">
@@ -786,8 +803,8 @@
             <%- include("partials/modals/log-modal.ejs") %>
                 <%- include("partials/modals/list-modal.ejs") %>
                     <!-- Scripts -->
-                    <script src="js/modals.js"></script>
-                    <script src="js/pages/profile-page.js"></script>
+                    <script src="/js/modals.js"></script>
+                    <script src="/js/pages/profile-page.js"></script>
 </body>
 
 </html>

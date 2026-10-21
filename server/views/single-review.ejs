@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/css/modals.css">
 </head>
 
-<body class="single-review-page logged-in">
+<body class="single-review-page <%= locals.user ? 'logged-in' : 'logged-out' %>">
     <!-- Navbar -->
     <header>
         <%- include("partials/navbar.ejs") %>

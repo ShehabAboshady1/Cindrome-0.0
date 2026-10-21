@@ -2,16 +2,39 @@ import express, { raw } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-
+import bcrypt from "bcrypt";
+import db from "./config/db.js";
+import session from "express-session";
+import passport from "passport";
+import LocalStrategy from "passport-local";
+import "dotenv/config";
 const app = express();
 const port = process.env.PORT || 3000;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(express.static(path.join(__dirname, "../client")));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET, // استدعاء المفتاح من ملف .env
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
 
+// تهيئة Passport ليعمل مع Express
+app.use(passport.initialize());
+// ربط Passport بالـ Session لإدارة الجلسات
+app.use(passport.session());
+// Middleware لتمرير بيانات المستخدم لكل ملفات EJS
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
 // مفتاح TMDB الخاص بك
-const TMDB_API_KEY = "ea76631510d3901482064d17498c07b5";
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 // ==============================================================
 // 🌟 قاموس التصنيفات العام ودالة تنسيق الكروت الذكية
@@ -1185,10 +1208,212 @@ app.get("/api/discover", async (req, res) => {
 });
 app.get("/drome", (req, res) => res.render("drome.ejs"));
 app.get("/lists", (req, res) => res.render("lists.ejs"));
-app.get("/profile", (req, res) => res.render("profile.ejs"));
+// 🌟 مسار البروفايل الديناميكي 🌟
+app.get("/profile/:username", async (req, res, next) => {
+  try {
+    const requestedUsername = req.params.username;
+
+    // 1. استعلام بيجيب بيانات اليوزر + الإعدادات + البروفايل في ضربة واحدة
+    const query = `
+      SELECT 
+        u.id, u.username, u.email, 
+        s.is_private, s.notify_new_follower, s.notify_review_interaction,
+        p.display_name, p.bio, p.avatar_url, p.backdrop_url
+      FROM users u
+      LEFT JOIN user_settings s ON u.id = s.user_id
+      LEFT JOIN user_profiles p ON u.id = p.user_id
+      WHERE u.username = $1
+    `;
+    const result = await db.query(query, [requestedUsername]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).send("User not found");
+    }
+
+    const profileUser = result.rows[0];
+
+    // 2. استعلام منفصل عشان نجيب الـ Genres (بما إنهم صفين في جدول تاني)
+    const genresResult = await db.query(
+      "SELECT genre FROM user_favorite_genres WHERE user_id = $1 LIMIT 2",
+      [profileUser.id],
+    );
+    // هنحولهم لمصفوفة (Array) بسيطة فيها أسماء الجينرز
+    const favoriteGenres = genresResult.rows.map((row) => row.genre);
+
+    // 3. هل الزائر هو صاحب الحساب؟
+    let isSelf = false;
+    if (req.user && req.user.id === profileUser.id) {
+      isSelf = true;
+    }
+
+    // 4. إرسال كل الداتا دي لصفحة الـ EJS
+    res.render("profile.ejs", {
+      profileUser: profileUser,
+      favoriteGenres: favoriteGenres, // هنبعت الجينرز هنا
+      isSelf: isSelf,
+    });
+  } catch (err) {
+    console.error("Error loading profile:", err);
+    next(err);
+  }
+});
 app.get("/settings", (req, res) => res.render("settings.ejs"));
 app.get("/sign-in", (req, res) => res.render("sign-in.ejs"));
+// ==========================================
+// 6. Route: Login (Authentication Engine)
+// ==========================================
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    // لو مفيش يوزر (يعني باسورد غلط أو الحساب مش موجود)
+    if (!user) {
+      return res.redirect("/sign-in?error=1");
+    }
+    // لو كله تمام
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+
+      // 🌟 تفعيل ميزة Remember Me 🌟
+      if (req.body.remember === "true") {
+        // خلي الجلسة تعيش لمدة 30 يوم (بالملي ثانية)
+        req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
+      } else {
+        // خلي الجلسة تنتهي بمجرد إغلاق المتصفح (Browser Session)
+        req.session.cookie.expires = false;
+      }
+
+      return res.redirect("/");
+    });
+  })(req, res, next);
+});
 app.get("/sign-up", (req, res) => res.render("sign-up.ejs"));
+app.post("/register", async (req, res) => {
+  try {
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // 1. فحص الإيميل واليوزر نيم مع بعض في خطوة واحدة
+    const checkUser = await db.query(
+      "SELECT * FROM users WHERE email = $1 OR username = $2",
+      [email, username],
+    );
+
+    if (checkUser.rows.length > 0) {
+      const existingUser = checkUser.rows[0];
+      let errorMsg = "Account already exists";
+
+      // بنحدد المشكلة في الإيميل ولا اليوزر نيم
+      if (existingUser.email === email) {
+        errorMsg = "This Email is already registered!";
+      } else if (existingUser.username === username) {
+        errorMsg = "This Username is already taken!";
+      }
+
+      // 🌟 التعديل هنا: بنعيد عرض الصفحة ونبعتلها رسالة الخطأ 🌟
+      return res.render("sign-up.ejs", { errorMessage: errorMsg });
+    }
+
+    // 2. تشفير الباسورد
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // 3. الحفظ في الداتابيز للثلاث جداول
+    const insertResult = await db.query(
+      "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id",
+      [username, email, hashedPassword],
+    );
+    const newUserId = insertResult.rows[0].id;
+
+    await db.query(
+      "INSERT INTO user_settings (user_id, is_private) VALUES ($1, $2)",
+      [newUserId, false],
+    );
+
+    await db.query("INSERT INTO user_profiles (user_id) VALUES ($1)", [
+      newUserId,
+    ]);
+
+    // 4. تسجيل الدخول أوتوماتيك والتحويل للرئيسية
+    const newUser = { id: newUserId, username: username, email: email };
+    req.login(newUser, (err) => {
+      if (err) {
+        console.error(err);
+        return res.render("sign-up.ejs", {
+          errorMessage: "Registration successful, but login failed.",
+        });
+      }
+      return res.redirect("/");
+    });
+  } catch (error) {
+    console.error(error);
+    // لو حصل خطأ سيرفر، بنعرضه جوه الصفحة برضه
+    return res.render("sign-up.ejs", {
+      errorMessage: "Internal Server Error. Please try again.",
+    });
+  }
+});
+app.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
+});
+// ==========================================
+// 🌟 Route: تعديل بيانات البروفايل
+// ==========================================
+app.post("/edit-profile", async (req, res) => {
+  // التأكد من تسجيل الدخول أولاً
+  if (!req.isAuthenticated()) {
+    return res.status(401).send("You must be logged in to edit your profile.");
+  }
+
+  const userId = req.user.id;
+  const { displayName, username, bio, genre1, genre2 } = req.body;
+
+  try {
+    // 1. تحديث جدول users (لليوزر نيم)
+    // لاحظ: لو اليوزر اختار يوزر نيم موجود لواحد تاني، الداتابيز هترفض
+    await db.query(
+      "UPDATE users SET username = $1 WHERE id = $2",
+      [username, userId]
+    );
+
+    // 2. تحديث جدول user_profiles (للاسم الظاهر والبايو)
+    await db.query(
+      "UPDATE user_profiles SET display_name = $1, bio = $2 WHERE user_id = $3",
+      [displayName, bio, userId]
+    );
+
+    // 3. تحديث جدول الأنواع المفضلة user_favorite_genres
+    // بما إن اليوزر ممكن يختار نوعين، الأسهل نمسح الأنواع القديمة بتاعته ونحط الجداد
+    await db.query("DELETE FROM user_favorite_genres WHERE user_id = $1", [userId]);
+    
+    if (genre1) {
+      await db.query("INSERT INTO user_favorite_genres (user_id, genre) VALUES ($1, $2)", [userId, genre1]);
+    }
+    if (genre2 && genre2 !== genre1) { // نتأكد إنه مش مختار نفس النوع مرتين
+      await db.query("INSERT INTO user_favorite_genres (user_id, genre) VALUES ($1, $2)", [userId, genre2]);
+    }
+
+    // 4. الرد بنجاح العملية وإرسال اليوزر نيم الجديد عشان الفرونت يحولك لبروفايلك الصح
+    res.status(200).json({ message: "Profile updated", newUsername: username });
+
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    // لو الإيرور بسبب إن اليوزر نيم متكرر
+    if (error.code === '23505') {
+      return res.status(400).json({ error: "Username is already taken." });
+    }
+    res.status(500).json({ error: "Server error while updating profile." });
+  }
+});
 app.get("/single-list", (req, res) => res.render("single-list.ejs"));
 app.get("/single-review", (req, res) => res.render("single-review.ejs"));
 app.get("/watchlist", (req, res) => res.render("watchlist.ejs"));
@@ -1264,7 +1489,48 @@ app.get("/api/search", async (req, res) => {
     res.status(500).json([]);
   }
 });
+passport.use(
+  new LocalStrategy(
+    // السطر ده هو اللي هيحل مشكلة missing credentials
+    { usernameField: "email", passwordField: "password" },
+    async (email, password, cb) => {
+      try {
+        // البحث عن المستخدم بواسطة الإيميل أو اليوزر نيم
+        const result = await db.query(
+          "SELECT * FROM users WHERE email = $1 OR username = $1",
+          [email], // المتغير email هنا شايل الكلمة اللي اليوزر كتبها في الخانة (سواء كانت إيميل أو يوزر نيم)
+        );
+        if (result.rows.length === 0) {
+          return cb(null, false, { message: "User not found" });
+        }
+        const user = result.rows[0];
+        const isMatch = await bcrypt.compare(password, user.password_hash);
+        if (isMatch) {
+          return cb(null, user);
+        } else {
+          return cb(null, false, { message: "Incorrect password" });
+        }
+      } catch (err) {
+        return cb(err);
+      }
+    },
+  ),
+);
 
+// 3. تخزين الـ ID فقط في الـ Session لتوفير مساحة الذاكرة
+passport.serializeUser((user, cb) => {
+  cb(null, user.id);
+});
+
+// 4. استرجاع بيانات المستخدم كاملة من الداتابيز مع كل طلب جديد
+passport.deserializeUser(async (id, cb) => {
+  try {
+    const result = await db.query("SELECT * FROM users WHERE id = $1", [id]);
+    cb(null, result.rows[0]);
+  } catch (err) {
+    cb(err);
+  }
+});
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

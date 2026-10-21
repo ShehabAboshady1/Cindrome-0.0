@@ -28,12 +28,12 @@
             </div>
 
             <!-- نموذج الدخول -->
-            <form class="auth-form" id="signInForm" novalidate>
+            <form class="auth-form" action="/login" method="POST" id="signInForm" novalidate>
 
                 <!-- 🌟 حقل الإيميل أو اسم المستخدم 🌟 -->
                 <div class="form-group">
                     <label for="loginInput">Email or Username</label>
-                    <input type="text" id="loginInput" placeholder="Username or email address" required
+                    <input type="text" name="email" id="loginInput" placeholder="Username or email address" required
                         autocomplete="username">
                     <span class="field-error-msg" id="loginError"></span>
                 </div>
@@ -45,7 +45,7 @@
                         <a href="#" class="forgot-link">Forgot?</a>
                     </div>
                     <div class="password-input-wrapper">
-                        <input type="password" id="password" placeholder="••••••••" required
+                        <input type="password" name="password" id="password" placeholder="••••••••" required
                             autocomplete="current-password">
                         <button type="button" class="toggle-password-btn" id="togglePasswordBtn"
                             aria-label="Show password">
@@ -58,7 +58,7 @@
                 <!-- خيار تذكرني -->
                 <div class="form-options">
                     <label class="toggle-container">
-                        <input type="checkbox" id="remember">
+                        <input type="checkbox" name="remember" id="remember" value="true">
                         <span class="toggle-slider"></span>
                         <span class="toggle-label">Remember me</span>
                     </label>

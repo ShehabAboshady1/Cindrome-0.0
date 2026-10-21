@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="/css/modals.css">
 </head>
 
-<body class="logged-in">
+<body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">
     <header>
         <%- include("partials/navbar.ejs") %>
     </header>
