@@ -53,14 +53,21 @@ header {
   text-decoration: none;
 }
 
-/* --- ترتيب عناصر الشاشات الكبيرة (Desktop) --- */
 .right-bar {
   display: flex;
   gap: 20px;
   align-items: center;
   z-index: 2;
-  flex-shrink: 0;
-  margin-left: auto; /* 👈 يزق الروابط وزر السيرش في أقصى اليمين */
+  margin-left: auto; /* بيزق الروابط لليمين */
+  margin-right: 25px; /* مسافة بين الروابط وزراير الأكشن */
+}
+
+/* 🌟 الكونتينر الجديد لزراير الأكشن 🌟 */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 3;
 }
 
 /* زرار العدسة المكبرة (على اللابتوب هيكون بعد الـ right-bar في أقصى اليمين) */
@@ -246,7 +253,6 @@ button.signin-btn:hover,
   background-color: #0bd3d3;
 }
 
-/* --- Responsive للموبايل (Media Query) --- */
 @media (max-width: 1024px) {
   .bar {
     position: relative;
@@ -262,11 +268,10 @@ button.signin-btn:hover,
     max-width: 100px;
   }
 
-  /* 🌟 ترتيب العناصر اللي بره القايمة 🌟 */
-  .nav-container > .guest-only,
-  .log-nav-btn {
-    order: 1;
-    margin-left: auto; /* بيزق الزرار والسيرش والهامبرجر لأقصى اليمين */
+  /* تنسيق زراير الأكشن على الموبايل */
+  .nav-actions {
+    margin-left: auto; /* بيزق الأزرار والهامبرجر لأقصى اليمين */
+    gap: 8px;
   }
 
   .signin-btn,
@@ -277,8 +282,6 @@ button.signin-btn:hover,
   }
 
   .search-trigger-btn {
-    order: 2;
-    margin-left: 0; /* لغينا الـ auto عشان يلزق في الزرار */
     padding: 6px;
   }
 
@@ -288,13 +291,11 @@ button.signin-btn:hover,
     color: var(--text-cream);
     cursor: pointer;
     line-height: 1;
-    z-index: 2;
-    order: 3;
     margin-left: 4px;
   }
 
+  /* تحويل الروابط لقائمة منسدلة تغطي الشاشة */
   .right-bar {
-    display: flex;
     flex-direction: column;
     position: absolute;
     top: 100%;
@@ -312,6 +313,7 @@ button.signin-btn:hover,
     transition: all 0.3s ease;
     z-index: 999;
     margin-left: 0;
+    margin-right: 0;
   }
 
   .menu-checkbox:checked ~ .right-bar {

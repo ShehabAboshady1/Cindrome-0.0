@@ -5,11 +5,11 @@
             <img class="logo" src="/assets/logos/no background logo.png" alt="Cindrome Logo">
         </a>
 
+        <!-- الـ Checkbox لازم يفضل هنا عشان CSS الـ Hamburger يشتغل -->
         <input type="checkbox" id="menu-toggle" class="menu-checkbox">
-        <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
 
+        <!-- 1. روابط الـ Navigation العادية (بتختفي في الموبايل) -->
         <div class="right-bar">
-            <!-- 1. روابط الـ Navigation العادية في الأول -->
             <a href="/" class="nav-item">Home</a>
             <a href="/discover" class="nav-item">Discover</a>
             <a href="/lists" class="nav-item">Lists</a>
@@ -26,11 +26,9 @@
 
             <a href="/drome" class="nav-item">Drome</a>
 
-            <!-- 2. قايمة الأكونت (للمستخدمين بس - الـ CSS هيخفيها لو زائر) -->
             <div class="dropdown user-only">
                 <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
                 <label for="account-toggle" class="nav-item dropdown-label">
-                    <!-- لو مسجل دخول، اعرض صورته واسمه، لو لأ، خليها "Account" عادي (مع إن الـ CSS هيخفيها أصلاً) -->
                     <% if (locals.user) { %>
                         <img src="<%= user.avatar_url || '/assets/profile-avatar.jpg' %>" alt="Profile"
                             style="width: 25px; height: 25px; border-radius: 50%; vertical-align: middle; margin-right: 5px; object-fit: cover;">
@@ -43,21 +41,19 @@
                     <li><a href="/profile/<%= locals.user ? locals.user.username : '' %>">Profile</a></li>
                     <li><a href="/diary">Diary</a></li>
                     <li><a href="/watchlist">Watchlist</a></li>
-                    <!-- خلينا رابط الـ Logout بجد يروح لمسار السيرفر -->
                     <li><a href="/logout" style="color: #ff4757;">Log out</a></li>
                 </ul>
             </div>
+        </div>
 
-            <!-- ========================================================= -->
-            <!-- 🌟 3. زراير الأكشن 🌟 -->
-            <!-- ========================================================= -->
-
-            <!-- 🔴 للزوار بس -->
+        <!-- 🌟 2. زراير الأكشن والهامبرجر (بره القايمة عشان يظهروا دايماً) 🌟 -->
+        <div class="nav-actions">
+            <!-- للزوار بس -->
             <a href="/sign-in" class="guest-only" style="text-decoration: none;">
                 <button class="signin-btn">Sign in</button>
             </a>
 
-            <!-- 🟢 للمستخدمين بس -->
+            <!-- للمستخدمين بس -->
             <button class="log-nav-btn user-only" id="navLogBtn">
                 <i class="fa-solid fa-plus"></i> Log
             </button>
@@ -71,5 +67,9 @@
                 </svg>
             </button>
 
+            <!-- زرار الهامبرجر -->
+            <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
         </div>
+
+    </div>
 </nav>

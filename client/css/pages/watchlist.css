@@ -6,7 +6,7 @@
 html,
 body {
   max-width: 100%;
-  overflow-x: hidden; 
+  overflow-x: hidden;
   box-sizing: border-box;
 }
 
@@ -29,12 +29,12 @@ body {
   width: 100%;
   margin: 0 auto 20px auto;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
 }
 
 .watchlist-title {
-  font-size: 2.8rem; 
+  font-size: 2.8rem;
   font-weight: 800;
   color: var(--text-cream);
   letter-spacing: 2px;
@@ -47,7 +47,7 @@ body {
   align-items: center;
   margin-bottom: 18px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(241, 227, 200, 0.08); 
+  border-bottom: 1px solid rgba(241, 227, 200, 0.08);
 }
 
 .grid-count-text {
@@ -156,7 +156,10 @@ body {
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
   white-space: nowrap;
 }
 
@@ -182,7 +185,7 @@ body {
 .css-dropdown {
   position: relative;
   font-family: inherit;
-  width: max-content; 
+  width: max-content;
 }
 
 .css-dropdown summary::-webkit-details-marker {
@@ -228,7 +231,7 @@ body {
   top: 120%;
   left: 0;
   min-width: 100%;
-  width: max-content; 
+  width: max-content;
   background: var(--maincolor);
   border: 1px solid rgba(241, 227, 200, 0.15);
   border-radius: 16px;
@@ -239,11 +242,11 @@ body {
   z-index: 50;
   max-height: 220px;
   overflow-y: auto;
-  scrollbar-width: none; 
+  scrollbar-width: none;
 }
 
 .dropdown-list::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
 
 .dropdown-item {
@@ -320,7 +323,7 @@ body {
 
 .watchlist-cards-grid .mini-content-card {
   width: 100%;
-  max-width: 120px; 
+  max-width: 120px;
   flex: unset;
 }
 
@@ -432,7 +435,7 @@ body {
 
   .dropdowns-group .css-dropdown {
     width: 100%;
-    display: block; 
+    display: block;
   }
 
   .dropdowns-group .dropdown-selected {
@@ -450,8 +453,8 @@ body {
   }
 
   .dropdowns-group .dropdown-list {
-    min-width: 120px; 
-    width: max-content; 
+    min-width: 120px;
+    width: max-content;
     max-width: 85vw;
     left: 50%;
     transform: translateX(-50%);
@@ -468,10 +471,13 @@ body {
    ========================================== */
 @media (max-width: 768px) {
   .watchlist-cards-grid .mini-content-card .mini-card-bar {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: none; /* إلغاء الأنيميشن لأنها ثابتة دايماً */
   }
 
   .watchlist-cards-grid .mini-content-card.show-bar .mini-card-bar {
