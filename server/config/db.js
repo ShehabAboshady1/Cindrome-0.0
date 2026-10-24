@@ -1,28 +1,29 @@
 import pg from "pg";
 import dotenv from "dotenv";
 
-// تشغيل الخزنة السرية
+// تشغيل الخزنة السرية (هتشتغل على اللابتوب، وفي Render ملهاش تأثير ضار)
 dotenv.config();
 
 const { Pool } = pg;
 
-// تجهيز إعدادات الاتصال بناءً على البيئة (Local أو Production)
-const isProduction = process.env.NODE_ENV === "production";
+// دي الحركة الذكية: هنقوله لو لقيت الرابط بتاع Render استخدمه فوراً،
+// لو ملقتهوش، استخدم المتغيرات الفردية بتاعت اللابتوب
+const connectionString =
+  process.env.DATABASE_URL ||
+  `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
 
-// إعدادات الاتصال
-const connectionString = isProduction
-  ? process.env.DATABASE_URL
-  : `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+// هنحدد إننا نفعل الـ SSL فقط لو كان الرابط بيحتوي على كلمة render
+// (عشان ميضربش إيرور عندك على اللابتوب)
+const isRender = connectionString.includes("render.com");
 
 const db = new Pool({
   connectionString: connectionString,
-  // تفعيل الـ SSL فقط في حالة الـ Production (Render)
-  ssl: isProduction ? { rejectUnauthorized: false } : false,
+  ssl: isRender ? { rejectUnauthorized: false } : false,
 });
 
-// اختبار الاتصال
 db.connect()
-  .then(() => console.log("✅ Connected to Database successfully!"))
+  .then(() => console.log("✅ Connected to Cindrome Database successfully!"))
   .catch((err) => console.error("❌ Database connection error:", err.stack));
 
 export default db;
+ 
