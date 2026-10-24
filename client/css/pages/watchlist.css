@@ -470,16 +470,15 @@ body {
    6. RESPONSIVE BREAKPOINT (MOBILE <= 768px)
    ========================================== */
 @media (max-width: 768px) {
+  /* نخفي البار افتراضياً */
   .watchlist-cards-grid .mini-content-card .mini-card-bar {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    transition: none; /* إلغاء الأنيميشن لأنها ثابتة دايماً */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
   }
 
+  /* الكلاس ده الـ JS هيحطه لما اليوزر يلمس البوستر */
   .watchlist-cards-grid .mini-content-card.show-bar .mini-card-bar {
     opacity: 1;
     visibility: visible;
