@@ -37,22 +37,26 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
+// السطر ده ضروري جداً عشان الجلسات تشتغل على السيرفرات السحابية زي Render
+app.set("trust proxy", 1);
 app.use(express.static(path.join(__dirname, "../client")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
   session({
     store: new pgSession({
-      pool: db, // ده الـ db pool اللي إنت عامله في ملف config/db.js
-      tableName: "user_sessions", // اسم الجدول اللي هيتكريت فيه الجلسات
-      createTableIfMissing: true, // ميزة جبارة: هتخليه يكريت الجدول لوحده لو مش موجود
+      pool: db,
+      tableName: "user_sessions",
+      createTableIfMissing: false, // خليناها false لأننا خلاص عملنا الجدول بإيدينا
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    // (اختياري) تقدر تسيب الـ cookie هنا لو حابب تظبط وقت معين
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 يوم
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 يوم
+      // تفعيل الأمان لو الموقع شغال على Render (HTTPS)
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    },
   }),
 );
 
