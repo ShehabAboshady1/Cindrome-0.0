@@ -44,47 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // 🌟 2. تفاعل زرار الـ Watchlist في الهيرو 🌟
-  // ==========================================
-  const heroWatchlistBtn = document.querySelector(
-    ".action-buttons .watchlist-btn",
-  );
-  if (heroWatchlistBtn) {
-    heroWatchlistBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      this.classList.toggle("added");
-      const icon = this.querySelector("i");
-
-      if (icon) {
-        if (this.classList.contains("added")) {
-          icon.classList.replace("fa-regular", "fa-solid");
-        } else {
-          icon.classList.replace("fa-solid", "fa-regular");
-        }
-      }
-    });
-  }
-
-  // ==========================================
-  // 🌟 3. تفاعل زرار الـ Like في الهيرو 🌟
-  // ==========================================
-  const likeHeroBtn = document.querySelector(".like-btn-hero");
-  if (likeHeroBtn) {
-    likeHeroBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      this.classList.toggle("liked");
-      const icon = this.querySelector("i");
-      if (icon) {
-        if (this.classList.contains("liked")) {
-          icon.classList.replace("fa-regular", "fa-solid");
-        } else {
-          icon.classList.replace("fa-solid", "fa-regular");
-        }
-      }
-    });
-  }
-
-  // ==========================================
   // 🌟 4. تشغيل زرار الـ Like في المراجعات 🌟
   // ==========================================
   const reviewLikeBtns = document.querySelectorAll(".review-like-btn");

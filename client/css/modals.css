@@ -446,7 +446,8 @@ summary,
   filter: drop-shadow(0 0 6px rgba(9, 158, 158, 0.5));
 }
 
-.spoiler-btn.spoiler-active {
+/* رفعنا قوة الـ Selector عشان يغلب اللون الأزرق لو جه بالغلط */
+.icon-toggle-btn.spoiler-btn.spoiler-active {
   color: #ff4757;
   filter: drop-shadow(0 0 6px rgba(255, 71, 87, 0.5));
 }

@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==================================================
   // 🌟 3. التحقق عند الضغط على إنشاء حساب (Submit)
   // ==================================================
-  signUpForm.addEventListener("submit", (e) => {
+  signUpForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     let isFormValid = true;
@@ -131,20 +131,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!isFormValid) return;
-
     // ==================================================
-    // 🌟 4. حفظ بيانات المستخدم والدخول (localStorage)
+    // 🌟 4. Send Data to Server (Direct Submit)
     // ==================================================
-    localStorage.setItem("cindrome_username", usernameVal);
-    localStorage.setItem("cindrome_email", emailVal);
-    localStorage.setItem("cindrome_logged_in", "true");
-
     submitBtn.textContent = "Creating Account...";
     submitBtn.disabled = true;
 
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 900);
+    // إرسال النموذج مباشرة للسيرفر (سيتجه إلى /register)
+    signUpForm.submit();
   });
 
   // ==================================================

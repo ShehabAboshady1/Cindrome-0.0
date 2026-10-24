@@ -138,7 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const dateInput = document.getElementById("watchDate");
   const reviewText = document.getElementById("reviewText");
-  const toggleBtns = document.querySelectorAll("#logModal .icon-toggle-btn");
   const stars = document.querySelectorAll("#logModal .rate-star");
   let currentRating = 0;
   const logSearchInput = document.getElementById("logSearchInput");
@@ -259,9 +258,10 @@ document.addEventListener("DOMContentLoaded", () => {
       star.classList.add("fa-regular", "fa-star");
     });
 
-    toggleBtns.forEach((btn) =>
-      btn.classList.remove("active", "spoiler-active"),
-    );
+    const allToggles = document.querySelectorAll("#logModal .icon-toggle-btn");
+    allToggles.forEach((btn) => {
+      btn.classList.remove("active", "spoiler-active");
+    });
 
     if (reviewText) reviewText.value = "";
     if (dateInput) dateInput.value = new Date().toISOString().split("T")[0];
@@ -303,20 +303,37 @@ document.addEventListener("DOMContentLoaded", () => {
   if (closeLogBtn) closeLogBtn.addEventListener("click", closeLog);
   if (cancelLogBtn) cancelLogBtn.addEventListener("click", closeLog);
 
-  const regularToggles = document.querySelectorAll(
-    "#logModal .icon-toggle-btn:not(.spoiler-btn)",
-  );
-  regularToggles.forEach((btn) => {
-    btn.addEventListener("click", () => btn.classList.toggle("active"));
-  });
+  // ==========================================
+  // 🌟 تفاعلات أزرار المودال (بدون عزل - مباشر) 🌟
+  // ==========================================
+  const likeBtn = document.getElementById("likeToggle");
+  const rewatchBtn = document.getElementById("rewatchToggle");
+  const spoilerToggleBtn = document.getElementById("spoilerToggle");
 
-  const spoilerBtn = document.querySelector("#logModal .spoiler-btn");
-  if (spoilerBtn) {
-    spoilerBtn.addEventListener("click", () =>
-      spoilerBtn.classList.toggle("spoiler-active"),
-    );
+  // دالة موحدة لتبديل الأزرار عشان الكود يكون نظيف
+  function toggleLogButton(btn, activeClass) {
+    if (!btn) return;
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      this.classList.toggle(activeClass);
+
+      // حماية إضافية نظيفة: لو زرار الاسبويلر، نتأكد إن مفيش كلاس active أزرق
+      if (activeClass === "spoiler-active") {
+        this.classList.remove("active");
+      } else {
+        // لو زرار عادي، نتأكد إن مفيش كلاس أحمر
+        this.classList.remove("spoiler-active");
+      }
+    });
   }
 
+  // تفعيل الزراير الثلاثة
+  toggleLogButton(likeBtn, "active");
+  toggleLogButton(rewatchBtn, "active");
+  toggleLogButton(spoilerToggleBtn, "spoiler-active");
+  // ==========================================
+  // 🌟 النجوم 🌟
+  // ==========================================
   function updateStars(value) {
     stars.forEach((star, index) => {
       star.classList.remove("fa-solid", "fa-regular", "fa-star-half-stroke");
@@ -347,6 +364,107 @@ document.addEventListener("DOMContentLoaded", () => {
       const isHalf = e.clientX - rect.left < rect.width / 2;
       currentRating = index + (isHalf ? 0.5 : 1);
       updateStars(currentRating);
+    });
+  });
+
+  // =========================================================================
+  // 🌟 SUBMIT LOG MODAL DATA 🌟
+  // =========================================================================
+  const logForms = document.querySelectorAll(".log-form");
+
+  logForms.forEach((logForm) => {
+    logForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const currentModal = this.closest(".log-modal-container");
+      const saveLogBtn = currentModal.querySelector(".btn-save-log");
+
+      const tmdb_id = currentModal.querySelector(
+        "input[id='logMediaId']",
+      )?.value;
+      const media_type = currentModal.querySelector(
+        "input[id='logMediaType']",
+      )?.value;
+      const review_text = currentModal
+        .querySelector("textarea.review-textarea")
+        ?.value.trim();
+      const watch_date =
+        currentModal.querySelector("input[type='date']")?.value;
+      const rating = currentRating > 0 ? currentRating : null;
+
+      const rewatchBtn = currentModal.querySelector("#rewatchToggle");
+      const spoilerBtn = currentModal.querySelector("#spoilerToggle");
+      const likeBtn = currentModal.querySelector("#likeToggle");
+
+      const is_rewatch = rewatchBtn?.classList.contains("active") || false;
+      const has_spoilers =
+        spoilerBtn?.classList.contains("spoiler-active") || false;
+      const liked = likeBtn?.classList.contains("active") || false;
+
+      let season_number = null;
+      let episode_number = null;
+
+      if (media_type !== "movie") {
+        const seasonStr =
+          currentModal.querySelector("span[id='seasonText']")?.textContent ||
+          "";
+        const epStr =
+          currentModal.querySelector("span[id='episodeText']")?.textContent ||
+          "";
+
+        const seasonMatch = seasonStr.match(/\d+/);
+        if (seasonMatch) season_number = parseInt(seasonMatch[0], 10);
+
+        const epMatch = epStr.match(/\d+/);
+        if (epMatch) episode_number = parseInt(epMatch[0], 10);
+      }
+
+      if (!tmdb_id || !media_type) {
+        alert("Please select a movie, series, or anime first.");
+        return;
+      }
+
+      if (saveLogBtn) {
+        saveLogBtn.disabled = true;
+        saveLogBtn.innerHTML =
+          '<i class="fa-solid fa-spinner fa-spin"></i> Logging...';
+      }
+
+      try {
+        const response = await fetch("/api/reviews/log", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tmdb_id,
+            media_type,
+            rating,
+            review_text,
+            is_rewatch,
+            has_spoilers,
+            liked,
+            season_number,
+            episode_number,
+            watch_date,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          closeLog();
+          window.location.reload();
+        } else {
+          alert(data.error || "An error occurred.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Network error.");
+      } finally {
+        if (saveLogBtn) {
+          saveLogBtn.disabled = false;
+          saveLogBtn.innerHTML = "Log";
+        }
+      }
     });
   });
 
@@ -768,6 +886,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const title = clone.querySelector(".card-title");
       const meta = clone.querySelector(".meta-row");
       const detailsLink = clone.querySelector(".btn-details");
+      const watchlistBtn = clone.querySelector(".btn-watchlist"); // سطر جديد لزرار الوتش ليست
 
       poster.src = item.poster;
       poster.alt = item.title;
@@ -776,7 +895,16 @@ document.addEventListener("DOMContentLoaded", () => {
       title.textContent = item.title;
       title.title = item.title;
       meta.textContent = `${item.year} • ${item.badge}`;
+
+      // تفعيل زرار Details
       detailsLink.href = `/details?id=${item.id}&type=${item.mediaType}`;
+
+      // تفعيل زرار Watchlist وربطه بالدالة العامة
+      if (watchlistBtn) {
+        watchlistBtn.onclick = function () {
+          toggleWatchlist(this, item.id, item.mediaType);
+        };
+      }
 
       globalSearchResults.appendChild(clone);
     });

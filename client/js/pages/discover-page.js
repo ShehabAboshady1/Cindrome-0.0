@@ -171,6 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const meta = clone.querySelector(".meta-row");
       const detailsLink = clone.querySelector(".btn-details");
 
+      // مسكنا زرار الـ Watchlist من القالب
+      const watchlistBtn = clone.querySelector(".btn-watchlist");
+
       poster.src = item.poster;
       poster.alt = item.title;
       badge.textContent = item.badge.toUpperCase();
@@ -179,6 +182,21 @@ document.addEventListener("DOMContentLoaded", () => {
       title.title = item.title;
       meta.textContent = `${item.genres} • ${item.year}`;
       detailsLink.href = `/details?id=${item.id}&type=${item.mediaType}`;
+
+      // ربط الزرار بدالة الـ toggleWatchlist اللي في main.js
+      if (watchlistBtn) {
+        // حددنا نوع العمل صح للـ API
+        const finalType =
+          item.mediaType === "tv"
+            ? "tv"
+            : item.mediaType === "anime"
+              ? "anime"
+              : "movie";
+        watchlistBtn.setAttribute(
+          "onclick",
+          `toggleWatchlist(this, ${item.id}, '${finalType}')`,
+        );
+      }
 
       cardsGrid.appendChild(clone);
     });
@@ -268,16 +286,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     return [1, "...", current - 1, current, current + 1, "...", total];
-  }
-
-  if (cardsGrid) {
-    cardsGrid.addEventListener("click", (e) => {
-      const btn = e.target.closest(".btn-watchlist");
-      if (btn) {
-        e.preventDefault();
-        btn.classList.toggle("added");
-      }
-    });
   }
 
   fetchDiscoverData();

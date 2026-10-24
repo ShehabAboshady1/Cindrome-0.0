@@ -106,8 +106,7 @@ body.is-private.profile-page-other .profile-private-overlay {
 .profile-banner {
   width: 100%;
   aspect-ratio: 3.5 / 1; 
-  max-height: 400px; 
-  background-image: url(../../assets/backdrops/backdrop-onepiece.webp);
+  max-height: 400px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

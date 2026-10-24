@@ -31,21 +31,6 @@ window.setFollowState = function (state) {
   }
 };
 
-window.setNotificationState = function (isEnabled) {
-  const notifyBtn = document.getElementById("notifyBtn");
-  if (!notifyBtn) return;
-
-  notifyBtn.classList.toggle("is-active", isEnabled);
-  notifyBtn.setAttribute("aria-pressed", String(isEnabled));
-  notifyBtn.setAttribute(
-    "aria-label",
-    isEnabled ? "Turn off notifications" : "Turn on notifications",
-  );
-  notifyBtn.title = isEnabled
-    ? "Turn off notifications"
-    : "Turn on notifications";
-};
-
 window.switchProfileTab = function (tabId, btnElement) {
   document.querySelectorAll(".profile-tab-panel").forEach((panel) => {
     panel.style.display = "none";
@@ -137,7 +122,11 @@ function setupEditModal() {
   const openBtn = document.getElementById("editProfileBtn");
   const closeBtn = document.getElementById("closeEditModal");
   const cancelBtn = document.getElementById("cancelEditBtn");
+  const saveBtn = modal ? modal.querySelector(".btn-save") : null;
 
+  // =====================================
+  // 1. فتح وإغلاق المودال
+  // =====================================
   if (openBtn && modal) {
     openBtn.addEventListener("click", () => {
       modal.classList.add("active");
@@ -159,6 +148,103 @@ function setupEditModal() {
       closeModal();
     }
   });
+
+  // =====================================
+  // 2. المعاينة المباشرة للصور قبل الحفظ
+  // =====================================
+  const avatarUpload = document.getElementById("avatarUpload");
+  const editAvatarPreview = document.getElementById("editAvatarPreview");
+
+  if (avatarUpload && editAvatarPreview) {
+    avatarUpload.addEventListener("change", function () {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          editAvatarPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  }
+
+  const backdropUpload = document.getElementById("backdropUpload");
+  const editBannerPreview = document.getElementById("editBannerPreview");
+
+  if (backdropUpload && editBannerPreview) {
+    backdropUpload.addEventListener("change", function () {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          editBannerPreview.style.backgroundImage = `url('${e.target.result}')`;
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  }
+
+  // =====================================
+  // 3. تجميع البيانات وإرسالها للسيرفر
+  // =====================================
+  if (saveBtn) {
+    saveBtn.addEventListener("click", async () => {
+      const inputs = modal.querySelectorAll(".edit-input");
+      if (inputs.length < 3) return;
+
+      const displayName = inputs[0].value.trim();
+      const username = inputs[1].value.trim();
+      const bio = inputs[2].value.trim();
+
+      const selectedOptions = modal.querySelectorAll(".custom-option.selected");
+      const genre1 =
+        selectedOptions.length > 0
+          ? selectedOptions[0].getAttribute("data-value")
+          : "";
+      const genre2 =
+        selectedOptions.length > 1
+          ? selectedOptions[1].getAttribute("data-value")
+          : "";
+
+      const formData = new FormData();
+      formData.append("displayName", displayName);
+      formData.append("username", username);
+      formData.append("bio", bio);
+      formData.append("genre1", genre1);
+      formData.append("genre2", genre2);
+
+      if (avatarUpload && avatarUpload.files[0]) {
+        formData.append("avatar", avatarUpload.files[0]);
+      }
+      if (backdropUpload && backdropUpload.files[0]) {
+        formData.append("backdrop", backdropUpload.files[0]);
+      }
+
+      const originalText = saveBtn.textContent;
+      saveBtn.textContent = "Saving...";
+      saveBtn.disabled = true;
+
+      try {
+        const response = await fetch("/edit-profile", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          window.location.href = `/profile/${data.newUsername}`;
+        } else {
+          alert(data.error || "Failed to update profile");
+          saveBtn.textContent = originalText;
+          saveBtn.disabled = false;
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Server connection failed.");
+        saveBtn.textContent = originalText;
+        saveBtn.disabled = false;
+      }
+    });
+  }
 }
 
 function setupCreateListModal() {
@@ -249,53 +335,25 @@ function setupCreateListModal() {
       }
     });
   }
-
-  const searchInput = document.getElementById("addMovieSearch");
-  if (searchInput && addedItemsContainer) {
-    searchInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter" && this.value.trim() !== "") {
-        e.preventDefault();
-
-        const newCard = document.createElement("div");
-        newCard.className = "mini-content-card modal-mini-card";
-        newCard.draggable = true;
-        newCard.innerHTML = `
-                    <div class="mini-card-media">
-                        <img src="https://image.tmdb.org/t/p/w200/8bZCaPAPPil3ea2c9xSsmfsibGB.jpg" class="mini-card-poster" alt="New">
-                    </div>
-                    <button class="remove-mini-btn" title="Remove"><i class="fa-solid fa-xmark"></i></button>
-                `;
-
-        addedItemsContainer.prepend(newCard);
-        addDragEvents(newCard);
-        this.value = "";
-      }
-    });
-  }
 }
 
 // ==========================================
 // 🌟 تشغيل الأحداث (EventListeners)
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-  // قراءة حالة الخصوصية المحفوظة من صفحة الإعدادات
   const savedPrivacy = localStorage.getItem("cindrome_is_private");
   if (savedPrivacy !== null) {
     window.setPrivacyMode(savedPrivacy === "true");
   }
-  // 🌟 قراءة الأوضاع تلقائياً من رابط الصفحة للتجربة على الموبايل 🌟
   const urlParams = new URLSearchParams(window.location.search);
 
-  // إذا كاتب في الرابط mode=other أو mode=self
   if (urlParams.has("mode")) {
     window.setProfileMode(urlParams.get("mode"));
   }
 
-  // إذا كاتب في الرابط private=true أو private=false
   if (urlParams.has("private")) {
     window.setPrivacyMode(urlParams.get("private") === "true");
   }
-  // 1. اختصار نصوص المراجعات
   const reviewBodies = document.querySelectorAll(".review-body");
   const MAX_CHARS = 150;
 
@@ -311,37 +369,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 2. زرار المتابعة (يتعرف تلقائياً إذا كان الحساب خاصاً ليعرض Requested)
+  // 2. زرار المتابعة (يكلم السيرفر للتبديل الفعلي)
   const followBtn = document.getElementById("followBtn");
   if (followBtn) {
-    followBtn.addEventListener("click", () => {
+    followBtn.addEventListener("click", async () => {
+      const followingId = followBtn.getAttribute("data-id");
       const isPrivate = document.body.classList.contains("is-private");
-      const isCurrentlyRequested = followBtn.classList.contains("is-requested");
-      const isCurrentlyFollowing = followBtn.classList.contains("is-active");
 
-      if (isPrivate) {
-        if (isCurrentlyRequested) {
-          window.setFollowState("none");
+      if (!followingId) return;
+
+      followBtn.disabled = true;
+      const originalText = followBtn.querySelector(".btn-label").textContent;
+      followBtn.querySelector(".btn-label").textContent = "...";
+
+      try {
+        const response = await fetch("/api/follow/toggle", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ followingId: followingId }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          if (data.status === "followed") {
+            if (isPrivate) {
+              window.setFollowState("requested");
+            } else {
+              window.setFollowState("following");
+            }
+          } else if (data.status === "unfollowed") {
+            window.setFollowState("none");
+          }
         } else {
-          window.setFollowState("requested");
+          alert(data.error || "Something went wrong.");
+          followBtn.querySelector(".btn-label").textContent = originalText;
         }
-      } else {
-        if (isCurrentlyFollowing) {
-          window.setFollowState("none");
-        } else {
-          window.setFollowState("following");
-        }
+      } catch (error) {
+        console.error("Follow error:", error);
+        alert("Failed to connect to the server.");
+        followBtn.querySelector(".btn-label").textContent = originalText;
+      } finally {
+        followBtn.disabled = false;
       }
-    });
-  }
-
-  // 3. زرار الإشعارات
-  const notifyBtn = document.getElementById("notifyBtn");
-  if (notifyBtn) {
-    let isNotifying = false;
-    notifyBtn.addEventListener("click", () => {
-      isNotifying = !isNotifying;
-      window.setNotificationState(isNotifying);
     });
   }
 
@@ -376,16 +448,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", function () {
     document.querySelectorAll(".custom-select-options").forEach((opt) => {
       opt.classList.remove("open");
-    });
-  });
-
-  // 5. تحويل زرار (+) لـ (-) في كروت الـ Favorites
-  document.querySelectorAll(".btn-watchlist").forEach((btn) => {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.classList.toggle("added");
-      this.textContent = this.classList.contains("added") ? "−" : "+";
     });
   });
 
