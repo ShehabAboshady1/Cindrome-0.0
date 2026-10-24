@@ -86,15 +86,19 @@
                     <div class="toolbar-divider"></div>
 
                     <div class="toolbar-actions">
-                        <button type="button" class="icon-toggle-btn" id="likeToggle" title="Like">
-                            <i class="fa-solid fa-heart"></i>
+                        <button type="button" class="icon-toggle-btn like-btn-toggle" title="Like" id="likeToggle"
+                            onclick="this.classList.toggle('active')">
+                            <i class="fa-solid fa-heart" style="pointer-events: none;"></i>
                         </button>
-                        <button type="button" class="icon-toggle-btn" id="rewatchToggle" title="Rewatch">
-                            <i class="fa-solid fa-rotate-right"></i>
+
+                        <button type="button" class="icon-toggle-btn rewatch-btn-toggle" title="Rewatch" id="rewatchToggle"
+                            onclick="this.classList.toggle('active')">
+                            <i class="fa-solid fa-rotate-right" style="pointer-events: none;"></i>
                         </button>
-                        <button type="button" class="icon-toggle-btn spoiler-btn" id="spoilerToggle"
-                            title="Contains Spoilers">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+
+                        <button type="button" class="icon-toggle-btn spoiler-btn" title="Contains Spoilers" id="spoilerToggle"
+                            onclick="this.classList.toggle('spoiler-active'); this.classList.remove('active')">
+                            <i class="fa-solid fa-triangle-exclamation" style="pointer-events: none;"></i>
                         </button>
                     </div>
                 </div>

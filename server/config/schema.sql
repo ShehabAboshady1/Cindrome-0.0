@@ -49,3 +49,20 @@ CREATE TABLE watchlist (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (tmdb_id, media_type) REFERENCES media_cache(tmdb_id, media_type) ON DELETE CASCADE
 );
+
+CREATE TABLE reviews (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    tmdb_id INT NOT NULL,
+    media_type VARCHAR(20) NOT NULL,
+    rating DECIMAL(3,1), 
+    review_text TEXT,
+    is_rewatch BOOLEAN DEFAULT false,
+    has_spoilers BOOLEAN DEFAULT false,
+    liked BOOLEAN DEFAULT false,
+    season_number INT,
+    episode_number INT,
+    watch_date DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (tmdb_id, media_type) REFERENCES media_cache(tmdb_id, media_type) ON DELETE CASCADE
+);

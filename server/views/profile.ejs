@@ -29,14 +29,15 @@
     </header>
 
     <!-- BANNER -->
-    <div class="profile-banner">
+    <div class="profile-banner"
+        style="background-image: url('<%= profileUser.backdrop_url || '/assets/default-backdrop.jpg' %>');">
         <div class="banner-overlay"></div>
     </div>
-
     <!-- PROFILE HEADER -->
     <div class="profile-header-container">
         <div class="profile-avatar-wrapper">
-            <img src="/assets/avatars/shehab.jpg" alt="Shehab Aboshady" class="profile-avatar"
+            <img src="<%= profileUser.avatar_url || '/assets/default-avatar.jpeg' %>"
+                alt="<%= profileUser.display_name || profileUser.username %>" class="profile-avatar"
                 onerror="this.src='/assets/profile-avatar.jpg'">
         </div>
 
@@ -67,14 +68,18 @@
                         </button>
                     </a>
 
-                    <button id="followBtn" class="btn-profile-pill btn-follow other-only" type="button"
-                        aria-pressed="false" aria-label="Follow user">
-                        <i class="fa-solid fa-user-plus"></i>
-                        <span class="btn-label">Follow</span>
-                    </button>
-                    <button id="notifyBtn" class="btn-profile-pill btn-notify other-only" type="button"
-                        title="Turn on notifications" aria-label="Turn on notifications" aria-pressed="false">
-                        <i class="fa-solid fa-bell"></i>
+                    <button id="followBtn"
+                        class="btn-profile-pill btn-follow other-only <%= typeof isFollowing !== 'undefined' && isFollowing ? 'is-active' : '' %>"
+                        type="button"
+                        aria-pressed="<%= typeof isFollowing !== 'undefined' && isFollowing ? 'true' : 'false' %>"
+                        aria-label="<%= typeof isFollowing !== 'undefined' && isFollowing ? 'Following user' : 'Follow user' %>"
+                        data-id="<%= profileUser.id %>">
+
+                        <i
+                            class="fa-solid <%= typeof isFollowing !== 'undefined' && isFollowing ? 'fa-check' : 'fa-user-plus' %>"></i>
+                        <span class="btn-label">
+                            <%= typeof isFollowing !=='undefined' && isFollowing ? 'Following' : 'Follow' %>
+                        </span>
                     </button>
                 </div>
             </div>
@@ -85,15 +90,21 @@
 
             <div class="profile-stats">
                 <div class="stat-item">
-                    <span class="stat-value">1,240</span>
+                    <span class="stat-value">
+                        <%= followersCount %>
+                    </span>
                     <span class="stat-label">Followers</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-value">385</span>
+                    <span class="stat-value">
+                        <%= followingCount %>
+                    </span>
                     <span class="stat-label">Following</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-value">842</span>
+                    <span class="stat-value">
+                        <%= totalWatchedCount %>
+                    </span>
                     <span class="stat-label">Total Watched</span>
                 </div>
             </div>
@@ -143,138 +154,73 @@
                         </div>
 
                         <div class="profile-cards-wrapper" id="favoritesRow">
-                            <div class="content-card">
-                                <img src="/assets/posters/poster-vinlandsaga.webp" alt="Vinland Saga"
-                                    class="card-poster">
-                                <div class="card-overlay">
-                                    <div class="card-top-row">
-                                        <span class="type-badge">ANIME</span>
-                                        <div class="rating-box">
-                                            <span class="rating-label">MAL</span>
-                                            <span class="rating-score">⭐ 8.8</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-bottom-content">
-                                        <div class="title-row">
-                                            <h3 class="card-title">Vinland Saga</h3>
-                                            <span class="age-badge">TV-MA</span>
-                                        </div>
-                                        <div class="meta-row">
-                                            <span>2 Seasons • 2019</span>
-                                        </div>
-                                        <div class="card-actions">
-                                            <a href="/details" class="btn-details">Details</a>
-                                            <button class="btn-watchlist" title="Add to Watchlist">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <% if (locals.favoriteMedia && favoriteMedia.length> 0) { %>
+                                <% favoriteMedia.forEach(item=> { %>
+                                    <div class="content-card">
+                                        <!-- البوستر -->
+                                        <img src="<%= item.poster_path ? 'https://image.tmdb.org/t/p/w500' + item.poster_path : '/assets/default-poster.jpg' %>"
+                                            alt="<%= item.title %>" class="card-poster">
 
-                            <div class="content-card">
-                                <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
-                                    alt="Interstellar" class="card-poster">
-                                <div class="card-overlay">
-                                    <div class="card-top-row">
-                                        <span class="type-badge">MOVIE</span>
-                                        <div class="rating-box">
-                                            <span class="rating-label">IMDb</span>
-                                            <span class="rating-score">⭐ 8.7</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-bottom-content">
-                                        <div class="title-row">
-                                            <h3 class="card-title">Interstellar</h3>
-                                            <span class="age-badge">PG-13</span>
-                                        </div>
-                                        <div class="meta-row">
-                                            <span>2h 49m • 2014</span>
-                                        </div>
-                                        <div class="card-actions">
-                                            <a href="/details" class="btn-details">Details</a>
-                                            <button class="btn-watchlist" title="Add to Watchlist">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        <div class="card-overlay">
+                                            <div class="card-top-row">
+                                                <!-- نوع العمل -->
+                                                <span class="type-badge">
+                                                    <%= item.media_type==='tv' ? 'SERIES' :
+                                                        item.media_type.toUpperCase() %>
+                                                </span>
+                                            </div>
 
-                            <div class="content-card">
-                                <img src="/assets/posters/poster-dune2.webp" alt="Dune: Part Two" class="card-poster">
-                                <div class="card-overlay">
-                                    <div class="card-top-row">
-                                        <span class="type-badge">MOVIE</span>
-                                        <div class="rating-box">
-                                            <span class="rating-label">IMDb</span>
-                                            <span class="rating-score">⭐ 8.5</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-bottom-content">
-                                        <div class="title-row">
-                                            <h3 class="card-title">Dune: Part Two</h3>
-                                            <span class="age-badge">PG-13</span>
-                                        </div>
-                                        <div class="meta-row">
-                                            <span>2h 46m • 2024</span>
-                                        </div>
-                                        <div class="card-actions">
-                                            <a href="/details" class="btn-details">Details</a>
-                                            <button class="btn-watchlist" title="Add to Watchlist">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                            <div class="card-bottom-content">
+                                                <div class="title-row">
+                                                    <h3 class="card-title">
+                                                        <%= item.title %>
+                                                    </h3>
+                                                </div>
 
-                            <div class="content-card">
-                                <img src="/assets/posters/poster-breakingbad.webp" alt="Breaking Bad"
-                                    class="card-poster">
-                                <div class="card-overlay">
-                                    <div class="card-top-row">
-                                        <span class="type-badge">SERIES</span>
-                                        <div class="rating-box">
-                                            <span class="rating-label">IMDb</span>
-                                            <span class="rating-score">⭐ 9.5</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-bottom-content">
-                                        <div class="title-row">
-                                            <h3 class="card-title">Breaking Bad</h3>
-                                            <span class="age-badge">TV-MA</span>
-                                        </div>
-                                        <div class="meta-row">
-                                            <span>5 Seasons • 2008</span>
-                                        </div>
-                                        <div class="card-actions">
-                                            <a href="/details" class="btn-details">Details</a>
-                                            <button class="btn-watchlist" title="Add to Watchlist">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                                <div class="meta-row">
+                                                    <span>
+                                                        <!-- حساب مدة العرض أو عدد الحلقات والمواسم -->
+                                                        <% if (item.media_type==='movie' && item.run_time) { %>
+                                                            <%= Math.floor(item.run_time / 60) %>h <%= item.run_time %
+                                                                    60 %>m
+                                                                    <% } else if (item.total_seasons &&
+                                                                        item.total_seasons> 0) { %>
+                                                                        <%= item.total_seasons %> Seasons
+                                                                            <% } else if (item.total_episodes) { %>
+                                                                                <%= item.total_episodes %> Eps
+                                                                                    <% } %>
+                                                    </span>
+                                                </div>
 
-                            <div class="content-card">
-                                <img src="/assets/posters/poster-onepiece.webp" alt="One Piece" class="card-poster">
-                                <div class="card-overlay">
-                                    <div class="card-top-row">
-                                        <span class="type-badge">ANIME</span>
-                                        <div class="rating-box">
-                                            <span class="rating-label">IMDb</span>
-                                            <span class="rating-score">⭐ 9.0</span>
+                                                <div class="card-actions">
+                                                    <a href="/details/<%= item.media_type %>/<%= item.tmdb_id %>"
+                                                        class="btn-details">Details</a>
+
+                                                    <% // فحص: هل العمل ده موجود في الـ Watchlist بتاعتي؟ let
+                                                        isAdded=false; if (locals.myWatchlist) {
+                                                        isAdded=myWatchlist.some(w=> w.tmdb_id === item.tmdb_id &&
+                                                        w.media_type === item.media_type);
+                                                        }
+                                                        %>
+                                                        <button class="btn-watchlist <%= isAdded ? 'added' : '' %>"
+                                                            title="Toggle Watchlist"
+                                                            onclick="toggleWatchlist(this, <%= item.tmdb_id %>, '<%= item.media_type %>')">
+                                                            <span class="icon-plus">+</span>
+                                                            <span class="icon-minus">-</span>
+                                                        </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="card-bottom-content">
-                                        <div class="title-row">
-                                            <h3 class="card-title">One Piece</h3>
-                                            <span class="age-badge">TV-14</span>
-                                        </div>
-                                        <div class="meta-row">
-                                            <span>1122 Eps • 1999–Present</span>
-                                        </div>
-                                        <div class="card-actions">
-                                            <a href="/details" class="btn-details">Details</a>
-                                            <button class="btn-watchlist" title="Add to Watchlist">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <div class="empty-state"
+                                                style="padding: 30px; text-align: center; width: 100%; color: rgba(241, 227, 200, 0.5);">
+                                                <i class="fa-regular fa-heart"
+                                                    style="font-size: 2.5rem; margin-bottom: 15px;"></i>
+                                                <p>No favorites added yet.</p>
+                                            </div>
+                                            <% } %>
                         </div>
                     </div>
 
@@ -608,19 +554,27 @@
                         <div class="quick-stats">
                             <div class="qs-row">
                                 <span>Watch Time</span>
-                                <strong>1,420 hrs</strong>
+                                <strong>
+                                    <%= totalWatchHours || 0 %> hrs
+                                </strong>
                             </div>
                             <div class="qs-row">
                                 <span>Movies</span>
-                                <strong>512</strong>
+                                <strong>
+                                    <%= statsMovies || 0 %>
+                                </strong>
                             </div>
                             <div class="qs-row">
                                 <span>Series</span>
-                                <strong>120</strong>
+                                <strong>
+                                    <%= statsSeries || 0 %>
+                                </strong>
                             </div>
                             <div class="qs-row">
                                 <span>Anime</span>
-                                <strong>210</strong>
+                                <strong>
+                                    <%= statsAnime || 0 %>
+                                </strong>
                             </div>
                         </div>
                     </div>
@@ -803,6 +757,7 @@
             <%- include("partials/modals/log-modal.ejs") %>
                 <%- include("partials/modals/list-modal.ejs") %>
                     <!-- Scripts -->
+                    <script src="/js/main.js"></script>
                     <script src="/js/modals.js"></script>
                     <script src="/js/pages/profile-page.js"></script>
 </body>

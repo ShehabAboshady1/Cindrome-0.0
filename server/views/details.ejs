@@ -7,16 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - <%= media.title %>
     </title>
-    <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/navbar.css">
-    <link rel="stylesheet" href="css/hero.css">
-    <link rel="stylesheet" href="css/lists-carousel.css">
-    <link rel="stylesheet" href="css/carousel.css">
-    <link rel="stylesheet" href="css/pages/details.css">
-    <link rel="stylesheet" href="css/reviews.css">
-    <link rel="stylesheet" href="css/modals.css">
-    <link rel="stylesheet" href="css/cards.css">
+    <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/hero.css">
+    <link rel="stylesheet" href="/css/lists-carousel.css">
+    <link rel="stylesheet" href="/css/carousel.css">
+    <link rel="stylesheet" href="/css/pages/details.css">
+    <link rel="stylesheet" href="/css/reviews.css">
+    <link rel="stylesheet" href="/css/modals.css">
+    <link rel="stylesheet" href="/css/cards.css">
 </head>
 
 <body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">
@@ -64,14 +64,19 @@
                     <div class="action-buttons">
                         <button class="btn btn-primary log-btn" id="openLogModal">+ Log</button>
 
-                        <button class="btn btn-secondary watchlist-btn" title="Toggle Watchlist">
-                            <i class="fa-regular fa-bookmark"></i>
-                            <span class="text-default">Watchlist</span>
-                            <span class="text-added" style="display: none;">Added</span>
+                        <button type="button"
+                            class="btn btn-secondary watchlist-btn hero-watchlist-btn <%= media && locals.watchlistMap && locals.watchlistMap.includes(media.id.toString()) ? 'added' : '' %>"
+                            title="Toggle Watchlist"
+                            onclick="toggleWatchlist(this, <%= media.id %>, '<%= media.type %>')">
+                            <span class="default-content"><i class="fa-regular fa-bookmark"></i> Watchlist</span>
+                            <span class="added-content"><i class="fa-solid fa-minus" style="margin-right: 6px;"></i>
+                                Added</span>
                         </button>
-
-                        <button class="btn btn-icon-only like-btn-hero" title="Like">
-                            <i class="fa-regular fa-heart"></i>
+                        <button type="button"
+                            class="btn btn-icon-only like-btn-hero <%= locals.likedMediaMap && locals.likedMediaMap.includes(media.id.toString()) ? 'liked' : '' %>"
+                            title="Like" onclick="toggleLike(this, <%= media.id %>, '<%= media.type %>')">
+                            <i
+                                class="<%= locals.likedMediaMap && locals.likedMediaMap.includes(media.id.toString()) ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
                         </button>
                     </div>
                 </div>
@@ -173,7 +178,7 @@
                         </div>
                     </div>
 
-                    <!-- 5. REVIEWS SECTION (الأربعة الأصلية كاملة مع كلاساتها) -->
+                    <!-- 5. REVIEWS SECTION -->
                     <div class="detail-section details-panel" id="sec-reviews">
                         <div class="reviews-section-header">
                             <div class="reviews-section-heading">
@@ -190,207 +195,118 @@
                         </div>
 
                         <div class="reviews-list" id="reviewsRow">
+                            <% if (media.reviews && media.reviews.length> 0) { %>
+                                <% media.reviews.forEach(review=> { %>
+                                    <article class="minimal-review-card">
+                                        <div class="minimal-card-header">
+                                            <div class="header-left-stack">
+                                                <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
+                                                    class="review-poster-link" title="<%= media.title %>">
+                                                    <img src="<%= media.poster %>" class="review-micro-poster"
+                                                        alt="<%= media.title %>">
+                                                </a>
+                                                <div class="review-info-content">
+                                                    <div class="review-title-row">
+                                                        <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
+                                                            class="review-media-title">
+                                                            <%= media.title %>
+                                                        </a>
+                                                        <!-- تحديد نوع المراجعة: موسم/حلقة أو عامة -->
+                                                        <% if (review.season_number && review.episode_number) { %>
+                                                            <span class="review-context-pill highlight">S<%=
+                                                                    review.season_number < 10 ? '0'
+                                                                    +review.season_number : review.season_number %> E<%=
+                                                                        review.episode_number < 10 ? '0'
+                                                                        +review.episode_number : review.episode_number
+                                                                        %></span>
+                                                            <% } else if (review.season_number) { %>
+                                                                <span class="review-context-pill highlight">Season <%=
+                                                                        review.season_number %></span>
+                                                                <% } else { %>
+                                                                    <span class="review-context-pill">General
+                                                                        Review</span>
+                                                                    <% } %>
+                                                    </div>
 
-                            <!-- Review 1 -->
-                            <article class="minimal-review-card">
-                                <div class="minimal-card-header">
-                                    <div class="header-left-stack">
-                                        <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
-                                            class="review-poster-link" title="<%= media.title %>">
-                                            <img src="<%= media.poster %>" class="review-micro-poster"
-                                                alt="<%= media.title %>">
-                                        </a>
-                                        <div class="review-info-content">
-                                            <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
-                                                class="review-media-title">
-                                                <%= media.title %>
-                                            </a>
-                                            <div class="review-rating-line">
-                                                <div class="stars" title="5 Stars">
-                                                    <span class="star-full">★</span><span
-                                                        class="star-full">★</span><span class="star-full">★</span><span
-                                                        class="star-full">★</span><span class="star-full">★</span>
+                                                    <div class="review-rating-line">
+                                                        <div class="review-stars-box"
+                                                            title="<%= review.rating || 0 %> Stars">
+                                                            <% const rating=parseFloat(review.rating) || 0; const
+                                                                fullStars=Math.floor(rating); const hasHalf=rating % 1
+                                                                !==0; const emptyStars=5 - Math.ceil(rating); %>
+
+                                                                <% for(let i=0; i<fullStars; i++) { %>
+                                                                    <span class="star-full">★</span>
+                                                                    <% } %>
+                                                                        <% if (hasHalf) { %>
+                                                                            <span class="star-half">★</span>
+                                                                            <% } %>
+                                                                                <% for(let i=0; i<emptyStars; i++) { %>
+                                                                                    <span class="star-empty">★</span>
+                                                                                    <% } %>
+                                                        </div>
+                                                    </div>
+                                                    <div class="review-author-line">
+                                                        <a href="/profile/<%= review.username %>"
+                                                            class="review-avatar-link">
+                                                            <img src="<%= review.avatar_url || '/assets/default-avatar.jpeg' %>"
+                                                                alt="<%= review.username %>" class="review-micro-avatar"
+                                                                onerror="this.src='/assets/default-avatar.jpeg'">
+                                                        </a>
+                                                        <a href="/profile/<%= review.username %>"
+                                                            class="review-author-username">@<%= review.username %></a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="review-author-line">
-                                                <a href="/profile" class="review-avatar-link">
-                                                    <img src="assets/profile-avatar.jpg" alt="Shehab"
-                                                        class="review-micro-avatar">
-                                                </a>
-                                                <a href="/profile" class="review-author-username">@Shehab_Aboshady</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="minimal-card-body">
-                                    <p class="review-body">
-                                        Sharp writing and brilliant performance throughout! The pacing and character
-                                        arcs are absolute perfection.
-                                    </p>
-                                </div>
-                                <div class="minimal-card-footer">
-                                    <div class="minimal-actions">
-                                        <button class="minimal-btn review-like-btn"><i class="fa-regular fa-heart"></i>
-                                            350</button>
-                                        <a href="/single-review" class="minimal-btn"><i
-                                                class="fa-regular fa-comment"></i> 12</a>
-                                    </div>
-                                    <a href="/single-review" class="minimal-read-link">Read More <i
-                                            class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                                </div>
-                            </article>
-
-                            <!-- Review 2 (Spoiler) -->
-                            <article class="minimal-review-card">
-                                <div class="minimal-card-header">
-                                    <div class="header-left-stack">
-                                        <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
-                                            class="review-poster-link" title="<%= media.title %>">
-                                            <img src="<%= media.poster %>" class="review-micro-poster"
-                                                alt="<%= media.title %>">
-                                        </a>
-                                        <div class="review-info-content">
-                                            <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
-                                                class="review-media-title">
-                                                <%= media.title %>
-                                            </a>
-                                            <div class="review-rating-line">
-                                                <div class="stars" title="4 Stars">
-                                                    <span class="star-full">★</span><span
-                                                        class="star-full">★</span><span class="star-full">★</span><span
-                                                        class="star-full">★</span><span class="star-empty">★</span>
+                                            <% if (review.has_spoilers) { %>
+                                                <div class="header-right-stack">
+                                                    <span class="spoiler-badge"><i
+                                                            class="fa-solid fa-triangle-exclamation"></i> Spoiler</span>
                                                 </div>
-                                            </div>
-                                            <div class="review-author-line">
-                                                <a href="/profile" class="review-avatar-link">
-                                                    <img src="assets/profile-avatar.jpg" alt="Shehab"
-                                                        class="review-micro-avatar">
-                                                </a>
-                                                <a href="/profile" class="review-author-username">@Shehab_Aboshady</a>
-                                            </div>
+                                                <% } %>
                                         </div>
-                                    </div>
-                                    <div class="header-right-stack">
-                                        <span class="spoiler-badge"><i class="fa-solid fa-triangle-exclamation"></i>
-                                            Spoiler</span>
-                                    </div>
-                                </div>
-                                <div class="minimal-card-body">
-                                    <p class="review-body blurred"
-                                        data-full-text="The climax and plot twist execution were insane! One of the most unexpected twists in modern media.">
-                                        Click to reveal review containing spoilers for the finale.
-                                    </p>
-                                </div>
-                                <div class="minimal-card-footer">
-                                    <div class="minimal-actions">
-                                        <button class="minimal-btn review-like-btn"><i class="fa-regular fa-heart"></i>
-                                            42</button>
-                                        <a href="/single-review" class="minimal-btn"><i
-                                                class="fa-regular fa-comment"></i> 5</a>
-                                    </div>
-                                    <a href="/single-review" class="minimal-read-link">Read More <i
-                                            class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                                </div>
-                            </article>
 
-                            <!-- Review 3 -->
-                            <article class="minimal-review-card">
-                                <div class="minimal-card-header">
-                                    <div class="header-left-stack">
-                                        <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
-                                            class="review-poster-link" title="<%= media.title %>">
-                                            <img src="<%= media.poster %>" class="review-micro-poster"
-                                                alt="<%= media.title %>">
-                                        </a>
-                                        <div class="review-info-content">
-                                            <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
-                                                class="review-media-title">
-                                                <%= media.title %>
-                                            </a>
-                                            <div class="review-rating-line">
-                                                <div class="stars" title="5 Stars">
-                                                    <span class="star-full">★</span><span
-                                                        class="star-full">★</span><span class="star-full">★</span><span
-                                                        class="star-full">★</span><span class="star-full">★</span>
-                                                </div>
-                                            </div>
-                                            <div class="review-author-line">
-                                                <a href="/profile" class="review-avatar-link">
-                                                    <img src="assets/profile-avatar.jpg" alt="Shehab"
-                                                        class="review-micro-avatar">
-                                                </a>
-                                                <a href="/profile" class="review-author-username">@Shehab_Aboshady</a>
-                                            </div>
+                                        <div class="minimal-card-body">
+                                            <% if (review.review_text && review.review_text.trim() !=='' ) { %>
+                                                <% if (review.has_spoilers) { %>
+                                                    <p class="review-body blurred" onclick="revealSpoiler(this)"
+                                                        data-full-text="<%= review.review_text %>">
+                                                        Click to reveal review containing spoilers.
+                                                    </p>
+                                                    <% } else { %>
+                                                        <p class="review-body">
+                                                            <%= review.review_text %>
+                                                        </p>
+                                                        <% } %>
+                                                            <% } else { %>
+                                                                <p class="review-body"
+                                                                    style="font-style: italic; color: rgba(241,227,200,0.5);">
+                                                                    Logged without a written review.</p>
+                                                                <% } %>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="minimal-card-body">
-                                    <p class="review-body">
-                                        Mind-blowing cinematography and complex narrative. Truly mind-bending and
-                                        gripping from start to finish!
-                                    </p>
-                                </div>
-                                <div class="minimal-card-footer">
-                                    <div class="minimal-actions">
-                                        <button class="minimal-btn review-like-btn"><i class="fa-regular fa-heart"></i>
-                                            18</button>
-                                        <a href="/single-review" class="minimal-btn"><i
-                                                class="fa-regular fa-comment"></i> 3</a>
-                                    </div>
-                                    <a href="/single-review" class="minimal-read-link">Read More <i
-                                            class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                                </div>
-                            </article>
 
-                            <!-- Review 4 -->
-                            <article class="minimal-review-card">
-                                <div class="minimal-card-header">
-                                    <div class="header-left-stack">
-                                        <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
-                                            class="review-poster-link" title="<%= media.title %>">
-                                            <img src="<%= media.poster %>" class="review-micro-poster"
-                                                alt="<%= media.title %>">
-                                        </a>
-                                        <div class="review-info-content">
-                                            <a href="/details?id=<%= media.id %>&type=<%= media.type %>"
-                                                class="review-media-title">
-                                                <%= media.title %>
-                                            </a>
-                                            <div class="review-rating-line">
-                                                <div class="stars" title="5 Stars">
-                                                    <span class="star-full">★</span><span
-                                                        class="star-full">★</span><span class="star-full">★</span><span
-                                                        class="star-full">★</span><span class="star-full">★</span>
-                                                </div>
+                                        <div class="minimal-card-footer">
+                                            <div class="minimal-actions">
+                                                <!-- مؤقتاً: تصفير اللايكات والكومنتات لحد ما نعمل الجداول بتاعتهم -->
+                                                <button class="minimal-btn review-like-btn"
+                                                    title="Likes not active yet"><i class="fa-regular fa-heart"></i>
+                                                    0</button>
+                                                <a href="/single-review?id=<%= review.review_id %>" class="minimal-btn"
+                                                    title="Comments not active yet"><i
+                                                        class="fa-regular fa-comment"></i> 0</a>
                                             </div>
-                                            <div class="review-author-line">
-                                                <a href="/profile" class="review-avatar-link">
-                                                    <img src="assets/profile-avatar.jpg" alt="Shehab"
-                                                        class="review-micro-avatar">
-                                                </a>
-                                                <a href="/profile" class="review-author-username">@Shehab_Aboshady</a>
-                                            </div>
+                                            <a href="/single-review?id=<%= review.review_id %>"
+                                                class="minimal-read-link">Read More <i
+                                                    class="fa-solid fa-arrow-up-right-from-square"></i></a>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="minimal-card-body">
-                                    <p class="review-body">
-                                        An absolute masterpiece of atmospheric drama and sharp dialogue. Definitely a
-                                        must-watch experience.
-                                    </p>
-                                </div>
-                                <div class="minimal-card-footer">
-                                    <div class="minimal-actions">
-                                        <button class="minimal-btn review-like-btn"><i class="fa-regular fa-heart"></i>
-                                            31</button>
-                                        <a href="/single-review" class="minimal-btn"><i
-                                                class="fa-regular fa-comment"></i> 8</a>
-                                    </div>
-                                    <a href="/single-review" class="minimal-read-link">Read More <i
-                                            class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                                </div>
-                            </article>
-
+                                    </article>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <div
+                                                style="padding: 20px; color: rgba(241, 227, 200, 0.6); font-style: italic; width: 100%;">
+                                                No reviews yet. Be the first to review this!
+                                            </div>
+                                            <% } %>
                         </div>
                     </div>
 
@@ -436,7 +352,10 @@
                                                     <div class="card-actions">
                                                         <a href="/details?id=<%= rec.id %>&type=<%= rec.mediaType %>"
                                                             class="btn-details">Details</a>
-                                                        <button class="btn-watchlist" title="Add to Watchlist">
+                                                        <button
+                                                            class="btn-watchlist <%= locals.watchlistMap && locals.watchlistMap.includes(rec.id.toString()) ? 'added' : '' %>"
+                                                            title="<%= locals.watchlistMap && locals.watchlistMap.includes(rec.id.toString()) ? 'Remove from Watchlist' : 'Toggle Watchlist' %>"
+                                                            onclick="toggleWatchlist(this, <%= rec.id %>, '<%= rec.mediaType %>')">
                                                             <span class="icon-plus">+</span>
                                                             <span class="icon-minus">-</span>
                                                         </button>
@@ -456,11 +375,11 @@
     <%- include("partials/footer.ejs") %>
         <%- include("partials/modals/log-modal.ejs") %>
             <%- include("partials/modals/search-modal.ejs") %>
-
-                <script src="js/modals.js"></script>
-                <script src="js/carousel.js"></script>
-                <script src="js/pages/index-page.js"></script>
-                <script src="js/pages/details-page.js"></script>
+                <script src="/js/main.js"></script>
+                <script src="/js/modals.js"></script>
+                <script src="/js/carousel.js"></script>
+                <script src="/js/pages/index-page.js"></script>
+                <script src="/js/pages/details-page.js"></script>
 </body>
 
 </html>

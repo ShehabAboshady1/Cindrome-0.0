@@ -62,7 +62,9 @@
                         View Series
                     </a>
 
-                    <button type="button" class="btn btn-secondary hero-watchlist-btn">
+                    <button type="button"
+                        class="btn btn-secondary hero-watchlist-btn <%= heroSeries && locals.watchlistMap && locals.watchlistMap.includes(heroSeries.id.toString()) ? 'added' : '' %>"
+                        onclick="toggleWatchlist(this, <%= heroSeries ? heroSeries.id : '' %>, '<%= heroSeries ? heroSeries.mediaType : 'tv' %>')">
                         <span class="default-content">Add to Watchlist</span>
                         <span class="added-content"><i class="fa-solid fa-minus" style="margin-right: 6px;"></i>
                             Added</span>
@@ -111,7 +113,10 @@
                                 </div>
                                 <div class="card-actions">
                                     <a href="/details?id=<%= item.id %>&type=tv" class="btn-details">Details</a>
-                                    <button class="btn-watchlist" title="Toggle Watchlist">
+                                    <button
+                                        class="btn-watchlist <%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'added' : '' %>"
+                                        title="<%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'Remove from Watchlist' : 'Toggle Watchlist' %>"
+                                        onclick="toggleWatchlist(this, <%= item.id %>, '<%= item.mediaType %>')">
                                         <span class="icon-plus">+</span>
                                         <span class="icon-minus">-</span>
                                     </button>
@@ -164,7 +169,10 @@
                                 </div>
                                 <div class="card-actions">
                                     <a href="/details?id=<%= item.id %>&type=tv" class="btn-details">Details</a>
-                                    <button class="btn-watchlist" title="Toggle Watchlist">
+                                    <button
+                                        class="btn-watchlist <%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'added' : '' %>"
+                                        title="<%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'Remove from Watchlist' : 'Toggle Watchlist' %>"
+                                        onclick="toggleWatchlist(this, <%= item.id %>, '<%= item.mediaType %>')">
                                         <span class="icon-plus">+</span>
                                         <span class="icon-minus">-</span>
                                     </button>
@@ -217,7 +225,10 @@
                                 </div>
                                 <div class="card-actions">
                                     <a href="/details?id=<%= item.id %>&type=tv" class="btn-details">Details</a>
-                                    <button class="btn-watchlist" title="Toggle Watchlist">
+                                    <button
+                                        class="btn-watchlist <%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'added' : '' %>"
+                                        title="<%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'Remove from Watchlist' : 'Toggle Watchlist' %>"
+                                        onclick="toggleWatchlist(this, <%= item.id %>, '<%= item.mediaType %>')">
                                         <span class="icon-plus">+</span>
                                         <span class="icon-minus">-</span>
                                     </button>
@@ -270,7 +281,10 @@
                                 </div>
                                 <div class="card-actions">
                                     <a href="/details?id=<%= item.id %>&type=tv" class="btn-details">Details</a>
-                                    <button class="btn-watchlist" title="Toggle Watchlist">
+                                    <button
+                                        class="btn-watchlist <%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'added' : '' %>"
+                                        title="<%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'Remove from Watchlist' : 'Toggle Watchlist' %>"
+                                        onclick="toggleWatchlist(this, <%= item.id %>, '<%= item.mediaType %>')">
                                         <span class="icon-plus">+</span>
                                         <span class="icon-minus">-</span>
                                     </button>
@@ -455,6 +469,7 @@
                 <script src="/js/modals.js"></script>
                 <script src="/js/carousel.js"></script>
                 <script src="/js/pages/index-page.js"></script>
+                <script src="/js/main.js"></script>
 </body>
 
 </html>
