@@ -1553,8 +1553,8 @@ app.post("/register", async (req, res) => {
       "INSERT INTO user_profiles (user_id, avatar_url, backdrop_url) VALUES ($1, $2, $3)",
       [
         newUserId,
-        "/assets/default-avatar.jpeg",
-        "/assets/default-backdrop.png",
+        "/assets/avatars/default-avatar.jpeg",
+        "/assets/backdrops/default-backdrop.png",
       ],
     );
 
