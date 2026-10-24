@@ -1507,42 +1507,44 @@ app.post("/login", (req, res, next) => {
 });
 app.get("/sign-up", (req, res) => res.render("sign-up.ejs"));
 app.post("/register", async (req, res) => {
+  console.log(
+    "🚀 [1] تم الضغط على زرار التسجيل. اليوزر نيم: ",
+    req.body.username,
+  ); // جهاز تتبع 1
+
   try {
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
 
-    // 1. فحص الإيميل واليوزر نيم مع بعض في خطوة واحدة
     const checkUser = await db.query(
       "SELECT * FROM users WHERE email = $1 OR username = $2",
       [email, username],
     );
 
     if (checkUser.rows.length > 0) {
+      console.log("⚠️ [2] الحساب موجود بالفعل!"); // جهاز تتبع 2
       const existingUser = checkUser.rows[0];
       let errorMsg = "Account already exists";
 
-      // بنحدد المشكلة في الإيميل ولا اليوزر نيم
       if (existingUser.email === email) {
         errorMsg = "This Email is already registered!";
       } else if (existingUser.username === username) {
         errorMsg = "This Username is already taken!";
       }
 
-      // 🌟 التعديل هنا: بنعيد عرض الصفحة ونبعتلها رسالة الخطأ 🌟
       return res.render("sign-up.ejs", { errorMessage: errorMsg });
     }
 
-    // 2. تشفير الباسورد
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // 3. الحفظ في الداتابيز للثلاث جداول
     const insertResult = await db.query(
       "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id",
       [username, email, hashedPassword],
     );
     const newUserId = insertResult.rows[0].id;
+    console.log("✅ [3] تم حفظ اليوزر في الداتابيز بنجاح برقم: ", newUserId); // جهاز تتبع 3
 
     await db.query(
       "INSERT INTO user_settings (user_id, is_private) VALUES ($1, $2)",
@@ -1557,21 +1559,23 @@ app.post("/register", async (req, res) => {
         "/assets/default-backdrop.png",
       ],
     );
+    console.log("✅ [4] تم إعداد البروفايل والإعدادات بنجاح"); // جهاز تتبع 4
 
-    // 4. تسجيل الدخول أوتوماتيك والتحويل للرئيسية
     const newUser = { id: newUserId, username: username, email: email };
     req.login(newUser, (err) => {
       if (err) {
-        console.error(err);
+        console.error("❌ [5] خطأ في Passport أثناء إنشاء الجلسة: ", err); // جهاز تتبع 5
         return res.render("sign-up.ejs", {
           errorMessage: "Registration successful, but login failed.",
         });
       }
+      console.log(
+        "✅ [6] تم تسجيل الدخول بنجاح، جاري التحويل للصفحة الرئيسية!",
+      ); // جهاز تتبع 6
       return res.redirect("/");
     });
   } catch (error) {
-    console.error(error);
-    // لو حصل خطأ سيرفر، بنعرضه جوه الصفحة برضه
+    console.error("🚨 إيرور قاتل في مسار التسجيل: ", error);
     return res.render("sign-up.ejs", {
       errorMessage: "Internal Server Error. Please try again.",
     });
