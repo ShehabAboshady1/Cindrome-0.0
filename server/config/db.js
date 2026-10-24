@@ -6,20 +6,23 @@ dotenv.config();
 
 const { Pool } = pg;
 
-// إعدادات الاتصال الذكية
-const db = new Pool({
-  // لو فيه رابط أونلاين استخدمه، لو مفيش استخدم بيانات اللابتوب المحلي
-  connectionString:
-    process.env.DATABASE_URL ||
-    `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+// تجهيز إعدادات الاتصال بناءً على البيئة (Local أو Production)
+const isProduction = process.env.NODE_ENV === "production";
 
-  // سيرفرات Render بتشترط اتصال مشفر (SSL) لما نكلمها من بره
-  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
+// إعدادات الاتصال
+const connectionString = isProduction
+  ? process.env.DATABASE_URL
+  : `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+
+const db = new Pool({
+  connectionString: connectionString,
+  // تفعيل الـ SSL فقط في حالة الـ Production (Render)
+  ssl: isProduction ? { rejectUnauthorized: false } : false,
 });
 
 // اختبار الاتصال
 db.connect()
-  .then(() => console.log("✅ Connected to Cindrome Database successfully!"))
+  .then(() => console.log("✅ Connected to Database successfully!"))
   .catch((err) => console.error("❌ Database connection error:", err.stack));
 
 export default db;
