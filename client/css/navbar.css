@@ -59,7 +59,6 @@ header {
   align-items: center;
   z-index: 2;
   margin-left: auto; /* بيزق الروابط لليمين */
-  margin-right: 25px; /* مسافة بين الروابط وزراير الأكشن */
 }
 
 /* 🌟 الكونتينر الجديد لزراير الأكشن 🌟 */
