@@ -1529,47 +1529,85 @@ app.get("/profile/:username", async (req, res, next) => {
       myWatchlist = wlRes.rows;
     }
 
-    // === جلب إحصائيات المشاهدة (Watch Stats) والعدد الإجمالي بناءً على الأعمال المكتملة ===
-    const statsRes = await db.query(
-      `
+    // === جلب إحصائيات المشاهدة (Watch Stats) وساعات المشاهدة بدقة (معالجة التقييمات المتعددة) ===
+    const statsQuery = `
       SELECT 
-        media_type,
-        COUNT(tmdb_id) as count,
-        SUM(run_time) as total_movie_minutes
+        r.tmdb_id,
+        r.media_type,
+        r.season_number,
+        r.episode_number,
+        m.run_time,
+        m.total_episodes,
+        m.total_seasons,
+        -- 🌟 السطر السحري: هل اليوزر ده عمره قيّم العمل ده بالكامل قبل كده؟ 🌟
+        EXISTS (
+          SELECT 1 FROM reviews r2 
+          WHERE r2.user_id = $1 
+            AND r2.tmdb_id = r.tmdb_id 
+            AND r2.media_type = r.media_type
+            AND r2.season_number IS NULL
+        ) as watched_all
       FROM (
-        SELECT DISTINCT r.tmdb_id, r.media_type, m.run_time
-        FROM reviews r
-        JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
-        WHERE r.user_id = $1
-          AND (r.media_type = 'movie' OR r.season_number IS NULL)
-      ) as unique_reviews
-      GROUP BY media_type
-    `,
-      [profileUser.id],
-    );
+        SELECT DISTINCT ON (tmdb_id, media_type) *
+        FROM reviews
+        WHERE user_id = $1
+        ORDER BY tmdb_id, media_type, watch_date DESC, created_at DESC
+      ) r
+      JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
+    `;
+    const statsRes = await db.query(statsQuery, [profileUser.id]);
 
     let statsMovies = 0;
     let statsSeries = 0;
     let statsAnime = 0;
-    let totalWatchHours = 0;
-    let finalWatchedCount = 0; // 🌟 الإجمالي الشامل هنا
+    let totalWatchMinutes = 0;
+    let finalWatchedCount = 0;
 
     statsRes.rows.forEach((row) => {
-      const count = parseInt(row.count) || 0;
-      finalWatchedCount += count; // 🌟 بنجمع الإجمالي
+      // تحديد وقت الحلقة (لو مش متسجل في TMDB بنفترض 24 دقيقة للأنمي و 45 للمسلسل)
+      let runtime = parseInt(row.run_time);
+      if (!runtime || runtime === 0) {
+        runtime = row.media_type === "anime" ? 24 : 45;
+      }
 
+      // 1. حساب الأعمال المكتملة (مستحيل ينقص دلوقتي لو كنت مخلصه قبل كده)
+      if (row.media_type === "movie" || row.watched_all) {
+        finalWatchedCount++;
+        if (row.media_type === "movie") statsMovies++;
+        else if (row.media_type === "tv" || row.media_type === "series")
+          statsSeries++;
+        else if (row.media_type === "anime") statsAnime++;
+      }
+
+      // 2. حساب وقت المشاهدة التراكمي
       if (row.media_type === "movie") {
-        statsMovies = count;
-        // بنحول دقايق الأفلام لساعات ونزودها ع المجموع
-        totalWatchHours += (parseInt(row.total_movie_minutes) || 0) / 60;
-      } else if (row.media_type === "tv" || row.media_type === "series") {
-        statsSeries = count;
-      } else if (row.media_type === "anime") {
-        statsAnime = count;
+        totalWatchMinutes += runtime;
+      } else {
+        const totalEps = parseInt(row.total_episodes) || 1;
+
+        if (row.watched_all) {
+          // طالما مخلصه في أي وقت، نضرب كل حلقاته الإجمالية في وقت الحلقة
+          totalWatchMinutes += totalEps * runtime;
+        } else {
+          // لو لسه بيتفرج ولم يكمله أبدًا، نجمع اللي شافه
+          const totalSeasons = parseInt(row.total_seasons) || 1;
+          const currentSeason = parseInt(row.season_number) || 1;
+          const currentEp = parseInt(row.episode_number) || 0;
+
+          const avgEpsPerSeason = totalEps / totalSeasons;
+          let estimatedEpsWatched =
+            (currentSeason - 1) * avgEpsPerSeason + currentEp;
+
+          if (estimatedEpsWatched > totalEps || currentEp > avgEpsPerSeason) {
+            estimatedEpsWatched = Math.min(currentEp, totalEps);
+          }
+
+          totalWatchMinutes += Math.round(estimatedEpsWatched) * runtime;
+        }
       }
     });
 
-    totalWatchHours = Math.round(totalWatchHours); // تقريب الرقم لأقرب ساعة
+    const totalWatchHours = Math.round(totalWatchMinutes / 60);
     // === جلب قائمة Currently Watching ===
     const watchingQuery = `
       SELECT DISTINCT ON (r.tmdb_id) 
@@ -2057,6 +2095,15 @@ app.post("/api/watchlist/toggle", async (req, res) => {
         } else {
           total_episodes = data.number_of_episodes;
           total_seasons = data.number_of_seasons;
+          // 🌟 السر هنا: التقاط وقت الحلقة للمسلسلات والأنمي من TMDB 🌟
+          if (data.episode_run_time && data.episode_run_time.length > 0) {
+            run_time = data.episode_run_time[0];
+          } else if (
+            data.last_episode_to_air &&
+            data.last_episode_to_air.runtime
+          ) {
+            run_time = data.last_episode_to_air.runtime;
+          }
         }
       } catch (apiErr) {
         console.error(`TMDB Fetch Error:`, apiErr.message);
@@ -2167,6 +2214,15 @@ app.post("/api/like/toggle", async (req, res) => {
         } else {
           total_episodes = data.number_of_episodes;
           total_seasons = data.number_of_seasons;
+          // 🌟 السر هنا: التقاط وقت الحلقة للمسلسلات والأنمي من TMDB 🌟
+          if (data.episode_run_time && data.episode_run_time.length > 0) {
+            run_time = data.episode_run_time[0];
+          } else if (
+            data.last_episode_to_air &&
+            data.last_episode_to_air.runtime
+          ) {
+            run_time = data.last_episode_to_air.runtime;
+          }
         }
       } catch (apiErr) {
         console.error(`TMDB Fetch Error:`, apiErr.message);
@@ -2263,6 +2319,15 @@ app.post("/api/reviews/log", async (req, res) => {
       } else {
         total_episodes = data.number_of_episodes;
         total_seasons = data.number_of_seasons;
+        // 🌟 السر هنا: التقاط وقت الحلقة للمسلسلات والأنمي من TMDB 🌟
+        if (data.episode_run_time && data.episode_run_time.length > 0) {
+          run_time = data.episode_run_time[0];
+        } else if (
+          data.last_episode_to_air &&
+          data.last_episode_to_air.runtime
+        ) {
+          run_time = data.last_episode_to_air.runtime;
+        }
       }
     } catch (apiErr) {
       console.error(`Failed to fetch TMDB data in Log Modal:`, apiErr.message);
@@ -2270,10 +2335,12 @@ app.post("/api/reviews/log", async (req, res) => {
     }
 
     // إدخال أو تحديث الكاش
+    // إدخال أو تحديث الكاش (وتحديث وقت العمل لو كان ناقص)
     await db.query(
       `INSERT INTO media_cache (tmdb_id, media_type, title, poster_path, run_time, total_episodes, total_seasons)
              VALUES ($1, $2, $3, $4, $5, $6, $7)
-             ON CONFLICT (tmdb_id, media_type) DO NOTHING`,
+             ON CONFLICT (tmdb_id, media_type) 
+             DO UPDATE SET run_time = EXCLUDED.run_time WHERE media_cache.run_time IS NULL`,
       [
         tmdb_id,
         media_type,
