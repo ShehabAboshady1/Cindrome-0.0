@@ -920,9 +920,125 @@ app.get("/api/tv/:id/season/:seasonNumber", async (req, res) => {
     res.status(500).json([]);
   }
 });
+app.put("/api/reviews/:id", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
 
+  try {
+    const {
+      rating,
+      review_text,
+      is_rewatch,
+      has_spoilers,
+      liked,
+      season_number,
+      episode_number,
+      watch_date,
+    } = req.body;
+
+    await db.query(
+      `
+            UPDATE reviews 
+            SET rating = $1, review_text = $2, is_rewatch = $3, has_spoilers = $4, liked = $5, season_number = $6, episode_number = $7, watch_date = $8
+            WHERE id = $9 AND user_id = $10
+        `,
+      [
+        rating,
+        review_text,
+        is_rewatch,
+        has_spoilers,
+        liked,
+        season_number,
+        episode_number,
+        watch_date,
+        req.params.id,
+        req.user.id,
+      ],
+    );
+
+    res.status(200).json({ message: "Log updated successfully" });
+  } catch (error) {
+    console.error("Update Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 // المسارات الثابتة
-app.get("/diary", (req, res) => res.render("diary.ejs"));
+// ==========================================
+// Route: Diary Page (يوميات المشاهدة)
+// ==========================================
+app.get("/diary", async (req, res) => {
+  // 1. لازم اليوزر يكون مسجل دخول
+  if (!req.user) {
+    return res.redirect("/sign-in");
+  }
+
+  try {
+    // 2. هنجيب كل الـ Logs بتاعته ونربطها ببيانات العمل من الكاش
+    const query = `
+      SELECT 
+        r.id AS review_id, r.tmdb_id, r.media_type, r.rating, r.review_text, 
+        r.is_rewatch, r.has_spoilers, r.liked, r.watch_date,
+        r.season_number, r.episode_number,  /* 👈 السطر ده اللي كان ناقص */
+        m.title, m.poster_path, m.is_anime, m.run_time, m.total_episodes,m.total_seasons,
+        EXTRACT(YEAR FROM r.watch_date) AS watch_year,
+        TO_CHAR(r.watch_date, 'Month') AS watch_month,
+        EXTRACT(DAY FROM r.watch_date) AS watch_day
+      FROM reviews r
+      JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
+      WHERE r.user_id = $1
+      ORDER BY r.watch_date DESC, r.created_at DESC
+    `;
+
+    const result = await db.query(query, [req.user.id]);
+    const allLogs = result.rows;
+
+    // 3. حساب عدد الأعمال اللي شافها السنة دي (عشان الـ Subtitle اللي فوق)
+    const currentYear = new Date().getFullYear();
+    const currentYearCount = allLogs.filter(
+      (log) => parseInt(log.watch_year) === currentYear,
+    ).length;
+
+    // 4. تجميع الأعمال حسب "الشهر والسنة" (عشان نعرضهم تحت بعض زي التصميم بتاعك)
+    const groupedLogs = {};
+    allLogs.forEach((log) => {
+      const monthYear = `${log.watch_month.trim()} ${log.watch_year}`;
+      if (!groupedLogs[monthYear]) {
+        groupedLogs[monthYear] = [];
+      }
+      groupedLogs[monthYear].push(log);
+    });
+
+    // 5. نبعت الداتا المترتبة للصفحة
+    res.render("diary.ejs", {
+      groupedLogs,
+      currentYearCount,
+      currentYear,
+    });
+  } catch (error) {
+    console.error("Error fetching diary logs:", error);
+    res.render("diary.ejs", {
+      groupedLogs: {},
+      currentYearCount: 0,
+      currentYear: new Date().getFullYear(),
+    });
+  }
+});
+app.delete("/api/reviews/:id", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    // بنحذف بشرطين: رقم الريفيو، وإنه يكون بتاع اليوزر نفسه (للحماية)
+    await db.query("DELETE FROM reviews WHERE id = $1 AND user_id = $2", [
+      req.params.id,
+      req.user.id,
+    ]);
+    res.status(200).json({ message: "Log deleted successfully" });
+  } catch (error) {
+    console.error("Delete Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 app.get("/discover", (req, res) => {
   res.render("discover.ejs");
 });

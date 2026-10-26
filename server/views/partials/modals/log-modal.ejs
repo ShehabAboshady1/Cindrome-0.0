@@ -19,6 +19,7 @@
             <div class="log-item-header">
                 <input type="hidden" id="logMediaId" value="<%= hasMedia ? media.id : '' %>">
                 <input type="hidden" id="logMediaType" value="<%= hasMedia ? media.type : '' %>">
+                <input type="hidden" id="logReviewId" value="">
 
                 <img src="<%= safePoster %>" alt="<%= hasMedia ? media.title : 'Media Poster' %>"
                     class="log-item-poster" id="logItemPoster">
@@ -91,12 +92,13 @@
                             <i class="fa-solid fa-heart" style="pointer-events: none;"></i>
                         </button>
 
-                        <button type="button" class="icon-toggle-btn rewatch-btn-toggle" title="Rewatch" id="rewatchToggle"
-                            onclick="this.classList.toggle('active')">
+                        <button type="button" class="icon-toggle-btn rewatch-btn-toggle" title="Rewatch"
+                            id="rewatchToggle" onclick="this.classList.toggle('active')">
                             <i class="fa-solid fa-rotate-right" style="pointer-events: none;"></i>
                         </button>
 
-                        <button type="button" class="icon-toggle-btn spoiler-btn" title="Contains Spoilers" id="spoilerToggle"
+                        <button type="button" class="icon-toggle-btn spoiler-btn" title="Contains Spoilers"
+                            id="spoilerToggle"
                             onclick="this.classList.toggle('spoiler-active'); this.classList.remove('active')">
                             <i class="fa-solid fa-triangle-exclamation" style="pointer-events: none;"></i>
                         </button>

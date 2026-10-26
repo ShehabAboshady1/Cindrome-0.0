@@ -262,7 +262,8 @@ document.addEventListener("DOMContentLoaded", () => {
     allToggles.forEach((btn) => {
       btn.classList.remove("active", "spoiler-active");
     });
-
+    if (document.getElementById("logReviewId"))
+      document.getElementById("logReviewId").value = "";
     if (reviewText) reviewText.value = "";
     if (dateInput) dateInput.value = new Date().toISOString().split("T")[0];
 
@@ -430,9 +431,16 @@ document.addEventListener("DOMContentLoaded", () => {
           '<i class="fa-solid fa-spinner fa-spin"></i> Logging...';
       }
 
+      // نعرف إحنا بنعدل ولا بنضيف جديد
+      const logReviewId = currentModal.querySelector("#logReviewId")?.value;
+      const apiUrl = logReviewId
+        ? `/api/reviews/${logReviewId}`
+        : "/api/reviews/log";
+      const apiMethod = logReviewId ? "PUT" : "POST";
+
       try {
-        const response = await fetch("/api/reviews/log", {
-          method: "POST",
+        const response = await fetch(apiUrl, {
+          method: apiMethod,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             tmdb_id,
