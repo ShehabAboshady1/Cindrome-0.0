@@ -43,13 +43,19 @@ body.is-private.profile-page-other .profile-restricted-wrapper {
   min-height: 480px;
 }
 
-body.is-private.profile-page-other .profile-restricted-wrapper .profile-main-tabs,
-body.is-private.profile-page-other .profile-restricted-wrapper .profile-main-container {
+body.is-private.profile-page-other
+  .profile-restricted-wrapper
+  .profile-main-tabs,
+body.is-private.profile-page-other
+  .profile-restricted-wrapper
+  .profile-main-container {
   filter: blur(22px);
   opacity: 0.28;
   pointer-events: none;
   user-select: none;
-  transition: filter 0.3s ease, opacity 0.3s ease;
+  transition:
+    filter 0.3s ease,
+    opacity 0.3s ease;
 }
 
 body.is-private.profile-page-other .profile-private-overlay {
@@ -105,7 +111,7 @@ body.is-private.profile-page-other .profile-private-overlay {
 /* BANNER */
 .profile-banner {
   width: 100%;
-  aspect-ratio: 3.5 / 1; 
+  aspect-ratio: 3.5 / 1;
   max-height: 400px;
   background-size: cover;
   background-position: center;
@@ -401,17 +407,34 @@ body.is-private.profile-page-other .profile-private-overlay {
   display: none;
 }
 
+/* 🌟 تعديل أيقونة المفضلة (القلب) جوه الكارت بقوة التحديد (Specificity) 🌟 */
+.profile-cards-wrapper .content-card .card-actions .btn-watchlist i.fa-heart {
+  font-size: 0.85rem;
+  color: #ef4444;
+  line-height: 1;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* في حالة ظهور الـ Spinner أثناء التحميل */
+.profile-cards-wrapper .content-card .card-actions .btn-watchlist i.fa-spinner {
+  font-size: 0.85rem;
+  color: #a0aec0;
+}
+
 /* CURRENTLY WATCHING LIST */
 .currently-watching-list {
   display: flex;
   flex-direction: column;
-  gap: 10px; 
+  gap: 10px;
   margin-top: 10px;
-  max-height: 260px; 
+  max-height: 260px;
   overflow-y: auto;
-  padding-right: 8px; 
-  scrollbar-width: thin; 
-  scrollbar-color: rgba(9, 158, 158, 0.6) transparent; 
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(9, 158, 158, 0.6) transparent;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -421,10 +444,10 @@ body.is-private.profile-page-other .profile-private-overlay {
 }
 .currently-watching-list::-webkit-scrollbar-track {
   background: transparent;
-  margin: 10px 0; 
+  margin: 10px 0;
 }
 .currently-watching-list::-webkit-scrollbar-thumb {
-  background-color: rgba(9, 158, 158, 0.5); 
+  background-color: rgba(9, 158, 158, 0.5);
   border-radius: 10px;
 }
 .currently-watching-list::-webkit-scrollbar-thumb:hover {
@@ -433,17 +456,17 @@ body.is-private.profile-page-other .profile-private-overlay {
 
 .tracking-item {
   display: flex;
-  gap: 10px; 
+  gap: 10px;
   background-color: var(--dark-bg, #010a09);
-  padding: 8px; 
+  padding: 8px;
   border-radius: 8px;
   border: 1px solid rgba(241, 227, 200, 0.08);
   align-items: center;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 .tracking-poster {
-  width: 42px; 
+  width: 42px;
   aspect-ratio: 2 / 3;
   border-radius: 4px;
   object-fit: cover;
@@ -464,7 +487,7 @@ body.is-private.profile-page-other .profile-private-overlay {
 }
 
 .tracking-header h3 {
-  font-size: 0.85rem; 
+  font-size: 0.85rem;
   font-weight: 600;
   margin: 0;
 }
@@ -474,7 +497,7 @@ body.is-private.profile-page-other .profile-private-overlay {
 .media-title-link:active {
   color: var(--text-cream);
   text-decoration: none;
-  font-size: inherit; 
+  font-size: inherit;
 }
 
 .media-title-link:hover {
@@ -482,7 +505,7 @@ body.is-private.profile-page-other .profile-private-overlay {
 }
 
 .tag {
-  font-size: 0.6rem; 
+  font-size: 0.6rem;
   padding: 2px 5px;
   border-radius: 4px;
   font-weight: 600;
@@ -492,13 +515,13 @@ body.is-private.profile-page-other .profile-private-overlay {
 }
 
 .progress-text {
-  font-size: 0.65rem; 
+  font-size: 0.65rem;
   color: rgba(241, 227, 200, 0.6);
   margin-bottom: 5px;
 }
 
 .progress-bar {
-  height: 4px; 
+  height: 4px;
   background-color: rgba(241, 227, 200, 0.1);
   border-radius: 10px;
   overflow: hidden;
@@ -526,12 +549,12 @@ body.is-private.profile-page-other .profile-private-overlay {
   width: 100%;
   align-items: flex-start;
   box-sizing: border-box;
-  max-height: 650px; 
+  max-height: 650px;
   overflow-y: auto;
-  overflow-x: hidden; 
-  padding-right: 12px; 
-  scrollbar-width: thin; 
-  scrollbar-color: rgba(9, 158, 158, 0.6) transparent; 
+  overflow-x: hidden;
+  padding-right: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(9, 158, 158, 0.6) transparent;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -540,12 +563,12 @@ body.is-private.profile-page-other .profile-private-overlay {
   -webkit-appearance: none;
 }
 .minimal-reviews-feed::-webkit-scrollbar-track {
-  background: transparent; 
-  margin: 15px 0; 
+  background: transparent;
+  margin: 15px 0;
 }
 .minimal-reviews-feed::-webkit-scrollbar-thumb {
-  background-color: rgba(9, 158, 158, 0.5); 
-  border-radius: 10px; 
+  background-color: rgba(9, 158, 158, 0.5);
+  border-radius: 10px;
 }
 .minimal-reviews-feed::-webkit-scrollbar-thumb:hover {
   background: var(--accent-teal);
@@ -555,8 +578,8 @@ body.is-private.profile-page-other .profile-private-overlay {
   border: 0;
   height: 1px;
   background: rgba(241, 227, 200, 0.08);
-  margin: 0 auto; 
-  width: calc(100% - 20px); 
+  margin: 0 auto;
+  width: calc(100% - 20px);
   flex-shrink: 0;
 }
 
@@ -571,7 +594,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   transition: border-color 0.2s ease;
   width: 100%;
   box-sizing: border-box;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 .minimal-review-card:hover {
@@ -584,14 +607,14 @@ body.is-private.profile-page-other .profile-private-overlay {
   align-items: flex-start;
   border-bottom: 1px solid rgba(241, 227, 200, 0.05);
   padding-bottom: 14px;
-  gap: 10px; 
+  gap: 10px;
 }
 
 .header-left-stack {
   display: flex;
   gap: 14px;
-  flex: 1; 
-  min-width: 0; 
+  flex: 1;
+  min-width: 0;
 }
 
 .review-poster-link {
@@ -614,7 +637,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  min-width: 0; 
+  min-width: 0;
 }
 
 .review-media-title {
@@ -624,7 +647,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   text-decoration: none;
   transition: color 0.2s ease;
   line-height: 1.1;
-  word-wrap: break-word; 
+  word-wrap: break-word;
 }
 .review-media-title:hover {
   text-decoration: underline;
@@ -687,7 +710,7 @@ body.is-private.profile-page-other .profile-private-overlay {
 }
 
 .header-right-stack {
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 .spoiler-badge {
@@ -1025,7 +1048,9 @@ body.is-private.profile-page-other .profile-private-overlay {
   font-size: 0.85rem;
   color: rgba(241, 227, 200, 0.7);
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .custom-option:hover {
@@ -1110,7 +1135,9 @@ body.is-private.profile-page-other .profile-private-overlay {
   z-index: 9999;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 
 .modal-overlay.active {
@@ -1349,7 +1376,7 @@ body.is-private.profile-page-other .profile-private-overlay {
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
   .profile-banner {
-    aspect-ratio: 3 / 1; 
+    aspect-ratio: 3 / 1;
   }
 
   .profile-header-container {
@@ -1417,7 +1444,7 @@ body.is-private.profile-page-other .profile-private-overlay {
     grid-template-columns: 1fr;
     display: flex;
     flex-direction: column;
-    gap: 12px; 
+    gap: 12px;
   }
 
   .profile-sidebar {
@@ -1431,10 +1458,10 @@ body.is-private.profile-page-other .profile-private-overlay {
     height: 130px;
     border-width: 4px;
   }
-  
+
   .profile-box-header {
     flex-wrap: nowrap;
-    gap: 8px; 
+    gap: 8px;
   }
   .profile-box-title {
     font-size: 1.05rem;
@@ -1459,36 +1486,36 @@ body.is-private.profile-page-other .profile-private-overlay {
   #panel-lists .profile-title-with-action {
     gap: 8px;
     flex: 1;
-    min-width: 0; 
+    min-width: 0;
   }
   #panel-lists .profile-create-list-btn {
     padding: 4px 12px;
     font-size: 0.75rem;
     white-space: nowrap;
   }
-  
+
   .lists-track {
     gap: 12px;
   }
   .list-card {
     width: 75vw;
-    max-width: 280px; 
+    max-width: 280px;
     flex-shrink: 0;
   }
 
   #overview-sidebar-content .sidebar-card {
     background-color: rgba(22, 22, 22, 0.4);
     border: 1px solid rgba(241, 227, 200, 0.08);
-    padding: 12px 2px; 
-    margin-bottom: 0px; 
+    padding: 12px 2px;
+    margin-bottom: 0px;
     border-radius: 10px;
   }
 
   #overview-sidebar-content .sidebar-card-title {
-    display: block; 
+    display: block;
     font-size: 0.7rem;
     margin-bottom: 10px;
-    text-align: center; 
+    text-align: center;
     color: rgba(241, 227, 200, 0.4);
     letter-spacing: 1px;
   }
@@ -1502,17 +1529,17 @@ body.is-private.profile-page-other .profile-private-overlay {
   }
 
   .qs-row {
-    flex-direction: column-reverse; 
-    align-items: center; 
-    background: transparent; 
+    flex-direction: column-reverse;
+    align-items: center;
+    background: transparent;
     padding: 0;
     border: none;
-    flex: 1; 
-    position: relative; 
+    flex: 1;
+    position: relative;
   }
 
   .qs-row:first-child {
-    flex: 1.4; 
+    flex: 1.4;
   }
 
   .qs-row:not(:last-child)::after {
@@ -1536,7 +1563,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   }
 
   .qs-row strong {
-    font-size: 0.9rem; 
+    font-size: 0.9rem;
     color: var(--accent-teal);
     margin-bottom: 3px;
     white-space: nowrap;
@@ -1544,20 +1571,20 @@ body.is-private.profile-page-other .profile-private-overlay {
   }
 
   .currently-watching-list {
-    max-height: 210px; 
+    max-height: 210px;
     overflow-y: auto;
-    padding-right: 4px; 
+    padding-right: 4px;
   }
-  
+
   .currently-watching-list::-webkit-scrollbar {
     width: 4px;
   }
   .currently-watching-list::-webkit-scrollbar-track {
     background: transparent;
-    margin: 10px 0; 
+    margin: 10px 0;
   }
   .currently-watching-list::-webkit-scrollbar-thumb {
-    background-color: rgba(9, 158, 158, 0.5); 
+    background-color: rgba(9, 158, 158, 0.5);
     border-radius: 10px;
   }
   .currently-watching-list::-webkit-scrollbar-thumb:hover {
@@ -1565,33 +1592,33 @@ body.is-private.profile-page-other .profile-private-overlay {
   }
 
   .minimal-reviews-feed {
-    max-height: 600px; 
-    padding-right: 8px; 
+    max-height: 600px;
+    padding-right: 8px;
   }
 
   .minimal-reviews-feed::-webkit-scrollbar {
     width: 4px;
   }
   .minimal-reviews-feed::-webkit-scrollbar-track {
-    background: transparent; 
-    margin: 15px 0; 
+    background: transparent;
+    margin: 15px 0;
   }
   .minimal-reviews-feed::-webkit-scrollbar-thumb {
-    background-color: rgba(9, 158, 158, 0.5); 
-    border-radius: 10px; 
+    background-color: rgba(9, 158, 158, 0.5);
+    border-radius: 10px;
   }
   .minimal-reviews-feed::-webkit-scrollbar-thumb:hover {
     background: var(--accent-teal);
   }
 
   .minimal-card-header {
-    gap: 8px; 
+    gap: 8px;
   }
   .review-media-title {
-    font-size: 1.05rem; 
+    font-size: 1.05rem;
   }
   .minimal-actions {
-    gap: 10px; 
+    gap: 10px;
   }
   .minimal-btn {
     font-size: 0.75rem;
@@ -1609,38 +1636,38 @@ body.is-private.profile-page-other .profile-private-overlay {
     flex: 1;
     min-width: 0;
   }
-  
+
   .filter-label {
     font-size: 0.65rem;
     white-space: nowrap;
-    text-align: center; 
+    text-align: center;
   }
-  
+
   .custom-select-trigger {
     padding: 8px 10px;
     font-size: 0.7rem;
-    justify-content: center; 
-    border-radius: 50px; 
-    position: relative; 
+    justify-content: center;
+    border-radius: 50px;
+    position: relative;
   }
-  
+
   .custom-select-trigger span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 0 10px; 
+    padding: 0 10px;
   }
-  
+
   .custom-select-trigger i {
     font-size: 0.6em;
-    position: absolute; 
-    right: 10px; 
+    position: absolute;
+    right: 10px;
   }
-  
+
   .custom-option {
     font-size: 0.75rem;
     padding: 8px 10px;
-    text-align: center; 
+    text-align: center;
   }
 
   .profile-reviews-container,

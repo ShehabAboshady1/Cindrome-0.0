@@ -193,21 +193,13 @@
                                                 </div>
 
                                                 <div class="card-actions">
-                                                    <a href="/details/<%= item.media_type %>/<%= item.tmdb_id %>"
+                                                    <a href="/details?id=<%= item.tmdb_id %>&type=<%= item.media_type %>"
                                                         class="btn-details">Details</a>
 
-                                                    <% // فحص: هل العمل ده موجود في الـ Watchlist بتاعتي؟ let
-                                                        isAdded=false; if (locals.myWatchlist) {
-                                                        isAdded=myWatchlist.some(w=> w.tmdb_id === item.tmdb_id &&
-                                                        w.media_type === item.media_type);
-                                                        }
-                                                        %>
-                                                        <button class="btn-watchlist <%= isAdded ? 'added' : '' %>"
-                                                            title="Toggle Watchlist"
-                                                            onclick="toggleWatchlist(this, <%= item.tmdb_id %>, '<%= item.media_type %>')">
-                                                            <span class="icon-plus">+</span>
-                                                            <span class="icon-minus">-</span>
-                                                        </button>
+                                                    <button class="btn-watchlist added" title="Remove from Favorites"
+                                                        onclick="toggleFavoriteProfile(this, <%= item.tmdb_id %>, '<%= item.media_type %>')">
+                                                        <i class="fa-solid fa-heart"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -228,38 +220,42 @@
                     <div class="profile-card-box">
                         <h2 class="profile-box-title"><i class="fa-solid fa-play"></i> Watching</h2>
                         <div class="currently-watching-list">
-                            <div class="tracking-item">
-                                <a href="/details" style="display: flex; flex-shrink: 0;">
-                                    <img src="/assets/posters/poster-jjk.webp" alt="Jujutsu Kaisen"
-                                        class="tracking-poster">
-                                </a>
-                                <div class="tracking-info">
-                                    <div class="tracking-header">
-                                        <h3><a href="/details" class="media-title-link">Jujutsu Kaisen</a></h3>
-                                        <span class="tag anime-tag">Anime</span>
+                            <% if (locals.currentlyWatching && currentlyWatching.length> 0) { %>
+                                <% currentlyWatching.forEach(item=> { %>
+                                    <div class="tracking-item">
+                                        <a href="/details?id=<%= item.tmdb_id %>&type=<%= item.media_type %>"
+                                            style="display: flex; flex-shrink: 0;">
+                                            <img src="<%= item.poster_path ? 'https://image.tmdb.org/t/p/w500' + item.poster_path : '/assets/default-poster.jpg' %>"
+                                                alt="<%= item.title %>" class="tracking-poster">
+                                        </a>
+                                        <div class="tracking-info">
+                                            <div class="tracking-header">
+                                                <h3><a href="/details?id=<%= item.tmdb_id %>&type=<%= item.media_type %>"
+                                                        class="media-title-link">
+                                                        <%= item.title %>
+                                                    </a></h3>
+                                                <span class="tag <%= item.is_anime ? 'anime-tag' : 'tv-tag' %>">
+                                                    <%= item.is_anime ? 'Anime' : 'Series' %>
+                                                </span>
+                                            </div>
+                                            <p class="progress-text">
+                                                <%= item.progressText %>
+                                            </p>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill"
+                                                    style="width: <%= item.progressPercentage %>%;"></div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p class="progress-text">Episode 12 of 24</p>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 50%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tracking-item">
-                                <a href="/details" style="display: flex; flex-shrink: 0;">
-                                    <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/7V0Ebks0GgpKvQ7QbLAIdX5dos4.jpg"
-                                        alt="House of the Dragon" class="tracking-poster">
-                                </a>
-                                <div class="tracking-info">
-                                    <div class="tracking-header">
-                                        <h3><a href="/details" class="media-title-link">House Of The Dragon</a></h3>
-                                        <span class="tag tv-tag">Series</span>
-                                    </div>
-                                    <p class="progress-text">Season 2 • Episode 5</p>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 62%;"></div>
-                                    </div>
-                                </div>
-                            </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <div class="empty-state"
+                                                style="padding: 20px; text-align: center; color: rgba(241, 227, 200, 0.5);">
+                                                <i class="fa-solid fa-tv"
+                                                    style="font-size: 2rem; margin-bottom: 10px;"></i>
+                                                <p>Not watching anything currently.</p>
+                                            </div>
+                                            <% } %>
                         </div>
                     </div>
                 </div>

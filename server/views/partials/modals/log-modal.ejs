@@ -38,10 +38,12 @@
 
                         <details class="css-dropdown" id="logSeasonDropdown">
                             <summary class="dropdown-selected">
-                                <span id="seasonText">Season 1</span>
+                                <span id="seasonText">All Seasons</span>
                                 <span class="dropdown-arrow" aria-hidden="true">▼</span>
                             </summary>
                             <ul class="dropdown-list" id="logSeasonList">
+                                <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">All Seasons
+                                </li>
                                 <% const totalSeasons=(hasMedia && media.seasonsCount) ? media.seasonsCount : 1; %>
                                     <% for(let s=1; s <=totalSeasons; s++) { %>
                                         <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">

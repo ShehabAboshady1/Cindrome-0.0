@@ -1505,13 +1505,8 @@ app.get("/profile/:username", async (req, res, next) => {
     );
     const followingCount = followingRes.rows[0].count;
 
-    // 3. عدد الأعمال اللي شافها (Total Watched)
-    // هنفترض إن عمود الحالة في الوتش ليست اسمه 'completed' أو 'watched'
-    const watchedRes = await db.query(
-      "SELECT COUNT(*) FROM watchlist WHERE user_id = $1 AND status = 'completed'",
-      [profileUser.id],
-    );
-    const totalWatchedCount = watchedRes.rows[0].count;
+    // (مسحنا كود الاستعلام القديم بتاع الوتش ليست من هنا)
+
     // === جلب أعمال المفضلة (من جدول liked_media) ===
     const favoritesRes = await db.query(
       `
@@ -1533,18 +1528,22 @@ app.get("/profile/:username", async (req, res, next) => {
       );
       myWatchlist = wlRes.rows;
     }
-    // === جلب إحصائيات المشاهدة (Watch Stats) ===
-    // هنجيب كل الأعمال اللي اليوزر خلصها (completed) ونجمعها حسب النوع
+
+    // === جلب إحصائيات المشاهدة (Watch Stats) والعدد الإجمالي بناءً على الأعمال المكتملة ===
     const statsRes = await db.query(
       `
       SELECT 
-        w.media_type,
-        COUNT(w.id) as count,
-        SUM(m.run_time) as total_movie_minutes
-      FROM watchlist w
-      JOIN media_cache m ON w.tmdb_id = m.tmdb_id AND w.media_type = m.media_type
-      WHERE w.user_id = $1 AND w.status = 'completed'
-      GROUP BY w.media_type
+        media_type,
+        COUNT(tmdb_id) as count,
+        SUM(run_time) as total_movie_minutes
+      FROM (
+        SELECT DISTINCT r.tmdb_id, r.media_type, m.run_time
+        FROM reviews r
+        JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
+        WHERE r.user_id = $1
+          AND (r.media_type = 'movie' OR r.season_number IS NULL)
+      ) as unique_reviews
+      GROUP BY media_type
     `,
       [profileUser.id],
     );
@@ -1553,29 +1552,103 @@ app.get("/profile/:username", async (req, res, next) => {
     let statsSeries = 0;
     let statsAnime = 0;
     let totalWatchHours = 0;
+    let finalWatchedCount = 0; // 🌟 الإجمالي الشامل هنا
 
     statsRes.rows.forEach((row) => {
+      const count = parseInt(row.count) || 0;
+      finalWatchedCount += count; // 🌟 بنجمع الإجمالي
+
       if (row.media_type === "movie") {
-        statsMovies = parseInt(row.count);
+        statsMovies = count;
         // بنحول دقايق الأفلام لساعات ونزودها ع المجموع
         totalWatchHours += (parseInt(row.total_movie_minutes) || 0) / 60;
-      } else if (row.media_type === "tv") {
-        statsSeries = parseInt(row.count);
+      } else if (row.media_type === "tv" || row.media_type === "series") {
+        statsSeries = count;
       } else if (row.media_type === "anime") {
-        statsAnime = parseInt(row.count);
+        statsAnime = count;
       }
     });
 
     totalWatchHours = Math.round(totalWatchHours); // تقريب الرقم لأقرب ساعة
+    // === جلب قائمة Currently Watching ===
+    const watchingQuery = `
+      SELECT DISTINCT ON (r.tmdb_id) 
+        r.tmdb_id,
+        r.media_type,
+        r.season_number,
+        r.episode_number,
+        r.watch_date,
+        m.title,
+        m.poster_path,
+        m.total_episodes,
+        m.total_seasons,
+        m.is_anime
+      FROM reviews r
+      JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
+      WHERE r.user_id = $1 
+        AND r.media_type != 'movie' 
+        AND r.season_number IS NOT NULL 
+        AND r.episode_number IS NOT NULL
+      ORDER BY r.tmdb_id, r.watch_date DESC, r.created_at DESC
+    `;
+    const watchingRes = await db.query(watchingQuery, [profileUser.id]);
+
+    // هنحسب الشريط الأخضر لكل كارت بذكاء
+    const currentlyWatching = watchingRes.rows.map((item) => {
+      let progressPercentage = 0;
+      let progressText = `Season ${item.season_number} • Episode ${item.episode_number}`;
+
+      const totalEps = parseInt(item.total_episodes) || 0;
+      const totalSeasons = parseInt(item.total_seasons) || 1;
+      const currentSeason = parseInt(item.season_number) || 1;
+      const currentEp = parseInt(item.episode_number) || 0;
+
+      if (totalEps > 0) {
+        // حساب تقريبي للتقدم
+        const avgEpsPerSeason = totalEps / totalSeasons;
+        let estimatedEpsWatched =
+          (currentSeason - 1) * avgEpsPerSeason + currentEp;
+
+        // 🌟 الذكاء هنا: لو الحسبة عدت الإجمالي أو رقم الحلقة نفسه كبير جداً
+        // ده معناه إننا بنتعامل مع ترقيم إجمالي (زي وان بيس) مش ترقيم جوه الموسم
+        if (estimatedEpsWatched > totalEps || currentEp > avgEpsPerSeason) {
+          estimatedEpsWatched = Math.min(currentEp, totalEps);
+        }
+
+        estimatedEpsWatched = Math.round(estimatedEpsWatched);
+
+        progressPercentage = Math.min(
+          100,
+          Math.round((estimatedEpsWatched / totalEps) * 100),
+        );
+
+        // لو أنمي، نعرض النص بشكل أفضل (رقم الحلقة من الإجمالي)
+        if (item.is_anime) {
+          progressText = `Episode ${estimatedEpsWatched} of ${totalEps}`;
+        }
+      }
+
+      return {
+        ...item,
+        progressPercentage,
+        progressText,
+      };
+    });
+
+    // نرتبهم تاني بحيث أحدث حاجة اتشافت تظهر الأول
+    currentlyWatching.sort(
+      (a, b) => new Date(b.watch_date) - new Date(a.watch_date),
+    );
     // 4. إرسال كل الداتا دي لصفحة الـ EJS
     res.render("profile.ejs", {
+      currentlyWatching: currentlyWatching,
       profileUser: profileUser,
       favoriteGenres: favoriteGenres,
       isSelf: isSelf,
       isFollowing: isFollowing,
       followersCount: followersCount,
       followingCount: followingCount,
-      totalWatchedCount: totalWatchedCount,
+      totalWatchedCount: finalWatchedCount, // 🌟 هنا بعتنا المتغير الجديد بدال القديم
       favoriteMedia: favoriteMedia,
       myWatchlist: myWatchlist,
       statsMovies: statsMovies,

@@ -85,10 +85,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (targetId === "seasonText") {
-      const match = el.textContent.match(/\d+/);
-      if (match) {
-        const seasonNumber = parseInt(match[0], 10);
-        window.updateLogModalEpisodes(seasonNumber);
+      const textVal = el.textContent.trim();
+      if (textVal === "All Seasons") {
+        const epList = document.getElementById("logEpisodeList");
+        const epText = document.getElementById("episodeText");
+        if (epText) epText.textContent = "All Episodes";
+        if (epList)
+          epList.innerHTML =
+            '<li class="dropdown-item" onclick="selectDropdownOption(this, \'episodeText\')">All Episodes</li>';
+      } else {
+        const match = textVal.match(/\d+/);
+        if (match) {
+          const seasonNumber = parseInt(match[0], 10);
+          window.updateLogModalEpisodes(seasonNumber);
+        }
       }
     }
   };
@@ -223,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!isMovie) {
-      if (seasonText) seasonText.textContent = "Season 1";
+      if (seasonText) seasonText.textContent = "All Seasons";
       if (epText) epText.textContent = "All Episodes";
 
       try {
@@ -234,7 +244,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalSeasons = detailData.number_of_seasons || 1;
 
         if (seasonList) {
-          seasonList.innerHTML = "";
+          seasonList.innerHTML =
+            '<li class="dropdown-item" onclick="selectDropdownOption(this, \'seasonText\')">All Seasons</li>';
           for (let s = 1; s <= totalSeasons; s++) {
             const li = document.createElement("li");
             li.className = "dropdown-item";
@@ -245,8 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
             seasonList.appendChild(li);
           }
         }
-
-        window.updateLogModalEpisodes(1);
       } catch (e) {}
     }
   }

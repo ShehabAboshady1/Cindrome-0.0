@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (seasonText) {
         seasonText.textContent = itemSeason
           ? `Season ${itemSeason}`
-          : "Season 1";
+          : "All Seasons";
       }
       if (episodeText) {
         episodeText.textContent = itemEpisode
@@ -225,7 +225,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // تفريغ وبناء المواسم
                 if (seasonList) {
-                  seasonList.innerHTML = "";
+                  seasonList.innerHTML =
+                    '<li class="dropdown-item" onclick="selectDropdownOption(this, \'seasonText\')">All Seasons</li>';
                   for (let s = 1; s <= totalSeasons; s++) {
                     const li = document.createElement("li");
                     li.className = "dropdown-item";

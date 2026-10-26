@@ -480,4 +480,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupEditModal();
   setupCreateListModal();
+  // ==========================================
+  // 🌟 دالة إزالة العمل من المفضلة في صفحة البروفايل 🌟
+  // ==========================================
+  window.toggleFavoriteProfile = async function (
+    btnElement,
+    tmdbId,
+    mediaType,
+  ) {
+    // حفظ المحتوى القديم عشان لو حصل خطأ
+    const originalHTML = btnElement.innerHTML;
+
+    // إظهار حالة التحميل (Spinner) جوه الزرار المربع
+    btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin" style="font-size: 1.1rem; color: #a0aec0;"></i>`;
+    btnElement.disabled = true;
+
+    try {
+      // إرسال طلب للسيرفر لإزالة العمل من المفضلة (تأكد إن المسار ده متوافق مع הـ API بتاعك)
+      // في العادة إنت بتستخدم نفس مسار اللوجيك بتاع الـ Like
+      const response = await fetch("/api/like/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tmdb_id: tmdbId, media_type: mediaType }),
+      });
+
+      if (response.ok) {
+        // لو النجاح، نخفي الكارت كله بشكل جمالي (Fade out)
+        const card = btnElement.closest(".content-card");
+        if (card) {
+          card.style.transition = "all 0.3s ease";
+          card.style.transform = "scale(0.8)";
+          card.style.opacity = "0";
+          setTimeout(() => {
+            card.remove();
+            // نقدر هنا نشيك لو مفيش كروت تانية نظهر رسالة "No favorites" بس خلينا نكتفي بالحذف حالياً
+          }, 300);
+        }
+      } else {
+        const data = await response.json();
+        alert(data.error || "Something went wrong.");
+        btnElement.innerHTML = originalHTML;
+        btnElement.disabled = false;
+      }
+    } catch (error) {
+      console.error("Error removing from favorites:", error);
+      alert("Failed to connect to the server.");
+      btnElement.innerHTML = originalHTML;
+      btnElement.disabled = false;
+    }
+  };
 });
