@@ -320,27 +320,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const rewatchBtn = document.getElementById("rewatchToggle");
   const spoilerToggleBtn = document.getElementById("spoilerToggle");
 
-  // دالة موحدة لتبديل الأزرار عشان الكود يكون نظيف
   function toggleLogButton(btn, activeClass) {
     if (!btn) return;
     btn.addEventListener("click", function (e) {
       e.preventDefault();
       this.classList.toggle(activeClass);
 
-      // حماية إضافية نظيفة: لو زرار الاسبويلر، نتأكد إن مفيش كلاس active أزرق
       if (activeClass === "spoiler-active") {
         this.classList.remove("active");
       } else {
-        // لو زرار عادي، نتأكد إن مفيش كلاس أحمر
         this.classList.remove("spoiler-active");
       }
     });
   }
 
-  // تفعيل الزراير الثلاثة
   toggleLogButton(likeBtn, "active");
   toggleLogButton(rewatchBtn, "active");
   toggleLogButton(spoilerToggleBtn, "spoiler-active");
+
   // ==========================================
   // 🌟 النجوم 🌟
   // ==========================================
@@ -440,7 +437,6 @@ document.addEventListener("DOMContentLoaded", () => {
           '<i class="fa-solid fa-spinner fa-spin"></i> Logging...';
       }
 
-      // نعرف إحنا بنعدل ولا بنضيف جديد
       const logReviewId = currentModal.querySelector("#logReviewId")?.value;
       const apiUrl = logReviewId
         ? `/api/reviews/${logReviewId}`
@@ -485,6 +481,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // =========================================================================
+  // 🌟 LIST MODAL (CREATE & EDIT) 🌟
+  // =========================================================================
   const createListModal = document.getElementById("createListModal");
   const openCreateListBtn = document.getElementById("openCreateListBtn");
   const closeCreateListBtn = document.getElementById("closeCreateListBtn");
@@ -497,6 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "listSearchItemTemplate",
   );
   let listSearchTimer = null;
+  let currentEditListId = null; // 🌟 جديد: تخزين الـ ID لو بنعدل
 
   function openCreateModal() {
     if (createListModal) createListModal.style.display = "flex";
@@ -510,8 +510,94 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  if (openCreateListBtn)
-    openCreateListBtn.addEventListener("click", openCreateModal);
+  // 🌟 جديد: فتح المودال في وضع الإنشاء (تصفير الداتا)
+  if (openCreateListBtn) {
+    openCreateListBtn.addEventListener("click", () => {
+      currentEditListId = null;
+      const modalTitle = document.querySelector(
+        "#createListModal .modal-main-title",
+      );
+      const saveBtn = document.querySelector("#createListModal .btn-save-log");
+      if (modalTitle) modalTitle.textContent = "Create New List";
+      if (saveBtn) saveBtn.textContent = "Create List";
+
+      // تصفير الفورم
+      if (document.getElementById("listTitle"))
+        document.getElementById("listTitle").value = "";
+      if (document.getElementById("privacyToggle"))
+        document.getElementById("privacyToggle").checked = false;
+      if (addedItemsContainer) addedItemsContainer.innerHTML = "";
+
+      openCreateModal();
+    });
+  }
+
+  // 🌟 جديد: استقبال إشارة التعديل من صفحة Single List (النسخة المضادة للكسر)
+  window.addEventListener("openEditListMode", (e) => {
+    const { list, items } = e.detail;
+    currentEditListId = list.id;
+
+    openCreateModal();
+
+    // تغيير العناوين
+    const modalTitle = document.querySelector(
+      "#createListModal .modal-main-title",
+    );
+    const saveBtn = document.querySelector("#createListModal .btn-save-log");
+    if (modalTitle) modalTitle.textContent = "Edit List";
+    if (saveBtn) saveBtn.textContent = "Save Changes";
+
+    // ملء اسم القائمة (بندور بالـ ID ولو ملقاهوش بيدور بالكلاس)
+    const titleInput =
+      document.getElementById("listTitle") ||
+      document.querySelector("#createListModal .list-basic-input");
+    if (titleInput) titleInput.value = list.title;
+
+    // ملء الخصوصية
+    const privacyToggle =
+      document.getElementById("privacyToggle") ||
+      document.querySelector("#createListModal input[type='checkbox']");
+    if (privacyToggle) privacyToggle.checked = list.is_private;
+
+    // رسم الأفلام القديمة
+    const addedContainer = document.getElementById("addedItemsContainer");
+    const cardTemplate = document.getElementById("miniCardTemplate");
+
+    if (addedContainer && cardTemplate) {
+      addedContainer.innerHTML = ""; // نفضي القديم
+
+      items.forEach((item) => {
+        const clone = cardTemplate.content.cloneNode(true);
+        const card = clone.querySelector(".modal-mini-card");
+
+        if (!card) return; // لو الكارت مش موجود يعدي للي بعده
+
+        card.dataset.id = item.tmdb_id;
+        card.dataset.type = item.media_type;
+        card.dataset.rating = item.rating || "NR";
+
+        // بنجيب الصورة بأي تاج <img> عشان نتفادى اختلاف الكلاسات
+        const img = card.querySelector("img");
+        if (img) {
+          img.src = item.poster_path
+            ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+            : "/assets/posters/poster-odyssey.webp";
+          img.alt = item.title;
+        }
+
+        const titleEl = card.querySelector(".mini-title");
+        if (titleEl) titleEl.textContent = item.title;
+
+        // تفعيل السحب والإفلات
+        if (typeof attachDragEvents === "function") {
+          attachDragEvents(card);
+        }
+
+        addedContainer.appendChild(clone);
+      });
+    }
+  });
+
   if (closeCreateListBtn)
     closeCreateListBtn.addEventListener("click", closeCreateModal);
   if (cancelListBtn) cancelListBtn.addEventListener("click", closeCreateModal);
@@ -572,7 +658,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addedItemsContainer.addEventListener("click", (e) => {
       const btn = e.target.closest(".remove-mini-btn");
       if (btn) {
-        const card = btn.closest(".mini-content-card");
+        const card = btn.closest(".modal-mini-card");
         if (card) {
           card.style.transform = "scale(0)";
           card.style.opacity = "0";
@@ -587,15 +673,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const clone = miniCardTemplate.content.cloneNode(true);
     const card = clone.querySelector(".modal-mini-card");
-    const img = clone.querySelector(".mini-card-poster");
+    const img = clone.querySelector("img");
 
     card.dataset.id = item.id;
     card.dataset.type = item.mediaType;
+    card.dataset.rating = item.numericScore || item.score;
     img.src = item.poster;
     img.alt = item.title;
 
+    const titleEl =
+      card.querySelector(".mini-title") ||
+      card.querySelector(".mini-card-title");
+    if (titleEl) titleEl.textContent = item.title;
+
     attachDragEvents(card);
-    addedItemsContainer.prepend(card);
+    addedItemsContainer.prepend(card); // أو append حسب ما تحب
 
     if (listSearchResults) {
       listSearchResults.innerHTML = "";
@@ -668,6 +760,98 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // =========================================================================
+  // 🌟 SUBMIT LIST (CREATE & EDIT) 🌟
+  // =========================================================================
+  const createListForm = document.querySelector("#createListModal .list-form");
+
+  if (createListForm) {
+    createListForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const titleInput = document.getElementById("listTitle");
+      const privacyToggle = document.getElementById("privacyToggle");
+      const saveBtn = createListForm.querySelector(".btn-save-log");
+
+      const title = titleInput ? titleInput.value.trim() : "";
+      const is_private = privacyToggle ? privacyToggle.checked : false;
+
+      if (!title) {
+        alert("Please enter a list name.");
+        return;
+      }
+
+      // 1. تجميع الأفلام اللي اليوزر ضافها بالترتيب الحالي
+      const itemCards = document.querySelectorAll(
+        "#addedItemsContainer .modal-mini-card",
+      );
+      const items = Array.from(itemCards).map((card, index) => {
+        const img = card.querySelector("img");
+        let posterPath = img.src;
+
+        if (posterPath.includes("image.tmdb.org/t/p/w500")) {
+          posterPath = posterPath.split("image.tmdb.org/t/p/w500")[1];
+        }
+
+        return {
+          tmdb_id: card.dataset.id,
+          media_type: card.dataset.type,
+          title: img.alt,
+          poster_path: posterPath,
+          rating: card.dataset.rating !== "NR" ? card.dataset.rating : null,
+          order_index: index + 1,
+        };
+      });
+
+      // 2. إظهار حالة التحميل
+      const originalBtnText = saveBtn.innerHTML;
+      saveBtn.disabled = true;
+      saveBtn.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      // 🌟 جديد: تحديد المسار بناءً على حالة المودال (Create ولا Edit)
+      const url = currentEditListId
+        ? `/api/lists/${currentEditListId}`
+        : "/api/lists/create";
+      const method = currentEditListId ? "PUT" : "POST";
+
+      // 3. إرسال البيانات للسيرفر
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, is_private, items }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          createListModal.style.display = "none";
+
+          if (currentEditListId) {
+            // لو كنا في صفحة single list وعدلنا، نعمل ريفريش لنفس الصفحة
+            window.location.reload();
+          } else {
+            // لو عملنا كرييت، نروح للبروفايل أو نعمل ريفريش
+            window.location.reload();
+          }
+        } else {
+          alert(data.error || "Failed to save list.");
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = originalBtnText;
+        }
+      } catch (error) {
+        console.error("Error saving list:", error);
+        alert("Network error. Please try again.");
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalBtnText;
+      }
+    });
+  }
+
+  // =========================================================================
+  // 🌟 GLOBAL SEARCH 🌟
+  // =========================================================================
   document.addEventListener("click", function (event) {
     const dropdowns = document.querySelectorAll(
       ".css-dropdown, .g-css-dropdown",
@@ -903,7 +1087,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const title = clone.querySelector(".card-title");
       const meta = clone.querySelector(".meta-row");
       const detailsLink = clone.querySelector(".btn-details");
-      const watchlistBtn = clone.querySelector(".btn-watchlist"); // سطر جديد لزرار الوتش ليست
+      const watchlistBtn = clone.querySelector(".btn-watchlist");
 
       poster.src = item.poster;
       poster.alt = item.title;
@@ -913,10 +1097,8 @@ document.addEventListener("DOMContentLoaded", () => {
       title.title = item.title;
       meta.textContent = `${item.year} • ${item.badge}`;
 
-      // تفعيل زرار Details
       detailsLink.href = `/details?id=${item.id}&type=${item.mediaType}`;
 
-      // تفعيل زرار Watchlist وربطه بالدالة العامة
       if (watchlistBtn) {
         watchlistBtn.onclick = function () {
           toggleWatchlist(this, item.id, item.mediaType);

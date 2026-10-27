@@ -529,4 +529,146 @@ document.addEventListener("DOMContentLoaded", () => {
       btnElement.disabled = false;
     }
   };
+
+  // ==========================================
+  // 🌟 نظام الفلترة والترتيب لتاب المراجعات (Reviews) 🌟
+  // ==========================================
+
+  // 1. تحديد زرار الحرق (Toggle) - هنجيبه باستخدام الـ CSS selector لأنه ملوش ID صريح
+  const spoilersToggle = document.querySelector(
+    '.spoiler-toggle-wrapper input[type="checkbox"]',
+  );
+  const reviewsFeed = document.querySelector(".minimal-reviews-feed");
+
+  // الدالة الرئيسية للفلترة
+  function applyFilters() {
+    if (!reviewsFeed) return;
+
+    const reviewCards = Array.from(
+      reviewsFeed.querySelectorAll(".minimal-review-card"),
+    );
+
+    // 2. قراءة القيم من الـ Custom Dropdowns بناءً على الكلاس 'selected'
+    // القوائم مترتبة: 0 = Media Type, 1 = Rating, 2 = Sort By (في قسم الـ Reviews)
+    const reviewFilters = document.querySelectorAll(
+      "#reviews-sidebar-content .custom-select-options",
+    );
+
+    const selectedMediaOption = reviewFilters[0]?.querySelector(
+      ".custom-option.selected",
+    );
+    const selectedRatingOption = reviewFilters[1]?.querySelector(
+      ".custom-option.selected",
+    );
+    const selectedSortOption = reviewFilters[2]?.querySelector(
+      ".custom-option.selected",
+    );
+
+    const showSpoilers = spoilersToggle ? spoilersToggle.checked : true;
+    const selectedMedia = selectedMediaOption
+      ? selectedMediaOption.getAttribute("data-value")
+      : "all";
+    const selectedRating = selectedRatingOption
+      ? selectedRatingOption.getAttribute("data-value")
+      : "any";
+    const selectedSort = selectedSortOption
+      ? selectedSortOption.getAttribute("data-value")
+      : "newest";
+
+    let visibleCards = [];
+
+    // --- أ: الفلترة ---
+    reviewCards.forEach((card) => {
+      const cardType = card.dataset.type; // movie, series, anime
+      const cardRating = parseFloat(card.dataset.rating) || 0;
+      const cardSpoiler = card.dataset.spoiler === "true";
+
+      let isMatch = true;
+
+      // 1. فلتر الحرق (Spoilers)
+      if (!showSpoilers && cardSpoiler) isMatch = false;
+
+      // 2. فلتر نوع المحتوى (movies, series, anime)
+      // لاحظ في الـ HTML إنت كاتب 'movies' بالجمع، وفي الداتا 'movie' بالمفرد، فهنعالجها هنا
+      if (selectedMedia !== "all") {
+        const expectedType =
+          selectedMedia === "movies" ? "movie" : selectedMedia;
+        if (cardType !== expectedType) isMatch = false;
+      }
+
+      // 3. فلتر التقييم (5, 4, 3)
+      if (selectedRating !== "any") {
+        const requiredRating = parseFloat(selectedRating);
+        if (cardRating < requiredRating) isMatch = false;
+      }
+
+      if (isMatch) {
+        card.style.display = "flex";
+        visibleCards.push(card);
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    // --- ب: الترتيب ---
+    visibleCards.sort((a, b) => {
+      const timeA = parseInt(a.dataset.timestamp) || 0;
+      const timeB = parseInt(b.dataset.timestamp) || 0;
+      const ratingA = parseFloat(a.dataset.rating) || 0;
+      const ratingB = parseFloat(b.dataset.rating) || 0;
+
+      if (selectedSort === "newest") return timeB - timeA;
+      if (selectedSort === "oldest") return timeA - timeB;
+      if (selectedSort === "highest") return ratingB - ratingA;
+      if (selectedSort === "lowest") return ratingA - ratingB;
+
+      return timeB - timeA;
+    });
+
+    // --- ج: إعادة ترتيب الكروت وإظهار/إخفاء رسالة الفلتر ---
+    reviewsFeed
+      .querySelectorAll(".review-divider")
+      .forEach((hr) => hr.remove());
+
+    const filterEmptyState = document.getElementById("filterEmptyState");
+
+    if (visibleCards.length === 0) {
+      // لو مفيش كروت، أظهر الرسالة
+      if (filterEmptyState) filterEmptyState.style.display = "block";
+    } else {
+      // لو في كروت، اخفي الرسالة واعرض الكروت
+      if (filterEmptyState) filterEmptyState.style.display = "none";
+
+      visibleCards.forEach((card, index) => {
+        reviewsFeed.appendChild(card);
+
+        if (index < visibleCards.length - 1) {
+          const hr = document.createElement("hr");
+          hr.className = "review-divider";
+          reviewsFeed.appendChild(hr);
+        }
+      });
+
+      // بننقل الرسالة لآخر الكونتينر عشان تفضل دايماً تحت الكروت
+      if (filterEmptyState) reviewsFeed.appendChild(filterEmptyState);
+    }
+  }
+
+  // 3. ربط الـ Toggle بتاع الحرق
+  if (spoilersToggle) {
+    spoilersToggle.addEventListener("change", applyFilters);
+  }
+
+  // 4. ربط اختيارات القوائم المنسدلة للفلتر
+  // هنسمع الـ Click على أي اختيار جوه قسم الفلتر بتاع الـ Reviews
+  const reviewFilterOptions = document.querySelectorAll(
+    "#reviews-sidebar-content .custom-option",
+  );
+  reviewFilterOptions.forEach((option) => {
+    option.addEventListener("click", () => {
+      // الجافاسكريبت بتاعك اللي بينقل كلاس 'selected' بيشتغل في نفس وقت الضغطة
+      // بنعمل تأخير صغير جداً (50 مللي ثانية) عشان نضمن إن الدالة بتاعتنا تقرأ القيمة الجديدة
+      setTimeout(applyFilters, 50);
+    });
+  });
 });

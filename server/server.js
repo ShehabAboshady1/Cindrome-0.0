@@ -1677,6 +1677,63 @@ app.get("/profile/:username", async (req, res, next) => {
     currentlyWatching.sort(
       (a, b) => new Date(b.watch_date) - new Date(a.watch_date),
     );
+
+    const reviewsQuery = `
+      SELECT 
+        r.id AS review_id,
+        r.tmdb_id,
+        r.media_type,
+        r.rating,
+        r.review_text,
+        r.has_spoilers,
+        r.liked,
+        r.created_at,
+        r.season_number,
+        r.episode_number,
+        m.is_anime,
+        m.title,
+        m.poster_path
+      FROM reviews r
+      JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
+      WHERE r.user_id = $1 
+        AND r.review_text IS NOT NULL 
+        AND TRIM(r.review_text) != ''
+      ORDER BY r.created_at DESC
+    `;
+    const reviewsRes = await db.query(reviewsQuery, [profileUser.id]);
+    const userReviews = reviewsRes.rows;
+
+    // === جلب القوائم (Lists Tab) ===
+    // الاستعلام ده بيجيب كل قائمة، وبيعد الأفلام اللي جواها، وبيجيب أول 4 بوسترات كـ Array
+    // === جلب القوائم (Lists Tab) مع مراعاة الخصوصية ===
+    const listsQuery = `
+      SELECT 
+          l.id AS list_id,
+          l.title,
+          l.is_private,
+          l.created_at,
+          COUNT(li.id) AS total_items,
+          COALESCE(
+              (
+                  SELECT json_agg(sub.poster_path)
+                  FROM (
+                      SELECT mc.poster_path
+                      FROM list_items li2
+                      LEFT JOIN media_cache mc ON li2.tmdb_id = mc.tmdb_id AND li2.media_type = mc.media_type
+                      WHERE li2.list_id = l.id
+                      ORDER BY li2.order_index ASC
+                      LIMIT 4
+                  ) sub
+              ), '[]'::json
+          ) AS preview_posters
+      FROM lists l
+      LEFT JOIN list_items li ON l.id = li.list_id
+      WHERE l.user_id = $1 AND (l.is_private = false OR $2 = true)
+      GROUP BY l.id
+      ORDER BY l.created_at DESC
+    `;
+    // هنباصي profileUser.id و isSelf
+    const listsResult = await db.query(listsQuery, [profileUser.id, isSelf]);
     // 4. إرسال كل الداتا دي لصفحة الـ EJS
     res.render("profile.ejs", {
       currentlyWatching: currentlyWatching,
@@ -1693,6 +1750,8 @@ app.get("/profile/:username", async (req, res, next) => {
       statsSeries: statsSeries,
       statsAnime: statsAnime,
       totalWatchHours: totalWatchHours,
+      userReviews: userReviews,
+      userLists: listsResult.rows,
     });
   } catch (err) {
     console.error("Error loading profile:", err);
@@ -1913,7 +1972,90 @@ app.post(
     }
   },
 );
-app.get("/single-list", (req, res) => res.render("single-list.ejs"));
+// ==========================================
+// Route: Single List Page (Dynamic)
+// ==========================================
+app.get("/single-list", async (req, res) => {
+  try {
+    const listId = req.query.id;
+    if (!listId) {
+      return res.redirect("/"); // لو مفيش رقم قائمة، نرجعه للرئيسية
+    }
+
+    // 1. نجيب بيانات القائمة وصاحبها
+    const listQuery = `
+      SELECT 
+        l.id, l.title, l.is_private, l.user_id, l.created_at, l.updated_at,
+        u.username,
+        p.avatar_url
+      FROM lists l
+      JOIN users u ON l.user_id = u.id
+      LEFT JOIN user_profiles p ON u.id = p.user_id
+      WHERE l.id = $1
+    `;
+    const listRes = await db.query(listQuery, [listId]);
+
+    // لو القائمة مش موجودة أو اتمسحت
+    if (listRes.rows.length === 0) {
+      return res.status(404).send("List not found");
+    }
+
+    const list = listRes.rows[0];
+
+    // 2. حماية الخصوصية (الدفاع في العمق) 🛡️
+    const isOwner = req.user && req.user.id === list.user_id;
+    if (list.is_private && !isOwner) {
+      // لو القائمة برايفت واللي فاتحها مش صاحبها، نمنعه!
+      return res
+        .status(403)
+        .send(
+          "Sorry, this list is private and can only be viewed by its creator.",
+        );
+    }
+
+    // عشان لو اللي فاتح الصفحة زائر مش مسجل دخول، نديله ID وهمي ميبوظش الاستعلام
+    const currentUserId = req.user ? req.user.id : -1;
+
+    // 3. نجيب الأفلام + نسأل الداتابيز هو اليوزر ده عاملها لايك أو وتش ليست ولا لأ؟
+    const itemsQuery = `
+      SELECT 
+        li.tmdb_id, li.media_type, li.order_index,
+        mc.title, mc.poster_path, mc.rating, mc.is_anime,
+        EXISTS(SELECT 1 FROM liked_media lm WHERE lm.user_id = $2 AND lm.tmdb_id = li.tmdb_id AND lm.media_type = li.media_type) as is_liked,
+        EXISTS(SELECT 1 FROM watchlist w WHERE w.user_id = $2 AND w.tmdb_id = li.tmdb_id AND w.media_type = li.media_type) as is_watchlisted
+      FROM list_items li
+      JOIN media_cache mc ON li.tmdb_id = mc.tmdb_id AND li.media_type = mc.media_type
+      WHERE li.list_id = $1
+      ORDER BY li.order_index ASC
+    `;
+    const itemsRes = await db.query(itemsQuery, [listId, currentUserId]);
+    const listItems = itemsRes.rows;
+
+    // --- 🌟 السطر الجديد لحساب العداد 🌟 ---
+    let watchedCount = 0;
+    if (req.user && listItems.length > 0) {
+      const watchedQuery = `
+          SELECT COUNT(DISTINCT li.tmdb_id) as count
+          FROM list_items li
+          JOIN reviews r ON li.tmdb_id = r.tmdb_id AND li.media_type = r.media_type
+          WHERE li.list_id = $1 AND r.user_id = $2
+      `;
+      const watchedRes = await db.query(watchedQuery, [listId, req.user.id]);
+      watchedCount = parseInt(watchedRes.rows[0].count) || 0;
+    }
+    // ----------------------------------------
+
+    res.render("single-list.ejs", {
+      list: list,
+      listItems: listItems,
+      isOwner: isOwner,
+      watchedCount: watchedCount, // نمرر العداد الحقيقي للصفحة
+    });
+  } catch (error) {
+    console.error("Error loading single list:", error);
+    res.status(500).send("Server Error");
+  }
+});
 app.get("/single-review", (req, res) => res.render("single-review.ejs"));
 app.get("/watchlist", async (req, res) => {
   if (!req.user) {
@@ -2429,6 +2571,176 @@ app.post("/api/follow/toggle", async (req, res) => {
       return res.status(200).json({ status: "followed" });
     }
   } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+// =========================================================================
+// CREATE LIST API ROUTE
+// =========================================================================
+app.post("/api/lists/create", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res
+      .status(401)
+      .json({ error: "You must be logged in to create a list." });
+  }
+
+  const { title, is_private, items } = req.body;
+  const userId = req.user.id;
+
+  if (!title || title.trim() === "") {
+    return res.status(400).json({ error: "List title is required." });
+  }
+
+  // هنستخدم Transaction عشان نضمن إن الداتا كلها تتحفظ مع بعض، أو تترفض مع بعض
+  const client = await db.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    // 1. حفظ القائمة الأساسية واسترجاع الـ ID بتاعها
+    const listResult = await client.query(
+      `INSERT INTO lists (user_id, title, is_private) VALUES ($1, $2, $3) RETURNING id`,
+      [userId, title.trim(), is_private],
+    );
+    const newListId = listResult.rows[0].id;
+
+    // 2. لوب على الأفلام وإضافتها للقائمة
+    if (items && items.length > 0) {
+      for (const item of items) {
+        // خطوة أمان: نتأكد إن العمل ده متكيّش في media_cache عشان البوستر يظهر بره
+        await client.query(
+          `INSERT INTO media_cache (tmdb_id, media_type, title, poster_path, rating)
+           VALUES ($1, $2, $3, $4, $5)
+           ON CONFLICT (tmdb_id, media_type) DO UPDATE SET rating = EXCLUDED.rating WHERE media_cache.rating IS NULL`,
+          [
+            item.tmdb_id,
+            item.media_type,
+            item.title,
+            item.poster_path,
+            item.rating,
+          ],
+        );
+
+        // حفظ العمل جوه القائمة مع ترتيبه
+        await client.query(
+          `INSERT INTO list_items (list_id, tmdb_id, media_type, order_index)
+           VALUES ($1, $2, $3, $4)`,
+          [newListId, item.tmdb_id, item.media_type, item.order_index],
+        );
+      }
+    }
+
+    await client.query("COMMIT");
+    res
+      .status(200)
+      .json({ message: "List created successfully", list_id: newListId });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error("Create List Error:", error);
+    res.status(500).json({ error: "Internal server error." });
+  } finally {
+    client.release();
+  }
+});
+// =========================================================================
+// DELETE LIST API ROUTE
+// =========================================================================
+app.delete("/api/lists/:id", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const listId = req.params.id;
+    const userId = req.user.id;
+
+    // نجيب الـ username بتاع اليوزر اللي بيمسح عشان نرجعه لصفحته
+    const userRes = await db.query("SELECT username FROM users WHERE id = $1", [
+      userId,
+    ]);
+    const username = userRes.rows[0].username;
+
+    // نمسح الأفلام الأول
+    await db.query("DELETE FROM list_items WHERE list_id = $1", [listId]);
+
+    // نمسح القائمة
+    const delRes = await db.query(
+      "DELETE FROM lists WHERE id = $1 AND user_id = $2",
+      [listId, userId],
+    );
+
+    if (delRes.rowCount > 0) {
+      // نبعت الـ username في الـ Response
+      res
+        .status(200)
+        .json({ message: "List deleted successfully", username: username });
+    } else {
+      res
+        .status(403)
+        .json({ error: "You don't have permission to delete this list." });
+    }
+  } catch (error) {
+    console.error("Delete List Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+// =========================================================================
+// UPDATE LIST API ROUTE
+// =========================================================================
+app.put("/api/lists/:id", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
+
+  const listId = req.params.id;
+  const { title, is_private, items } = req.body;
+  const userId = req.user.id;
+
+  try {
+    // هنستخدم Transaction عشان لو حصل أي خطأ في النص، يرجع كل حاجة زي ما كانت
+    await db.query("BEGIN");
+
+    // 1. تحديث اسم القائمة وحالتها (ونتأكد إن اليوزر هو صاحبها)
+    const updateListRes = await db.query(
+      "UPDATE lists SET title = $1, is_private = $2, updated_at = NOW() WHERE id = $3 AND user_id = $4 RETURNING id",
+      [title, is_private, listId, userId],
+    );
+
+    if (updateListRes.rowCount === 0) {
+      await db.query("ROLLBACK");
+      return res.status(403).json({ error: "Unauthorized or list not found" });
+    }
+
+    // 2. نمسح الأفلام القديمة من القائمة دي
+    await db.query("DELETE FROM list_items WHERE list_id = $1", [listId]);
+
+    // 3. نضيف الأفلام بالترتيب الجديد
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      // نحدث الـ Cache بالمرة عشان لو التقييم اتغير
+      await db.query(
+        `INSERT INTO media_cache (tmdb_id, media_type, title, poster_path, rating)
+         VALUES ($1, $2, $3, $4, $5)
+         ON CONFLICT (tmdb_id, media_type) DO UPDATE SET rating = EXCLUDED.rating WHERE media_cache.rating IS NULL`,
+        [
+          item.tmdb_id,
+          item.media_type,
+          item.title,
+          item.poster_path,
+          item.rating,
+        ],
+      );
+
+      // نضيف الفيلم للقائمة
+      await db.query(
+        "INSERT INTO list_items (list_id, tmdb_id, media_type, order_index) VALUES ($1, $2, $3, $4)",
+        [listId, item.tmdb_id, item.media_type, item.order_index],
+      );
+    }
+
+    await db.query("COMMIT");
+    res.status(200).json({ message: "List updated successfully" });
+  } catch (error) {
+    await db.query("ROLLBACK");
+    console.error("Update List Error:", error);
     res.status(500).json({ error: "Server error" });
   }
 });

@@ -659,7 +659,32 @@ body.is-private.profile-page-other .profile-private-overlay {
   gap: 6px;
   margin-top: 2px;
 }
+/* 🌟 رسالة حالة الفراغ الخاصة بالفلتر 🌟 */
+.filter-empty-state {
+  padding: 40px 20px;
+  text-align: center;
+  width: 100%;
+  color: rgba(241, 227, 200, 0.5);
+  display: none; /* مخفية افتراضياً */
+}
 
+.filter-empty-state i {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  opacity: 0.7;
+}
+
+.filter-empty-state .primary-msg {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.filter-empty-state .secondary-msg {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-top: 5px;
+}
 .favorite-heart {
   color: #ff4757;
   font-size: 0.85rem;
@@ -673,6 +698,21 @@ body.is-private.profile-page-other .profile-private-overlay {
   letter-spacing: 1px;
   display: flex;
   align-items: center;
+}
+.star-full {
+  color: var(--text-main, #f1e3c8); /* لون النجمة الكاملة */
+}
+
+.star-half {
+  /* السطر ده بيلون نص النجمة باللون الأساسي والنص التاني باهت */
+  background: linear-gradient(
+    90deg,
+    var(--text-main, #f1e3c8) 50%,
+    rgba(241, 227, 200, 0.2) 50%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
 .review-author-line {
@@ -735,7 +775,29 @@ body.is-private.profile-page-other .profile-private-overlay {
   margin: 0;
   display: inline;
 }
+/* 🌟 تنسيقات إضافية لكروت المراجعات 🌟 */
+.review-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 
+.review-episode-badge {
+  background-color: rgba(9, 158, 158, 0.15); /* خلفية بلون الـ Accent خفيفة */
+  color: var(--accent-teal, #099e9e); /* لون النص */
+  border: 1px solid rgba(9, 158, 158, 0.3);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.no-rating-text {
+  color: rgba(241, 227, 200, 0.3);
+  font-size: 0.8rem;
+}
 .review-body.blurred {
   filter: blur(6px);
   cursor: pointer;

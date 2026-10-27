@@ -1235,7 +1235,63 @@ input:checked ~ .privacy-label {
   font-weight: 500;
   letter-spacing: 0.3px;
 }
+/* ==========================================================================
+   🌟 CUSTOM CONFIRM DELETE MODAL 🌟
+   ========================================================================== */
+.confirm-modal-container {
+  max-width: 340px;
+  text-align: center;
+  padding: 30px 24px;
+}
 
+.confirm-icon {
+  font-size: 3rem;
+  color: #ef4444; /* لون أحمر شيك يعبر عن الحذف */
+  margin-bottom: 16px;
+}
+
+.confirm-text {
+  color: rgba(241, 227, 200, 0.7);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-cancel-confirm {
+  background: transparent;
+  border: 1px solid rgba(241, 227, 200, 0.2);
+  color: var(--text-cream);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-cancel-confirm:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-danger-confirm {
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-danger-confirm:hover {
+  background: #dc2626;
+}
 @media (max-width: 768px) {
   .g-results-wrapper {
     margin-top: 14px;

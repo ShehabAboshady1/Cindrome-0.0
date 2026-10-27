@@ -101,3 +101,20 @@ CREATE TABLE followers (
     FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE(follower_id, following_id)
 );
+CREATE TABLE lists (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE list_items (
+    id SERIAL PRIMARY KEY,
+    list_id INTEGER REFERENCES lists(id) ON DELETE CASCADE,
+    tmdb_id INTEGER NOT NULL,
+    media_type VARCHAR(20) NOT NULL, 
+    order_index INTEGER NOT NULL, 
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(list_id, tmdb_id, media_type)
+);

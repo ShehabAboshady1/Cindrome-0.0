@@ -1,5 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. أزرار الهيدر
+  // =========================================================
+  // 1. تفعيل أزرار المودال (Like, Rewatch, Spoiler)
+  // =========================================================
+  const likeBtn = document.getElementById("likeToggle");
+  const rewatchBtn = document.getElementById("rewatchToggle");
+  const spoilerToggleBtn = document.getElementById("spoilerToggle");
+
+  function toggleLogButton(btn, activeClass) {
+    if (!btn) return;
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      this.classList.toggle(activeClass);
+      if (activeClass === "spoiler-active") {
+        this.classList.remove("active");
+      } else {
+        this.classList.remove("spoiler-active");
+      }
+    });
+  }
+
+  toggleLogButton(likeBtn, "active");
+  toggleLogButton(rewatchBtn, "active");
+  toggleLogButton(spoilerToggleBtn, "spoiler-active");
+
+  // =========================================================
+  // 2. أزرار الهيدر (Like List, Share)
+  // =========================================================
   const listLikeBtn = document.querySelector(
     ".single-list-actions-inline .like-btn",
   );
@@ -38,26 +64,93 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 2. الكروت
+  // =========================================================
+  // 3. الكروت وأزرار القائمة (Delete, Add, Fav)
+  // =========================================================
+
+  // تفعيل زرار مسح القائمة (Custom Modal)
+  const deleteListBtn = document.getElementById("deleteListBtn");
+  const deleteListModal = document.getElementById("deleteListModal");
+  const cancelDeleteListBtn = document.getElementById("cancelDeleteListBtn");
+  const confirmDeleteListBtn = document.getElementById("confirmDeleteListBtn");
+
+  if (deleteListBtn && deleteListModal) {
+    // 1. فتح المودال لما ندوس على زرار Delete List
+    deleteListBtn.addEventListener("click", () => {
+      deleteListModal.style.display = "flex";
+    });
+
+    // 2. قفل المودال لما ندوس Cancel
+    cancelDeleteListBtn.addEventListener("click", () => {
+      deleteListModal.style.display = "none";
+    });
+
+    // 3. قفل المودال لو دوسنا بره في الخلفية السودا
+    deleteListModal.addEventListener("click", (e) => {
+      if (e.target === deleteListModal) {
+        deleteListModal.style.display = "none";
+      }
+    });
+
+    // 4. تنفيذ المسح الحقيقي لما ندوس Delete في المودال
+    confirmDeleteListBtn.addEventListener("click", async () => {
+      const listId = deleteListBtn.getAttribute("data-list-id");
+      const originalText = confirmDeleteListBtn.innerHTML;
+
+      confirmDeleteListBtn.innerHTML = "Deleting...";
+      confirmDeleteListBtn.disabled = true;
+      confirmDeleteListBtn.style.opacity = "0.7";
+
+      try {
+        const res = await fetch(`/api/lists/${listId}`, { method: "DELETE" });
+        const data = await res.json(); // نقرا الداتا اللي رجعت من السيرفر
+
+        if (res.ok) {
+          // نستخدم الـ username الحقيقي اللي جي من الباك إند
+          window.location.href = `/profile/${data.username}`;
+        } else {
+          alert(data.error || "Failed to delete the list. Please try again.");
+          confirmDeleteListBtn.innerHTML = originalText;
+          confirmDeleteListBtn.disabled = false;
+          confirmDeleteListBtn.style.opacity = "1";
+          deleteListModal.style.display = "none";
+        }
+      } catch (err) {
+        alert("Network error.");
+        confirmDeleteListBtn.innerHTML = originalText;
+        confirmDeleteListBtn.disabled = false;
+        confirmDeleteListBtn.style.opacity = "1";
+        deleteListModal.style.display = "none";
+      }
+    });
+  }
+
+  // تفعيل زراير הכروت (لايك ووتش ليست للميديا)
   const cardsGrid = document.querySelector(".single-list-cards-grid");
-  const plusIconSvg = `
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-    `;
-  const minusIconSvg = `
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-    `;
+  const plusIconSvg = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+  const minusIconSvg = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
 
   if (cardsGrid) {
     cardsGrid.addEventListener("click", (e) => {
+      const card = e.target.closest(".mini-content-card");
+      if (!card) return;
+
+      const tmdb_id = card.dataset.id;
+      const media_type = card.dataset.type;
+
+      // لو داس على زرار الوتش ليست (+)
       const addBtn = e.target.closest(".btn-add");
       if (addBtn) {
         e.preventDefault();
         e.stopPropagation();
+
+        // نكلم الداتابيز عشان نضيفه/نمسحه بجد
+        fetch("/api/watchlist/toggle", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tmdb_id, media_type }),
+        });
+
         const isAdded = addBtn.classList.toggle("is-added");
         addBtn.innerHTML = isAdded ? minusIconSvg : plusIconSvg;
         addBtn.setAttribute(
@@ -67,16 +160,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // لو داس على القلب (Fav)
       const favBtn = e.target.closest(".btn-fav");
       if (favBtn) {
         e.preventDefault();
         e.stopPropagation();
+
+        // نكلم الداتابيز عشان يعمل لايك بجد
+        fetch("/api/like/toggle", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tmdb_id, media_type }),
+        });
+
         favBtn.classList.toggle("is-favorited");
         return;
       }
 
-      const card = e.target.closest(".mini-content-card");
-      if (card && window.innerWidth <= 768) {
+      // بار الموبايل
+      if (window.innerWidth <= 768) {
         document
           .querySelectorAll(".mini-content-card.show-bar")
           .forEach((c) => {
@@ -87,7 +189,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 3. التعليقات والردود بالتداخل الشجري
+  // =========================================================
+  // 4. التعليقات والردود بالتداخل الشجري (Clean JS via Templates)
+  // =========================================================
   const commentsList = document.querySelector(".comments-list");
   const mainCommentTextarea = document.querySelector(
     ".add-comment-box .comment-textarea",
@@ -96,7 +200,15 @@ document.addEventListener("DOMContentLoaded", () => {
     ".add-comment-box .modern-post-btn",
   );
   const commentsCountHeader = document.querySelector(".comments-count");
-  const currentUsername = localStorage.getItem("cindrome_username") || "You";
+  const mainCommentTemplate = document.getElementById("mainCommentTemplate");
+  const replyCommentTemplate = document.getElementById("replyCommentTemplate");
+
+  // استخراج اليوزر الحالي من النافبار لو متاح
+  let currentUsername = "You";
+  const navUserLink = document.querySelector(".nav-username");
+  if (navUserLink) {
+    currentUsername = navUserLink.textContent.trim().replace("@", "");
+  }
 
   function updateCommentsCount(change = 1) {
     if (!commentsCountHeader) return;
@@ -105,56 +217,31 @@ document.addEventListener("DOMContentLoaded", () => {
     commentsCountHeader.textContent = count;
   }
 
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // نشر تعليق أساسي
   function postMainComment() {
-    if (!mainCommentTextarea) return;
+    if (!mainCommentTextarea || !mainCommentTemplate) return;
     const text = mainCommentTextarea.value.trim();
     if (!text) {
       mainCommentTextarea.focus();
       return;
     }
 
-    const newCommentThread = document.createElement("div");
-    newCommentThread.className = "comment-thread";
-    newCommentThread.innerHTML = `
-            <div class="single-comment">
-                <img src="../assets/logos/cindrome-logo.png" alt="User" class="comment-avatar">
-                <div class="comment-content-wrapper">
-                    <div class="comment-header">
-                        <span class="comment-user">@${currentUsername}</span>
-                        <span class="comment-time">Just now</span>
-                    </div>
-                    <p class="comment-text">${escapeHtml(text)}</p>
-                    <div class="comment-interactions">
-                        <button class="interaction-btn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg> 0
-                        </button>
-                        <button class="interaction-btn reply-trigger">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                            </svg> Reply
-                        </button>
-                    </div>
-                    <div class="inline-reply-box">
-                        <img src="../assets/logos/cindrome-logo.png" alt="My Avatar" class="comment-avatar small-avatar">
-                        <div class="modern-input-wrapper">
-                            <textarea class="comment-textarea" placeholder="Reply to @${currentUsername}..." rows="1"></textarea>
-                            <button class="modern-post-btn" title="Send Reply">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                </svg>
-                            </button>
-                        </div>
-                        <button class="reply-cancel-btn" title="Cancel Reply">Cancel</button>
-                    </div>
-                </div>
-            </div>
-            <div class="nested-replies"></div>
-        `;
+    const clone = mainCommentTemplate.content.cloneNode(true);
+    const newThread = clone.querySelector(".comment-thread");
 
-    commentsList.prepend(newCommentThread);
+    newThread.querySelector(".comment-user").textContent =
+      `@${currentUsername}`;
+    newThread.querySelector(".comment-text").innerHTML = escapeHtml(text);
+    newThread.querySelector(".comment-textarea").placeholder =
+      `Reply to @${currentUsername}...`;
+
+    commentsList.prepend(newThread);
     mainCommentTextarea.value = "";
     updateCommentsCount(1);
   }
@@ -169,7 +256,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // نشر رد
   function submitReply(replyBox) {
+    if (!replyCommentTemplate) return;
     const textarea = replyBox.querySelector(".comment-textarea");
     const replyText = textarea.value.trim();
     if (!replyText) {
@@ -218,43 +307,15 @@ document.addEventListener("DOMContentLoaded", () => {
         ? `<span class="comment-mention">${escapeHtml(replyTo)}</span> `
         : "";
 
-    const newReply = document.createElement("div");
-    newReply.className = `single-comment ${isSubReply ? "sub-reply-comment" : "reply-comment"}`;
-    newReply.innerHTML = `
-            <img src="../assets/logos/cindrome-logo.png" alt="User" class="comment-avatar small-avatar">
-            <div class="comment-content-wrapper">
-                <div class="comment-header">
-                    <span class="comment-user">@${currentUsername}</span>
-                    <span class="comment-time">Just now</span>
-                </div>
-                <p class="comment-text">${mentionPrefix}${escapeHtml(replyText)}</p>
-                <div class="comment-interactions">
-                    <button class="interaction-btn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg> 0
-                    </button>
-                    <button class="interaction-btn reply-trigger">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                        </svg> Reply
-                    </button>
-                </div>
-                <div class="inline-reply-box">
-                    <img src="../assets/logos/cindrome-logo.png" alt="My Avatar" class="comment-avatar small-avatar">
-                    <div class="modern-input-wrapper">
-                        <textarea class="comment-textarea" placeholder="Reply to @${currentUsername}..." rows="1"></textarea>
-                        <button class="modern-post-btn" title="Send Reply">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="22" y1="2" x2="11" y2="13"></line>
-                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                            </svg>
-                        </button>
-                    </div>
-                    <button class="reply-cancel-btn" title="Cancel Reply">Cancel</button>
-                </div>
-            </div>
-        `;
+    const clone = replyCommentTemplate.content.cloneNode(true);
+    const newReply = clone.querySelector(".single-comment");
+    newReply.classList.add(isSubReply ? "sub-reply-comment" : "reply-comment");
+
+    newReply.querySelector(".comment-user").textContent = `@${currentUsername}`;
+    newReply.querySelector(".comment-text").innerHTML =
+      mentionPrefix + escapeHtml(replyText);
+    newReply.querySelector(".comment-textarea").placeholder =
+      `Reply to @${currentUsername}...`;
 
     targetContainer.appendChild(newReply);
     textarea.value = "";
@@ -263,6 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCommentsCount(1);
   }
 
+  // تفاعلات التعليقات
   if (commentsList) {
     commentsList.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -278,6 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     commentsList.addEventListener("click", (e) => {
+      // فتح الرد
       const replyBtn = e.target.closest(".reply-trigger");
       if (replyBtn) {
         const commentWrapper = replyBtn.closest(".comment-content-wrapper");
@@ -317,6 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // إلغاء الرد
       const cancelBtn = e.target.closest(".reply-cancel-btn");
       if (cancelBtn) {
         const replyBox = cancelBtn.closest(".inline-reply-box");
@@ -329,6 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // إرسال الرد
       const sendReplyBtn = e.target.closest(
         ".inline-reply-box .modern-post-btn",
       );
@@ -338,23 +403,59 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // لايك للتعليق
       const likeCommentBtn = e.target.closest(".interaction-btn");
       if (
         likeCommentBtn &&
         !likeCommentBtn.classList.contains("reply-trigger")
       ) {
         const isLiked = likeCommentBtn.classList.toggle("is-liked");
-        let currentNum = parseInt(likeCommentBtn.textContent.trim(), 10) || 0;
-        currentNum = isLiked ? currentNum + 1 : Math.max(0, currentNum - 1);
-        const svgHtml = likeCommentBtn.querySelector("svg").outerHTML;
-        likeCommentBtn.innerHTML = `${svgHtml} ${currentNum}`;
+        const span = likeCommentBtn.querySelector("span");
+        let currentNum = parseInt(span.textContent.trim(), 10) || 0;
+        span.textContent = isLiked
+          ? currentNum + 1
+          : Math.max(0, currentNum - 1);
       }
     });
   }
+  // =========================================================
+  // 5. زرار تعديل القائمة (Edit List) - النسخة الآمنة
+  // =========================================================
+  const editListTriggerBtn = document.getElementById("editListTriggerBtn");
 
-  function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
+  if (editListTriggerBtn) {
+    editListTriggerBtn.addEventListener("click", () => {
+      const dataHelper = document.getElementById("listDataHelper");
+
+      if (!dataHelper) {
+        alert("Error: Data helper not found.");
+        return;
+      }
+
+      try {
+        // قراءة البيانات من الـ HTML وتحويلها لكائنات جافاسكريبت
+        const currentList = JSON.parse(dataHelper.getAttribute("data-list"));
+        const currentListItems = JSON.parse(
+          dataHelper.getAttribute("data-items"),
+        );
+
+        if (!currentList || !currentList.id) {
+          alert("Data is still loading, please wait...");
+          return;
+        }
+
+        // نبعت إشارة لملف modals.js عشان يفتح المودال ويفرش فيه الداتا
+        const event = new CustomEvent("openEditListMode", {
+          detail: {
+            list: currentList,
+            items: currentListItems,
+          },
+        });
+        window.dispatchEvent(event);
+      } catch (error) {
+        console.error("Error parsing list data:", error);
+        alert("Failed to load list data for editing.");
+      }
+    });
   }
 });
