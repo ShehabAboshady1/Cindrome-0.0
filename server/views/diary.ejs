@@ -147,13 +147,19 @@
                                     </div>
 
                                     <% if (entry.review_text && entry.review_text.trim() !=='' ) { %>
-                                        <p class="diary-user-review">
-                                            <% if (entry.has_spoilers) { %>
-                                                <span class="spoiler-badge"
-                                                    style="margin-right: 4px; padding: 1px 4px; font-size: 0.65rem;">Spoiler</span>
-                                                <% } %>
-                                                    "<%= entry.review_text %>"
-                                        </p>
+                                        <a href="/review/<%= entry.review_id %>"
+                                            style="text-decoration: none; color: inherit; display: block;">
+                                            <p class="diary-user-review"
+                                                style="cursor: pointer; transition: opacity 0.2s;"
+                                                onmouseover="this.style.opacity='0.8'"
+                                                onmouseout="this.style.opacity='1'">
+                                                <% if (entry.has_spoilers) { %>
+                                                    <span class="spoiler-badge"
+                                                        style="margin-right: 4px; padding: 1px 4px; font-size: 0.65rem;">Spoiler</span>
+                                                    <% } %>
+                                                        "<%= entry.review_text %>"
+                                            </p>
+                                        </a>
                                         <% } %>
                                 </div>
 

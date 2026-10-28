@@ -118,3 +118,48 @@ CREATE TABLE list_items (
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(list_id, tmdb_id, media_type)
 );
+-- ==========================================
+-- 1. جدول إعجابات المراجعات (Review Likes)
+-- ==========================================
+CREATE TABLE review_likes (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    review_id INT NOT NULL REFERENCES reviews(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, review_id) -- يمنع اللايك المكرر لنفس الريفيو من نفس اليوزر
+);
+
+-- ==========================================
+-- 2. جدول تعليقات المراجعات (Review Comments)
+-- ==========================================
+CREATE TABLE review_comments (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    review_id INT NOT NULL REFERENCES reviews(id) ON DELETE CASCADE,
+    parent_comment_id INT REFERENCES review_comments(id) ON DELETE CASCADE, -- للردود المتداخلة
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ==========================================
+-- 3. جدول إعجابات القوائم (List Likes)
+-- ==========================================
+CREATE TABLE list_likes (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    list_id INT NOT NULL REFERENCES lists(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, list_id)
+);
+
+-- ==========================================
+-- 4. جدول تعليقات القوائم (List Comments)
+-- ==========================================
+CREATE TABLE list_comments (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    list_id INT NOT NULL REFERENCES lists(id) ON DELETE CASCADE,
+    parent_comment_id INT REFERENCES list_comments(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

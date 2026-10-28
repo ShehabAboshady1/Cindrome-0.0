@@ -2056,7 +2056,59 @@ app.get("/single-list", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
-app.get("/single-review", (req, res) => res.render("single-review.ejs"));
+// ==========================================
+// Route: Single Review Page (Dynamic)
+// ==========================================
+app.get("/review/:id", async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+
+    const query = `
+      SELECT 
+        r.id AS review_id, r.rating, r.review_text, r.watch_date, r.has_spoilers, r.liked,
+        r.season_number, r.episode_number,
+        u.username,
+        p.display_name, p.avatar_url,
+        m.tmdb_id, m.media_type, m.title, m.poster_path, m.is_anime,
+        EXTRACT(YEAR FROM r.watch_date) AS watch_year
+      FROM reviews r
+      JOIN users u ON r.user_id = u.id
+      LEFT JOIN user_profiles p ON u.id = p.user_id
+      JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
+      WHERE r.id = $1
+    `;
+    const result = await db.query(query, [reviewId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).send("Review not found");
+    }
+
+    const review = result.rows[0];
+
+    // 🌟 جديد: جلب الخلفية العريضة الحقيقية (Backdrop) من TMDB 🌟
+    try {
+      const tmdbUrl = `https://api.themoviedb.org/3/${review.media_type === "anime" ? "tv" : review.media_type}/${review.tmdb_id}?api_key=${TMDB_API_KEY}`;
+      const tmdbRes = await axios.get(tmdbUrl);
+      review.backdrop_path = tmdbRes.data.backdrop_path;
+    } catch (err) {
+      console.error("Failed to fetch backdrop from TMDB");
+    }
+
+    const likesCount = 0;
+    const commentsCount = 0;
+    const isLikedByCurrentUser = false;
+
+    res.render("single-review.ejs", {
+      review: review,
+      likesCount: likesCount,
+      commentsCount: commentsCount,
+      isLikedByCurrentUser: isLikedByCurrentUser,
+    });
+  } catch (error) {
+    console.error("Error loading single review:", error);
+    res.status(500).send("Server Error");
+  }
+});
 app.get("/watchlist", async (req, res) => {
   if (!req.user) {
     return res.redirect("/sign-in");
