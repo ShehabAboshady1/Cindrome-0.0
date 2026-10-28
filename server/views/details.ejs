@@ -285,19 +285,27 @@
                                                                 <% } %>
                                         </div>
 
+                                        <!-- التعديل هنا: تصليح مسار الرابط وتشغيل زرار اللايك -->
                                         <div class="minimal-card-footer">
                                             <div class="minimal-actions">
-                                                <!-- مؤقتاً: تصفير اللايكات والكومنتات لحد ما نعمل الجداول بتاعتهم -->
-                                                <button class="minimal-btn review-like-btn"
-                                                    title="Likes not active yet"><i class="fa-regular fa-heart"></i>
-                                                    0</button>
-                                                <a href="/single-review?id=<%= review.review_id %>" class="minimal-btn"
-                                                    title="Comments not active yet"><i
-                                                        class="fa-regular fa-comment"></i> 0</a>
+                                                <button
+                                                    class="minimal-btn review-like-btn <%= review.is_liked_by_user ? 'is-liked' : '' %>"
+                                                    onclick="toggleLike(this, <%= review.review_id %>, 'review')">
+                                                    <i
+                                                        class="<%= review.is_liked_by_user ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
+                                                    <span class="like-count">
+                                                        <%= review.likes_count || 0 %>
+                                                    </span>
+                                                </button>
+                                                <a href="/review/<%= review.review_id %>" class="minimal-btn">
+                                                    <i class="fa-regular fa-comment"></i> <span class="comment-count">
+                                                        <%= review.comments_count || 0 %>
+                                                    </span>
+                                                </a>
                                             </div>
-                                            <a href="/single-review?id=<%= review.review_id %>"
-                                                class="minimal-read-link">Read More <i
-                                                    class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                            <a href="/review/<%= review.review_id %>" class="minimal-read-link">Read
+                                                More
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                                         </div>
                                     </article>
                                     <% }); %>

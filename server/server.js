@@ -109,6 +109,20 @@ const genreMap = {
   10765: "Sci-Fi & Fantasy",
 };
 
+// 🌟 الدالة الجديدة لمعالجة نص الكومنت والمنشن 🌟
+function formatCommentText(text) {
+  if (!text) return "";
+  // حماية من XSS
+  let safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  // تغليف أي منشن بـ span
+  safeText = safeText.replace(/\B@\w+/g, (match) => {
+    return `<span class="comment-mention">${match}</span>`;
+  });
+
+  return safeText;
+}
+
 // فاحص الكلمات الرياضية الذكي: يفحص قصة وعنوان العمل ديناميكياً لأي عمل حالي أو مستقبلي
 const sportsRegex =
   /\b(sport|sports|football|soccer|volleyball|basketball|boxing|boxer|baseball|tennis|skating|swimming|swimmer|table tennis|ping pong|badminton|rugby|judo|karate|wrestling|athlete|athletics|striker)\b/i;
@@ -873,7 +887,10 @@ app.get("/details", async (req, res) => {
           r.season_number,
           r.episode_number,
           u.username,
-          p.avatar_url
+          p.avatar_url,
+          (SELECT COUNT(*) FROM review_likes rl WHERE rl.review_id = r.id) as likes_count,
+          (SELECT COUNT(*) FROM review_comments rc WHERE rc.review_id = r.id) as comments_count,
+          ${req.user ? `EXISTS (SELECT 1 FROM review_likes rl WHERE rl.review_id = r.id AND rl.user_id = ${req.user.id})` : "false"} as is_liked_by_user
         FROM reviews r
         JOIN users u ON r.user_id = u.id
         LEFT JOIN user_profiles p ON u.id = p.user_id
@@ -2057,12 +2074,13 @@ app.get("/single-list", async (req, res) => {
   }
 });
 // ==========================================
-// Route: Single Review Page (Dynamic)
+// Route: Single Review Page (Dynamic with Likes & Comments)
 // ==========================================
 app.get("/review/:id", async (req, res) => {
   try {
     const reviewId = req.params.id;
 
+    // 1. جلب بيانات الريفيو الأساسية
     const query = `
       SELECT 
         r.id AS review_id, r.rating, r.review_text, r.watch_date, r.has_spoilers, r.liked,
@@ -2082,10 +2100,9 @@ app.get("/review/:id", async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(404).send("Review not found");
     }
-
     const review = result.rows[0];
 
-    // 🌟 جديد: جلب الخلفية العريضة الحقيقية (Backdrop) من TMDB 🌟
+    // 2. جلب الـ Backdrop
     try {
       const tmdbUrl = `https://api.themoviedb.org/3/${review.media_type === "anime" ? "tv" : review.media_type}/${review.tmdb_id}?api_key=${TMDB_API_KEY}`;
       const tmdbRes = await axios.get(tmdbUrl);
@@ -2094,15 +2111,79 @@ app.get("/review/:id", async (req, res) => {
       console.error("Failed to fetch backdrop from TMDB");
     }
 
-    const likesCount = 0;
-    const commentsCount = 0;
-    const isLikedByCurrentUser = false;
+    // 3. جلب عدد اللايكات للريفيو
+    const likesRes = await db.query(
+      "SELECT COUNT(*) FROM review_likes WHERE review_id = $1",
+      [reviewId],
+    );
+    const likesCount = parseInt(likesRes.rows[0].count) || 0;
+
+    // 4. جلب عدد التعليقات للريفيو
+    const commentsRes = await db.query(
+      "SELECT COUNT(*) FROM review_comments WHERE review_id = $1",
+      [reviewId],
+    );
+    const commentsCount = parseInt(commentsRes.rows[0].count) || 0;
+
+    // 5. هل المستخدم الحالي عامل لايك للريفيو ده؟
+    let isLikedByCurrentUser = false;
+    if (req.user) {
+      const checkLike = await db.query(
+        "SELECT 1 FROM review_likes WHERE review_id = $1 AND user_id = $2",
+        [reviewId, req.user.id],
+      );
+      if (checkLike.rows.length > 0) {
+        isLikedByCurrentUser = true;
+      }
+    }
+
+    // 6. جلب التعليقات نفسها مع حساب اللايكات لكل تعليق
+    const commentsQuery = `
+      SELECT 
+          c.id, c.content, c.created_at, c.parent_comment_id,
+          u.username, p.avatar_url,
+          (SELECT COUNT(*) FROM review_comment_likes cl WHERE cl.comment_id = c.id) as likes_count,
+          ${req.user ? `EXISTS (SELECT 1 FROM review_comment_likes cl WHERE cl.comment_id = c.id AND cl.user_id = ${req.user.id})` : "false"} as is_liked_by_user
+      FROM review_comments c
+      JOIN users u ON c.user_id = u.id
+      LEFT JOIN user_profiles p ON u.id = p.user_id
+      WHERE c.review_id = $1
+      ORDER BY c.created_at ASC
+    `;
+    const commentsDataRes = await db.query(commentsQuery, [reviewId]);
+    const allComments = commentsDataRes.rows.map((comment) => {
+      // بنعدل الـ content باستخدام الدالة بتاعتنا قبل ما نبعته للـ EJS
+      comment.content = formatCommentText(comment.content);
+      return comment;
+    });
+
+    // 7. تنظيم التعليقات في شجرة (عشان الـ Partial EJS يرسمهم صح)
+    const mainComments = [];
+    const commentMap = {};
+
+    // أول لفة: نحط كل التعليقات في الـ Map ونعمل Array فاضية للردود بتاعتها
+    allComments.forEach((comment) => {
+      comment.replies = [];
+      commentMap[comment.id] = comment;
+    });
+
+    // تاني لفة: نوزع التعليقات (الأساسي يروح mainComments، والرد يروح جوه أبوه)
+    allComments.forEach((comment) => {
+      if (comment.parent_comment_id) {
+        if (commentMap[comment.parent_comment_id]) {
+          commentMap[comment.parent_comment_id].replies.push(comment);
+        }
+      } else {
+        mainComments.push(comment);
+      }
+    });
 
     res.render("single-review.ejs", {
-      review: review,
-      likesCount: likesCount,
-      commentsCount: commentsCount,
-      isLikedByCurrentUser: isLikedByCurrentUser,
+      review,
+      likesCount,
+      commentsCount,
+      isLikedByCurrentUser,
+      mainComments, // هنبعت دي للـ EJS (تحتوي على الأساسي وجواه الردود)
     });
   } catch (error) {
     console.error("Error loading single review:", error);
@@ -2793,6 +2874,112 @@ app.put("/api/lists/:id", async (req, res) => {
   } catch (error) {
     await db.query("ROLLBACK");
     console.error("Update List Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+// =========================================================================
+// REVIEW LIKES & COMMENTS API ROUTES
+// =========================================================================
+
+// 1. Toggle Review Like
+app.post("/api/reviews/:id/like", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
+
+  const reviewId = req.params.id;
+  const userId = req.user.id;
+
+  try {
+    const checkResult = await db.query(
+      "SELECT id FROM review_likes WHERE review_id = $1 AND user_id = $2",
+      [reviewId, userId],
+    );
+
+    if (checkResult.rows.length > 0) {
+      // شيل اللايك
+      await db.query("DELETE FROM review_likes WHERE id = $1", [
+        checkResult.rows[0].id,
+      ]);
+      res.json({ status: "removed" });
+    } else {
+      // ضيف اللايك
+      await db.query(
+        "INSERT INTO review_likes (review_id, user_id) VALUES ($1, $2)",
+        [reviewId, userId],
+      );
+      res.json({ status: "added" });
+    }
+  } catch (error) {
+    console.error("Review Like Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// 2. Add Review Comment
+app.post("/api/reviews/:id/comment", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
+
+  const reviewId = req.params.id;
+  const userId = req.user.id;
+  const { content, parent_comment_id } = req.body;
+
+  if (!content || content.trim() === "") {
+    return res.status(400).json({ error: "Comment cannot be empty" });
+  }
+
+  try {
+    const result = await db.query(
+      `
+            INSERT INTO review_comments (review_id, user_id, content, parent_comment_id) 
+            VALUES ($1, $2, $3, $4) RETURNING id, created_at
+        `,
+      [reviewId, userId, content.trim(), parent_comment_id || null],
+    );
+
+    // بنرجع بيانات اليوزر مع التعليق عشان الفرونت يطبعها فوراً
+    res.status(200).json({
+      message: "Comment added",
+      comment_id: result.rows[0].id,
+      created_at: result.rows[0].created_at,
+      username: req.user.username,
+      avatar_url: req.user.avatar_url,
+    });
+  } catch (error) {
+    console.error("Review Comment Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+// 3. Toggle Comment Like (Review Comments)
+app.post("/api/comments/:id/like", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
+
+  const commentId = req.params.id;
+  const userId = req.user.id;
+
+  try {
+    const checkResult = await db.query(
+      "SELECT id FROM review_comment_likes WHERE comment_id = $1 AND user_id = $2",
+      [commentId, userId],
+    );
+
+    if (checkResult.rows.length > 0) {
+      // شيل اللايك
+      await db.query("DELETE FROM review_comment_likes WHERE id = $1", [
+        checkResult.rows[0].id,
+      ]);
+      res.json({ status: "removed" });
+    } else {
+      // ضيف اللايك
+      await db.query(
+        "INSERT INTO review_comment_likes (comment_id, user_id) VALUES ($1, $2)",
+        [commentId, userId],
+      );
+      res.json({ status: "added" });
+    }
+  } catch (error) {
+    console.error("Comment Like Error:", error);
     res.status(500).json({ error: "Server error" });
   }
 });

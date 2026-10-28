@@ -48,20 +48,50 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const reviewLikeBtns = document.querySelectorAll(".review-like-btn");
   reviewLikeBtns.forEach((btn) => {
-    btn.addEventListener("click", function (e) {
+    btn.addEventListener("click", async function (e) {
       e.preventDefault();
-      this.classList.toggle("is-liked");
-      const icon = this.querySelector("i");
-      if (icon) {
-        if (this.classList.contains("is-liked")) {
-          icon.classList.replace("fa-regular", "fa-solid");
-        } else {
-          icon.classList.replace("fa-solid", "fa-regular");
+
+      // استخراج ID الريفيو من الدالة اللي في الـ onclick لو كانت موجودة، أو من data attribute
+      const onclickAttr = this.getAttribute("onclick");
+      let reviewId;
+      if (onclickAttr) {
+        const match = onclickAttr.match(/toggleLike\(this,\s*(\d+)/);
+        if (match) reviewId = match[1];
+      }
+
+      if (!reviewId) return;
+
+      try {
+        const response = await fetch(`/api/reviews/${reviewId}/like`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const countSpan =
+            this.querySelector(".like-count") ||
+            this.querySelector("span:last-child");
+          const icon = this.querySelector("i");
+          let count = parseInt(countSpan.textContent) || 0;
+
+          if (data.status === "added") {
+            this.classList.add("is-liked");
+            countSpan.textContent = count + 1;
+            if (icon) icon.classList.replace("fa-regular", "fa-solid");
+          } else if (data.status === "removed") {
+            this.classList.remove("is-liked");
+            countSpan.textContent = Math.max(0, count - 1);
+            if (icon) icon.classList.replace("fa-solid", "fa-regular");
+          }
+        } else if (response.status === 401) {
+          window.location.href = "/sign-in";
         }
+      } catch (error) {
+        console.error("Error toggling like:", error);
       }
     });
   });
-
   // ==========================================
   // 🌟 5. تبديل المواسم وجلب الحلقات ديناميكياً (المُعدل) 🌟
   // ==========================================

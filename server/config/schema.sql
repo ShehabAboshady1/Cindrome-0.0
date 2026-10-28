@@ -163,3 +163,17 @@ CREATE TABLE list_comments (
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE comment_likes (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    comment_id INT NOT NULL REFERENCES review_comments(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, comment_id) -- عشان نمنع اليوزر يعمل لايك لنفس الكومنت مرتين
+);
+CREATE TABLE review_comment_likes (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    comment_id INT NOT NULL REFERENCES review_comments(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, comment_id) -- يمنع اليوزر يعمل لايك مرتين لنفس الكومنت
+);

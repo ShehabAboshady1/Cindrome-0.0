@@ -15,13 +15,37 @@ document.addEventListener("DOMContentLoaded", () => {
   if (reviewWrapper) reviewWrapper.addEventListener("click", revealSpoiler);
   if (spoilerBadge) spoilerBadge.addEventListener("click", revealSpoiler);
 
-  // 2. أزرار المراجعة
+  // 2. أزرار المراجعة (لايك وشير)
   const reviewLikeBtn = document.getElementById("reviewLikeBtn");
   const reviewShareBtn = document.getElementById("reviewShareBtn");
 
   if (reviewLikeBtn) {
-    reviewLikeBtn.addEventListener("click", () => {
-      reviewLikeBtn.classList.toggle("is-liked");
+    reviewLikeBtn.addEventListener("click", async () => {
+      const reviewId = window.location.pathname.split("/").pop();
+      try {
+        const response = await fetch(`/api/reviews/${reviewId}/like`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const span = reviewLikeBtn.querySelector("span");
+          let count = parseInt(span.textContent) || 0;
+
+          if (data.status === "added") {
+            reviewLikeBtn.classList.add("is-liked");
+            span.textContent = count + 1;
+          } else if (data.status === "removed") {
+            reviewLikeBtn.classList.remove("is-liked");
+            span.textContent = Math.max(0, count - 1);
+          }
+        } else if (response.status === 401) {
+          window.location.href = "/sign-in";
+        }
+      } catch (error) {
+        console.error("Error toggling like:", error);
+      }
     });
   }
 
@@ -31,13 +55,12 @@ document.addEventListener("DOMContentLoaded", () => {
         await navigator.clipboard.writeText(window.location.href);
         reviewShareBtn.classList.add("is-copied");
         reviewShareBtn.setAttribute("title", "Copied!");
-
-        // قللنا الوقت هنا لـ 800 ملي ثانية بدل 2000
         setTimeout(() => {
           reviewShareBtn.classList.remove("is-copied");
           reviewShareBtn.setAttribute("title", "Copy link");
         }, 800);
       } catch (err) {
+        // Fallback for older browsers
         const dummy = document.createElement("input");
         document.body.appendChild(dummy);
         dummy.value = window.location.href;
@@ -46,14 +69,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.removeChild(dummy);
 
         reviewShareBtn.classList.add("is-copied");
-
-        // وهنا كمان لـ 800 ملي ثانية
         setTimeout(() => reviewShareBtn.classList.remove("is-copied"), 800);
       }
     });
   }
 
-  // 3. التعليقات والردود بالتداخل الشجري
+  // 3. التعليقات والردود
   const commentsList = document.querySelector(".comments-list");
   const mainCommentTextarea = document.querySelector(
     ".add-comment-box .comment-textarea",
@@ -62,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ".add-comment-box .modern-post-btn",
   );
   const commentsCountHeader = document.querySelector(".comments-count");
-  const currentUsername = localStorage.getItem("cindrome_username") || "Shehab";
 
   function updateCommentsCount(change = 1) {
     if (!commentsCountHeader) return;
@@ -71,7 +91,82 @@ document.addEventListener("DOMContentLoaded", () => {
     commentsCountHeader.textContent = count;
   }
 
-  function postMainComment() {
+  // دالة مساعدة لنسخ الـ Template وتعبئة البيانات (تستخدم للتعليقات والردود)
+  function createCommentElement(
+    data,
+    text,
+    isSubReply = false,
+    replyToUser = "",
+  ) {
+    const template = document.getElementById("commentTemplate");
+    if (!template) return null;
+
+    const newCommentThread = template.content.cloneNode(true).firstElementChild;
+    newCommentThread.dataset.commentId = data.comment_id;
+
+    const singleCommentDiv = newCommentThread.querySelector(".single-comment");
+
+    // لو ده رد (Reply)، نغير شكله ونصغّره
+    if (isSubReply) {
+      singleCommentDiv.className = "single-comment sub-reply-comment";
+      const mainAvatar = newCommentThread.querySelector(".comment-avatar");
+      mainAvatar.classList.add("small-avatar");
+
+      // نشيل زرار صندوق الرد للردود المتداخلة (ممكن اليوزر يعمل Reply ويفتح صندوق الأب)
+      const inlineReplyBox =
+        newCommentThread.querySelector(".inline-reply-box");
+      if (inlineReplyBox) inlineReplyBox.remove();
+    }
+
+    // ربط الصورة بالبروفايل ديناميكياً
+    const userLink = newCommentThread.querySelector(".comment-user-link");
+    if (userLink) userLink.href = `/profile/${data.username}`;
+
+    const avatarImg = newCommentThread.querySelector(".comment-avatar");
+    avatarImg.src = data.avatar_url || "/assets/profile-avatar.jpg";
+
+    // ربط الاسم بالبروفايل ديناميكياً
+    const userSpanText = newCommentThread.querySelector(
+      ".comment-user-link-text",
+    );
+    if (userSpanText) {
+      userSpanText.href = `/profile/${data.username}`;
+      userSpanText.textContent = `@${data.username}`;
+    }
+
+    const textP = newCommentThread.querySelector(".comment-text");
+
+    // إضافة الـ Mention كنص محمي عشان الـ JS يرسمه وقتي
+    if (replyToUser) {
+      textP.innerHTML = `<span class="comment-mention">${replyToUser}</span> ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}`;
+    } else {
+      textP.innerHTML = text
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(
+          /\B@\w+/g,
+          (match) => `<span class="comment-mention">${match}</span>`,
+        );
+    }
+
+    // إعداد صندوق الرد الداخلي (لو موجود)
+    const replyAvatar = newCommentThread.querySelector(".reply-avatar");
+    if (replyAvatar)
+      replyAvatar.src = data.avatar_url || "/assets/profile-avatar.jpg";
+
+    const replyTextarea = newCommentThread.querySelector(".comment-textarea");
+    if (replyTextarea)
+      replyTextarea.placeholder = `Reply to @${data.username}...`;
+
+    // تحديث ID زرار اللايك
+    const likeBtn = newCommentThread.querySelector(".comment-like-btn");
+    if (likeBtn) likeBtn.dataset.commentId = data.comment_id;
+
+    return newCommentThread;
+  }
+
+  // إضافة تعليق أساسي
+  async function postMainComment() {
     if (!mainCommentTextarea) return;
     const text = mainCommentTextarea.value.trim();
     if (!text) {
@@ -79,50 +174,33 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const newCommentThread = document.createElement("div");
-    newCommentThread.className = "comment-thread";
-    newCommentThread.innerHTML = `
-            <div class="single-comment">
-                <img src="../assets/avatars/shehab.jpg" alt="User" class="comment-avatar" onerror="this.src='../assets/profile-avatar.jpg'">
-                <div class="comment-content-wrapper">
-                    <div class="comment-header">
-                        <span class="comment-user">@${currentUsername}</span>
-                        <span class="comment-time">Just now</span>
-                    </div>
-                    <p class="comment-text">${escapeHtml(text)}</p>
-                    <div class="comment-interactions">
-                        <button class="interaction-btn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg> 0
-                        </button>
-                        <button class="interaction-btn reply-trigger">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                            </svg> Reply
-                        </button>
-                    </div>
-                    <div class="inline-reply-box">
-                        <img src="../assets/avatars/shehab.jpg" alt="My Avatar" class="comment-avatar small-avatar" onerror="this.src='../assets/profile-avatar.jpg'">
-                        <div class="modern-input-wrapper">
-                            <textarea class="comment-textarea" placeholder="Reply to @${currentUsername}..." rows="1"></textarea>
-                            <button class="modern-post-btn" title="Send Reply">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                </svg>
-                            </button>
-                        </div>
-                        <button class="reply-cancel-btn" title="Cancel Reply">Cancel</button>
-                    </div>
-                </div>
-            </div>
-            <div class="nested-replies"></div>
-        `;
+    const reviewId = window.location.pathname.split("/").pop();
 
-    commentsList.prepend(newCommentThread);
-    mainCommentTextarea.value = "";
-    updateCommentsCount(1);
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/comment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: text }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const noCommentsMsg = commentsList.querySelector(".no-comments-msg");
+        if (noCommentsMsg) noCommentsMsg.remove();
+
+        const newElement = createCommentElement(data, text);
+        if (newElement) {
+          commentsList.prepend(newElement);
+        }
+
+        mainCommentTextarea.value = "";
+        updateCommentsCount(1);
+      } else if (response.status === 401) {
+        window.location.href = "/sign-in";
+      }
+    } catch (error) {
+      console.error("Error posting comment:", error);
+    }
   }
 
   if (mainPostBtn) mainPostBtn.addEventListener("click", postMainComment);
@@ -135,8 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // إرسال الرد المتداخل وتحديد مكانه في الشجرة بدقة
-  function submitReply(replyBox) {
+  // إضافة رد متداخل
+  async function submitReply(replyBox) {
     const textarea = replyBox.querySelector(".comment-textarea");
     const replyText = textarea.value.trim();
     if (!replyText) {
@@ -144,95 +222,60 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const thread = replyBox.closest(".comment-thread");
-    const parentComment = replyBox.closest(".single-comment");
-    const isReplyingToNested =
-      parentComment &&
-      (parentComment.classList.contains("reply-comment") ||
-        parentComment.classList.contains("sub-reply-comment"));
+    const reviewId = window.location.pathname.split("/").pop();
+    const parentThread = replyBox.closest(".comment-thread");
+    const parentCommentId = parentThread
+      ? parentThread.dataset.commentId
+      : null;
 
-    let targetContainer;
-    let isSubReply = false;
-
-    if (isReplyingToNested) {
-      isSubReply = true;
-      // إذا كنا بالفعل داخل sub-nested-replies
-      const existingSub = parentComment.closest(".sub-nested-replies");
-      if (existingSub) {
-        targetContainer = existingSub;
-      } else {
-        // نبحث عن حاوية تحت تعليق شهاب أو ننشئها ملاصقة له تحته فوراً
-        let nextEl = parentComment.nextElementSibling;
-        if (nextEl && nextEl.classList.contains("sub-nested-replies")) {
-          targetContainer = nextEl;
-        } else {
-          targetContainer = document.createElement("div");
-          targetContainer.className = "sub-nested-replies";
-          parentComment.after(targetContainer);
-        }
-      }
-    } else {
-      // رد عادي على أحمد علي
-      let nestedContainer = thread.querySelector(".nested-replies");
-      if (!nestedContainer) {
-        nestedContainer = document.createElement("div");
-        nestedContainer.className = "nested-replies";
-        thread.appendChild(nestedContainer);
-      }
-      targetContainer = nestedContainer;
+    // تجهيز النص وإضافة المنشن لو موجود عشان يتحفظ في الداتابيز صح
+    const replyTo = replyBox.dataset.replyTo;
+    let finalContent = replyText;
+    if (replyTo) {
+      finalContent = `${replyTo} ${replyText}`;
     }
 
-    const replyTo = replyBox.dataset.replyTo;
-    const mentionPrefix =
-      isSubReply && replyTo
-        ? `<span class="comment-mention">${escapeHtml(replyTo)}</span> `
-        : "";
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/comment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: finalContent,
+          parent_comment_id: parentCommentId, // بنربط الرد بالأب
+        }),
+      });
 
-    const newReply = document.createElement("div");
-    newReply.className = `single-comment ${isSubReply ? "sub-reply-comment" : "reply-comment"}`;
-    newReply.innerHTML = `
-            <img src="../assets/avatars/shehab.jpg" alt="User" class="comment-avatar small-avatar" onerror="this.src='../assets/profile-avatar.jpg'">
-            <div class="comment-content-wrapper">
-                <div class="comment-header">
-                    <span class="comment-user">@${currentUsername}</span>
-                    <span class="comment-time">Just now</span>
-                </div>
-                <p class="comment-text">${mentionPrefix}${escapeHtml(replyText)}</p>
-                <div class="comment-interactions">
-                    <button class="interaction-btn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg> 0
-                    </button>
-                    <button class="interaction-btn reply-trigger">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                        </svg> Reply
-                    </button>
-                </div>
-                <div class="inline-reply-box">
-                    <img src="../assets/avatars/shehab.jpg" alt="My Avatar" class="comment-avatar small-avatar" onerror="this.src='../assets/profile-avatar.jpg'">
-                    <div class="modern-input-wrapper">
-                        <textarea class="comment-textarea" placeholder="Reply to @${currentUsername}..." rows="1"></textarea>
-                        <button class="modern-post-btn" title="Send Reply">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="22" y1="2" x2="11" y2="13"></line>
-                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                            </svg>
-                        </button>
-                    </div>
-                    <button class="reply-cancel-btn" title="Cancel Reply">Cancel</button>
-                </div>
-            </div>
-        `;
+      if (response.ok) {
+        const data = await response.json();
 
-    targetContainer.appendChild(newReply);
-    textarea.value = "";
-    delete replyBox.dataset.replyTo;
-    replyBox.classList.remove("is-active");
-    updateCommentsCount(1);
+        let targetContainer = parentThread.querySelector(".nested-replies");
+
+        const newReplyThread = createCommentElement(
+          data,
+          replyText,
+          true,
+          replyTo,
+        );
+
+        if (newReplyThread) {
+          // ناخد التعليق بس من غير الثريد الأب ونرميه في الـ nested-replies
+          const commentOnly = newReplyThread.querySelector(".single-comment");
+          targetContainer.appendChild(commentOnly);
+        }
+
+        textarea.value = "";
+        delete replyBox.dataset.replyTo;
+        replyBox.classList.remove("is-active");
+        updateCommentsCount(1);
+      } else if (response.status === 401) {
+        window.location.href = "/sign-in";
+      }
+    } catch (err) {
+      console.error("Error posting reply:", err);
+    }
   }
 
+  // التعامل مع أحداث الكومنتات والردود واللايكات
   if (commentsList) {
     commentsList.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -248,25 +291,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     commentsList.addEventListener("click", (e) => {
+      // إظهار/إخفاء صندوق الرد
       const replyBtn = e.target.closest(".reply-trigger");
       if (replyBtn) {
-        const commentWrapper = replyBtn.closest(".comment-content-wrapper");
-        const replyBox = commentWrapper.querySelector(".inline-reply-box");
+        // نحدد الـ Thread الأساسي عشان نظهر الصندوق بتاعه
+        const parentThread = replyBtn.closest(".comment-thread");
+        const replyBox = parentThread.querySelector(".inline-reply-box");
 
         if (replyBox) {
+          // نقفل أي صندوق مفتوح تاني
           document
             .querySelectorAll(".inline-reply-box.is-active")
             .forEach((b) => {
               if (b !== replyBox) b.classList.remove("is-active");
             });
 
-          const isNestedComment =
-            !!replyBtn.closest(".reply-comment") ||
-            !!replyBtn.closest(".sub-reply-comment");
+          const isNestedComment = !!replyBtn.closest(".sub-reply-comment");
+
+          // نجيب اسم اليوزر اللي دايسين عليه Reply
+          const commentWrapper = replyBtn.closest(".comment-content-wrapper");
           const targetUser =
             commentWrapper.querySelector(".comment-user")?.textContent.trim() ||
             "";
 
+          // لو بنرد على رد (مش التعليق الأساسي)، نسجل اسم اليوزر
           if (isNestedComment && targetUser) {
             replyBox.dataset.replyTo = targetUser;
           } else {
@@ -287,6 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // إلغاء الرد
       const cancelBtn = e.target.closest(".reply-cancel-btn");
       if (cancelBtn) {
         const replyBox = cancelBtn.closest(".inline-reply-box");
@@ -299,6 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // إرسال الرد بالزرار
       const sendReplyBtn = e.target.closest(
         ".inline-reply-box .modern-post-btn",
       );
@@ -308,23 +358,39 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const likeCommentBtn = e.target.closest(".interaction-btn");
-      if (
-        likeCommentBtn &&
-        !likeCommentBtn.classList.contains("reply-trigger")
-      ) {
-        const isLiked = likeCommentBtn.classList.toggle("is-liked");
-        let currentNum = parseInt(likeCommentBtn.textContent.trim(), 10) || 0;
-        currentNum = isLiked ? currentNum + 1 : Math.max(0, currentNum - 1);
-        const svgHtml = likeCommentBtn.querySelector("svg").outerHTML;
-        likeCommentBtn.innerHTML = `${svgHtml} ${currentNum}`;
+      // 🌟 لايكات التعليقات 🌟
+      const likeCommentBtn = e.target.closest(".comment-like-btn");
+      if (likeCommentBtn) {
+        const commentId = likeCommentBtn.dataset.commentId;
+
+        if (commentId) {
+          fetch(`/api/comments/${commentId}/like`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          })
+            .then((response) => {
+              if (response.ok) return response.json();
+              if (response.status === 401) {
+                window.location.href = "/sign-in";
+                throw new Error("Unauthorized");
+              }
+            })
+            .then((data) => {
+              if (data) {
+                const span = likeCommentBtn.querySelector("span");
+                let currentNum = parseInt(span.textContent) || 0;
+                if (data.status === "added") {
+                  likeCommentBtn.classList.add("is-liked");
+                  span.textContent = currentNum + 1;
+                } else if (data.status === "removed") {
+                  likeCommentBtn.classList.remove("is-liked");
+                  span.textContent = Math.max(0, currentNum - 1);
+                }
+              }
+            })
+            .catch((err) => console.error("Error liking comment:", err));
+        }
       }
     });
-  }
-
-  function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
   }
 });
