@@ -2002,12 +2002,14 @@ app.get("/single-list", async (req, res) => {
       return res.redirect("/"); // لو مفيش رقم قائمة، نرجعه للرئيسية
     }
 
-    // 1. نجيب بيانات القائمة وصاحبها
+    // 1. نجيب بيانات القائمة مع عدد اللايكات وحالة اللايك لليوزر الحالي
     const listQuery = `
       SELECT 
         l.id, l.title, l.is_private, l.user_id, l.created_at, l.updated_at,
         u.username,
-        p.avatar_url
+        p.avatar_url,
+        (SELECT COUNT(*) FROM list_likes ll WHERE ll.list_id = l.id) as likes_count,
+        ${req.user ? `EXISTS (SELECT 1 FROM list_likes ll WHERE ll.list_id = l.id AND ll.user_id = ${req.user.id})` : "false"} as is_liked_by_user
       FROM lists l
       JOIN users u ON l.user_id = u.id
       LEFT JOIN user_profiles p ON u.id = p.user_id
@@ -2015,17 +2017,13 @@ app.get("/single-list", async (req, res) => {
     `;
     const listRes = await db.query(listQuery, [listId]);
 
-    // لو القائمة مش موجودة أو اتمسحت
     if (listRes.rows.length === 0) {
       return res.status(404).send("List not found");
     }
-
     const list = listRes.rows[0];
 
-    // 2. حماية الخصوصية (الدفاع في العمق) 🛡️
     const isOwner = req.user && req.user.id === list.user_id;
     if (list.is_private && !isOwner) {
-      // لو القائمة برايفت واللي فاتحها مش صاحبها، نمنعه!
       return res
         .status(403)
         .send(
@@ -2033,10 +2031,10 @@ app.get("/single-list", async (req, res) => {
         );
     }
 
-    // عشان لو اللي فاتح الصفحة زائر مش مسجل دخول، نديله ID وهمي ميبوظش الاستعلام
     const currentUserId = req.user ? req.user.id : -1;
 
-    // 3. نجيب الأفلام + نسأل الداتابيز هو اليوزر ده عاملها لايك أو وتش ليست ولا لأ؟
+    // ... (سيب استعلام itemsQuery و watchedQuery زي ما هما) ...
+
     const itemsQuery = `
       SELECT 
         li.tmdb_id, li.media_type, li.order_index,
@@ -2051,7 +2049,6 @@ app.get("/single-list", async (req, res) => {
     const itemsRes = await db.query(itemsQuery, [listId, currentUserId]);
     const listItems = itemsRes.rows;
 
-    // --- 🌟 السطر الجديد لحساب العداد 🌟 ---
     let watchedCount = 0;
     if (req.user && listItems.length > 0) {
       const watchedQuery = `
@@ -2063,13 +2060,52 @@ app.get("/single-list", async (req, res) => {
       const watchedRes = await db.query(watchedQuery, [listId, req.user.id]);
       watchedCount = parseInt(watchedRes.rows[0].count) || 0;
     }
-    // ----------------------------------------
+
+    // === الجديد: جلب التعليقات بتاعت القائمة ===
+    const commentsQuery = `
+      SELECT 
+          c.id, c.content, c.created_at, c.parent_comment_id,
+          u.username, p.avatar_url,
+          (SELECT COUNT(*) FROM list_comment_likes cl WHERE cl.comment_id = c.id) as likes_count,
+          ${req.user ? `EXISTS (SELECT 1 FROM list_comment_likes cl WHERE cl.comment_id = c.id AND cl.user_id = ${req.user.id})` : "false"} as is_liked_by_user
+      FROM list_comments c
+      JOIN users u ON c.user_id = u.id
+      LEFT JOIN user_profiles p ON u.id = p.user_id
+      WHERE c.list_id = $1
+      ORDER BY c.created_at ASC
+    `;
+    const commentsDataRes = await db.query(commentsQuery, [listId]);
+
+    const allComments = commentsDataRes.rows.map((comment) => {
+      comment.content = formatCommentText(comment.content);
+      return comment;
+    });
+
+    const mainComments = [];
+    const commentMap = {};
+
+    allComments.forEach((comment) => {
+      comment.replies = [];
+      commentMap[comment.id] = comment;
+    });
+
+    allComments.forEach((comment) => {
+      if (comment.parent_comment_id) {
+        if (commentMap[comment.parent_comment_id]) {
+          commentMap[comment.parent_comment_id].replies.push(comment);
+        }
+      } else {
+        mainComments.push(comment);
+      }
+    });
 
     res.render("single-list.ejs", {
       list: list,
       listItems: listItems,
       isOwner: isOwner,
-      watchedCount: watchedCount, // نمرر العداد الحقيقي للصفحة
+      watchedCount: watchedCount,
+      mainComments: mainComments, // تمرير التعليقات
+      commentsCount: allComments.length, // إجمالي عدد التعليقات
     });
   } catch (error) {
     console.error("Error loading single list:", error);
@@ -2983,6 +3019,106 @@ app.post("/api/comments/:id/like", async (req, res) => {
     }
   } catch (error) {
     console.error("Comment Like Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+// =========================================================================
+// LIST LIKES & COMMENTS API ROUTES
+// =========================================================================
+
+// 1. Toggle List Like (للإعجاب بالقائمة نفسها)
+app.post("/api/lists/:id/like", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
+
+  const listId = req.params.id;
+  const userId = req.user.id;
+
+  try {
+    const checkResult = await db.query(
+      "SELECT id FROM list_likes WHERE list_id = $1 AND user_id = $2",
+      [listId, userId],
+    );
+
+    if (checkResult.rows.length > 0) {
+      await db.query("DELETE FROM list_likes WHERE id = $1", [
+        checkResult.rows[0].id,
+      ]);
+      res.json({ status: "removed" });
+    } else {
+      await db.query(
+        "INSERT INTO list_likes (list_id, user_id) VALUES ($1, $2)",
+        [listId, userId],
+      );
+      res.json({ status: "added" });
+    }
+  } catch (error) {
+    console.error("List Like Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// 2. Add List Comment (لإضافة تعليق أو رد على القائمة)
+app.post("/api/lists/:id/comment", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
+
+  const listId = req.params.id;
+  const userId = req.user.id;
+  const { content, parent_comment_id } = req.body;
+
+  if (!content || !content.trim())
+    return res.status(400).json({ error: "Comment cannot be empty" });
+
+  try {
+    const result = await db.query(
+      `INSERT INTO list_comments (list_id, user_id, content, parent_comment_id) 
+       VALUES ($1, $2, $3, $4) RETURNING id, created_at`,
+      [listId, userId, content.trim(), parent_comment_id || null],
+    );
+
+    // بنرجع بيانات اليوزر مع التعليق عشان الجافاسكريبت يعرضها فوراً
+    res.status(200).json({
+      message: "Comment added",
+      comment_id: result.rows[0].id,
+      created_at: result.rows[0].created_at,
+      username: req.user.username,
+      avatar_url: req.user.avatar_url,
+    });
+  } catch (error) {
+    console.error("List Comment Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// 3. Toggle List Comment Like (للإعجاب بتعليق جوه القائمة)
+app.post("/api/list-comments/:id/like", async (req, res) => {
+  if (!req.isAuthenticated())
+    return res.status(401).json({ error: "Unauthorized" });
+
+  const commentId = req.params.id;
+  const userId = req.user.id;
+
+  try {
+    const checkResult = await db.query(
+      "SELECT id FROM list_comment_likes WHERE comment_id = $1 AND user_id = $2",
+      [commentId, userId],
+    );
+
+    if (checkResult.rows.length > 0) {
+      await db.query("DELETE FROM list_comment_likes WHERE id = $1", [
+        checkResult.rows[0].id,
+      ]);
+      res.json({ status: "removed" });
+    } else {
+      await db.query(
+        "INSERT INTO list_comment_likes (comment_id, user_id) VALUES ($1, $2)",
+        [commentId, userId],
+      );
+      res.json({ status: "added" });
+    }
+  } catch (error) {
+    console.error("List Comment Like Error:", error);
     res.status(500).json({ error: "Server error" });
   }
 });

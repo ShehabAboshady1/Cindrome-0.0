@@ -1,4 +1,6 @@
-<section id="comments-section" class="list-comments-wrapper">
+<section id="comments-section" class="list-comments-wrapper"
+    data-target-id="<%= typeof targetId !== 'undefined' ? targetId : '' %>"
+    data-target-type="<%= typeof targetType !== 'undefined' ? targetType : 'review' %>">
     <div class="comments-header-row">
         <h2 class="comments-title">Comments <span class="comments-count">
                 <%= typeof commentsCount !=='undefined' ? commentsCount : 0 %>

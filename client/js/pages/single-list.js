@@ -34,8 +34,36 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   if (listLikeBtn) {
-    listLikeBtn.addEventListener("click", () => {
-      listLikeBtn.classList.toggle("is-liked");
+    listLikeBtn.addEventListener("click", async () => {
+      const listId = listLikeBtn.getAttribute("data-list-id");
+      if (!listId) return;
+
+      try {
+        const response = await fetch(`/api/lists/${listId}/like`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const countSpan =
+            listLikeBtn.querySelector(".like-count") ||
+            listLikeBtn.querySelector("span");
+          let count = parseInt(countSpan.textContent) || 0;
+
+          if (data.status === "added") {
+            listLikeBtn.classList.add("is-liked");
+            countSpan.textContent = count + 1;
+          } else if (data.status === "removed") {
+            listLikeBtn.classList.remove("is-liked");
+            countSpan.textContent = Math.max(0, count - 1);
+          }
+        } else if (response.status === 401) {
+          window.location.href = "/sign-in";
+        }
+      } catch (err) {
+        console.error("Error toggling list like:", err);
+      }
     });
   }
 
@@ -185,236 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (c !== card) c.classList.remove("show-bar");
           });
         card.classList.toggle("show-bar");
-      }
-    });
-  }
-
-  // =========================================================
-  // 4. التعليقات والردود بالتداخل الشجري (Clean JS via Templates)
-  // =========================================================
-  const commentsList = document.querySelector(".comments-list");
-  const mainCommentTextarea = document.querySelector(
-    ".add-comment-box .comment-textarea",
-  );
-  const mainPostBtn = document.querySelector(
-    ".add-comment-box .modern-post-btn",
-  );
-  const commentsCountHeader = document.querySelector(".comments-count");
-  const mainCommentTemplate = document.getElementById("mainCommentTemplate");
-  const replyCommentTemplate = document.getElementById("replyCommentTemplate");
-
-  // استخراج اليوزر الحالي من النافبار لو متاح
-  let currentUsername = "You";
-  const navUserLink = document.querySelector(".nav-username");
-  if (navUserLink) {
-    currentUsername = navUserLink.textContent.trim().replace("@", "");
-  }
-
-  function updateCommentsCount(change = 1) {
-    if (!commentsCountHeader) return;
-    let count = parseInt(commentsCountHeader.textContent, 10) || 0;
-    count += change;
-    commentsCountHeader.textContent = count;
-  }
-
-  function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  // نشر تعليق أساسي
-  function postMainComment() {
-    if (!mainCommentTextarea || !mainCommentTemplate) return;
-    const text = mainCommentTextarea.value.trim();
-    if (!text) {
-      mainCommentTextarea.focus();
-      return;
-    }
-
-    const clone = mainCommentTemplate.content.cloneNode(true);
-    const newThread = clone.querySelector(".comment-thread");
-
-    newThread.querySelector(".comment-user").textContent =
-      `@${currentUsername}`;
-    newThread.querySelector(".comment-text").innerHTML = escapeHtml(text);
-    newThread.querySelector(".comment-textarea").placeholder =
-      `Reply to @${currentUsername}...`;
-
-    commentsList.prepend(newThread);
-    mainCommentTextarea.value = "";
-    updateCommentsCount(1);
-  }
-
-  if (mainPostBtn) mainPostBtn.addEventListener("click", postMainComment);
-  if (mainCommentTextarea) {
-    mainCommentTextarea.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        postMainComment();
-      }
-    });
-  }
-
-  // نشر رد
-  function submitReply(replyBox) {
-    if (!replyCommentTemplate) return;
-    const textarea = replyBox.querySelector(".comment-textarea");
-    const replyText = textarea.value.trim();
-    if (!replyText) {
-      textarea.focus();
-      return;
-    }
-
-    const thread = replyBox.closest(".comment-thread");
-    const parentComment = replyBox.closest(".single-comment");
-    const isReplyingToNested =
-      parentComment &&
-      (parentComment.classList.contains("reply-comment") ||
-        parentComment.classList.contains("sub-reply-comment"));
-
-    let targetContainer;
-    let isSubReply = false;
-
-    if (isReplyingToNested) {
-      isSubReply = true;
-      const existingSub = parentComment.closest(".sub-nested-replies");
-      if (existingSub) {
-        targetContainer = existingSub;
-      } else {
-        let nextEl = parentComment.nextElementSibling;
-        if (nextEl && nextEl.classList.contains("sub-nested-replies")) {
-          targetContainer = nextEl;
-        } else {
-          targetContainer = document.createElement("div");
-          targetContainer.className = "sub-nested-replies";
-          parentComment.after(targetContainer);
-        }
-      }
-    } else {
-      let nestedContainer = thread.querySelector(".nested-replies");
-      if (!nestedContainer) {
-        nestedContainer = document.createElement("div");
-        nestedContainer.className = "nested-replies";
-        thread.appendChild(nestedContainer);
-      }
-      targetContainer = nestedContainer;
-    }
-
-    const replyTo = replyBox.dataset.replyTo;
-    const mentionPrefix =
-      isSubReply && replyTo
-        ? `<span class="comment-mention">${escapeHtml(replyTo)}</span> `
-        : "";
-
-    const clone = replyCommentTemplate.content.cloneNode(true);
-    const newReply = clone.querySelector(".single-comment");
-    newReply.classList.add(isSubReply ? "sub-reply-comment" : "reply-comment");
-
-    newReply.querySelector(".comment-user").textContent = `@${currentUsername}`;
-    newReply.querySelector(".comment-text").innerHTML =
-      mentionPrefix + escapeHtml(replyText);
-    newReply.querySelector(".comment-textarea").placeholder =
-      `Reply to @${currentUsername}...`;
-
-    targetContainer.appendChild(newReply);
-    textarea.value = "";
-    delete replyBox.dataset.replyTo;
-    replyBox.classList.remove("is-active");
-    updateCommentsCount(1);
-  }
-
-  // تفاعلات التعليقات
-  if (commentsList) {
-    commentsList.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        const replyTextarea = e.target.closest(
-          ".inline-reply-box .comment-textarea",
-        );
-        if (replyTextarea) {
-          e.preventDefault();
-          const replyBox = replyTextarea.closest(".inline-reply-box");
-          if (replyBox) submitReply(replyBox);
-        }
-      }
-    });
-
-    commentsList.addEventListener("click", (e) => {
-      // فتح الرد
-      const replyBtn = e.target.closest(".reply-trigger");
-      if (replyBtn) {
-        const commentWrapper = replyBtn.closest(".comment-content-wrapper");
-        const replyBox = commentWrapper.querySelector(".inline-reply-box");
-
-        if (replyBox) {
-          document
-            .querySelectorAll(".inline-reply-box.is-active")
-            .forEach((b) => {
-              if (b !== replyBox) b.classList.remove("is-active");
-            });
-
-          const isNestedComment =
-            !!replyBtn.closest(".reply-comment") ||
-            !!replyBtn.closest(".sub-reply-comment");
-          const targetUser =
-            commentWrapper.querySelector(".comment-user")?.textContent.trim() ||
-            "";
-
-          if (isNestedComment && targetUser) {
-            replyBox.dataset.replyTo = targetUser;
-          } else {
-            delete replyBox.dataset.replyTo;
-          }
-
-          replyBox.classList.toggle("is-active");
-          if (replyBox.classList.contains("is-active")) {
-            const area = replyBox.querySelector(".comment-textarea");
-            if (area) {
-              area.placeholder = targetUser
-                ? `Reply to ${targetUser}...`
-                : `Reply to comment...`;
-              area.focus();
-            }
-          }
-        }
-        return;
-      }
-
-      // إلغاء الرد
-      const cancelBtn = e.target.closest(".reply-cancel-btn");
-      if (cancelBtn) {
-        const replyBox = cancelBtn.closest(".inline-reply-box");
-        if (replyBox) {
-          delete replyBox.dataset.replyTo;
-          replyBox.classList.remove("is-active");
-          const area = replyBox.querySelector(".comment-textarea");
-          if (area) area.value = "";
-        }
-        return;
-      }
-
-      // إرسال الرد
-      const sendReplyBtn = e.target.closest(
-        ".inline-reply-box .modern-post-btn",
-      );
-      if (sendReplyBtn) {
-        const replyBox = sendReplyBtn.closest(".inline-reply-box");
-        if (replyBox) submitReply(replyBox);
-        return;
-      }
-
-      // لايك للتعليق
-      const likeCommentBtn = e.target.closest(".interaction-btn");
-      if (
-        likeCommentBtn &&
-        !likeCommentBtn.classList.contains("reply-trigger")
-      ) {
-        const isLiked = likeCommentBtn.classList.toggle("is-liked");
-        const span = likeCommentBtn.querySelector("span");
-        let currentNum = parseInt(span.textContent.trim(), 10) || 0;
-        span.textContent = isLiked
-          ? currentNum + 1
-          : Math.max(0, currentNum - 1);
       }
     });
   }
