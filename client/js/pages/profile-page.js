@@ -451,12 +451,41 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 6. تفعيل زرار الإعجاب لكروت الـ Lists
+  // 6. تفعيل زرار الإعجاب لكروت الـ Lists والاتصال بالسيرفر
   document.querySelectorAll(".list-action-btn.like-btn").forEach((btn) => {
-    btn.addEventListener("click", function (e) {
+    btn.addEventListener("click", async function (e) {
       e.preventDefault();
-      e.stopPropagation();
-      this.classList.toggle("liked");
+      e.stopPropagation(); // عشان الضغطة ماتفتحش القائمة وتنقلك لصفحة تانية
+
+      const listId = this.getAttribute("data-list-id");
+      if (!listId) return;
+
+      try {
+        const response = await fetch(`/api/lists/${listId}/like`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const countSpan =
+            this.querySelector(".like-count") || this.querySelector("span");
+          let count = parseInt(countSpan.textContent) || 0;
+
+          if (data.status === "added") {
+            this.classList.add("is-liked");
+            countSpan.textContent = count + 1;
+          } else if (data.status === "removed") {
+            this.classList.remove("is-liked");
+            countSpan.textContent = Math.max(0, count - 1);
+          }
+        } else if (response.status === 401) {
+          // لو مش مسجل دخول
+          window.location.href = "/sign-in";
+        }
+      } catch (error) {
+        console.error("Error toggling list like:", error);
+      }
     });
   });
 

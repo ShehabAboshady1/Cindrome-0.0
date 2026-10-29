@@ -185,17 +185,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // ربط الزرار بدالة الـ toggleWatchlist اللي في main.js
       if (watchlistBtn) {
-        // حددنا نوع العمل صح للـ API
         const finalType =
           item.mediaType === "tv"
             ? "tv"
             : item.mediaType === "anime"
               ? "anime"
               : "movie";
+
         watchlistBtn.setAttribute(
           "onclick",
           `toggleWatchlist(this, ${item.id}, '${finalType}')`,
         );
+
+        // 🌟 لو العمل متضاف بالفعل، نحط كلاس added عشان الزائد يقلب ناقص 🌟
+        if (item.is_watchlisted) {
+          watchlistBtn.classList.add("added");
+          watchlistBtn.setAttribute("title", "Remove from Watchlist");
+        }
       }
 
       cardsGrid.appendChild(clone);
