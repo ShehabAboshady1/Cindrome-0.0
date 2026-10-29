@@ -143,3 +143,5 @@
         </div>
     </div>
 </template>
+<!-- ديف مخفي لتمرير البيانات بأمان (استخدمنا علامة تنصيص مفردة ' حول الـ data-watchlist) -->
+<div id="userWatchlistData" data-watchlist='<%= JSON.stringify(locals.watchlistMap || []) %>' style="display: none;"></div>

@@ -857,10 +857,12 @@ body.is-private.profile-page-other .profile-private-overlay {
   color: var(--accent-teal);
 }
 
-.review-like-btn.liked {
+.review-like-btn.liked,
+.review-like-btn.is-liked {
   color: #ff4757;
 }
-.review-like-btn.liked i {
+.review-like-btn.liked i,
+.review-like-btn.is-liked i {
   font-weight: 900;
   color: #ff4757;
 }
@@ -979,12 +981,14 @@ body.is-private.profile-page-other .profile-private-overlay {
   text-decoration: none;
 }
 
-.list-action-btn.like-btn.liked svg {
+.list-action-btn.like-btn.liked svg,
+.list-action-btn.like-btn.is-liked svg {
   fill: #ff4757;
   stroke: #ff4757;
 }
 
-.list-action-btn.like-btn.liked span {
+.list-action-btn.like-btn.liked span,
+.list-action-btn.like-btn.is-liked span {
   color: #ff4757;
 }
 

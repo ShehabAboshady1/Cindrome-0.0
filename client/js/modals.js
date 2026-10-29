@@ -1079,6 +1079,17 @@ document.addEventListener("DOMContentLoaded", () => {
       globalSearchStatus.style.display = "none";
     }
 
+    // 🌟 نقرأ الداتا مرة واحدة بره اللوب عشان الأداء والسرعة 🌟
+    const dataEl = document.getElementById("userWatchlistData");
+    let userWatchlist = [];
+    if (dataEl && dataEl.dataset.watchlist) {
+      try {
+        userWatchlist = JSON.parse(dataEl.dataset.watchlist);
+      } catch (e) {
+        console.error("Error parsing watchlist data", e);
+      }
+    }
+
     list.forEach((item) => {
       const clone = cardTemplate.content.cloneNode(true);
       const poster = clone.querySelector(".card-poster");
@@ -1100,6 +1111,13 @@ document.addEventListener("DOMContentLoaded", () => {
       detailsLink.href = `/details?id=${item.id}&type=${item.mediaType}`;
 
       if (watchlistBtn) {
+        // نتشيك على الداتا اللي قرأناها
+        if (userWatchlist.includes(item.id.toString())) {
+          watchlistBtn.classList.add("added");
+        } else {
+          watchlistBtn.classList.remove("added");
+        }
+
         watchlistBtn.onclick = function () {
           toggleWatchlist(this, item.id, item.mediaType);
         };

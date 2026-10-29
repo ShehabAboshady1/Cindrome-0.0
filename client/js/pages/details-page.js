@@ -51,14 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", async function (e) {
       e.preventDefault();
 
-      // استخراج ID الريفيو من الدالة اللي في الـ onclick لو كانت موجودة، أو من data attribute
-      const onclickAttr = this.getAttribute("onclick");
-      let reviewId;
-      if (onclickAttr) {
-        const match = onclickAttr.match(/toggleLike\(this,\s*(\d+)/);
-        if (match) reviewId = match[1];
-      }
-
+      const reviewId = this.getAttribute("data-review-id");
       if (!reviewId) return;
 
       try {

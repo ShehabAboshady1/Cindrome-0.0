@@ -1709,7 +1709,10 @@ app.get("/profile/:username", async (req, res, next) => {
         r.episode_number,
         m.is_anime,
         m.title,
-        m.poster_path
+        m.poster_path,
+        (SELECT COUNT(*) FROM review_likes rl WHERE rl.review_id = r.id) as likes_count,
+        (SELECT COUNT(*) FROM review_comments rc WHERE rc.review_id = r.id) as comments_count,
+        ${req.user ? `EXISTS (SELECT 1 FROM review_likes rl WHERE rl.review_id = r.id AND rl.user_id = ${req.user.id})` : "false"} as is_liked_by_user
       FROM reviews r
       JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
       WHERE r.user_id = $1 

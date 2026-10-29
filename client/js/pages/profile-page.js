@@ -460,20 +460,41 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 7. تفعيل زرار الإعجاب لكروت الـ Reviews
+  // 7. تفعيل زرار الإعجاب لكروت الـ Reviews مع الاتصال بالسيرفر
   document.querySelectorAll(".review-like-btn").forEach((btn) => {
-    btn.addEventListener("click", function (e) {
+    btn.addEventListener("click", async function (e) {
       e.preventDefault();
-      this.classList.toggle("liked");
-      const icon = this.querySelector("i");
-      if (icon) {
-        if (this.classList.contains("liked")) {
-          icon.classList.remove("fa-regular");
-          icon.classList.add("fa-solid");
-        } else {
-          icon.classList.remove("fa-solid");
-          icon.classList.add("fa-regular");
+
+      const reviewId = this.getAttribute("data-review-id");
+      if (!reviewId) return;
+
+      try {
+        const response = await fetch(`/api/reviews/${reviewId}/like`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const countSpan =
+            this.querySelector(".like-count") || this.querySelector("span");
+          const icon = this.querySelector("i");
+          let count = parseInt(countSpan.textContent) || 0;
+
+          if (data.status === "added") {
+            this.classList.add("is-liked");
+            countSpan.textContent = count + 1;
+            if (icon) icon.classList.replace("fa-regular", "fa-solid");
+          } else if (data.status === "removed") {
+            this.classList.remove("is-liked");
+            countSpan.textContent = Math.max(0, count - 1);
+            if (icon) icon.classList.replace("fa-solid", "fa-regular");
+          }
+        } else if (response.status === 401) {
+          window.location.href = "/sign-in";
         }
+      } catch (error) {
+        console.error("Error toggling like:", error);
       }
     });
   });

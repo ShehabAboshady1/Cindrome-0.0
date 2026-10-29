@@ -367,11 +367,21 @@
 
                                         <div class="minimal-card-footer">
                                             <div class="minimal-actions">
-                                                <button class="minimal-btn review-like-btn" title="Like Review">
-                                                    <i class="fa-regular fa-heart"></i> <span>0</span>
+                                                <button
+                                                    class="minimal-btn review-like-btn <%= review.is_liked_by_user ? 'is-liked' : '' %>"
+                                                    title="Like Review" data-review-id="<%= review.review_id %>">
+                                                    <i
+                                                        class="<%= review.is_liked_by_user ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
+                                                    <span class="like-count">
+                                                        <%= review.likes_count || 0 %>
+                                                    </span>
                                                 </button>
-                                                <a href="/review/<%= review.review_id %>" class="minimal-btn"><i
-                                                        class="fa-regular fa-comment"></i> 0</a>
+                                                <a href="/review/<%= review.review_id %>" class="minimal-btn"
+                                                    title="Comments">
+                                                    <i class="fa-regular fa-comment"></i> <span class="comment-count">
+                                                        <%= review.comments_count || 0 %>
+                                                    </span>
+                                                </a>
                                             </div>
                                             <a href="/review/<%= review.review_id %>" class="minimal-read-link">Read
                                                 More <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
