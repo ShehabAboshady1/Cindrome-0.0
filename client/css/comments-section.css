@@ -1,8 +1,5 @@
-/* ==========================================================================
-   CINDROME - UNIFIED COMMENTS SECTION STYLES
-   ========================================================================== */
+/* Unified Comments Section Styles */
 
-/* Modern Comments Section Container */
 .list-comments-wrapper {
   width: 100%;
   margin-top: 10px;
@@ -26,7 +23,7 @@
   margin-left: 6px;
 }
 
-/* Modern Comment Input Box */
+/* Comment Input Box */
 .add-comment-box {
   display: flex;
   gap: 16px;
@@ -109,7 +106,6 @@
   transform: scale(1.08) rotate(5deg);
 }
 
-/* 🌟 الخط الفاصل (Divider) 🌟 */
 .comments-divider {
   border: 0;
   height: 1px;
@@ -216,9 +212,7 @@
   stroke: #ff4757;
 }
 
-/* ==========================================
-   INLINE REPLY BOX & NESTING
-   ========================================== */
+/* Inline Reply Box & Nesting */
 .comment-mention {
   color: var(--accent-teal, #099e9e);
   font-weight: 700;
@@ -327,83 +321,101 @@
   width: 30px;
   height: 30px;
 }
-/* ضبط عرض قسم التعليقات في صفحة القوائم فقط */
+
+/* Single List Specific Width */
 .single-list-main-section .list-comments-wrapper {
   width: 92%;
   max-width: 900px;
   margin: 30px auto 40px auto;
 }
-/* ==================================================
-   MOBILE RESPONSIVENESS (Comments only)
-   ================================================== */
+
+/* Mobile Responsive */
 @media (max-width: 768px) {
   .list-comments-wrapper {
     margin-top: 15px;
   }
+
   .comments-title {
     font-size: 1rem;
     margin-bottom: 16px;
   }
+
   .comments-title span {
     font-size: 0.85rem;
   }
+
   .add-comment-box {
     gap: 8px;
     margin-bottom: 18px;
   }
+
   .comment-avatar {
     width: 28px;
     height: 28px;
   }
+
   .modern-input-wrapper {
     padding: 2px 4px 2px 12px;
     border-radius: 18px;
     min-height: 34px;
   }
+
   .comment-textarea {
     font-size: 0.82rem;
   }
+
   .modern-post-btn {
     width: 26px;
     height: 26px;
     margin-left: 6px;
   }
+
   .modern-post-btn svg {
     width: 12px;
     height: 12px;
   }
+
   .comments-divider {
     margin-bottom: 16px;
   }
+
   .comments-list {
     gap: 14px;
   }
+
   .comment-thread,
   .single-comment {
     gap: 8px;
   }
+
   .comment-user {
     font-size: 0.78rem;
   }
+
   .comment-badge {
     font-size: 0.55rem;
     padding: 1px 4px;
   }
+
   .comment-time {
     font-size: 0.7rem;
   }
+
   .comment-text {
     font-size: 0.82rem;
     line-height: 1.4;
     margin: 2px 0 4px 0;
   }
+
   .comment-interactions {
     gap: 10px;
   }
+
   .interaction-btn {
     font-size: 0.72rem;
     gap: 4px;
   }
+
   .interaction-btn svg {
     width: 11px;
     height: 11px;
@@ -413,6 +425,7 @@
     margin-left: 10px;
     gap: 8px;
   }
+
   .sub-nested-replies {
     margin-left: 8px;
     padding-left: 6px;
@@ -427,11 +440,13 @@
     gap: 4px;
     margin-top: 6px;
   }
+
   .inline-reply-box .small-avatar {
     width: 18px;
     height: 18px;
     flex-shrink: 0;
   }
+
   .inline-reply-box .modern-input-wrapper {
     min-width: 0;
     flex: 1 1 auto;
@@ -440,31 +455,37 @@
     min-height: 28px;
     box-sizing: border-box;
   }
+
   .inline-reply-box .comment-textarea {
     min-width: 0;
     width: 100%;
     font-size: 0.75rem;
     padding: 0;
   }
+
   .inline-reply-box .modern-post-btn {
     width: 22px;
     height: 22px;
     margin-left: 4px;
     flex-shrink: 0;
   }
+
   .inline-reply-box .modern-post-btn svg {
     width: 10px;
     height: 10px;
   }
+
   .reply-cancel-btn {
     font-size: 0.65rem;
     padding: 2px 2px;
     flex-shrink: 0;
   }
+
   .small-avatar {
     width: 22px;
     height: 22px;
   }
+
   .sub-reply-comment .small-avatar {
     width: 18px;
     height: 18px;

@@ -1,17 +1,10 @@
-/* ==========================================================================
-   CINDROME - LIST CARD COMPONENT (Reusable)
-========================================================================== */
-
-/* 1. الحاوية الأساسية للكارت */
+/* List Card Component */
 .list-card {
-  position: relative; /* إجبار الكارت إنه يفهم ترتيب الطبقات */
-  z-index: 1; /* ترتيب افتراضي حادي */
-
-  /* 🌟 التعديل السحري لعرض الكارت عشان يلم نفسه 🌟 */
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 295px; /* أقصى عرض للكارت عشان ما يفرشحش */
-  margin: 10px; /* توسيط الكارت تلقائياً لو المساحة حواليه فاضية */
-
+  max-width: 295px;
+  margin: 10px;
   background-color: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
@@ -22,24 +15,22 @@
   gap: 16px;
 }
 
-/* 🌟 تأثير الـ Hover على الكارت نفسه */
 .list-card:hover {
-  z-index: 10; /* يركب فوق الكروت اللي جنبه بسلاسة */
+  z-index: 10;
   border-color: var(--accent-teal);
   transform: translateY(-6px);
   box-shadow: 0 12px 30px rgba(9, 158, 158, 0.2);
 }
 
-/* 2. منطقة الـ 3D Posters Container */
+/* Poster Stack */
 .poster-stack {
   position: relative;
   width: 100%;
   height: 220px;
-  perspective: 1000px; /* بيدي البعد الثالث للعين */
+  perspective: 1000px;
   cursor: pointer;
 }
 
-/* 3. البوسترات المتراكمة داخل الكارت */
 .stack-poster {
   position: absolute;
   width: 130px;
@@ -52,7 +43,6 @@
   transform-origin: bottom center;
 }
 
-/* ترتيب البوسترات ودرجات الميل (Z-Index + 3D Position) */
 .stack-poster:nth-child(1) {
   z-index: 4;
   left: 10px;
@@ -84,7 +74,6 @@
   opacity: 0.8;
 }
 
-/* الحركة عند الـ Hover (تفريد الكروت زي الكوتشينة) */
 .list-card:hover .stack-poster:nth-child(1) {
   transform: translate(-10px, 0) rotate(-10deg);
 }
@@ -101,14 +90,13 @@
   transform: translate(18px, -4px) rotate(12deg) scale(0.94);
 }
 
-/* 4. تفاصيل ومعلومات الـ List */
+/* List Info & Typography */
 .list-info {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* عنوان القائمة (رابط) */
 .list-title {
   font-size: 16px;
   font-weight: 800;
@@ -142,7 +130,7 @@
   margin-left: 4px;
 }
 
-/* 5. زراير اللايك والكومنت الخاصة بالكارت */
+/* List Card Actions */
 .list-actions {
   display: flex;
   gap: 8px;
@@ -156,9 +144,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px; /* مسافة بين الأيقونة والرقم */
+  gap: 6px;
   color: rgba(241, 227, 200, 0.5);
-  font-size: 13px; /* حجم خط الرقم */
+  font-size: 13px;
   font-weight: 600;
   transition: all 0.2s ease;
 }
@@ -180,16 +168,13 @@
   color: var(--accent-teal);
 }
 
-/* ==========================================
-   📱 Responsive Design for Mobile
-========================================= */
+/* Responsive */
 @media (max-width: 768px) {
   .list-card {
-    /* التعديل للموبايل عشان يفضل حاكم نفسه */
     max-width: 200px;
     padding: 12px;
     gap: 10px;
-    margin: 0px;
+    margin: 0;
   }
 
   .poster-stack {
@@ -209,18 +194,21 @@
     top: 15px;
     transform: none;
   }
+
   .stack-poster:nth-child(2) {
     z-index: 3;
     left: 35px;
     top: 10px;
     transform: scale(0.96);
   }
+
   .stack-poster:nth-child(3) {
     z-index: 2;
     left: 65px;
     top: 5px;
     transform: scale(0.92);
   }
+
   .stack-poster:nth-child(4) {
     z-index: 1;
     left: 95px;

@@ -1,7 +1,4 @@
-/* ==========================================================================
-   CINDROME - SINGLE REVIEW PAGE STYLES
-   ========================================================================== */
-
+/* Single Review Page Layout */
 .single-review-page {
   background-color: var(--dark-bg, #080f0e);
   color: var(--text-cream);
@@ -13,18 +10,16 @@
   width: 100%;
 }
 
-/* ==================================================
-   1. BACKDROP HERO SECTION 
-   ================================================== */
+/* Backdrop Hero Section */
 .review-backdrop-wrapper {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 65vh; /* كبرنا الارتفاع عشان ندي الصورة مساحة تبان */
+  height: 65vh;
   max-height: 650px;
   background-size: cover;
-  background-position: center 15%; /* نسبة 15% ممتازة عشان تركز على وشوش الممثلين اللي دايماً فوق */
+  background-position: center 15%;
   background-attachment: scroll;
   z-index: 0;
 }
@@ -35,29 +30,22 @@
   background: linear-gradient(
     to bottom,
     rgba(8, 15, 14, 0) 0%,
-    /* شفاف تماماً فوق */ rgba(8, 15, 14, 0) 40%,
-    /* بيفضل شفاف لحد نص الصورة تقريباً عشان ملامح الصورة تبان */
+    rgba(8, 15, 14, 0) 40%,
     rgba(8, 15, 14, 0.7) 80%,
-    /* يبدأ يغمق بالتدريج من تحت */ var(--dark-bg, #080f0e) 100%
-      /* يقفل بلون الموقع الأساسي */
+    var(--dark-bg, #080f0e) 100%
   );
 }
 
-/* ==================================================
-   2. MAIN CONTENT CONTAINER 
-   ================================================== */
+/* Main Content Container */
 .review-content-container {
   position: relative;
   z-index: 2;
   max-width: 900px;
   margin: 0 auto;
-  /* نزلنا المحتوى (البوستر والريفيو) لتحت شوية عشان مايغطيش على نص الباك دروب */
   padding: calc(65vh - 180px) 20px 40px;
 }
 
-/* ==================================================
-   3. EXTERNAL MOVIE INFO
-   ================================================== */
+/* Media Metadata Header */
 .external-movie-header {
   display: flex;
   align-items: center;
@@ -122,9 +110,7 @@
   color: var(--text-cream);
 }
 
-/* ==================================================
-   4. THE REVIEW CARD
-   ================================================== */
+/* Review Card Container */
 .review-card-unified {
   background-color: #161a1e;
   border: 1px solid rgba(241, 227, 200, 0.05);
@@ -189,9 +175,8 @@
   position: relative;
   display: inline-block;
   color: transparent;
-  /* دول السطرين اللي هيحلوا الأزمة بالمللي */
-  margin-left: -4px; /* بيلغي المسافة الزايدة اللي سابتها النجمة اللي قبلها */
-  letter-spacing: normal; /* بيمنع النجمة النص إنها تورث مساحة وهمية جواها */
+  margin-left: -4px;
+  letter-spacing: normal;
 }
 
 .half-star::after {
@@ -246,7 +231,7 @@
   margin: 20px 0;
 }
 
-/* Review Text & Spoiler Blur */
+/* Review Text Content */
 .review-text-wrapper {
   position: relative;
 }
@@ -277,13 +262,12 @@
 .review-text p {
   margin-bottom: 16px;
 }
+
 .review-text p:last-child {
   margin-bottom: 0;
 }
 
-/* ==================================================
-   ACTION BUTTONS & SVGS (Micro-Interactions)
-   ================================================== */
+/* Action Controls & Interactive Icons */
 .actions-divider {
   border: 0;
   height: 1px;
@@ -325,11 +309,9 @@
     color 0.2s ease;
 }
 
-/* ==================================================
-   SHARE BUTTON & TOOLTIP (COPIED POPUP)
-   ================================================== */
+/* Share Action & Tooltip */
 .share-btn {
-  position: relative; /* ضروري عشان الـ Tooltip يتربط بالزرار ده بالظبط */
+  position: relative;
 }
 
 .share-svg {
@@ -345,7 +327,6 @@
   transform: scale(1.15);
 }
 
-/* الرسالة الطايرة (Copied!) - مخفية افتراضياً */
 .share-btn::after {
   content: "Copied!";
   position: absolute;
@@ -365,7 +346,6 @@
   pointer-events: none;
 }
 
-/* المثلث الصغير اللي تحت الرسالة */
 .share-btn::before {
   content: "";
   position: absolute;
@@ -380,7 +360,6 @@
   pointer-events: none;
 }
 
-/* إظهار الرسالة والمثلث لما الجافاسكريبت يضيف كلاس is-copied */
 .share-btn.is-copied::after,
 .share-btn.is-copied::before {
   opacity: 1;
@@ -388,9 +367,7 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* ==================================================
-   LIKE BUTTON
-   ================================================== */
+/* Like Action */
 .like-btn .like-svg {
   fill: var(--text-cream);
   stroke: var(--text-cream);
@@ -413,9 +390,7 @@
   transform: scale(0.75);
 }
 
-/* ==================================================
-   MOBILE RESPONSIVENESS
-   ================================================== */
+/* Mobile Responsive */
 @media (max-width: 768px) {
   html,
   body {

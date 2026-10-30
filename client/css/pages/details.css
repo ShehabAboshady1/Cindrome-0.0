@@ -1,21 +1,19 @@
-/* ==========================================================================
-   DETAILS PAGE STYLES (Cindrome)
-   ========================================================================== */
-
-/* --- General & Page Layout --- */
+/* Details Page Layout */
 body,
 .details-page {
   background-color: var(--dark-bg, #080f0e);
 }
+
 body {
   margin: 0;
 }
+
 .details-page {
   color: var(--text-cream, #e2e8f0);
   min-height: calc(100vh - 200px);
 }
 
-/* --- Hero Section --- */
+/* Details Hero */
 .details-hero {
   position: relative;
   padding: 40px 16px;
@@ -30,7 +28,7 @@ body {
   text-align: left;
 }
 
-/* --- Rating Star / Score Styling --- */
+/* Rating Score */
 .rating-star {
   display: inline-flex;
   align-items: center;
@@ -106,7 +104,7 @@ body {
   font-weight: 600;
 }
 
-/* --- Action Buttons --- */
+/* Action Buttons */
 .action-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -151,7 +149,7 @@ body {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* زرار الـ Watchlist */
+/* Watchlist Button */
 .watchlist-btn {
   color: var(--text-cream);
   transition: all 0.3s ease;
@@ -173,9 +171,11 @@ body {
 .watchlist-btn .text-added {
   display: none;
 }
+
 .watchlist-btn.added .text-default {
   display: none;
 }
+
 .watchlist-btn.added .text-added {
   display: inline-block;
 }
@@ -186,18 +186,18 @@ body {
   border-color: rgba(9, 158, 158, 0.3);
 }
 
-/* تعديل أيقونة زرار الووتش ليست في الهيرو */
 .hero-watchlist-btn.added .added-content .fa-minus {
   display: none;
 }
+
 .hero-watchlist-btn.added .added-content::before {
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
-  content: "\f00c"; /* Checkmark */
+  content: "\f00c";
   margin-right: 6px;
 }
 
-/* زرار اللايك في الهيرو */
+/* Icon Action Buttons */
 .btn-icon-only {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -225,13 +225,14 @@ body {
   transition: transform 0.2s ease;
 }
 
-/* زراير الكروت */
 .btn-watchlist .icon-minus {
   display: none;
 }
+
 .btn-watchlist.added .icon-plus {
   display: none;
 }
+
 .btn-watchlist.added .icon-minus {
   display: inline-block;
 }
@@ -240,7 +241,7 @@ body {
   color: #ff4757;
 }
 
-/* Layout */
+/* Main Content Layout */
 .details-content {
   padding: 32px 16px 60px 16px;
   display: flex;
@@ -252,7 +253,6 @@ body {
   width: 100%;
 }
 
-/* Details Panels */
 .details-panel {
   background: rgba(22, 22, 22, 0.4);
   border: 1px solid rgba(241, 227, 200, 0.05);
@@ -265,10 +265,12 @@ body {
 #sec-more-like-this.details-panel {
   padding: 24px 24px 16px 24px;
 }
+
 #sec-more-like-this .carousel-section {
   padding: 0;
   margin: 0;
 }
+
 #sec-more-like-this .carousel-header {
   margin-top: 0;
 }
@@ -281,7 +283,7 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* --- SECTION 1: Overview Styles --- */
+/* Overview Panel */
 .short-summary {
   font-size: 0.98rem;
   line-height: 1.6;
@@ -313,7 +315,7 @@ body {
   font-weight: 500;
 }
 
-/* --- SECTION 2: Seasons & Episodes --- */
+/* Seasons & Episodes */
 .seasons-sub-nav {
   display: flex;
   gap: 10px;
@@ -368,14 +370,17 @@ body {
 .minimal-ep-list::-webkit-scrollbar {
   width: 5px;
 }
+
 .minimal-ep-list::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.02);
   border-radius: 4px;
 }
+
 .minimal-ep-list::-webkit-scrollbar-thumb {
   background: rgba(0, 180, 216, 0.2);
   border-radius: 4px;
 }
+
 .minimal-ep-list::-webkit-scrollbar-thumb:hover {
   background: var(--accent-teal, #00b4d8);
 }
@@ -433,7 +438,7 @@ body {
   opacity: 0.85;
 }
 
-/* --- SECTION 3: Cast Carousel Styles --- */
+/* Cast Carousel */
 .section-header-flex {
   display: flex;
   align-items: center;
@@ -573,7 +578,7 @@ body {
   color: #718096;
 }
 
-/* --- SECTION 4: Reviews Styles --- */
+/* Reviews Panel */
 .reviews-list {
   display: flex;
   gap: 16px;
@@ -588,11 +593,6 @@ body {
   display: none;
 }
 
-/* ==========================================================================
-   الـ Review Card النظيف المتوافق مع الهواتف (بدون طاير)
-   ========================================================================== */
-
-/* كارت المراجعة */
 .minimal-review-card {
   flex: 0 0 calc(50% - 8px);
   min-width: 320px;
@@ -614,7 +614,6 @@ body {
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* هيدر الكارت (يضم البوستر، العنوان، والسبويلر) */
 .minimal-card-header {
   display: flex;
   justify-content: space-between;
@@ -623,7 +622,6 @@ body {
   margin-bottom: 4px;
 }
 
-/* القسم الأيسر: البوستر والمحتوى */
 .header-left-stack {
   display: flex;
   gap: 16px;
@@ -646,15 +644,13 @@ body {
   transform: scale(1.05);
 }
 
-/* حاوية العنوان والمؤلف */
 .review-info-content {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  min-width: 0; /* لضمان القص السليم للنصوص في التليفون */
+  min-width: 0;
 }
 
-/* 🌟 صف العنوان والتاج الجديد (بجوار العنوان مباشرة) 🌟 */
 .review-title-row {
   display: flex;
   align-items: center;
@@ -671,14 +667,13 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex: 0 1 auto; /* بيخليه يصغر لو الشاشة صغيرة */
+  flex: 0 1 auto;
 }
 
 .review-media-title:hover {
   filter: brightness(1.2);
 }
 
-/* التاج (Pill) بجوار العنوان */
 .review-context-pill {
   font-size: 0.65rem;
   font-weight: 600;
@@ -688,7 +683,7 @@ body {
   padding: 2px 6px;
   border-radius: 4px;
   white-space: nowrap;
-  flex-shrink: 0; /* بيمنعه إنه ينكمش ويخفي الكلام جواه */
+  flex-shrink: 0;
 }
 
 .review-context-pill.highlight {
@@ -697,10 +692,7 @@ body {
   border-color: rgba(0, 180, 216, 0.15);
 }
 
-/* =========================================
-   Star Ratings (High Specificity Fix without !important)
-   ========================================= */
-
+/* Review Star Ratings */
 #sec-reviews .review-rating-line .review-stars-box {
   color: rgba(255, 255, 255, 0.2);
   font-size: 0.85rem;
@@ -733,15 +725,10 @@ body {
   overflow: hidden;
 }
 
-/* 
-  استخدام ID + Classes يعطي أولوية أعلى من الكود القديم 
-  وبالتالي بنخفي النجمة السادسة الزيادة من غير !important 
-*/
 #sec-reviews .review-stars-box .star-half::after {
   display: none;
 }
 
-/* الكاتب (Author) */
 .review-author-line {
   display: flex;
   align-items: center;
@@ -764,11 +751,11 @@ body {
   text-decoration: none;
   transition: color 0.2s;
 }
+
 .review-author-username:hover {
   color: var(--text-cream, #e2e8f0);
 }
 
-/* السبويلر في أقصى اليمين */
 .header-right-stack {
   flex-shrink: 0;
   margin-left: 10px;
@@ -787,7 +774,6 @@ body {
   gap: 6px;
 }
 
-/* نص المراجعة */
 .minimal-card-body {
   flex-grow: 1;
   display: flex;
@@ -818,7 +804,6 @@ body {
   cursor: default;
 }
 
-/* الفوتر وزراير اللايك والكومنت */
 .minimal-card-footer {
   display: flex;
   justify-content: space-between;
@@ -851,6 +836,7 @@ body {
 .minimal-btn:hover {
   color: var(--text-cream, #e2e8f0);
 }
+
 .minimal-btn i {
   font-size: 1rem;
 }
@@ -870,9 +856,7 @@ body {
   filter: brightness(1.2);
 }
 
-/* ==========================================================================
-   MOBILE ONLY FIXES (Media Query for max-width: 768px)
-   ========================================================================== */
+/* Mobile Responsive */
 @media (max-width: 768px) {
   html,
   body,
@@ -1003,14 +987,14 @@ body {
 
   .minimal-review-card {
     flex: 0 0 85%;
-    min-width: 240px; /* مساحة كافية على الموبايل */
+    min-width: 240px;
     padding: 16px;
     gap: 12px;
     box-sizing: border-box;
   }
 
   .minimal-card-header {
-    gap: 8px; /* تقليل المسافة بين البوستر والسبويلر للموبايل */
+    gap: 8px;
   }
 
   .header-left-stack {
@@ -1023,7 +1007,7 @@ body {
   }
 
   .review-title-row {
-    flex-wrap: wrap; /* لو الشاشة ضيقة جدا، التاج هينزل تحت العنوان بس يفضل جوه المحاذاة */
+    flex-wrap: wrap;
     gap: 4px;
   }
 

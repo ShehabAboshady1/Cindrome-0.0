@@ -1,4 +1,4 @@
-/* --- Hero Section --- */
+/* Hero Section */
 .hero-section {
   position: relative;
   width: 100%;
@@ -111,7 +111,7 @@
   overflow: hidden;
 }
 
-/* --- Hero Buttons --- */
+/* Hero Buttons */
 .hero-actions {
   display: flex;
   gap: 14px;
@@ -169,28 +169,27 @@
   transform: translateY(-2px);
 }
 
-/* 🌟 تأثيرات زرار الـ Watchlist في الهيرو (متعدلة للون الكريمي) 🌟 */
-.hero-watchlist-btn .added-content { 
-    display: none; 
+/* Hero Watchlist Button States */
+.hero-watchlist-btn .added-content {
+  display: none;
 }
 
-/* التعديل هنا: فضلنا محافظين على اللون الكريمي وخليناه ينور خفيف زي الهوفر */
 .hero-watchlist-btn.added {
-    background-color: rgba(255, 255, 255, 0.18); 
-    color: var(--text-cream); 
-    border-color: var(--text-cream); 
+  background-color: rgba(255, 255, 255, 0.18);
+  color: var(--text-cream);
+  border-color: var(--text-cream);
 }
 
-.hero-watchlist-btn.added .default-content { 
-    display: none; 
+.hero-watchlist-btn.added .default-content {
+  display: none;
 }
 
 .hero-watchlist-btn.added .added-content {
-    display: inline-flex;
-    align-items: center;
+  display: inline-flex;
+  align-items: center;
 }
 
-/* --- Responsive للـ Hero --- */
+/* Mobile Responsive */
 @media (max-width: 1024px) {
   .hero-section {
     align-items: flex-end;

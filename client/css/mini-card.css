@@ -1,8 +1,4 @@
-/* ==========================================
-   🎬 Mini Content Card Styles Only
-   ========================================= */
-
-/* 1️⃣ الكارت الرئيسي */
+/* Mini Content Card Component */
 .mini-content-card {
   position: relative;
   flex: 0 0 90px;
@@ -11,7 +7,10 @@
   background-color: var(--dark-bg);
   cursor: pointer;
   border: 1.5px solid rgba(255, 255, 255, 0.08);
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -23,7 +22,7 @@
   box-shadow: 0 8px 22px rgba(9, 158, 158, 0.35);
 }
 
-/* 2️⃣ ميديا البوستر */
+/* Poster Media */
 .mini-card-media {
   position: relative;
   width: 100%;
@@ -44,7 +43,7 @@
   transform: scale(1.06);
 }
 
-/* 3️⃣ التقييم العلوي مع النجمة */
+/* Rating Badge */
 .mini-top-rating {
   position: absolute;
   top: 5px;
@@ -65,7 +64,7 @@
   gap: 2px;
 }
 
-/* 4️⃣ شريط الأزرار السفلي (Hover Bar) */
+/* Action Bar */
 .mini-card-bar {
   position: absolute;
   bottom: 0;
@@ -89,7 +88,9 @@
   z-index: 3;
   opacity: 0;
   transform: translateY(100%);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
 
 .mini-content-card:hover .mini-card-bar {
@@ -97,7 +98,7 @@
   transform: translateY(0);
 }
 
-/* 5️⃣ أزرار التفاعل */
+/* Action Buttons */
 .mini-bar-btn {
   background: none;
   border: none;
@@ -107,7 +108,10 @@
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: transform 0.2s ease, filter 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease,
+    color 0.2s ease;
 }
 
 .btn-add,
@@ -131,7 +135,7 @@
   opacity: 1;
 }
 
-/* 6️⃣ الـ Tooltip عند التمرير */
+/* Hover Tooltip */
 .mini-content-card::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -149,7 +153,9 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   z-index: 10;
 }
@@ -160,7 +166,7 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* 7️⃣ دعم التاتش والموبايل */
+/* Mobile & Touch Support */
 @media (max-width: 768px) {
   .mini-content-card:focus-within .mini-card-bar,
   .mini-content-card:active .mini-card-bar {

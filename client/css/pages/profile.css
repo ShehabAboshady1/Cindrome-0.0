@@ -1,8 +1,4 @@
-/* ==========================================================================
-   CINDROME PROFILE PAGE STYLES
-   ========================================================================== */
-
-/* 🌟 PRIVACY STATE LOGIC (Zero !important) 🌟 */
+/* Privacy State Logic */
 .user-meta-row {
   display: inline-flex;
   align-items: center;
@@ -37,7 +33,6 @@ body.is-private .private-badge {
   display: none;
 }
 
-/* تأثير التغبيش الثقيل عند زيارة حساب خاص */
 body.is-private.profile-page-other .profile-restricted-wrapper {
   overflow: hidden;
   min-height: 480px;
@@ -108,7 +103,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   line-height: 1.5;
 }
 
-/* BANNER */
+/* Banner */
 .profile-banner {
   width: 100%;
   aspect-ratio: 3.5 / 1;
@@ -243,6 +238,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   color: var(--dark-bg, #010a09);
   border-color: var(--text-cream, #f1e3c8);
 }
+
 .btn-follow.is-active:hover,
 .btn-notify.is-active:hover {
   background: #e6d5b8;
@@ -255,6 +251,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   color: var(--text-cream, #f1e3c8);
   border-color: rgba(241, 227, 200, 0.3);
 }
+
 .btn-follow.is-requested:hover {
   background: rgba(255, 71, 87, 0.15);
   color: #ff4757;
@@ -300,7 +297,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   color: rgba(241, 227, 200, 0.5);
 }
 
-/* MAIN TABS BAR */
+/* Main Tabs Navigation */
 .profile-main-tabs {
   max-width: 1200px;
   margin: 24px auto 0;
@@ -344,7 +341,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   border-radius: 4px 4px 0 0;
 }
 
-/* MAIN PAGE LAYOUT & SIDEBAR HIDING */
+/* Main Layout Grid & Sidebar */
 .profile-main-container {
   max-width: 1200px;
   margin: 24px auto;
@@ -394,7 +391,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   margin-right: 6px;
 }
 
-/* FAVORITES SECTION */
+/* Favorites Section */
 .profile-cards-wrapper {
   display: flex;
   gap: 14px;
@@ -403,11 +400,11 @@ body.is-private.profile-page-other .profile-private-overlay {
   padding-top: 5px;
   scrollbar-width: none;
 }
+
 .profile-cards-wrapper::-webkit-scrollbar {
   display: none;
 }
 
-/* 🌟 تعديل أيقونة المفضلة (القلب) جوه الكارت بقوة التحديد (Specificity) 🌟 */
 .profile-cards-wrapper .content-card .card-actions .btn-watchlist i.fa-heart {
   font-size: 0.85rem;
   color: #ef4444;
@@ -418,13 +415,12 @@ body.is-private.profile-page-other .profile-private-overlay {
   justify-content: center;
 }
 
-/* في حالة ظهور الـ Spinner أثناء التحميل */
 .profile-cards-wrapper .content-card .card-actions .btn-watchlist i.fa-spinner {
   font-size: 0.85rem;
   color: #a0aec0;
 }
 
-/* CURRENTLY WATCHING LIST */
+/* Currently Watching List */
 .currently-watching-list {
   display: flex;
   flex-direction: column;
@@ -442,14 +438,17 @@ body.is-private.profile-page-other .profile-private-overlay {
   width: 5px;
   -webkit-appearance: none;
 }
+
 .currently-watching-list::-webkit-scrollbar-track {
   background: transparent;
   margin: 10px 0;
 }
+
 .currently-watching-list::-webkit-scrollbar-thumb {
   background-color: rgba(9, 158, 158, 0.5);
   border-radius: 10px;
 }
+
 .currently-watching-list::-webkit-scrollbar-thumb:hover {
   background-color: var(--accent-teal);
 }
@@ -526,12 +525,13 @@ body.is-private.profile-page-other .profile-private-overlay {
   border-radius: 10px;
   overflow: hidden;
 }
+
 .progress-fill {
   height: 100%;
   background-color: var(--accent-teal, #099e9e);
 }
 
-/* MINIMALIST REVIEWS FEED */
+/* Reviews Feed */
 .profile-reviews-container {
   width: 100%;
   box-sizing: border-box;
@@ -562,14 +562,17 @@ body.is-private.profile-page-other .profile-private-overlay {
   width: 5px;
   -webkit-appearance: none;
 }
+
 .minimal-reviews-feed::-webkit-scrollbar-track {
   background: transparent;
   margin: 15px 0;
 }
+
 .minimal-reviews-feed::-webkit-scrollbar-thumb {
   background-color: rgba(9, 158, 158, 0.5);
   border-radius: 10px;
 }
+
 .minimal-reviews-feed::-webkit-scrollbar-thumb:hover {
   background: var(--accent-teal);
 }
@@ -622,9 +625,11 @@ body.is-private.profile-page-other .profile-private-overlay {
   display: block;
   transition: transform 0.2s ease;
 }
+
 .review-poster-link:hover {
   transform: scale(1.05);
 }
+
 .review-micro-poster {
   width: 48px;
   border-radius: 4px;
@@ -649,6 +654,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   line-height: 1.1;
   word-wrap: break-word;
 }
+
 .review-media-title:hover {
   text-decoration: underline;
 }
@@ -659,13 +665,13 @@ body.is-private.profile-page-other .profile-private-overlay {
   gap: 6px;
   margin-top: 2px;
 }
-/* 🌟 رسالة حالة الفراغ الخاصة بالفلتر 🌟 */
+
 .filter-empty-state {
   padding: 40px 20px;
   text-align: center;
   width: 100%;
   color: rgba(241, 227, 200, 0.5);
-  display: none; /* مخفية افتراضياً */
+  display: none;
 }
 
 .filter-empty-state i {
@@ -685,6 +691,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   opacity: 0.7;
   margin-top: 5px;
 }
+
 .favorite-heart {
   color: #ff4757;
   font-size: 0.85rem;
@@ -699,12 +706,12 @@ body.is-private.profile-page-other .profile-private-overlay {
   display: flex;
   align-items: center;
 }
+
 .star-full {
-  color: var(--text-main, #f1e3c8); /* لون النجمة الكاملة */
+  color: var(--text-main, #f1e3c8);
 }
 
 .star-half {
-  /* السطر ده بيلون نص النجمة باللون الأساسي والنص التاني باهت */
   background: linear-gradient(
     90deg,
     var(--text-main, #f1e3c8) 50%,
@@ -727,6 +734,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   flex-shrink: 0;
   transition: transform 0.2s ease;
 }
+
 .review-avatar-link:hover {
   transform: scale(1.05);
 }
@@ -745,6 +753,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   text-decoration: none;
   transition: color 0.2s ease;
 }
+
 .review-author-username:hover {
   color: var(--text-cream);
 }
@@ -775,7 +784,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   margin: 0;
   display: inline;
 }
-/* 🌟 تنسيقات إضافية لكروت المراجعات 🌟 */
+
 .review-title-row {
   display: flex;
   align-items: center;
@@ -784,8 +793,8 @@ body.is-private.profile-page-other .profile-private-overlay {
 }
 
 .review-episode-badge {
-  background-color: rgba(9, 158, 158, 0.15); /* خلفية بلون الـ Accent خفيفة */
-  color: var(--accent-teal, #099e9e); /* لون النص */
+  background-color: rgba(9, 158, 158, 0.15);
+  color: var(--accent-teal, #099e9e);
   border: 1px solid rgba(9, 158, 158, 0.3);
   padding: 2px 8px;
   border-radius: 6px;
@@ -798,6 +807,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   color: rgba(241, 227, 200, 0.3);
   font-size: 0.8rem;
 }
+
 .review-body.blurred {
   filter: blur(6px);
   cursor: pointer;
@@ -822,6 +832,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   margin-left: 4px;
   transition: text-decoration 0.2s ease;
 }
+
 .inline-more-btn:hover {
   text-decoration: underline;
 }
@@ -861,6 +872,7 @@ body.is-private.profile-page-other .profile-private-overlay {
 .review-like-btn.is-liked {
   color: #ff4757;
 }
+
 .review-like-btn.liked i,
 .review-like-btn.is-liked i {
   font-weight: 900;
@@ -881,7 +893,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   text-decoration: underline;
 }
 
-/* LISTS TAB */
+/* Lists Tab Section */
 .profile-lists-container {
   width: 100%;
   box-sizing: border-box;
@@ -930,6 +942,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   display: block;
   margin-bottom: 6px;
 }
+
 .list-title:hover {
   color: var(--accent-teal);
 }
@@ -946,6 +959,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   scrollbar-width: none;
   padding-bottom: 8px;
 }
+
 .lists-track::-webkit-scrollbar {
   display: none;
 }
@@ -992,7 +1006,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   color: #ff4757;
 }
 
-/* SIDEBAR & FILTERS */
+/* Sidebar & Stats */
 .sidebar-card {
   background-color: rgba(22, 22, 22, 0.8);
   border: 1px solid rgba(241, 227, 200, 0.1);
@@ -1033,6 +1047,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   font-size: 0.85rem;
   color: rgba(241, 227, 200, 0.7);
 }
+
 .qs-row strong {
   color: var(--text-cream, #f1e3c8);
 }
@@ -1045,6 +1060,7 @@ body.is-private.profile-page-other .profile-private-overlay {
 .filter-group {
   margin-bottom: 16px;
 }
+
 .filter-group:last-child {
   margin-bottom: 0;
 }
@@ -1189,7 +1205,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   background-color: var(--dark-bg);
 }
 
-/* EDIT PROFILE MODAL */
+/* Edit Profile Modal */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1253,6 +1269,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   cursor: pointer;
   transition: color 0.2s ease;
 }
+
 .close-modal-btn:hover {
   color: #ff4757;
 }
@@ -1294,6 +1311,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   z-index: 2;
   background: var(--dark-bg);
 }
+
 .edit-avatar-img {
   width: 100%;
   height: 100%;
@@ -1311,10 +1329,12 @@ body.is-private.profile-page-other .profile-private-overlay {
   opacity: 0;
   transition: opacity 0.2s ease;
 }
+
 .edit-img-overlay i {
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.5rem;
 }
+
 .edit-banner-box:hover .edit-img-overlay,
 .edit-avatar-box:hover .edit-img-overlay {
   opacity: 1;
@@ -1358,14 +1378,17 @@ body.is-private.profile-page-other .profile-private-overlay {
   overflow: hidden;
   transition: border-color 0.2s ease;
 }
+
 .input-with-prefix:focus-within {
   border-color: var(--accent-teal);
 }
+
 .input-prefix {
   padding-left: 14px;
   color: rgba(241, 227, 200, 0.5);
   font-size: 0.95rem;
 }
+
 .input-with-prefix .edit-input {
   border: none;
   background: transparent;
@@ -1380,6 +1403,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   display: flex;
   gap: 16px;
 }
+
 .edit-form-row .edit-form-group {
   flex: 1;
 }
@@ -1392,6 +1416,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   margin-bottom: 6px;
   transform: translateY(5px);
 }
+
 .modal-select-options.open {
   transform: translateY(0);
 }
@@ -1414,6 +1439,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   font-weight: 600;
   transition: all 0.2s ease;
 }
+
 .btn-cancel:hover {
   background: rgba(255, 255, 255, 0.05);
 }
@@ -1428,6 +1454,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   font-weight: 700;
   transition: background 0.2s ease;
 }
+
 .btn-save:hover {
   background: #0be3e3;
 }
@@ -1435,11 +1462,12 @@ body.is-private.profile-page-other .profile-private-overlay {
 .profile-page-self .other-only {
   display: none;
 }
+
 .profile-page-other .self-only {
   display: none;
 }
 
-/* MOBILE RESPONSIVENESS */
+/* Mobile Responsive */
 @media (max-width: 768px) {
   .profile-banner {
     aspect-ratio: 3 / 1;
@@ -1516,7 +1544,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   .profile-sidebar {
     order: -1;
     width: 100%;
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
   .profile-avatar {
@@ -1529,16 +1557,20 @@ body.is-private.profile-page-other .profile-private-overlay {
     flex-wrap: nowrap;
     gap: 8px;
   }
+
   .profile-box-title {
     font-size: 1.05rem;
     white-space: nowrap;
   }
+
   .profile-box-title i {
     margin-right: 4px;
   }
+
   .carousel-controls {
     gap: 6px;
   }
+
   .carousel-btn {
     width: 30px;
     height: 30px;
@@ -1554,6 +1586,7 @@ body.is-private.profile-page-other .profile-private-overlay {
     flex: 1;
     min-width: 0;
   }
+
   #panel-lists .profile-create-list-btn {
     padding: 4px 12px;
     font-size: 0.75rem;
@@ -1563,6 +1596,7 @@ body.is-private.profile-page-other .profile-private-overlay {
   .lists-track {
     gap: 12px;
   }
+
   .list-card {
     width: 75vw;
     max-width: 280px;
@@ -1573,7 +1607,7 @@ body.is-private.profile-page-other .profile-private-overlay {
     background-color: rgba(22, 22, 22, 0.4);
     border: 1px solid rgba(241, 227, 200, 0.08);
     padding: 12px 2px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     border-radius: 10px;
   }
 
@@ -1645,14 +1679,17 @@ body.is-private.profile-page-other .profile-private-overlay {
   .currently-watching-list::-webkit-scrollbar {
     width: 4px;
   }
+
   .currently-watching-list::-webkit-scrollbar-track {
     background: transparent;
     margin: 10px 0;
   }
+
   .currently-watching-list::-webkit-scrollbar-thumb {
     background-color: rgba(9, 158, 158, 0.5);
     border-radius: 10px;
   }
+
   .currently-watching-list::-webkit-scrollbar-thumb:hover {
     background-color: var(--accent-teal);
   }
@@ -1665,30 +1702,37 @@ body.is-private.profile-page-other .profile-private-overlay {
   .minimal-reviews-feed::-webkit-scrollbar {
     width: 4px;
   }
+
   .minimal-reviews-feed::-webkit-scrollbar-track {
     background: transparent;
     margin: 15px 0;
   }
+
   .minimal-reviews-feed::-webkit-scrollbar-thumb {
     background-color: rgba(9, 158, 158, 0.5);
     border-radius: 10px;
   }
+
   .minimal-reviews-feed::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-teal);
+    background-color: var(--accent-teal);
   }
 
   .minimal-card-header {
     gap: 8px;
   }
+
   .review-media-title {
     font-size: 1.05rem;
   }
+
   .minimal-actions {
     gap: 10px;
   }
+
   .minimal-btn {
     font-size: 0.75rem;
   }
+
   .minimal-read-link {
     font-size: 0.75rem;
   }
@@ -1697,6 +1741,7 @@ body.is-private.profile-page-other .profile-private-overlay {
     flex-direction: row;
     gap: 8px;
   }
+
   .filters-row .filter-group {
     margin-bottom: 0;
     flex: 1;

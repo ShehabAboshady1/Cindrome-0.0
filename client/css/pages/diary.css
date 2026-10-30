@@ -1,7 +1,4 @@
-/* ==========================================================================
-   CINDROME - DIARY PAGE (COMPACT ROW LAYOUT WITH EMOJIS & VERTICAL ACTIONS)
-========================================================================== */
-
+/* Diary Page Layout */
 .diary-main-wrapper {
   width: 92%;
   max-width: 1000px;
@@ -25,9 +22,7 @@
   letter-spacing: 0.5px;
 }
 
-/* ==========================================================================
-   DIARY EXCLUSIVE FILTER BAR (Fully Isolated & Independent)
-========================================================================== */
+/* Filter Bar */
 .diary-filter-section {
   width: 100%;
   display: flex;
@@ -146,9 +141,7 @@
   background: rgba(241, 227, 200, 0.12);
 }
 
-/* ==========================================================================
-   DIARY ENTRIES & ROWS
-========================================================================== */
+/* Diary Rows */
 .diary-list-container {
   background: rgba(22, 22, 22, 0.85);
   backdrop-filter: blur(20px);
@@ -185,10 +178,9 @@
   border: 1px solid rgba(241, 227, 200, 0.08);
   border-radius: 10px;
   padding: 10px 14px;
-  transition: all 0.4s ease; /* Transition زادت للنعومة في الاختفاء */
+  transition: all 0.4s ease;
 }
 
-/* 🌟 أنيميشن الاختفاء لما اليوزر يدوس مسح 🌟 */
 .diary-entry-row.fade-out {
   opacity: 0;
   transform: scale(0.95) translateX(40px);
@@ -214,6 +206,7 @@
   flex: 0 0 55px;
   width: 55px;
 }
+
 .diary-entry-row .mini-top-rating {
   font-size: 7.5px;
   padding: 2px 4px;
@@ -253,11 +246,11 @@
   color: rgba(241, 227, 200, 0.5);
   font-weight: 500;
 }
-/* 🌟 تنسيق شارة الموسم والحلقة (Season/Episode Badge) 🌟 */
+
 .diary-episode-info {
-  background: rgba(9, 158, 158, 0.12); /* خلفية تركواز شفافة وهادية */
-  color: var(--accent-teal); /* لون الخط التركواز المميز بتاع الموقع */
-  border: 1px solid rgba(9, 158, 158, 0.25); /* إطار خفيف جداً */
+  background: rgba(9, 158, 158, 0.12);
+  color: var(--accent-teal);
+  border: 1px solid rgba(9, 158, 158, 0.25);
   padding: 2px 6px;
   border-radius: 6px;
   font-size: 0.7rem;
@@ -372,7 +365,6 @@
   color: var(--accent-teal);
 }
 
-/* 🌟 تظبيط زرار المسح عشان ينور أحمر خطر 🌟 */
 .diary-square-btn.delete-btn:hover {
   background: rgba(255, 71, 87, 0.15);
   border-color: rgba(255, 71, 87, 0.3);
@@ -382,9 +374,7 @@
   color: #ff4757;
 }
 
-/* ==========================================================================
-   📱 DIARY MOBILE RESPONSIVE
-========================================================================== */
+/* Mobile Responsive */
 @media (max-width: 768px) {
   .diary-filter-section {
     padding: 10px 5px;
@@ -465,6 +455,7 @@
     flex-wrap: nowrap;
     align-items: baseline;
   }
+
   .diary-item-title-link {
     white-space: nowrap;
     overflow: hidden;
@@ -472,6 +463,7 @@
     font-size: 0.95rem;
     max-width: 80%;
   }
+
   .diary-item-year {
     flex-shrink: 0;
     font-size: 0.7rem;
@@ -495,9 +487,11 @@
     gap: 6px;
     margin-left: auto;
   }
+
   .diary-square-btn {
     padding: 4px;
   }
+
   .diary-square-btn svg {
     width: 14px;
     height: 14px;

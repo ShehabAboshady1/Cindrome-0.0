@@ -1,14 +1,11 @@
-/* ==========================================================================
-   CINDROME - SINGLE LIST PAGE SPECIFIC STYLES
-========================================================================== */
-
+/* Single List Page Layout */
 .single-list-main-section {
   width: 100%;
   padding-top: 40px;
   min-height: 70vh;
 }
 
-/* 1. Header Section (Clean, Text-only) */
+/* Header Section */
 .single-list-header-section {
   width: 92%;
   max-width: 1320px;
@@ -54,9 +51,7 @@
   text-decoration: underline;
 }
 
-/* ==========================================
-   2. Grid Container & Layout 
-========================================== */
+/* Grid Container & Layout */
 .single-list-grid-section {
   width: 92%;
   max-width: 1320px;
@@ -90,7 +85,7 @@
   flex: unset;
 }
 
-/* Custom Styles for Info Button & Mobile Tap State */
+/* Card Bar Info & Interactive States */
 .mini-bar-btn.btn-info {
   display: inline-flex;
   align-items: center;
@@ -114,9 +109,7 @@
   transform: translateY(0);
 }
 
-/* ==========================================
-   3. Grid Header (عداد الأفلام + زراير التفاعل)
-========================================== */
+/* Grid Header & Progress */
 .list-inline-header {
   display: flex;
   justify-content: space-between;
@@ -145,7 +138,6 @@
   line-height: 1.2;
 }
 
-/* User Progress */
 .list-user-progress {
   display: flex;
   align-items: center;
@@ -212,14 +204,13 @@
   color: #ff4757;
 }
 
-/* ==========================================
-   ACTIVE / TOGGLED STATES (JS HOOKS)
-========================================== */
+/* Active & Toggle States */
 .list-action-btn.like-btn.is-liked {
   background: rgba(255, 71, 87, 0.15);
   border-color: #ff4757;
   color: #ff4757;
 }
+
 .list-action-btn.like-btn.is-liked svg {
   fill: #ff4757;
   stroke: #ff4757;
@@ -245,13 +236,13 @@
 .interaction-btn.is-liked {
   color: #ff4757;
 }
+
 .interaction-btn.is-liked svg {
   fill: #ff4757;
   stroke: #ff4757;
 }
-/* ==========================================
-   DELETE CONFIRMATION MODAL
-========================================== */
+
+/* Delete Confirmation Modal */
 .delete-confirm-overlay {
   position: fixed;
   top: 0;
@@ -265,8 +256,9 @@
   z-index: 10000;
   backdrop-filter: blur(4px);
 }
+
 .delete-confirm-box {
-  background: #1c1c1c; /* لون الخلفية الداكن */
+  background: #1c1c1c;
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   padding: 32px 24px;
@@ -276,6 +268,7 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
   animation: modalFadeIn 0.2s ease-out forwards;
 }
+
 @keyframes modalFadeIn {
   from {
     opacity: 0;
@@ -286,33 +279,39 @@
     transform: scale(1);
   }
 }
+
 .delete-confirm-icon {
-  color: #ef4444; /* لون أيقونة السلة الأحمر */
+  color: #ef4444;
   width: 50px;
   height: 50px;
   margin: 0 auto 16px;
 }
+
 .delete-confirm-icon svg {
   width: 100%;
   height: 100%;
 }
+
 .delete-confirm-box h3 {
   color: #f1e3c8;
   font-size: 1.4rem;
   margin-bottom: 12px;
   font-weight: 600;
 }
+
 .delete-confirm-box p {
   color: #9ca3af;
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 24px;
 }
+
 .delete-confirm-actions {
   display: flex;
   justify-content: center;
   gap: 12px;
 }
+
 .btn-cancel-delete {
   background: transparent;
   border: 1px solid #374151;
@@ -325,9 +324,11 @@
   transition: 0.2s;
   flex: 1;
 }
+
 .btn-cancel-delete:hover {
   background: rgba(255, 255, 255, 0.05);
 }
+
 .btn-confirm-delete {
   background: #ef4444;
   border: 1px solid #ef4444;
@@ -340,18 +341,18 @@
   transition: 0.2s;
   flex: 1;
 }
+
 .btn-confirm-delete:hover {
   background: #dc2626;
   border-color: #dc2626;
 }
 
-/* ==========================================
-   Mobile Responsiveness
-========================================== */
+/* Mobile Responsive */
 @media (max-width: 920px) {
   .single-list-title {
     font-size: 2.2rem;
   }
+
   .single-list-header-section,
   .single-list-grid-section,
   .list-comments-wrapper {

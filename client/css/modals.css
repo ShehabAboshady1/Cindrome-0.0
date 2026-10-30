@@ -1,6 +1,4 @@
-/* ==========================================================================
-   CINDROME - PREMIUM MODALS STYLES
-========================================================================== */
+/* Base Variables & Reset */
 :root {
   --maincolor: #161616;
   --accent-teal: #099e9e;
@@ -22,7 +20,7 @@ body {
   height: 100vh;
 }
 
-/* 🌟 إخفاء المربع الأزرق عند الضغط في الهواتف 🌟 */
+/* Remove tap highlight on mobile */
 button,
 a,
 input,
@@ -34,9 +32,7 @@ summary,
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ==========================================================================
-   LOG MODAL OVERLAY & CONTAINER
-========================================================================== */
+/* Log Modal Overlay & Container */
 .log-modal-overlay {
   position: fixed;
   inset: 0;
@@ -97,11 +93,9 @@ summary,
   text-align: center;
 }
 
-/* ==========================================================================
-   SEARCH & ITEM HEADER (LOG MODAL)
-========================================================================== */
+/* Search & Item Header (Log Modal) */
 .log-global-search {
-  position: relative; /* 👈 أساس تثبيت القائمة المنسدلة تحت شريط البحث */
+  position: relative;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.03);
@@ -139,7 +133,7 @@ summary,
   display: none;
 }
 
-/* 🌟 نتائج البحث الحي للمودال (متناسقة مع الثيم) 🌟 */
+/* Live search results dropdown */
 .log-search-results {
   position: absolute;
   top: calc(100% + 6px);
@@ -275,9 +269,7 @@ summary,
   width: 100%;
 }
 
-/* ==========================================================================
-   MODERN CUSTOM DROPDOWNS (LOG MODAL)
-========================================================================== */
+/* Custom Dropdowns */
 .season-episode-selectors {
   display: flex;
   flex-direction: row;
@@ -286,7 +278,7 @@ summary,
   width: 100%;
 }
 
-/* 🌟 إخفاء اختيارات المواسم والحلقات في الأفلام عبر الـ CSS 🌟 */
+/* Hide season/episode selectors for movies */
 .season-episode-selectors.is-hidden {
   display: none;
 }
@@ -390,9 +382,7 @@ summary,
   color: var(--text-cream);
 }
 
-/* ==========================================================================
-   TOOLBAR (RATING & ICONS)
-========================================================================== */
+/* Toolbar (Rating & Icons) */
 .log-toolbar {
   display: flex;
   align-items: center;
@@ -446,15 +436,12 @@ summary,
   filter: drop-shadow(0 0 6px rgba(9, 158, 158, 0.5));
 }
 
-/* رفعنا قوة الـ Selector عشان يغلب اللون الأزرق لو جه بالغلط */
 .icon-toggle-btn.spoiler-btn.spoiler-active {
   color: #ff4757;
   filter: drop-shadow(0 0 6px rgba(255, 71, 87, 0.5));
 }
 
-/* ==========================================================================
-   REVIEW TEXTAREA
-========================================================================== */
+/* Review Textarea */
 .review-textarea {
   width: 100%;
   background: rgba(255, 255, 255, 0.02);
@@ -480,9 +467,7 @@ summary,
   color: rgba(241, 227, 200, 0.3);
 }
 
-/* ==========================================================================
-   FOOTER (DATE & BUTTONS)
-========================================================================== */
+/* Footer (Date & Buttons) */
 .log-footer {
   display: flex;
   justify-content: space-between;
@@ -570,9 +555,7 @@ summary,
   transform: translateY(-2px);
 }
 
-/* ==========================================================================
-   🌟 CREATE LIST MODAL SPECIFICS 🌟
-========================================================================== */
+/* Create List Modal Specifics */
 .create-list-container {
   max-width: 480px;
 }
@@ -904,9 +887,8 @@ input:checked ~ .privacy-label {
   transform: scale(1.15);
   background: var(--maincolor);
 }
-/* ==========================================================================
-   🌟 GLOBAL SEARCH MODAL SPECIFICS (EXACT DISCOVER MATCH) 🌟
-========================================================================== */
+
+/* Global Search Modal */
 .search-modal-overlay {
   position: fixed;
   inset: 0;
@@ -983,7 +965,7 @@ input:checked ~ .privacy-label {
   background: rgba(241, 227, 200, 0.12);
 }
 
-/* --- Search Box --- */
+/* Search Box */
 .g-filter-search-box {
   display: flex;
   align-items: center;
@@ -1027,7 +1009,7 @@ input:checked ~ .privacy-label {
   font-weight: 500;
 }
 
-/* --- Type Selector Pills --- */
+/* Type Selector Pills */
 .g-type-selector {
   display: flex;
   background: var(--dark-bg);
@@ -1065,7 +1047,7 @@ input:checked ~ .privacy-label {
   font-weight: 600;
 }
 
-/* --- Dropdowns Group --- */
+/* Dropdowns Group */
 .g-dropdowns-group {
   display: flex;
   align-items: center;
@@ -1159,7 +1141,7 @@ input:checked ~ .privacy-label {
   color: var(--text-cream);
 }
 
-/* --- Reset Button --- */
+/* Reset Button */
 .g-reset-filter-btn {
   background: transparent;
   border: none;
@@ -1186,6 +1168,7 @@ input:checked ~ .privacy-label {
   color: var(--accent-teal);
   transform: rotate(-90deg) scale(1.08);
 }
+
 .g-results-wrapper {
   width: 100%;
   margin-top: 20px;
@@ -1235,9 +1218,8 @@ input:checked ~ .privacy-label {
   font-weight: 500;
   letter-spacing: 0.3px;
 }
-/* ==========================================================================
-   🌟 CUSTOM CONFIRM DELETE MODAL 🌟
-   ========================================================================== */
+
+/* Confirm Delete Modal */
 .confirm-modal-container {
   max-width: 340px;
   text-align: center;
@@ -1246,7 +1228,7 @@ input:checked ~ .privacy-label {
 
 .confirm-icon {
   font-size: 3rem;
-  color: #ef4444; /* لون أحمر شيك يعبر عن الحذف */
+  color: #ef4444;
   margin-bottom: 16px;
 }
 
@@ -1292,6 +1274,7 @@ input:checked ~ .privacy-label {
 .btn-danger-confirm:hover {
   background: #dc2626;
 }
+
 @media (max-width: 768px) {
   .g-results-wrapper {
     margin-top: 14px;
@@ -1305,7 +1288,8 @@ input:checked ~ .privacy-label {
     padding-top: 6px;
   }
 }
-/* --- Mobile Layout (Exact Discover Clone 2x2) --- */
+
+/* Mobile Layout */
 @media (max-width: 930px) {
   .g-filter-bar-container {
     display: flex;
@@ -1389,9 +1373,7 @@ input:checked ~ .privacy-label {
   }
 }
 
-/* ==========================================================================
-   📱 MOBILE RESPONSIVE: LOG MODAL (Final Fixes)
-========================================================================== */
+/* Mobile Responsive: Log Modal */
 @media (max-width: 480px) {
   .log-modal-container {
     padding: 20px 16px;

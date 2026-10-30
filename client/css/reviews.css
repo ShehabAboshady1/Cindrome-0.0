@@ -1,6 +1,4 @@
-/* ==========================================================================
-   💬 USER REVIEWS COMPONENT STYLES
-   ========================================================================== */
+/* Reviews Component */
 
 /* Outer Box Container */
 .profile-card-box {
@@ -25,7 +23,7 @@
   color: var(--accent-teal, #099e9e);
 }
 
-/* Reviews List Layout */
+/* Reviews Track */
 .reviews-list {
   display: flex;
   flex-wrap: nowrap;
@@ -46,13 +44,13 @@
 
 /* Review Card */
 .review-card {
-  background: #1c2125; /* تم التغيير للون الرمادي المظلم الفاخر */
+  background: #1c2125;
   border: 1px solid rgba(241, 227, 200, 0.1);
   border-radius: 10px;
   padding: 16px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* يضمن ضبط ارتفاع المحتوى بالتساوي */
+  justify-content: space-between;
   transition:
     border-color 0.2s ease,
     transform 0.2s ease;
@@ -65,7 +63,7 @@
   border-color: rgba(9, 158, 158, 0.3);
 }
 
-/* Header: Profile Info + Movie Title */
+/* Review Card Header */
 .review-card-header {
   display: flex;
   justify-content: space-between;
@@ -110,7 +108,7 @@
   color: rgba(241, 227, 200, 0.5);
 }
 
-/* Media Info (Movie Title & Stars) */
+/* Media Meta */
 .review-media-meta {
   display: flex;
   align-items: center;
@@ -140,7 +138,7 @@
   letter-spacing: 1px;
 }
 
-/* ⚠️ SPOILER BADGE (Accent Teal) */
+/* Spoiler Badge */
 .spoiler-badge {
   color: var(--accent-teal, #099e9e);
   font-size: 0.65rem;
@@ -152,7 +150,11 @@
   white-space: nowrap;
 }
 
-/* Review Content Body */
+.spoiler-badge i {
+  font-size: 0.75rem;
+}
+
+/* Content Body */
 .review-body {
   font-size: 0.88rem;
   color: rgba(241, 227, 200, 0.85);
@@ -176,7 +178,7 @@
   user-select: auto;
 }
 
-/* Footer Actions */
+/* Card Footer */
 .review-card-footer {
   display: flex;
   justify-content: space-between;
@@ -234,11 +236,8 @@
   opacity: 1;
   text-decoration: underline;
 }
-/* ==========================================================================
-   💬 REVIEWS SECTION HEADER & LAYOUT FIXES
-   ========================================================================== */
 
-/* الحاوية الرئيسية للعنوان - العرض 100% يضمن إن النص يروح شمال فوراً */
+/* Header Container */
 .reviews-section-header {
   width: 100%;
   display: flex;
@@ -249,7 +248,7 @@
 }
 
 .reviews-title {
-  color: var(--accent-teal, #00b4d8); /* التركوازي المميز للموقع */
+  color: var(--accent-teal, #00b4d8);
   font-size: 1.15rem;
   font-weight: 700;
   text-transform: capitalize;
@@ -257,9 +256,7 @@
   margin: 0;
 }
 
-.spoiler-badge i {
-  font-size: 0.75rem;
-}
+/* Responsive */
 @media (max-width: 768px) {
   .review-card {
     flex: 0 0 85%;

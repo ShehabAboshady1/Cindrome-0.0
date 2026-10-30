@@ -1,8 +1,4 @@
-/* ==========================================================================
-   CINDROME - LISTS PAGE (Layout & Container)
-========================================================================== */
-
-/* 1. الحاوية الأساسية للصفحة (Page Wrapper) */
+/* Lists Page Layout */
 .lists-page-wrapper {
   width: 96%;
   max-width: 1320px;
@@ -12,7 +8,7 @@
   min-height: 70vh;
 }
 
-/* 2. عنوان الصفحة والوصف */
+/* Header & Title */
 .lists-header-box {
   text-align: center;
   margin-bottom: 25px;
@@ -34,9 +30,7 @@
   letter-spacing: 0.5px;
 }
 
-/* ==========================================================================
-   3. FILTER BAR SECTION (شريط البحث والفلاتر)
-========================================================================== */
+/* Filter Bar Section */
 .discover-filter-section {
   width: 100%;
   display: flex;
@@ -65,7 +59,7 @@
   background: rgba(241, 227, 200, 0.12);
 }
 
-/* مربع البحث الخاص بالقوائم */
+/* Lists Search Box */
 .lists-search-box {
   display: flex;
   align-items: center;
@@ -107,11 +101,7 @@
   font-weight: 500;
 }
 
-/* ==========================================================================
-   4. BLACK CONTAINER & GRID (البرواز الأسود وشبكة الكروت)
-========================================================================== */
-
-/* الحاوية اللي شايلة الخلفية والعنوان */
+/* Lists Grid Container */
 .lists-container-box {
   background: rgba(1, 10, 9, 0.85);
   backdrop-filter: blur(20px);
@@ -144,7 +134,7 @@
   line-height: 1.2;
 }
 
-/* زرار الـ Create */
+/* Create Action */
 .create-list-btn {
   background-color: var(--accent-teal);
   color: var(--dark-bg);
@@ -178,7 +168,7 @@
   margin: 0;
 }
 
-/* شبكة الكروت */
+/* Grid Layout */
 .lists-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -194,7 +184,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* الـ Meta Row */
 .lists-grid .list-meta {
   margin-top: 5px;
   flex-wrap: nowrap;
@@ -220,12 +209,10 @@
   margin-left: 4px;
 }
 
-/* الحفاظ على رابط الكومنت بدون خط تحته ليتطابق تماماً مع الزرار الأصلي */
 .list-card a.comment-btn {
   text-decoration: none;
 }
 
-/* تفاعل زرار الإعجاب مع الحفاظ على حيوية وتأثير list.css الأصلي */
 .list-action-btn.like-btn.liked svg,
 .list-action-btn.like-btn.active svg {
   fill: #ff4757;
@@ -237,12 +224,13 @@
   color: #ff4757;
 }
 
-/* ==========================================================================
-   5. MODAL DRAG & DROP STYLES
-========================================================================== */
+/* Modal Drag & Drop */
 .modal-mini-card {
   cursor: grab;
-  transition: transform 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    border-color 0.2s ease;
   border: 1px solid transparent;
 }
 
@@ -260,9 +248,7 @@
   box-shadow: 0 0 10px rgba(9, 158, 158, 0.4);
 }
 
-/* ==========================================================================
-   6. PAGINATION BAR COMPONENT
-========================================================================== */
+/* Pagination */
 .pagination-section {
   width: 100%;
   display: flex;
@@ -339,9 +325,7 @@
   user-select: none;
 }
 
-/* ==========================================================================
-   7. RESPONSIVE DESIGN (تظبيط الموبايل)
-========================================================================== */
+/* Responsive */
 @media (max-width: 930px) {
   .lists-page-wrapper {
     width: 95%;
@@ -426,31 +410,37 @@
     top: 12px;
     transform: none;
   }
+
   .lists-grid .stack-poster:nth-child(2) {
     left: calc(50% - 50px);
     top: 8px;
     transform: scale(0.96);
   }
+
   .lists-grid .stack-poster:nth-child(3) {
     left: calc(50% - 34px);
     top: 4px;
     transform: scale(0.92);
   }
+
   .lists-grid .stack-poster:nth-child(4) {
     left: calc(50% - 18px);
-    top: 0px;
+    top: 0;
     transform: scale(0.88);
   }
 
   .lists-grid .list-card:hover .stack-poster:nth-child(1) {
     transform: translate(-4px, 0) rotate(-6deg);
   }
+
   .lists-grid .list-card:hover .stack-poster:nth-child(2) {
     transform: translate(-1px, -2px) rotate(-2deg) scale(0.98);
   }
+
   .lists-grid .list-card:hover .stack-poster:nth-child(3) {
     transform: translate(3px, -3px) rotate(3deg) scale(0.96);
   }
+
   .lists-grid .list-card:hover .stack-poster:nth-child(4) {
     transform: translate(8px, -2px) rotate(6deg) scale(0.98);
   }

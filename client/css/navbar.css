@@ -94,7 +94,7 @@ header {
 button.signin-btn,
 .log-nav-btn {
   font-family: inherit;
-  font-weight: 700;
+  font-weight: 800;
   border: none;
   padding: 8px 18px;
   border-radius: 50px;
@@ -108,14 +108,9 @@ button.signin-btn,
 }
 
 button.signin-btn {
-  background-color: transparent;
-  color: var(--text-cream);
+  background-color: var(--accent-teal);
+  color: var(--dark-bg);
   border: 1.5px solid rgba(241, 227, 200, 0.2);
-}
-
-button.signin-btn:hover {
-  border-color: var(--accent-teal);
-  color: var(--accent-teal);
 }
 
 .log-nav-btn {

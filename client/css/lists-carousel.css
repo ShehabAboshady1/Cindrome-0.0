@@ -1,8 +1,4 @@
-/* ==========================================
-   🎬 3D Stacked Lists Carousel
-   ========================================= */
-
-/* 1. السكشن والحاوية */
+/* Lists Carousel Container */
 .lists-section {
   width: 100%;
   max-width: 1200px;
@@ -13,25 +9,22 @@
 
 .lists-track {
   display: flex;
-  gap: 24px;                  /* رجعنا المسافة المظبوطة دون ما توسع على الفاضي */
+  gap: 24px;
   overflow-x: auto;
-  padding: 25px 10px;         /* مساحة رأسية عشان حركة الـ Hover تترسم برتاحة */
+  padding: 25px 10px;
   scroll-behavior: smooth;
-
-  /* 🌟 إخفاء شريط السكرول بار نهائياً لكل المتصفحات */
-  -ms-overflow-style: none;  /* IE / Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* إخفاء السكرول بار لـ Chrome, Safari, Opera */
 .lists-track::-webkit-scrollbar {
   display: none;
 }
 
-/* 2. كارت القائمة الرئيسي (List Card) */
+/* List Card within Carousel */
 .list-card {
-  position: relative;        /* إجبار الكارت إنه يفهم ترتيب الطبقات */
-  z-index: 1;                /* ترتيب افتراضي حادي */
+  position: relative;
+  z-index: 1;
   flex: 0 0 280px;
   background-color: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -44,23 +37,21 @@
   gap: 16px;
 }
 
-/* 🌟 لما تقف بالماوس: الكارت يترفع فوق الكروت المجاورة فوراً عشان البوسترات ما تتداخلش بشكل غريب */
 .list-card:hover {
-  z-index: 10;               /* بيخلي الكارت يركب فوق الكارت اللي جنبه بسلاسة */
+  z-index: 10;
   border-color: var(--accent-teal);
   transform: translateY(-6px);
   box-shadow: 0 12px 30px rgba(9, 158, 158, 0.2);
 }
 
-/* 3. منطقة الـ 3D Posters Container */
+/* 3D Stack Container */
 .poster-stack {
   position: relative;
   width: 100%;
   height: 220px;
-  perspective: 1000px; /* بيدي البعد الثالث للعين */
+  perspective: 1000px;
 }
 
-/* 4. البوسترات المتراكمة داخل الكارت */
 .stack-poster {
   position: absolute;
   width: 130px;
@@ -73,7 +64,6 @@
   transform-origin: bottom center;
 }
 
-/* ترتيب البوسترات ودرجات الميل (Z-Index + 3D Position) */
 .stack-poster:nth-child(1) {
   z-index: 4;
   left: 10px;
@@ -100,12 +90,12 @@
 .stack-poster:nth-child(4) {
   z-index: 1;
   left: 140px;
-  top: 0px;
+  top: 0;
   transform: rotate(9deg) scale(0.88);
   opacity: 0.8;
 }
 
-/* 5. الحركة عند الـ Hover (تفريد الكروت زي الكوتشينة) */
+/* Stack Hover Effects */
 .list-card:hover .stack-poster:nth-child(1) {
   transform: translate(-10px, 0) rotate(-10deg);
 }
@@ -122,7 +112,7 @@
   transform: translate(18px, -4px) rotate(12deg) scale(0.94);
 }
 
-/* 6. تفاصيل ومعلومات الـ List */
+/* List Typography */
 .list-info {
   display: flex;
   flex-direction: column;
@@ -152,7 +142,7 @@
   font-weight: 600;
 }
 
-/* 🌟 7. زراير الأكشن (لايك وكومنت) في القوائم 🌟 */
+/* Actions */
 .list-actions {
   display: flex;
   gap: 8px;
@@ -166,8 +156,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px; /* مسافة بين الأيقونة والرقم */
-  color: rgba(241, 227, 200, 0.5); /* لون أساسي باهت للرقم والأيقونة */
+  gap: 4px;
+  color: rgba(241, 227, 200, 0.5);
   transition: all 0.2s ease;
 }
 
@@ -177,28 +167,23 @@
   transition: all 0.2s ease;
 }
 
-/* التأثير لما تقف بالماوس على الأيقونات (الرقم ملوش دعوة بيفضل زي ما هو) */
 .list-action-btn:hover svg {
   transform: scale(1.15);
 }
 
-/* 🌟 تظبيط اللايك (القلب بس هو اللي يحمر) 🌟 */
 .like-btn:hover svg {
-  stroke: #ff4757; /* لون القلب في الهوفر */
+  stroke: #ff4757;
 }
 
-/* لما اليوزر يدوس (الجافاسكريبت بيدي كلاس is-liked) */
 .like-btn.is-liked svg {
-  fill: #ff4757; /* القلب يتملي أحمر */
-  stroke: #ff4757; /* إطار القلب أحمر */
+  fill: #ff4757;
+  stroke: #ff4757;
 }
 
-/* الرقم بتاع اللايك بيفضل لونه الأساسي */
 .like-btn span {
-  color: rgba(241, 227, 200, 0.5); 
+  color: rgba(241, 227, 200, 0.5);
 }
 
-/* تظبيط الكومنت */
 .comment-btn:hover svg {
   stroke: var(--accent-teal);
 }
@@ -207,24 +192,18 @@
   color: rgba(241, 227, 200, 0.5);
 }
 
-/* ==========================================
-   📱 Responsive Design for Mobile (تحسين الموبايل)
-   ========================================= */
+/* Mobile Responsive */
 @media (max-width: 768px) {
-  
-  /* 1. تصغير حجم كارت القائمة ليناسب الشاشات الصغيرة */
   .list-card {
     flex: 0 0 200px;
     padding: 12px;
     gap: 10px;
   }
 
-  /* 2. تعديل ارتفاع منطقة البوسترات */
   .poster-stack {
     height: 140px;
   }
 
-  /* 3. إلغاء الميل والزوايا المعقدة على الموبايل وتحويلها لكروت مرتبة ورا بعض بوضوح */
   .stack-poster {
     width: 85px;
     height: 120px;
@@ -232,7 +211,6 @@
     box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.5);
   }
 
-  /* ترتيب منظم وبسيط على الموبايل من غير تدوير (Rotate) */
   .stack-poster:nth-child(1) {
     z-index: 4;
     left: 5px;
@@ -257,11 +235,10 @@
   .stack-poster:nth-child(4) {
     z-index: 1;
     left: 95px;
-    top: 0px;
+    top: 0;
     transform: scale(0.88);
   }
 
-  /* إلغاء الـ Hover effect على الموبايل لتجنب التعليق مع التاتش */
   .list-card:hover .stack-poster:nth-child(1),
   .list-card:hover .stack-poster:nth-child(2),
   .list-card:hover .stack-poster:nth-child(3),
@@ -269,11 +246,10 @@
     transform: inherit;
   }
 
-  /* تصغير الخطوط على الموبايل */
   .list-title {
     font-size: 14px;
   }
-  
+
   .list-meta {
     font-size: 11px;
   }

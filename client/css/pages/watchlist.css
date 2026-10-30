@@ -1,8 +1,4 @@
-/* ==========================================================================
-   CINDROME - WATCHLIST PAGE (UNIFIED & NO OVERFLOW)
-   ========================================================================== */
-
-/* 🌟 1. GLOBAL SETUP (OVERFLOW FIX) 🌟 */
+/* Watchlist Page Setup */
 html,
 body {
   max-width: 100%;
@@ -16,9 +12,7 @@ body {
   box-sizing: inherit;
 }
 
-/* ==========================================================================
-   2. HEADER & META SECTION
-   ========================================================================== */
+/* Header & Meta Section */
 .watchlist-main-section {
   width: 100%;
   padding-top: 40px;
@@ -60,9 +54,7 @@ body {
   line-height: 1.2;
 }
 
-/* ==========================================================================
-   3. FILTER BAR SECTION (UNIFIED WITH DISCOVER)
-   ========================================================================== */
+/* Filter Bar Section */
 .watchlist-filter-section {
   width: 100%;
   display: flex;
@@ -147,7 +139,7 @@ body {
 
 .type-pill {
   background: transparent;
-  border: 1px solid transparent; /* مساحة محجوزة مسبقاً لمنع اهتزاز البار */
+  border: 1px solid transparent;
   color: var(--text-cream);
   opacity: 0.65;
   padding: 6px 18px;
@@ -173,7 +165,7 @@ body {
   opacity: 1;
   border-color: var(--accent-teal);
   box-shadow: 0 0 10px rgba(9, 158, 158, 0.35);
-  font-weight: 600; /* تثبيت وزن الخط لمنع تمدد الكبسولة أفقياً */
+  font-weight: 600;
 }
 
 .dropdowns-group {
@@ -291,9 +283,7 @@ body {
   transform: rotate(-90deg) scale(1.08);
 }
 
-/* ==========================================================================
-   4. WATCHLIST GRID SECTION
-   ========================================================================== */
+/* Watchlist Grid Section */
 .watchlist-grid-section {
   width: 92%;
   max-width: 1320px;
@@ -327,7 +317,7 @@ body {
   flex: unset;
 }
 
-/* Custom Styles for Info Button & Mobile Tap State */
+/* Info Action & Tap State */
 .mini-bar-btn.btn-info {
   display: inline-flex;
   align-items: center;
@@ -351,11 +341,9 @@ body {
   transform: translateY(0);
 }
 
-/* ==========================================
-   ACTIVE / TOGGLED STATES (JS HOOKS)
-========================================== */
+/* Active & Toggle States */
 .mini-bar-btn.btn-add.is-removed {
-  color: var(--text-cream); /* الحفاظ على اللون الطبيعي دون انطفاء */
+  color: var(--text-cream);
 }
 
 .mini-bar-btn.btn-fav.is-favorited svg {
@@ -363,9 +351,7 @@ body {
   filter: drop-shadow(0 0 4px rgba(255, 71, 87, 0.4));
 }
 
-/* ==========================================
-   5. RESPONSIVE BREAKPOINT (TABLET <= 920px)
-   ========================================== */
+/* Tablet Responsive */
 @media (max-width: 920px) {
   .watchlist-title {
     font-size: 1.8rem;
@@ -466,11 +452,8 @@ body {
   }
 }
 
-/* ==========================================
-   6. RESPONSIVE BREAKPOINT (MOBILE <= 768px)
-   ========================================== */
+/* Mobile Responsive */
 @media (max-width: 768px) {
-  /* نخفي البار افتراضياً */
   .watchlist-cards-grid .mini-content-card .mini-card-bar {
     opacity: 0;
     visibility: hidden;
@@ -478,7 +461,6 @@ body {
     transition: all 0.3s ease;
   }
 
-  /* الكلاس ده الـ JS هيحطه لما اليوزر يلمس البوستر */
   .watchlist-cards-grid .mini-content-card.show-bar .mini-card-bar {
     opacity: 1;
     visibility: visible;

@@ -1,7 +1,4 @@
-/* ==========================================
-   🎠 Carousel Layout & Controls
-   ========================================= */
-
+/* Carousel Layout & Controls */
 .carousel-section {
   width: 100%;
   max-width: 1200px;
@@ -74,9 +71,7 @@
   display: none;
 }
 
-/* ==========================================
-   📱 Mobile Responsive for Carousel
-   ========================================= */
+/* Mobile Responsive */
 @media (max-width: 768px) {
   .carousel-section {
     margin: 40px auto;

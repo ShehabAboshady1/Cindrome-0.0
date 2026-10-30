@@ -1,7 +1,4 @@
-/* ==========================================================================
-   CINDROME - DROME AI CHATBOT STYLES (GEMINI / NATIVE APP UX)
-========================================================================== */
-
+/* Drome Chat Layout */
 html,
 body.drome-page {
   background-color: var(--dark-bg, #010a09);
@@ -18,9 +15,7 @@ body.drome-page {
   height: calc(100dvh - 70px);
 }
 
-/* ==================================================
-   1. CHAT AREA (Edge to Edge)
-================================================== */
+/* Chat Area Container */
 .drome-chat-area {
   display: flex;
   flex-direction: column;
@@ -32,9 +27,7 @@ body.drome-page {
   position: relative;
 }
 
-/* ==================================================
-   2. CHAT SCROLL & MESSAGES
-================================================== */
+/* Messages Scroll Area */
 .chat-messages-container {
   flex-grow: 1;
   width: 100%;
@@ -92,9 +85,7 @@ body.drome-page {
   transition: height 0.2s ease;
 }
 
-/* ==================================================
-   3. EMPTY STATE
-================================================== */
+/* Empty State */
 .drome-empty-state {
   margin: auto 0;
   text-align: center;
@@ -142,9 +133,7 @@ body.drome-page {
   transform: translateY(-2px);
 }
 
-/* ==================================================
-   4. CHAT BUBBLES
-================================================== */
+/* Chat Bubbles */
 .chat-bubble {
   display: flex;
   gap: 16px;
@@ -228,9 +217,7 @@ body.drome-page {
   display: inline-block;
 }
 
-/* ==================================================
-   5. STICKY INPUT BOX & TEXTAREA CONTROLS 
-================================================== */
+/* Sticky Input Box & Controls */
 .drome-input-wrapper {
   width: 100%;
   background: var(--dark-bg, #010a09);
@@ -283,9 +270,9 @@ body.drome-page {
 }
 
 .drome-input-box textarea::placeholder {
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .inline-icon-btn {
@@ -340,9 +327,7 @@ body.drome-page {
   padding: 0 10px;
 }
 
-/* ==================================================
-   6. USER'S CSS DROPDOWN
-================================================== */
+/* Scope Selector Dropdown */
 .dropdowns-group {
   display: flex;
   align-items: center;
@@ -430,15 +415,14 @@ body.drome-page {
   color: var(--text-cream);
 }
 
-/* ==================================================
-   7. TYPING DOTS ANIMATION
-================================================== */
+/* Typing Indicator */
 .typing-dots {
   display: flex;
   align-items: center;
   gap: 4px;
   height: 20px;
 }
+
 .dot {
   width: 5px;
   height: 5px;
@@ -446,15 +430,19 @@ body.drome-page {
   border-radius: 50%;
   animation: typing 1.4s infinite ease-in-out;
 }
+
 .dot:nth-child(1) {
   animation-delay: 0s;
 }
+
 .dot:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .dot:nth-child(3) {
   animation-delay: 0.4s;
 }
+
 @keyframes typing {
   0%,
   100% {
@@ -467,10 +455,7 @@ body.drome-page {
   }
 }
 
-/* ==================================================
-   8. CHAT INTERACTIVE MOVIE CARDS (ROW)
-================================================== */
-/* 🌟 حاوية الشريط العرضي عشان لو فيه أكتر من كارت 🌟 */
+/* Inline Media Cards */
 .chat-cards-row {
   display: flex;
   gap: 12px;
@@ -492,9 +477,8 @@ body.drome-page {
   border: 1px solid rgba(241, 227, 200, 0.1);
   border-radius: 12px;
   padding: 10px;
-  /* 🌟 خلينا العرض ثابت وصغير شوية عشان ميبقاش عريض بزيادة 🌟 */
   width: 250px;
-  flex-shrink: 0; /* بيمنع الكروت إنها تتضغط لو جم كذا واحد جنب بعض */
+  flex-shrink: 0;
   transition: border-color 0.2s ease;
 }
 
@@ -590,6 +574,7 @@ body.drome-page {
 .chat-btn-watchlist.added .icon-plus {
   display: none;
 }
+
 .chat-btn-watchlist.added .icon-minus {
   display: block;
 }
@@ -598,14 +583,13 @@ body.drome-page {
   display: none;
 }
 
-/* ==========================================
-   📱 Mobile Responsiveness 
-========================================== */
+/* Mobile Responsive */
 @media (max-width: 768px) {
   .chat-messages-container {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
+
   .chat-messages-container::-webkit-scrollbar {
     display: none;
   }
@@ -649,12 +633,14 @@ body.drome-page {
     font-size: 0.78rem;
     gap: 6px;
   }
+
   .drome-input-box .dropdown-list {
-    min-width: auto; /* لغينا العرض الإجباري اللي كان 120px */
-    width: max-content; /* العرض يبقى على قد أطول كلمة بالظبط */
+    min-width: auto;
+    width: max-content;
     bottom: calc(100% + 8px);
     top: auto;
   }
+
   .send-btn,
   .inline-icon-btn {
     width: 32px;
@@ -676,22 +662,20 @@ body.drome-page {
     min-width: 0;
     max-height: 120px;
   }
-  /* ==========================================
-       🌟 تصغير كارت الاقتراح ليتناسب مع الموبايل 🌟
-    ========================================== */
+
   .chat-movie-card {
-    width: 210px; /* قللنا العرض من 250 لـ 210 */
+    width: 210px;
     padding: 8px;
     gap: 8px;
   }
 
   .chat-movie-poster {
-    width: 50px; /* تصغير البوستر سنة */
+    width: 50px;
     height: 75px;
   }
 
   .chat-movie-title {
-    font-size: 0.85rem; /* تصغير العنوان */
+    font-size: 0.85rem;
     margin-bottom: 4px;
   }
 
