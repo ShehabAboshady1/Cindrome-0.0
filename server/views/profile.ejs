@@ -440,9 +440,16 @@
                                             onclick="window.location.href='/single-list?id=<%= list.list_id %>'">
                                             <% const posters=list.preview_posters || []; %>
                                                 <% for (let i=0; i < 4; i++) { %>
-                                                    <img src="<%= posters[i] ? 'https://image.tmdb.org/t/p/w500' + posters[i] : '/assets/default-poster.jpg' %>"
-                                                        alt="List Item" class="stack-poster">
-                                                    <% } %>
+                                                    <% if (posters[i]) { %>
+                                                        <img src="<%= posters[i].startsWith('http') ? posters[i] : 'https://image.tmdb.org/t/p/w500' + posters[i] %>"
+                                                            alt="List Item" class="stack-poster"
+                                                            onerror="this.onerror=null; this.src='/assets/posters/default-poster.png';">
+                                                        <% } else { %>
+                                                            <img src="/assets/posters/default-poster.png"
+                                                                alt="Empty Slot" class="stack-poster"
+                                                                style="opacity: 0.5; filter: grayscale(100%);">
+                                                            <% } %>
+                                                                <% } %>
                                         </div>
 
                                         <div class="list-info">

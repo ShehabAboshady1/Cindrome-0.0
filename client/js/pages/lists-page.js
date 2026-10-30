@@ -55,11 +55,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const posters = list.preview_posters || [];
       const posterElements = card.querySelectorAll(".stack-poster");
       posterElements.forEach((img, idx) => {
-        img.src = posters[idx]
-          ? `https://image.tmdb.org/t/p/w500${posters[idx]}`
-          : "/assets/default-poster.jpg";
-        // لو مفيش بوستر خالص نخفيه عشان الشكل
-        if (!posters[idx]) img.style.opacity = "0.3";
+        if (posters[idx]) {
+          img.src = posters[idx].startsWith("http")
+            ? posters[i]
+            : `https://image.tmdb.org/t/p/w500${posters[idx]}`;
+          img.style.opacity = "1";
+          img.style.filter = "none";
+        } else {
+          img.src = "/assets/posters/default-poster.png";
+          img.style.opacity = "0.5";
+          img.style.filter = "grayscale(100%)";
+        }
+        img.onerror = function () {
+          this.onerror = null;
+          this.src = "/assets/posters/default-poster.png";
+        };
       });
 
       // رابط القائمة بالكامل (البوسترات والعنوان)

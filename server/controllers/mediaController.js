@@ -86,7 +86,61 @@ export const renderHome = async (req, res) => {
     const filteredTrending = trendingAllRes.data.results.filter(
       (item) => item.vote_count >= 150 && item.vote_average >= 6.0,
     );
-
+    // ==========================================
+    // Fetch Top Community Lists from Actual Database
+    // ==========================================
+    let topCommunityLists = [];
+    try {
+      const listsQuery = `
+    SELECT 
+      l.id, 
+      l.title, 
+      u.username AS author,
+      (SELECT COUNT(*) FROM list_items li WHERE li.list_id = l.id) AS "itemsCount",
+      (SELECT COUNT(*) FROM list_likes ll WHERE ll.list_id = l.id) AS likes,
+      (SELECT COUNT(*) FROM list_comments lc WHERE lc.list_id = l.id) AS "commentsCount",
+      (
+        SELECT array_agg(mc.poster_path) 
+        FROM (
+          SELECT tmdb_id, media_type 
+          FROM list_items 
+          WHERE list_id = l.id 
+          ORDER BY order_index ASC 
+          LIMIT 4
+        ) li_sub
+        JOIN media_cache mc ON li_sub.tmdb_id = mc.tmdb_id AND li_sub.media_type = mc.media_type
+      ) AS posters
+    FROM lists l
+    JOIN users u ON l.user_id = u.id
+    WHERE l.is_private = false
+    ORDER BY likes DESC
+    LIMIT 8;
+  `;
+      const listsResult = await db.query(listsQuery);
+      topCommunityLists = listsResult.rows.map((row) => {
+        // Ensure posters array is formatted correctly
+        let formattedPosters = [];
+        if (row.posters && Array.isArray(row.posters)) {
+          formattedPosters = row.posters
+            .map((p) => {
+              if (p) {
+                return p.startsWith("http")
+                  ? p
+                  : `https://image.tmdb.org/t/p/w500${p}`;
+              }
+              return null;
+            })
+            .filter((p) => p !== null);
+        }
+        return {
+          ...row,
+          posters: formattedPosters,
+        };
+      });
+    } catch (dbErr) {
+      console.error("[DB Error fetching community lists]:", dbErr.message);
+    }
+    // ==========================================
     res.render("index.ejs", {
       heroMovie,
       trendingNow: filteredTrending
@@ -101,6 +155,7 @@ export const renderHome = async (req, res) => {
       topAnime: topAnimeRes.data.results
         .slice(0, 8)
         .map((i) => formatCard(i, "ANIME")),
+      topCommunityLists,
     });
   } catch (error) {
     console.error("[TMDB Index Error]:", error.message);
