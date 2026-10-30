@@ -1,18 +1,14 @@
-// controllers/listController.js
 import db from "../config/db.js";
 import { formatCommentText } from "../utils/helpers.js";
 
-// عرض صفحة القوائم العامة (Community Lists)
 export const renderListsPage = (req, res) => {
   try {
     res.render("lists.ejs");
   } catch (error) {
-    console.error("Error loading lists page:", error);
     res.status(500).send("Server Error");
   }
 };
 
-// API: جلب القوائم بفلترة وبحث و Pagination
 export const exploreListsApi = async (req, res) => {
   try {
     const { search = "", filter = "Popular", page = 1 } = req.query;
@@ -43,43 +39,32 @@ export const exploreListsApi = async (req, res) => {
         : "l.created_at DESC";
 
     const query = `
-            SELECT 
-                l.id AS list_id, l.title, l.created_at,
-                u.username,
+            SELECT l.id AS list_id, l.title, l.created_at, u.username,
                 (SELECT COUNT(*) FROM list_items li WHERE li.list_id = l.id) AS total_items,
                 (SELECT COUNT(*) FROM list_likes ll WHERE ll.list_id = l.id) AS likes_count,
                 (SELECT COUNT(*) FROM list_comments lc WHERE lc.list_id = l.id) AS comments_count,
                 EXISTS(SELECT 1 FROM list_likes ll WHERE ll.list_id = l.id AND ll.user_id = ${currentUserId}) AS is_liked_by_user,
-                COALESCE(
-                    (SELECT json_agg(sub.poster_path) FROM (
-                        SELECT mc.poster_path FROM list_items li2
-                        JOIN media_cache mc ON li2.tmdb_id = mc.tmdb_id AND li2.media_type = mc.media_type
-                        WHERE li2.list_id = l.id ORDER BY li2.order_index ASC LIMIT 4
-                    ) sub), '[]'::json
-                ) AS preview_posters
-            FROM lists l
-            JOIN users u ON l.user_id = u.id
-            ${whereString}
-            ORDER BY ${orderBy}
-            LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}
+                COALESCE((SELECT json_agg(sub.poster_path) FROM (SELECT mc.poster_path FROM list_items li2 JOIN media_cache mc ON li2.tmdb_id = mc.tmdb_id AND li2.media_type = mc.media_type WHERE li2.list_id = l.id ORDER BY li2.order_index ASC LIMIT 4) sub), '[]'::json) AS preview_posters
+            FROM lists l JOIN users u ON l.user_id = u.id ${whereString} ORDER BY ${orderBy} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}
         `;
-
     queryParams.push(limit, offset);
     const result = await db.query(query, queryParams);
 
-    const countQuery = `SELECT COUNT(*) FROM lists l ${whereString}`;
-    const countResult = await db.query(countQuery, queryParams.slice(0, -2));
-    const totalLists = parseInt(countResult.rows[0].count);
-    const totalPages = Math.max(1, Math.ceil(totalLists / limit));
+    const countResult = await db.query(
+      `SELECT COUNT(*) FROM lists l ${whereString}`,
+      queryParams.slice(0, -2),
+    );
+    const totalPages = Math.max(
+      1,
+      Math.ceil(parseInt(countResult.rows[0].count) / limit),
+    );
 
     res.json({ lists: result.rows, currentPage: parseInt(page), totalPages });
   } catch (error) {
-    console.error("Explore Lists API Error:", error);
     res.status(500).json({ error: "Server error" });
   }
 };
 
-// عرض صفحة قائمة معينة (Single List)
 export const renderSingleList = async (req, res) => {
   try {
     const listId = req.query.id;
@@ -90,8 +75,7 @@ export const renderSingleList = async (req, res) => {
             SELECT l.id, l.title, l.is_private, l.user_id, l.created_at, l.updated_at, u.username, p.avatar_url,
             (SELECT COUNT(*) FROM list_likes ll WHERE ll.list_id = l.id) as likes_count,
             ${req.user ? `EXISTS (SELECT 1 FROM list_likes ll WHERE ll.list_id = l.id AND ll.user_id = ${req.user.id})` : "false"} as is_liked_by_user
-            FROM lists l JOIN users u ON l.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id
-            WHERE l.id = $1
+            FROM lists l JOIN users u ON l.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE l.id = $1
         `,
       [listId],
     );
@@ -100,12 +84,10 @@ export const renderSingleList = async (req, res) => {
       return res.status(404).send("List not found");
     const list = listRes.rows[0];
 
-    const isOwner = req.user && req.user.id === list.user_id;
-    if (list.is_private && !isOwner)
+    if (list.is_private && (!req.user || req.user.id !== list.user_id))
       return res.status(403).send("Sorry, this list is private.");
 
     const currentUserId = req.user ? req.user.id : -1;
-
     const itemsRes = await db.query(
       `
             SELECT li.tmdb_id, li.media_type, li.order_index, mc.title, mc.poster_path, mc.rating, mc.is_anime,
@@ -120,11 +102,7 @@ export const renderSingleList = async (req, res) => {
     let watchedCount = 0;
     if (req.user && itemsRes.rows.length > 0) {
       const watchedRes = await db.query(
-        `
-                SELECT COUNT(DISTINCT li.tmdb_id) as count FROM list_items li
-                JOIN reviews r ON li.tmdb_id = r.tmdb_id AND li.media_type = r.media_type
-                WHERE li.list_id = $1 AND r.user_id = $2
-            `,
+        `SELECT COUNT(DISTINCT li.tmdb_id) as count FROM list_items li JOIN reviews r ON li.tmdb_id = r.tmdb_id AND li.media_type = r.media_type WHERE li.list_id = $1 AND r.user_id = $2`,
         [listId, req.user.id],
       );
       watchedCount = parseInt(watchedRes.rows[0].count) || 0;
@@ -158,13 +136,12 @@ export const renderSingleList = async (req, res) => {
     res.render("single-list.ejs", {
       list,
       listItems: itemsRes.rows,
-      isOwner,
+      isOwner: req.user && req.user.id === list.user_id,
       watchedCount,
       mainComments,
       commentsCount: allComments.length,
     });
   } catch (error) {
-    console.error("Error loading single list:", error);
     res.status(500).send("Server Error");
   }
 };
@@ -215,44 +192,42 @@ export const createList = async (req, res) => {
 
 export const deleteList = async (req, res) => {
   try {
-    const listId = req.params.id;
     const userRes = await db.query("SELECT username FROM users WHERE id = $1", [
       req.user.id,
     ]);
-    await db.query("DELETE FROM list_items WHERE list_id = $1", [listId]);
+    await db.query("DELETE FROM list_items WHERE list_id = $1", [
+      req.params.id,
+    ]);
     const delRes = await db.query(
       "DELETE FROM lists WHERE id = $1 AND user_id = $2",
-      [listId, req.user.id],
+      [req.params.id, req.user.id],
     );
-
     if (delRes.rowCount > 0)
       res
         .status(200)
-        .json({
-          message: "List deleted successfully",
-          username: userRes.rows[0].username,
-        });
-    else res.status(403).json({ error: "You don't have permission." });
+        .json({ message: "List deleted", username: userRes.rows[0].username });
+    else res.status(403).json({ error: "Permission denied." });
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
 };
 
 export const updateList = async (req, res) => {
-  const listId = req.params.id;
   const { title, is_private, items } = req.body;
   try {
     await db.query("BEGIN");
     const updateListRes = await db.query(
       "UPDATE lists SET title = $1, is_private = $2, updated_at = NOW() WHERE id = $3 AND user_id = $4 RETURNING id",
-      [title, is_private, listId, req.user.id],
+      [title, is_private, req.params.id, req.user.id],
     );
     if (updateListRes.rowCount === 0) {
       await db.query("ROLLBACK");
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    await db.query("DELETE FROM list_items WHERE list_id = $1", [listId]);
+    await db.query("DELETE FROM list_items WHERE list_id = $1", [
+      req.params.id,
+    ]);
     for (const item of items) {
       await db.query(
         `INSERT INTO media_cache (tmdb_id, media_type, title, poster_path, rating) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (tmdb_id, media_type) DO UPDATE SET rating = EXCLUDED.rating WHERE media_cache.rating IS NULL`,
@@ -266,11 +241,11 @@ export const updateList = async (req, res) => {
       );
       await db.query(
         "INSERT INTO list_items (list_id, tmdb_id, media_type, order_index) VALUES ($1, $2, $3, $4)",
-        [listId, item.tmdb_id, item.media_type, item.order_index],
+        [req.params.id, item.tmdb_id, item.media_type, item.order_index],
       );
     }
     await db.query("COMMIT");
-    res.status(200).json({ message: "List updated successfully" });
+    res.status(200).json({ message: "List updated" });
   } catch (error) {
     await db.query("ROLLBACK");
     res.status(500).json({ error: "Server error" });
@@ -301,13 +276,17 @@ export const toggleListLike = async (req, res) => {
 };
 
 export const addListComment = async (req, res) => {
-  const { content, parent_comment_id } = req.body;
-  if (!content?.trim())
-    return res.status(400).json({ error: "Comment cannot be empty" });
+  if (!req.body.content?.trim())
+    return res.status(400).json({ error: "Empty comment" });
   try {
     const result = await db.query(
       `INSERT INTO list_comments (list_id, user_id, content, parent_comment_id) VALUES ($1, $2, $3, $4) RETURNING id, created_at`,
-      [req.params.id, req.user.id, content.trim(), parent_comment_id || null],
+      [
+        req.params.id,
+        req.user.id,
+        req.body.content.trim(),
+        req.body.parent_comment_id || null,
+      ],
     );
     res
       .status(200)

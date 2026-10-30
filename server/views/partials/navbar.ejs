@@ -30,7 +30,8 @@
                 <input type="checkbox" id="account-toggle" class="dropdown-checkbox">
                 <label for="account-toggle" class="nav-item dropdown-label">
                     <% if (locals.user) { %>
-                        <img src="<%= user.avatar_url || '/assets/profile-avatar.jpg' %>" alt="Profile"
+                        <img src="<%= user.avatar_url || '/assets/avatars/default-avatar.jpeg' %>" alt="Profile"
+                            onerror="this.onerror=null; this.src='/assets/avatars/default-avatar.jpeg';"
                             style="width: 25px; height: 25px; border-radius: 50%; vertical-align: middle; margin-right: 5px; object-fit: cover;">
                         <%= user.username %> ▾
                             <% } else { %>

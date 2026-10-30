@@ -1,16 +1,13 @@
-/* ==========================================================================
-   🌟 AUTHENTICATION STATES (سحر إخفاء وإظهار العناصر) 🌟
-========================================================================== */
-/* لو البودي واخد كلاس logged-out (زائر) -> اخفي أي حاجة تخص المستخدم */
+/* Auth States */
 body.logged-out .user-only {
   display: none;
 }
 
-/* لو البودي واخد كلاس logged-in (مسجل دخول) -> اخفي أي حاجة تخص الزائر */
 body.logged-in .guest-only {
   display: none;
 }
-/* --- تثبيت الـ Header بأكمله في أعلى الصفحة --- */
+
+/* Header Layout */
 header {
   position: sticky;
   top: 0;
@@ -58,10 +55,10 @@ header {
   gap: 20px;
   align-items: center;
   z-index: 2;
-  margin-left: auto; /* بيزق الروابط لليمين */
+  margin-left: auto;
 }
 
-/* 🌟 الكونتينر الجديد لزراير الأكشن 🌟 */
+/* Nav Actions */
 .nav-actions {
   display: flex;
   align-items: center;
@@ -69,7 +66,6 @@ header {
   z-index: 3;
 }
 
-/* زرار العدسة المكبرة (على اللابتوب هيكون بعد الـ right-bar في أقصى اليمين) */
 .search-trigger-btn {
   background: transparent;
   border: none;
@@ -95,14 +91,13 @@ header {
   height: 20px;
 }
 
-/* 🌟 تظبيط زراير الـ Sign In والـ Log الجديدة 🌟 */
 button.signin-btn,
 .log-nav-btn {
   font-family: inherit;
   font-weight: 700;
   border: none;
   padding: 8px 18px;
-  border-radius: 50px; /* خليناهم كبسولة مودرن */
+  border-radius: 50px;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
@@ -112,22 +107,22 @@ button.signin-btn,
   font-size: 0.85rem;
 }
 
-/* زرار تسجيل الدخول (شفاف بحواف) */
 button.signin-btn {
   background-color: transparent;
   color: var(--text-cream);
   border: 1.5px solid rgba(241, 227, 200, 0.2);
 }
+
 button.signin-btn:hover {
   border-color: var(--accent-teal);
   color: var(--accent-teal);
 }
 
-/* زرار إضافة محتوى (الأساسي) */
 .log-nav-btn {
   background-color: var(--accent-teal);
   color: var(--dark-bg);
 }
+
 .log-nav-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(9, 158, 158, 0.3);
@@ -147,14 +142,14 @@ button.signin-btn:hover {
   color: var(--accent-teal);
 }
 
-/* إخفاء عناصر التحكم الخاصة بالموبايل افتراضياً */
+/* Hide mobile controls by default */
 .menu-checkbox,
 .hamburger-btn,
 .dropdown-checkbox {
   display: none;
 }
 
-/* --- تنسيق القوائم المنسدلة (الكمبيوتر) - 🌟 النسخة المودرن 🌟 --- */
+/* Dropdown Menus */
 .dropdown {
   position: relative;
   display: flex;
@@ -166,13 +161,13 @@ button.signin-btn:hover {
   top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(10px);
-  background-color: var(--maincolor); /* لون بريميم بدل الأسود المباشر */
-  border: 1px solid rgba(241, 227, 200, 0.1); /* إطار ناعم */
+  background-color: var(--maincolor);
+  border: 1px solid rgba(241, 227, 200, 0.1);
   list-style: none;
-  padding: 8px; /* مساحة داخلية أريح */
+  padding: 8px;
   min-width: 170px;
-  border-radius: 12px; /* حواف دائرية ناعمة */
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8); /* ظل أعمق */
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
   z-index: 100;
   opacity: 0;
   visibility: hidden;
@@ -182,7 +177,7 @@ button.signin-btn:hover {
     visibility 0.25s ease;
 }
 
-/* كوبري عشان الماوس ميفلتش */
+/* Hover bridge to prevent losing hover state */
 .dropdown::after {
   content: "";
   position: absolute;
@@ -192,10 +187,10 @@ button.signin-btn:hover {
   height: 15px;
 }
 
-/* لغينا الخطوط الفاصلة اللي بتخلي الشكل قديم */
 .dropdown-menu li {
   width: 100%;
 }
+
 .dropdown-menu li:not(:last-child) {
   border-bottom: none;
 }
@@ -203,11 +198,11 @@ button.signin-btn:hover {
 .dropdown-menu li a {
   display: block;
   padding: 10px 14px;
-  color: rgba(241, 227, 200, 0.85); /* لون أهدى شوية */
+  color: rgba(241, 227, 200, 0.85);
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
-  border-radius: 8px; /* حواف دائرية للينك نفسه لما نقف عليه */
+  border-radius: 8px;
   white-space: nowrap;
   transition:
     background 0.2s,
@@ -216,7 +211,7 @@ button.signin-btn:hover {
 }
 
 .dropdown-menu li a:hover {
-  background-color: rgba(9, 158, 158, 0.1); /* خلفية شفافة تركواز */
+  background-color: rgba(9, 158, 158, 0.1);
   color: var(--accent-teal);
 }
 
@@ -226,32 +221,7 @@ button.signin-btn:hover {
   transform: translateX(-50%) translateY(5px);
 }
 
-/* 🌟 توحيد شكل زرار الـ Sign in وزرار الـ Log 🌟 */
-button.signin-btn,
-.log-nav-btn {
-  background-color: var(--accent-teal);
-  color: var(--dark-bg);
-  border: none;
-  font-weight: 800;
-  font-family: inherit;
-  font-size: 0.85rem;
-  padding: 8px 18px;
-  border-radius: 50px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-button.signin-btn:hover,
-.log-nav-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(9, 158, 158, 0.4);
-  background-color: #0bd3d3;
-}
-
+/* Mobile Navigation */
 @media (max-width: 1024px) {
   .bar {
     position: relative;
@@ -267,9 +237,8 @@ button.signin-btn:hover,
     max-width: 100px;
   }
 
-  /* تنسيق زراير الأكشن على الموبايل */
   .nav-actions {
-    margin-left: auto; /* بيزق الأزرار والهامبرجر لأقصى اليمين */
+    margin-left: auto;
     gap: 8px;
   }
 
@@ -293,7 +262,6 @@ button.signin-btn:hover,
     margin-left: 4px;
   }
 
-  /* تحويل الروابط لقائمة منسدلة تغطي الشاشة */
   .right-bar {
     flex-direction: column;
     position: absolute;

@@ -30,15 +30,15 @@
 
     <!-- BANNER -->
     <div class="profile-banner"
-        style="background-image: url('<%= profileUser.backdrop_url || '/assets/default-backdrop.jpg' %>');">
+        style="background-image: url('<%= profileUser.backdrop_url || '/assets/backdrops/default-backdrop.png' %>');">
         <div class="banner-overlay"></div>
     </div>
     <!-- PROFILE HEADER -->
     <div class="profile-header-container">
         <div class="profile-avatar-wrapper">
-            <img src="<%= profileUser.avatar_url || '/assets/default-avatar.jpeg' %>"
+            <img src="<%= profileUser.avatar_url || '/assets/avatars/default-avatar.jpeg' %>"
                 alt="<%= profileUser.display_name || profileUser.username %>" class="profile-avatar"
-                onerror="this.src='/assets/profile-avatar.jpg'">
+                onerror="this.onerror=null; this.src='/assets/avatars/default-avatar.jpeg';">
         </div>
 
         <div class="profile-info-bar">
@@ -337,10 +337,10 @@
                                                     <div class="review-author-line">
                                                         <a href="/profile/<%= profileUser.username %>"
                                                             class="review-avatar-link">
-                                                            <img src="<%= profileUser.avatar_url || '/assets/profile-avatar.jpg' %>"
+                                                            <img src="<%= profileUser.avatar_url || '/assets/avatars/default-avatar.jpeg' %>"
                                                                 alt="<%= profileUser.username %>"
                                                                 class="review-micro-avatar"
-                                                                onerror="this.src='/assets/profile-avatar.jpg'">
+                                                                onerror="this.onerror=null; this.src='/assets/avatars/default-avatar.jpeg';">
                                                         </a>
                                                         <a href="/profile/<%= profileUser.username %>"
                                                             class="review-author-username">@<%= profileUser.username %>
@@ -645,7 +645,7 @@
 
                         <!-- صورة الغلاف (Backdrop) -->
                         <div class="edit-banner-box" id="editBannerPreview"
-                            style="background-image: url('<%= profileUser.backdrop_url || '/assets/default-backdrop.jpg' %>'); background-size: cover; background-position: center;">
+                            style="background-image: url('<%= profileUser.backdrop_url || '/assets/backdrops/default-backdrop.png' %>'); background-size: cover; background-position: center;">
                             <!-- لما نضغط هنا، هنشغل حقل الـ backdrop -->
                             <div class="edit-img-overlay" onclick="document.getElementById('backdropUpload').click();">
                                 <i class="fa-solid fa-camera"></i>
@@ -654,9 +654,9 @@
 
                         <!-- الصورة الشخصية (Avatar) -->
                         <div class="edit-avatar-box">
-                            <img src="<%= profileUser.avatar_url || '/assets/profile-avatar.jpg' %>" alt="Avatar"
-                                class="edit-avatar-img" id="editAvatarPreview"
-                                onerror="this.src='/assets/profile-avatar.jpg'">
+                            <img src="<%= profileUser.avatar_url || '/assets/avatars/default-avatar.jpeg' %>"
+                                alt="Avatar" class="edit-avatar-img" id="editAvatarPreview"
+                                onerror="this.onerror=null; this.src='/assets/avatars/default-avatar.jpeg';">
                             <!-- لما نضغط هنا، هنشغل حقل الـ avatar -->
                             <div class="edit-img-overlay" onclick="document.getElementById('avatarUpload').click();">
                                 <i class="fa-solid fa-camera"></i>

@@ -19,10 +19,7 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ==========================================
-   🎨 Custom Scrollbar (Clean 10px Turquoise)
-   ========================================= */
-
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -62,9 +59,7 @@ body {
   scrollbar-color: var(--accent-teal) var(--dark-bg, #010a09);
 }
 
-/* ==========================================
-   🔻 Minimal Footer Styles
-   ========================================= */
+/* Footer */
 .site-footer {
   width: 100%;
   background-color: var(--dark-bg, #010a09);
