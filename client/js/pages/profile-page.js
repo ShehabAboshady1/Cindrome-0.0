@@ -341,10 +341,6 @@ function setupCreateListModal() {
 // 🌟 تشغيل الأحداث (EventListeners)
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-  const savedPrivacy = localStorage.getItem("cindrome_is_private");
-  if (savedPrivacy !== null) {
-    window.setPrivacyMode(savedPrivacy === "true");
-  }
   const urlParams = new URLSearchParams(window.location.search);
 
   if (urlParams.has("mode")) {

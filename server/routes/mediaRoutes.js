@@ -15,5 +15,5 @@ router.get(
 );
 router.get("/discover", mediaController.renderDiscover);
 router.get("/api/discover", mediaController.apiDiscover);
-
+router.get("/api/search", mediaController.apiSearch);
 export default router;

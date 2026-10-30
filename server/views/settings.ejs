@@ -55,7 +55,7 @@
                         <div class="settings-form-row">
                             <div class="settings-form-group">
                                 <label class="settings-label">Current Email</label>
-                                <input type="email" class="settings-input" value="cindrome.me@gmail.com" readonly>
+                                <input type="email" class="settings-input" value="<%= userSettings.email %>" readonly>
                             </div>
                             <div class="settings-form-group">
                                 <label class="settings-label">New Email</label>
@@ -63,11 +63,6 @@
                                     placeholder="Enter new email address">
                             </div>
                         </div>
-                        <p class="input-hint" style="margin-top: -10px; margin-bottom: 20px;">
-                            <i class="fa-solid fa-circle-info"></i> For your security, a verification link will be sent
-                            to
-                            your current email first.
-                        </p>
                         <div class="settings-actions-left">
                             <button type="button" id="changeEmailBtn" class="btn-secondary-action">Change Email</button>
                         </div>
@@ -101,21 +96,6 @@
 
                     <hr class="settings-divider">
 
-                    <h3 class="panel-subtitle">Two-Factor Authentication (2FA)</h3>
-                    <div class="toggle-group">
-                        <div class="toggle-info">
-                            <h4 class="toggle-title">Enable 2FA</h4>
-                            <p class="toggle-desc">Require an extra security code sent to your email or mobile device
-                                when logging in.</p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="twoFactorToggle">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <hr class="settings-divider">
-
                     <h3 class="panel-subtitle danger-text">Danger Zone</h3>
                     <p class="input-hint" style="margin-bottom: 12px;">Once you delete your account, there is no going
                         back. All your reviews, lists, and diary logs will be permanently removed.</p>
@@ -135,19 +115,8 @@
                             <p class="toggle-desc">Only approved followers can see your profile, lists, and reviews.</p>
                         </div>
                         <label class="switch">
-                            <input type="checkbox" id="privateAccountToggle">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <div class="toggle-group">
-                        <div class="toggle-info">
-                            <h4 class="toggle-title">Allow Featuring</h4>
-                            <p class="toggle-desc">Allow Cindrome to feature your highly-rated lists and reviews on the
-                                Home page.</p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="allowFeaturingToggle" checked>
+                            <input type="checkbox" id="privateAccountToggle" <%=userSettings.is_private ? 'checked' : ''
+                                %>>
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -170,7 +139,8 @@
                             <p class="toggle-desc">Get an email when someone follows your account.</p>
                         </div>
                         <label class="switch">
-                            <input type="checkbox" id="notifyFollowersToggle" checked>
+                            <input type="checkbox" id="notifyFollowersToggle" <%=userSettings.notify_new_follower
+                                ? 'checked' : '' %>>
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -181,18 +151,8 @@
                             <p class="toggle-desc">Get an email when someone likes or comments on your review.</p>
                         </div>
                         <label class="switch">
-                            <input type="checkbox" id="notifyReviewsToggle" checked>
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <div class="toggle-group">
-                        <div class="toggle-info">
-                            <h4 class="toggle-title">Cindrome Newsletter</h4>
-                            <p class="toggle-desc">Receive weekly updates on trending movies, series, and anime.</p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="notifyNewsletterToggle">
+                            <input type="checkbox" id="notifyReviewsToggle" <%=userSettings.notify_review_interaction
+                                ? 'checked' : '' %>>
                             <span class="slider round"></span>
                         </label>
                     </div>

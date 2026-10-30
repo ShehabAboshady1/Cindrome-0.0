@@ -571,15 +571,13 @@ export const renderDetails = async (req, res) => {
       creatorLabel,
       creator: creatorName,
       status: d.status || "Released",
-      cast: (d.credits?.cast || [])
-        .slice(0, 10)
-        .map((actor) => ({
-          name: actor.name,
-          character: actor.character || "Cast Member",
-          image: actor.profile_path
-            ? `https://image.tmdb.org/t/p/w300${actor.profile_path}`
-            : "assets/profile-avatar.jpg",
-        })),
+      cast: (d.credits?.cast || []).slice(0, 10).map((actor) => ({
+        name: actor.name,
+        character: actor.character || "Cast Member",
+        image: actor.profile_path
+          ? `https://image.tmdb.org/t/p/w300${actor.profile_path}`
+          : "assets/profile-avatar.jpg",
+      })),
       episodes: season1Episodes,
       seasonsCount: d.number_of_seasons || 1,
       recommendations: (d.recommendations?.results || [])
@@ -975,5 +973,66 @@ export const apiDiscover = async (req, res) => {
   } catch (error) {
     console.error("Discover API Error:", error);
     res.status(500).json({ results: [], page: 1, totalPages: 1 });
+  }
+};
+export const apiSearch = async (req, res) => {
+  try {
+    const query = req.query.q;
+    const filterType = req.query.type || "all";
+    if (!query || query.trim() === "") return res.json([]);
+
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/search/multi",
+      {
+        params: {
+          api_key: process.env.TMDB_API_KEY,
+          query: query.trim(),
+          page: 1,
+        },
+      },
+    );
+
+    let items = (response.data.results || []).filter(
+      (item) => item.media_type === "movie" || item.media_type === "tv",
+    );
+
+    if (filterType === "movie")
+      items = items.filter((item) => item.media_type === "movie");
+    else if (filterType === "tv")
+      items = items.filter(
+        (item) => item.media_type === "tv" && item.original_language !== "ja",
+      );
+    else if (filterType === "anime")
+      items = items.filter((item) => item.original_language === "ja");
+
+    const results = items.slice(0, 20).map((item) => {
+      const isAnime = item.original_language === "ja";
+      let badge =
+        item.media_type === "movie" ? "Movie" : isAnime ? "Anime" : "Series";
+      const rawYear = (item.release_date || item.first_air_date || "").split(
+        "-",
+      )[0];
+      const score = item.vote_average
+        ? parseFloat(item.vote_average.toFixed(1))
+        : 0;
+
+      return {
+        id: item.id,
+        title: item.title || item.name,
+        mediaType: item.media_type,
+        badge: badge,
+        year: rawYear ? parseInt(rawYear, 10) : "N/A",
+        numericYear: rawYear ? parseInt(rawYear, 10) : 0,
+        score: score > 0 ? score.toFixed(1) : "NR",
+        numericScore: score,
+        genres: item.genre_ids || [],
+        poster: item.poster_path
+          ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+          : "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='255' viewBox='0 0 170 255'%3E%3Crect fill='%2311201f' width='170' height='255'/%3E%3Ctext fill='%23718096' font-family='sans-serif' font-size='14' dy='130' dx='45'%3ENo Poster%3C/text%3E%3C/svg%3E",
+      };
+    });
+    res.json(results);
+  } catch (error) {
+    res.status(500).json([]);
   }
 };

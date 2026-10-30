@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ==================================================
-  // 🌟 1. التنقل بين التبويبات (Tabs Switching)
-  // ==================================================
   const tabBtns = document.querySelectorAll(".settings-tab-btn");
   const panels = document.querySelectorAll(".settings-panel");
 
@@ -9,131 +6,144 @@ document.addEventListener("DOMContentLoaded", () => {
     panels.forEach((panel) => {
       panel.style.display = "none";
     });
-
     const targetPanel = document.getElementById(`tab-${targetTabId}`);
-    if (targetPanel) {
-      targetPanel.style.display = "block";
-    }
+    if (targetPanel) targetPanel.style.display = "block";
 
     tabBtns.forEach((btn) => btn.classList.remove("is-active"));
-    if (activeBtn) {
-      activeBtn.classList.add("is-active");
-    }
+    if (activeBtn) activeBtn.classList.add("is-active");
   }
 
   tabBtns.forEach((btn) => {
     btn.addEventListener("click", function () {
-      const tabId = this.getAttribute("data-tab");
-      switchTab(tabId, this);
+      switchTab(this.getAttribute("data-tab"), this);
     });
   });
 
   // ==================================================
-  // 🌟 2. مزامنة حالة الحساب الخاص (Private Account)
+  // حفظ إعدادات الخصوصية والإشعارات (Preferences)
   // ==================================================
-  const privateAccountToggle = document.getElementById("privateAccountToggle");
+  async function savePreferences(btnElement) {
+    const isPrivate =
+      document.getElementById("privateAccountToggle")?.checked || false;
+    const notifyFollowers =
+      document.getElementById("notifyFollowersToggle")?.checked || false;
+    const notifyReviews =
+      document.getElementById("notifyReviewsToggle")?.checked || false;
+
+    try {
+      const response = await fetch("/api/settings/preferences", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          is_private: isPrivate,
+          notify_new_follower: notifyFollowers,
+          notify_review_interaction: notifyReviews,
+        }),
+      });
+
+      if (response.ok) {
+        const originalText = btnElement.textContent;
+        btnElement.textContent = "Saved Successfully";
+        btnElement.style.backgroundColor = "#0be3e3";
+        setTimeout(() => {
+          btnElement.textContent = originalText;
+          btnElement.style.backgroundColor = "";
+        }, 2000);
+      } else {
+        alert("Failed to save settings.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Server connection failed.");
+    }
+  }
+
   const savePrivacyBtn = document.getElementById("savePrivacyBtn");
+  if (savePrivacyBtn)
+    savePrivacyBtn.addEventListener("click", () =>
+      savePreferences(savePrivacyBtn),
+    );
 
-  // قراءة الحالة المحفوظة مسبقاً لعرضها في السويتش
-  const savedPrivacy = localStorage.getItem("cindrome_is_private");
-  if (privateAccountToggle && savedPrivacy !== null) {
-    privateAccountToggle.checked = savedPrivacy === "true";
-  }
-
-  if (savePrivacyBtn && privateAccountToggle) {
-    savePrivacyBtn.addEventListener("click", () => {
-      const isPrivate = privateAccountToggle.checked;
-      localStorage.setItem("cindrome_is_private", isPrivate);
-
-      // تغذية بصرية بحفظ التعديل
-      const originalText = savePrivacyBtn.textContent;
-      savePrivacyBtn.textContent = "Saved";
-      savePrivacyBtn.style.backgroundColor = "#0be3e3";
-
-      setTimeout(() => {
-        savePrivacyBtn.textContent = originalText;
-        savePrivacyBtn.style.backgroundColor = "";
-      }, 1800);
-    });
-  }
-
-  // ==================================================
-  // 🌟 3. تفاعل حفظ الإشعارات (Notification Settings)
-  // ==================================================
   const saveNotificationsBtn = document.getElementById("saveNotificationsBtn");
-  if (saveNotificationsBtn) {
-    saveNotificationsBtn.addEventListener("click", () => {
-      const originalText = saveNotificationsBtn.textContent;
-      saveNotificationsBtn.textContent = "Saved";
-      saveNotificationsBtn.style.backgroundColor = "#0be3e3";
-
-      setTimeout(() => {
-        saveNotificationsBtn.textContent = originalText;
-        saveNotificationsBtn.style.backgroundColor = "";
-      }, 1800);
-    });
-  }
+  if (saveNotificationsBtn)
+    saveNotificationsBtn.addEventListener("click", () =>
+      savePreferences(saveNotificationsBtn),
+    );
 
   // ==================================================
-  // 🌟 4. تغيير الإيميل وكلمة السر (Validation & Feedback)
+  // تحديث الأمان (تغيير الإيميل والباسورد)
   // ==================================================
-  const changeEmailBtn = document.getElementById("changeEmailBtn");
-  const newEmailInput = document.getElementById("newEmailInput");
-
-  if (changeEmailBtn && newEmailInput) {
-    changeEmailBtn.addEventListener("click", () => {
-      const emailValue = newEmailInput.value.trim();
-      if (!emailValue) {
-        newEmailInput.focus();
-        return;
-      }
-      const originalText = changeEmailBtn.textContent;
-      changeEmailBtn.textContent = "Link Sent";
-      setTimeout(() => {
-        changeEmailBtn.textContent = originalText;
-        newEmailInput.value = "";
-      }, 2000);
-    });
-  }
-
   const updatePasswordBtn = document.getElementById("updatePasswordBtn");
-  const currentPassInput = document.getElementById("currentPasswordInput");
-  const newPassInput = document.getElementById("newPasswordInput");
-  const confirmPassInput = document.getElementById("confirmPasswordInput");
+  const changeEmailBtn = document.getElementById("changeEmailBtn");
 
-  if (
-    updatePasswordBtn &&
-    currentPassInput &&
-    newPassInput &&
-    confirmPassInput
-  ) {
-    updatePasswordBtn.addEventListener("click", () => {
-      if (
-        !currentPassInput.value ||
-        !newPassInput.value ||
-        !confirmPassInput.value
-      ) {
-        alert("Please fill in all password fields.");
-        return;
-      }
-      if (newPassInput.value !== confirmPassInput.value) {
-        alert("New passwords do not match.");
-        return;
-      }
+  async function updateSecurity(btnElement, type) {
+    const newEmail = document.getElementById("newEmailInput")?.value.trim();
+    const currentPassword = document
+      .getElementById("currentPasswordInput")
+      ?.value.trim();
+    const newPassword = document
+      .getElementById("newPasswordInput")
+      ?.value.trim();
+    const confirmPassword = document
+      .getElementById("confirmPasswordInput")
+      ?.value.trim();
 
-      const originalText = updatePasswordBtn.textContent;
-      updatePasswordBtn.textContent = "Password Updated";
-      setTimeout(() => {
-        updatePasswordBtn.textContent = originalText;
-        currentPassInput.value = "";
-        newPassInput.value = "";
-        confirmPassInput.value = "";
-      }, 2000);
-    });
+    const payload = {};
+
+    if (type === "email") {
+      if (!newEmail) return alert("Please enter a new email.");
+      payload.newEmail = newEmail;
+    } else if (type === "password") {
+      if (!currentPassword || !newPassword || !confirmPassword)
+        return alert("Please fill in all password fields.");
+      if (newPassword !== confirmPassword)
+        return alert("New passwords do not match.");
+      payload.currentPassword = currentPassword;
+      payload.newPassword = newPassword;
+    }
+
+    try {
+      const response = await fetch("/api/settings/security", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const originalText = btnElement.textContent;
+        btnElement.textContent = "Updated Successfully";
+        setTimeout(() => {
+          btnElement.textContent = originalText;
+          if (type === "email")
+            document.getElementById("newEmailInput").value = "";
+          if (type === "password") {
+            document.getElementById("currentPasswordInput").value = "";
+            document.getElementById("newPasswordInput").value = "";
+            document.getElementById("confirmPasswordInput").value = "";
+          }
+        }, 2000);
+      } else {
+        alert(data.error || "Failed to update security settings.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Server connection failed.");
+    }
   }
 
+  if (changeEmailBtn)
+    changeEmailBtn.addEventListener("click", () =>
+      updateSecurity(changeEmailBtn, "email"),
+    );
+  if (updatePasswordBtn)
+    updatePasswordBtn.addEventListener("click", () =>
+      updateSecurity(updatePasswordBtn, "password"),
+    );
+
   // ==================================================
-  // 🌟 5. نافذة تأكيد حذف الحساب (Delete Account Modal)
+  // نافذة تأكيد حذف الحساب (Delete Account Modal)
   // ==================================================
   const deleteModal = document.getElementById("deleteAccountModal");
   const openDeleteBtn = document.getElementById("openDeleteModalBtn");
@@ -141,28 +151,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
   const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 
-  function openDeleteModal() {
-    if (deleteModal) deleteModal.style.display = "flex";
-  }
-
   function closeDeleteModal() {
     if (deleteModal) deleteModal.style.display = "none";
   }
 
-  if (openDeleteBtn) openDeleteBtn.addEventListener("click", openDeleteModal);
+  if (openDeleteBtn)
+    openDeleteBtn.addEventListener("click", () => {
+      if (deleteModal) deleteModal.style.display = "flex";
+    });
   if (closeDeleteBtn)
     closeDeleteBtn.addEventListener("click", closeDeleteModal);
   if (cancelDeleteBtn)
     cancelDeleteBtn.addEventListener("click", closeDeleteModal);
-
   window.addEventListener("click", (e) => {
     if (e.target === deleteModal) closeDeleteModal();
   });
 
   if (confirmDeleteBtn) {
-    confirmDeleteBtn.addEventListener("click", () => {
-      localStorage.clear();
-      window.location.href = "/sign-in";
+    confirmDeleteBtn.addEventListener("click", async () => {
+      try {
+        const response = await fetch("/api/settings/account", {
+          method: "DELETE",
+        });
+        if (response.ok) {
+          localStorage.clear();
+          window.location.href = "/sign-in";
+        } else {
+          alert("Failed to delete account. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Server connection failed.");
+      }
     });
   }
 });
