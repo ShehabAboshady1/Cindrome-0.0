@@ -1,6 +1,6 @@
-// utils/helpers.js
 import db from "../config/db.js";
 
+// Genre mappings corresponding to TMDB IDs
 export const genreMap = {
   28: "Action",
   12: "Adventure",
@@ -28,6 +28,7 @@ export const genreMap = {
 const sportsRegex =
   /\b(sport|sports|football|soccer|volleyball|basketball|boxing|boxer|baseball|tennis|skating|swimming|swimmer|table tennis|ping pong|badminton|rugby|judo|karate|wrestling|athlete|athletics|striker)\b/i;
 
+// Sanitize comment text and wrap user mentions in styled spans
 export function formatCommentText(text) {
   if (!text) return "";
   let safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -37,6 +38,7 @@ export function formatCommentText(text) {
   return safeText;
 }
 
+// Normalize media object metadata for consistent card display
 export const formatCard = (item, defaultType = "MOVIE", forcedGenre = null) => {
   let mediaType = item.media_type || (defaultType === "MOVIE" ? "movie" : "tv");
   let displayType = defaultType;
@@ -93,6 +95,7 @@ export const formatCard = (item, defaultType = "MOVIE", forcedGenre = null) => {
   };
 };
 
+// Retrieve array of TMDB IDs in user's watchlist
 export async function getUserWatchlistIds(userId) {
   if (!userId) return [];
   try {
@@ -107,6 +110,7 @@ export async function getUserWatchlistIds(userId) {
   }
 }
 
+// Retrieve array of TMDB IDs in user's liked media
 export async function getUserLikedMediaIds(userId) {
   if (!userId) return [];
   try {

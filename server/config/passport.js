@@ -1,9 +1,9 @@
-// config/passport.js
 import passport from "passport";
 import LocalStrategy from "passport-local";
 import bcrypt from "bcrypt";
 import db from "./db.js";
 
+// Local authentication strategy (supports email or username)
 passport.use(
   new LocalStrategy(
     { usernameField: "email", passwordField: "password" },
@@ -27,10 +27,12 @@ passport.use(
   ),
 );
 
+// Serialize user ID to session
 passport.serializeUser((user, cb) => {
   cb(null, user.id);
 });
 
+// Deserialize user and hydrate profile metadata
 passport.deserializeUser(async (id, cb) => {
   try {
     const result = await db.query(

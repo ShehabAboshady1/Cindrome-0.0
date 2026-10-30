@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Search modal visibility controls
   const searchTriggers = document.querySelectorAll(".search-trigger-btn");
   const searchModal = document.getElementById("searchModal");
   const closeSearchBtn = searchModal
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Global search filter type toggles
   const gTypePills = document.querySelectorAll(".g-type-pill");
   gTypePills.forEach((pill) => {
     pill.addEventListener("click", function () {
@@ -27,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Global search filter reset
   const gResetBtn = document.querySelector(".g-reset-filter-btn");
   if (gResetBtn) {
     gResetBtn.addEventListener("click", () => {
@@ -44,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Dropdown text update handlers
   const gDropdownItems = document.querySelectorAll(
     ".g-css-dropdown .g-dropdown-item",
   );
@@ -103,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // Fetch season episodes for log modal
   window.updateLogModalEpisodes = async function (seasonNumber) {
     const mediaIdInput = document.getElementById("logMediaId");
     const epList = document.getElementById("logEpisodeList");
@@ -140,6 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // Log modal setup
   const logModal = document.getElementById("logModal");
   const openLogBtn = document.getElementById("openLogModal");
   const navLogBtn = document.getElementById("navLogBtn");
@@ -154,6 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const logSearchResults = document.getElementById("logSearchResults");
   let searchDebounceTimer = null;
 
+  // Log modal search handler
   if (logSearchInput && logSearchResults) {
     logSearchInput.addEventListener("input", (e) => {
       const query = e.target.value.trim();
@@ -201,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Select media item inside log modal
   async function selectMediaFromSearch(item) {
     logSearchResults.style.display = "none";
     logSearchInput.value = "";
@@ -260,6 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Reset log modal state
   window.resetLogData = function () {
     currentRating = 0;
     stars.forEach((star) => {
@@ -313,9 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (closeLogBtn) closeLogBtn.addEventListener("click", closeLog);
   if (cancelLogBtn) cancelLogBtn.addEventListener("click", closeLog);
 
-  // ==========================================
-  // 🌟 تفاعلات أزرار المودال (بدون عزل - مباشر) 🌟
-  // ==========================================
+  // Log modal toggle buttons
   const likeBtn = document.getElementById("likeToggle");
   const rewatchBtn = document.getElementById("rewatchToggle");
   const spoilerToggleBtn = document.getElementById("spoilerToggle");
@@ -338,9 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
   toggleLogButton(rewatchBtn, "active");
   toggleLogButton(spoilerToggleBtn, "spoiler-active");
 
-  // ==========================================
-  // 🌟 النجوم 🌟
-  // ==========================================
+  // Log rating star interactions
   function updateStars(value) {
     stars.forEach((star, index) => {
       star.classList.remove("fa-solid", "fa-regular", "fa-star-half-stroke");
@@ -374,9 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // =========================================================================
-  // 🌟 SUBMIT LOG MODAL DATA 🌟
-  // =========================================================================
+  // Submit log review/log entry
   const logForms = document.querySelectorAll(".log-form");
 
   logForms.forEach((logForm) => {
@@ -481,9 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // =========================================================================
-  // 🌟 LIST MODAL (CREATE & EDIT) 🌟
-  // =========================================================================
+  // Create and edit list modal handling
   const createListModal = document.getElementById("createListModal");
   const openCreateListBtn = document.getElementById("openCreateListBtn");
   const closeCreateListBtn = document.getElementById("closeCreateListBtn");
@@ -496,7 +497,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "listSearchItemTemplate",
   );
   let listSearchTimer = null;
-  let currentEditListId = null; // 🌟 جديد: تخزين الـ ID لو بنعدل
+  let currentEditListId = null;
 
   function openCreateModal() {
     if (createListModal) createListModal.style.display = "flex";
@@ -510,7 +511,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 🌟 جديد: فتح المودال في وضع الإنشاء (تصفير الداتا)
+  // Open modal in creation mode
   if (openCreateListBtn) {
     openCreateListBtn.addEventListener("click", () => {
       currentEditListId = null;
@@ -521,7 +522,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (modalTitle) modalTitle.textContent = "Create New List";
       if (saveBtn) saveBtn.textContent = "Create List";
 
-      // تصفير الفورم
       if (document.getElementById("listTitle"))
         document.getElementById("listTitle").value = "";
       if (document.getElementById("privacyToggle"))
@@ -532,14 +532,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🌟 جديد: استقبال إشارة التعديل من صفحة Single List (النسخة المضادة للكسر)
+  // Open modal in edit mode via custom event
   window.addEventListener("openEditListMode", (e) => {
     const { list, items } = e.detail;
     currentEditListId = list.id;
 
     openCreateModal();
 
-    // تغيير العناوين
     const modalTitle = document.querySelector(
       "#createListModal .modal-main-title",
     );
@@ -547,36 +546,32 @@ document.addEventListener("DOMContentLoaded", () => {
     if (modalTitle) modalTitle.textContent = "Edit List";
     if (saveBtn) saveBtn.textContent = "Save Changes";
 
-    // ملء اسم القائمة (بندور بالـ ID ولو ملقاهوش بيدور بالكلاس)
     const titleInput =
       document.getElementById("listTitle") ||
       document.querySelector("#createListModal .list-basic-input");
     if (titleInput) titleInput.value = list.title;
 
-    // ملء الخصوصية
     const privacyToggle =
       document.getElementById("privacyToggle") ||
       document.querySelector("#createListModal input[type='checkbox']");
     if (privacyToggle) privacyToggle.checked = list.is_private;
 
-    // رسم الأفلام القديمة
     const addedContainer = document.getElementById("addedItemsContainer");
     const cardTemplate = document.getElementById("miniCardTemplate");
 
     if (addedContainer && cardTemplate) {
-      addedContainer.innerHTML = ""; // نفضي القديم
+      addedContainer.innerHTML = "";
 
       items.forEach((item) => {
         const clone = cardTemplate.content.cloneNode(true);
         const card = clone.querySelector(".modal-mini-card");
 
-        if (!card) return; // لو الكارت مش موجود يعدي للي بعده
+        if (!card) return;
 
         card.dataset.id = item.tmdb_id;
         card.dataset.type = item.media_type;
         card.dataset.rating = item.rating || "NR";
 
-        // بنجيب الصورة بأي تاج <img> عشان نتفادى اختلاف الكلاسات
         const img = card.querySelector("img");
         if (img) {
           img.src = item.poster_path
@@ -588,7 +583,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const titleEl = card.querySelector(".mini-title");
         if (titleEl) titleEl.textContent = item.title;
 
-        // تفعيل السحب والإفلات
         if (typeof attachDragEvents === "function") {
           attachDragEvents(card);
         }
@@ -602,6 +596,7 @@ document.addEventListener("DOMContentLoaded", () => {
     closeCreateListBtn.addEventListener("click", closeCreateModal);
   if (cancelListBtn) cancelListBtn.addEventListener("click", closeCreateModal);
 
+  // Drag and drop reordering for list items
   let draggedItem = null;
 
   function handleDragStart() {
@@ -687,7 +682,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (titleEl) titleEl.textContent = item.title;
 
     attachDragEvents(card);
-    addedItemsContainer.prepend(card); // أو append حسب ما تحب
+    addedItemsContainer.prepend(card);
 
     if (listSearchResults) {
       listSearchResults.innerHTML = "";
@@ -698,6 +693,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Media search within list modal
   if (addMovieSearch && listSearchResults && listSearchItemTemplate) {
     addMovieSearch.addEventListener("input", function () {
       const query = this.value.trim();
@@ -760,9 +756,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================================================================
-  // 🌟 SUBMIT LIST (CREATE & EDIT) 🌟
-  // =========================================================================
+  // Submit list form handler
   const createListForm = document.querySelector("#createListModal .list-form");
 
   if (createListForm) {
@@ -781,7 +775,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // 1. تجميع الأفلام اللي اليوزر ضافها بالترتيب الحالي
       const itemCards = document.querySelectorAll(
         "#addedItemsContainer .modal-mini-card",
       );
@@ -803,19 +796,16 @@ document.addEventListener("DOMContentLoaded", () => {
         };
       });
 
-      // 2. إظهار حالة التحميل
       const originalBtnText = saveBtn.innerHTML;
       saveBtn.disabled = true;
       saveBtn.innerHTML =
         '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
-      // 🌟 جديد: تحديد المسار بناءً على حالة المودال (Create ولا Edit)
       const url = currentEditListId
         ? `/api/lists/${currentEditListId}`
         : "/api/lists/create";
       const method = currentEditListId ? "PUT" : "POST";
 
-      // 3. إرسال البيانات للسيرفر
       try {
         const response = await fetch(url, {
           method: method,
@@ -827,14 +817,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (response.ok) {
           createListModal.style.display = "none";
-
-          if (currentEditListId) {
-            // لو كنا في صفحة single list وعدلنا، نعمل ريفريش لنفس الصفحة
-            window.location.reload();
-          } else {
-            // لو عملنا كرييت، نروح للبروفايل أو نعمل ريفريش
-            window.location.reload();
-          }
+          window.location.reload();
         } else {
           alert(data.error || "Failed to save list.");
           saveBtn.disabled = false;
@@ -849,9 +832,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================================================================
-  // 🌟 GLOBAL SEARCH 🌟
-  // =========================================================================
+  // Global search filtering and state management
   document.addEventListener("click", function (event) {
     const dropdowns = document.querySelectorAll(
       ".css-dropdown, .g-css-dropdown",
@@ -1079,7 +1060,6 @@ document.addEventListener("DOMContentLoaded", () => {
       globalSearchStatus.style.display = "none";
     }
 
-    // 🌟 نقرأ الداتا مرة واحدة بره اللوب عشان الأداء والسرعة 🌟
     const dataEl = document.getElementById("userWatchlistData");
     let userWatchlist = [];
     if (dataEl && dataEl.dataset.watchlist) {
@@ -1111,7 +1091,6 @@ document.addEventListener("DOMContentLoaded", () => {
       detailsLink.href = `/details?id=${item.id}&type=${item.mediaType}`;
 
       if (watchlistBtn) {
-        // نتشيك على الداتا اللي قرأناها
         if (userWatchlist.includes(item.id.toString())) {
           watchlistBtn.classList.add("added");
         } else {

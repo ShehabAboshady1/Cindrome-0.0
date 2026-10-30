@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let searchDebounceTimer = null;
 
+  // Dropdown filter setup
   function setupDiscoverDropdown(dropdownId, textId, filterKey) {
     const dropdown = document.getElementById(dropdownId);
     const textSpan = document.getElementById(textId);
@@ -49,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDiscoverDropdown("discoverSortDropdown", "discoverSortText", "sort");
   setupDiscoverDropdown("discoverYearDropdown", "discoverYearText", "year");
 
+  // Media type selector pills
   if (typePills) {
     typePills.forEach((pill) => {
       pill.addEventListener("click", () => {
@@ -69,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Search input with debounce
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
       clearTimeout(searchDebounceTimer);
@@ -81,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Filter reset button
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
       state.q = "";
@@ -113,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Fetch discover data from API
   async function fetchDiscoverData() {
     if (!cardsGrid) return;
 
@@ -147,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Render cards grid
   function renderCards(items) {
     cardsGrid.innerHTML = "";
 
@@ -170,8 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const title = clone.querySelector(".card-title");
       const meta = clone.querySelector(".meta-row");
       const detailsLink = clone.querySelector(".btn-details");
-
-      // مسكنا زرار الـ Watchlist من القالب
       const watchlistBtn = clone.querySelector(".btn-watchlist");
 
       poster.src = item.poster;
@@ -183,7 +187,6 @@ document.addEventListener("DOMContentLoaded", () => {
       meta.textContent = `${item.genres} • ${item.year}`;
       detailsLink.href = `/details?id=${item.id}&type=${item.mediaType}`;
 
-      // ربط الزرار بدالة الـ toggleWatchlist اللي في main.js
       if (watchlistBtn) {
         const finalType =
           item.mediaType === "tv"
@@ -197,7 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
           `toggleWatchlist(this, ${item.id}, '${finalType}')`,
         );
 
-        // 🌟 لو العمل متضاف بالفعل، نحط كلاس added عشان الزائد يقلب ناقص 🌟
         if (item.is_watchlisted) {
           watchlistBtn.classList.add("added");
           watchlistBtn.setAttribute("title", "Remove from Watchlist");
@@ -208,13 +210,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Render pagination navigation
   function renderPagination() {
     if (!paginationNav) return;
     paginationNav.innerHTML = "";
 
     if (state.totalPages <= 1) return;
 
-    // دالة مساعدة عشان تطلع الشاشة لفوق لشريط الفلاتر بسلاسة
     function scrollToFilters() {
       const filterSection = document.querySelector(".discover-filter-section");
       if (filterSection) {
@@ -222,7 +224,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // زرار PREV
     const prevBtn = document.createElement("button");
     prevBtn.className = `page-btn prev-next ${state.page === 1 ? "disabled" : ""}`;
     prevBtn.type = "button";
@@ -237,7 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     paginationNav.appendChild(prevBtn);
 
-    // أرقام الصفحات
     const pages = getPaginationPages(state.page, state.totalPages);
 
     pages.forEach((p) => {
@@ -262,7 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // زرار NEXT
     const nextBtn = document.createElement("button");
     nextBtn.className = `page-btn prev-next ${state.page === state.totalPages ? "disabled" : ""}`;
     nextBtn.type = "button";
@@ -278,6 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
     paginationNav.appendChild(nextBtn);
   }
 
+  // Calculate visible pagination numbers
   function getPaginationPages(current, total) {
     if (total <= 7) {
       return Array.from({ length: total }, (_, i) => i + 1);

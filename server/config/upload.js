@@ -1,10 +1,10 @@
-// config/upload.js
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Disk storage configuration for user avatars and profile backdrops
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.fieldname === "avatar") {

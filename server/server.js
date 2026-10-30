@@ -1,13 +1,12 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import db from "./config/db.js";
 import session from "express-session";
-import passport from "./config/passport.js";
-import "dotenv/config";
 import connectPgSimple from "connect-pg-simple";
+import "dotenv/config";
 
-// 🌟 استدعاء الـ Routes والمساعدات 🌟
+import db from "./config/db.js";
+import passport from "./config/passport.js";
 import authRoutes from "./routes/authRoutes.js";
 import mediaRoutes from "./routes/mediaRoutes.js";
 import listRoutes from "./routes/listRoutes.js";
@@ -25,6 +24,7 @@ app.use(express.static(path.join(__dirname, "../client")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Persistent session store configuration with PostgreSQL
 app.use(
   session({
     store: new pgSession({
@@ -37,7 +37,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === "production" ? true : false,
+      secure: process.env.NODE_ENV === "production",
     },
   }),
 );
@@ -45,6 +45,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Global template locals for active session and user interactions
 app.use(async (req, res, next) => {
   res.locals.user = req.user;
   if (req.user) {
@@ -57,6 +58,7 @@ app.use(async (req, res, next) => {
   next();
 });
 
+// Application routing layers
 app.use(authRoutes);
 app.use(mediaRoutes);
 app.use(listRoutes);

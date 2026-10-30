@@ -4,9 +4,11 @@ import * as reviewController from "../controllers/reviewController.js";
 
 const router = express.Router();
 
+// Viewing diary and review page routes
 router.get("/diary", ensureAuthenticated, reviewController.renderDiary);
 router.get("/review/:id", reviewController.renderSingleReview);
 
+// Watch log CRUD endpoints
 router.post(
   "/api/reviews/log",
   ensureAuthenticated,
@@ -23,6 +25,7 @@ router.delete(
   reviewController.deleteReview,
 );
 
+// Review social interactions (likes and comments)
 router.post(
   "/api/reviews/:id/like",
   ensureAuthenticated,

@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // =========================================================
-  // UNIFIED COMMENTS SCRIPT (For Reviews & Lists)
-  // =========================================================
+  // Unified comments handling for reviews and lists
   const commentsSection = document.getElementById("comments-section");
   const commentsList = document.getElementById("commentsListContainer");
   const mainCommentTextarea = document.querySelector(
@@ -13,15 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const commentsCountHeader = document.querySelector(".comments-count");
   const commentTemplate = document.getElementById("commentTemplate");
 
-  // قراءة الـ ID والـ Type من הـ Wrapper
   let targetId = null;
-  let targetType = "review"; // افتراضي
+  let targetType = "review";
 
   if (commentsSection) {
     targetId = commentsSection.getAttribute("data-target-id");
     targetType = commentsSection.getAttribute("data-target-type") || "review";
 
-    // Fallback لو الـ ID مش موجود في הـ Data attribute (مثلاً في صفحة الريفيوهات القديمة)
     if (!targetId && targetType === "review") {
       targetId = window.location.pathname.split("/").pop();
     }
@@ -34,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     commentsCountHeader.textContent = count;
   }
 
-  // دالة إنشاء HTML للتعليق الجديد
   function createCommentElement(data, isReply = false) {
     if (!commentTemplate) return null;
     const clone = commentTemplate.content.cloneNode(true);
@@ -71,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return newComment;
   }
 
-  // 1. نشر تعليق أساسي
+  // Submit root comment
   async function postMainComment() {
     if (!mainCommentTextarea || !targetId) return;
     const text = mainCommentTextarea.value.trim();
@@ -133,9 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 2. تفاعلات التعليقات (الردود واللايكات)
+  // Handle comment interactions: replies and likes
   if (commentsList) {
-    // دعم الانتر في حقل الرد
     commentsList.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         const replyTextarea = e.target.closest(
@@ -151,14 +145,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     commentsList.addEventListener("click", async (e) => {
-      // فتح الرد
+      // Toggle reply box
       const replyBtn = e.target.closest(".reply-trigger");
       if (replyBtn) {
         const parentThread = replyBtn.closest(".comment-thread");
         const replyBox = parentThread.querySelector(".inline-reply-box");
 
         if (replyBox) {
-          // 1. نقفل أي صندوق مفتوح في ثريد تاني
           document
             .querySelectorAll(".inline-reply-box.is-active")
             .forEach((b) => {
@@ -172,7 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
             ".comment-interactions",
           );
 
-          // 2. هل الصندوق موجود أصلاً تحت الكومنت ده ومفتوح؟ لو أه، اقفله.
           if (
             replyBox.previousElementSibling === interactionsDiv &&
             replyBox.classList.contains("is-active")
@@ -181,7 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // 3. 🌟 السطر السحري: هننقل الصندوق في الـ DOM ليكون تحت الكومنت اللي اتداس عليه 🌟
           interactionsDiv.after(replyBox);
 
           const targetUser =
@@ -207,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // إلغاء الرد
+      // Cancel reply
       const cancelBtn = e.target.closest(".reply-cancel-btn");
       if (cancelBtn) {
         const replyBox = cancelBtn.closest(".inline-reply-box");
@@ -219,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // إرسال الرد
+      // Submit reply
       const sendReplyBtn = e.target.closest(
         ".inline-reply-box .modern-post-btn",
       );
@@ -239,15 +230,11 @@ document.addEventListener("DOMContentLoaded", () => {
           thread.querySelector(".comment-like-btn").dataset.commentId;
         const replyToUser = replyBox.dataset.replyTo || "";
 
-        // 🌟 فصلنا النص لنسختين: واحدة للواجهة وواحدة للداتابيز 🌟
-
-        // 1. النص اللي هيروح للداتابيز (صافي وبدون HTML عشان السيرفر ما يضربش)
         let plainText = replyText;
         if (replyToUser && !replyText.startsWith(replyToUser)) {
           plainText = `${replyToUser} ${replyText}`;
         }
 
-        // 2. النص اللي هيظهر للمستخدم فوراً قبل الـ Refresh (بـ HTML عشان التنسيق)
         let htmlContent = replyText;
         if (replyToUser && !replyText.startsWith(replyToUser)) {
           htmlContent = `<span class="comment-mention">${replyToUser}</span> ${replyText}`;
@@ -263,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              content: plainText, // 👈 بنبعت النص الصافي للسيرفر
+              content: plainText,
               parent_comment_id: parentCommentId,
             }),
           });
@@ -282,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
               {
                 username: data.username,
                 avatar_url: data.avatar_url,
-                content: htmlContent, // 👈 بنعرض النص المتنسق بالـ HTML في الواجهة فوراً
+                content: htmlContent,
                 comment_id: data.comment_id,
               },
               true,
@@ -304,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // لايك للتعليق
+      // Toggle comment like
       const likeCommentBtn = e.target.closest(".comment-like-btn");
       if (likeCommentBtn) {
         const commentId = likeCommentBtn.dataset.commentId;

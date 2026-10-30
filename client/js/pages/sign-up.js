@@ -7,20 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const togglePasswordBtn = document.getElementById("togglePasswordBtn");
   const submitBtn = document.getElementById("submitBtn");
 
-  // عناصر رسائل الخطأ
   const usernameError = document.getElementById("usernameError");
   const emailError = document.getElementById("emailError");
   const passwordError = document.getElementById("passwordError");
   const termsError = document.getElementById("termsError");
 
-  // عناصر فحص كلمة المرور
   const reqLength = document.getElementById("req-length");
   const reqUppercase = document.getElementById("req-uppercase");
   const reqNumberSpecial = document.getElementById("req-number-special");
 
-  // ==================================================
-  // 🌟 1. إظهار وإخفاء كلمة المرور
-  // ==================================================
+  // Toggle password visibility
   if (togglePasswordBtn && passwordInput) {
     togglePasswordBtn.addEventListener("click", () => {
       const isPassword = passwordInput.type === "password";
@@ -35,9 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==================================================
-  // 🌟 2. الفحص الحي لقوة كلمة المرور (Live Validation)
-  // ==================================================
+  // Live password strength validation
   function validatePasswordRequirements(val) {
     const hasLength = val.length >= 8;
     const hasUppercase = /[A-Z]/.test(val);
@@ -69,9 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ==================================================
-  // 🌟 3. التحقق عند الضغط على إنشاء حساب (Submit)
-  // ==================================================
+  // Client-side form submission validation
   signUpForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -80,13 +72,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailVal = emailInput.value.trim();
     const passwordVal = passwordInput.value;
 
-    // إعادة ضبط الأخطاء
     clearError(usernameInput, usernameError);
     clearError(emailInput, emailError);
     clearError(passwordInput, passwordError);
     if (termsError) termsError.classList.remove("show");
 
-    // فحص اسم المستخدم (3 أحرف على الأقل، أحرف وأرقام وشرطة سفلية)
+    // Username validation: minimum 3 alphanumeric characters or underscores
     if (!usernameVal) {
       showError(usernameInput, usernameError, "Username is required");
       isFormValid = false;
@@ -98,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
       isFormValid = false;
     }
 
-    // فحص البريد الإلكتروني
+    // Email format validation
     if (!emailVal) {
       showError(emailInput, emailError, "Email address is required");
       isFormValid = false;
@@ -107,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
       isFormValid = false;
     }
 
-    // فحص شروط كلمة المرور
+    // Password requirements check
     const isPasswordSecure = validatePasswordRequirements(passwordVal);
     if (!passwordVal) {
       showError(passwordInput, passwordError, "Password is required");
@@ -121,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
       isFormValid = false;
     }
 
-    // فحص الموافقة على الشروط
+    // Terms and conditions acceptance check
     if (!termsCheckbox.checked) {
       if (termsError) {
         termsError.textContent = "You must agree to the Terms & Policy";
@@ -131,19 +122,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!isFormValid) return;
-    // ==================================================
-    // 🌟 4. Send Data to Server (Direct Submit)
-    // ==================================================
+
     submitBtn.textContent = "Creating Account...";
     submitBtn.disabled = true;
 
-    // إرسال النموذج مباشرة للسيرفر (سيتجه إلى /register)
     signUpForm.submit();
   });
 
-  // ==================================================
-  // 🌟 5. دوال مساعدة
-  // ==================================================
+  // Validation helpers
   function showError(inputEl, errorEl, message) {
     inputEl.closest(".form-group").classList.add("has-error");
     if (errorEl) errorEl.textContent = message;

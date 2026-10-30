@@ -1,17 +1,19 @@
 import db from "../config/db.js";
 import axios from "axios";
+import bcrypt from "bcrypt";
 
+// Render user watchlist with media details and like statuses
 export const renderWatchlist = async (req, res) => {
   try {
     const query = `
-            SELECT w.status, m.tmdb_id, m.media_type, m.title, m.poster_path, m.run_time, 
-                   m.total_episodes, m.total_seasons, m.rating, m.is_anime,
-                   CASE WHEN l.id IS NOT NULL THEN true ELSE false END AS is_liked
-            FROM watchlist w
-            JOIN media_cache m ON w.tmdb_id = m.tmdb_id AND w.media_type = m.media_type
-            LEFT JOIN liked_media l ON w.user_id = l.user_id AND w.tmdb_id = l.tmdb_id AND w.media_type = l.media_type
-            WHERE w.user_id = $1 ORDER BY w.added_at DESC;
-        `;
+      SELECT w.status, m.tmdb_id, m.media_type, m.title, m.poster_path, m.run_time, 
+             m.total_episodes, m.total_seasons, m.rating, m.is_anime,
+             CASE WHEN l.id IS NOT NULL THEN true ELSE false END AS is_liked
+      FROM watchlist w
+      JOIN media_cache m ON w.tmdb_id = m.tmdb_id AND w.media_type = m.media_type
+      LEFT JOIN liked_media l ON w.user_id = l.user_id AND w.tmdb_id = l.tmdb_id AND w.media_type = l.media_type
+      WHERE w.user_id = $1 ORDER BY w.added_at DESC;
+    `;
     const result = await db.query(query, [req.user.id]);
     res.render("watchlist.ejs", { watchlistItems: result.rows });
   } catch (error) {
@@ -20,6 +22,7 @@ export const renderWatchlist = async (req, res) => {
   }
 };
 
+// Add or remove media from personal watchlist
 export const toggleWatchlist = async (req, res) => {
   const { tmdb_id, media_type } = req.body;
   if (!tmdb_id || !media_type)
@@ -94,6 +97,7 @@ export const toggleWatchlist = async (req, res) => {
   }
 };
 
+// Toggle like on media item
 export const toggleLike = async (req, res) => {
   const { tmdb_id, media_type } = req.body;
   if (!tmdb_id || !media_type)
@@ -167,10 +171,11 @@ export const toggleLike = async (req, res) => {
   }
 };
 
+// Toggle follower relationship
 export const toggleFollow = async (req, res) => {
   const followerId = req.user.id;
   const { followingId } = req.body;
-  if (!followingId || followerId === parseInt(followingId))
+  if (!followingId || followerId === parseInt(followingId, 10))
     return res.status(400).json({ error: "Invalid operation" });
   try {
     const checkResult = await db.query(
@@ -194,17 +199,16 @@ export const toggleFollow = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
-// إضافة لملف controllers/userController.js
 
-// تحديث دالة renderSettings
+// Render user settings dashboard
 export const renderSettings = async (req, res) => {
   try {
     const query = `
-            SELECT u.email, s.is_private, s.notify_new_follower, s.notify_review_interaction
-            FROM users u
-            LEFT JOIN user_settings s ON u.id = s.user_id
-            WHERE u.id = $1
-        `;
+      SELECT u.email, s.is_private, s.notify_new_follower, s.notify_review_interaction
+      FROM users u
+      LEFT JOIN user_settings s ON u.id = s.user_id
+      WHERE u.id = $1
+    `;
     const result = await db.query(query, [req.user.id]);
     if (result.rows.length === 0) return res.redirect("/");
 
@@ -215,15 +219,15 @@ export const renderSettings = async (req, res) => {
   }
 };
 
-// 1. تحديث الإعدادات (Privacy & Notifications)
+// Update user preferences (privacy and notification options)
 export const updateSettings = async (req, res) => {
   const { is_private, notify_new_follower, notify_review_interaction } =
     req.body;
   try {
     await db.query(
       `UPDATE user_settings 
-             SET is_private = $1, notify_new_follower = $2, notify_review_interaction = $3 
-             WHERE user_id = $4`,
+       SET is_private = $1, notify_new_follower = $2, notify_review_interaction = $3 
+       WHERE user_id = $4`,
       [is_private, notify_new_follower, notify_review_interaction, req.user.id],
     );
     res.status(200).json({ message: "Settings updated successfully" });
@@ -233,11 +237,10 @@ export const updateSettings = async (req, res) => {
   }
 };
 
-// 2. تحديث الحساب (Email & Password)
+// Update account security credentials (email or password)
 export const updateAccountSecurity = async (req, res) => {
   const { newEmail, currentPassword, newPassword } = req.body;
   try {
-    // لو باعت باسووردات، نتأكد الأول إن الباسوورد القديم صح
     if (currentPassword && newPassword) {
       const userRes = await db.query(
         "SELECT password_hash FROM users WHERE id = $1",
@@ -257,9 +260,7 @@ export const updateAccountSecurity = async (req, res) => {
       ]);
     }
 
-    // تحديث الإيميل لو موجود ومختلف
     if (newEmail && newEmail !== req.user.email) {
-      // نتشيك إن الإيميل مش متسجل قبل كده
       const checkEmail = await db.query(
         "SELECT id FROM users WHERE email = $1 AND id != $2",
         [newEmail, req.user.id],
@@ -280,11 +281,9 @@ export const updateAccountSecurity = async (req, res) => {
   }
 };
 
-// 3. حذف الحساب بالكامل (Danger Zone)
+// Delete user account and cascade associated records
 export const deleteAccount = async (req, res) => {
   try {
-    // بما إننا عاملين قواعد Foreign Keys صح في الداتابيز (غالباً)، فمسح اليوزر هيمسح كل حاجة مرتبطة بيه
-    // بس للضمان هنمسح بالترتيب: الإعدادات، البروفايل، ثم اليوزر
     await db.query("BEGIN");
 
     await db.query("DELETE FROM user_settings WHERE user_id = $1", [
@@ -308,15 +307,16 @@ export const deleteAccount = async (req, res) => {
   }
 };
 
+// Render complete user profile including stats, lists, and activity history
 export const renderProfile = async (req, res, next) => {
   try {
     const requestedUsername = req.params.username;
     const query = `
-            SELECT u.id, u.username, u.email, s.is_private, s.notify_new_follower, s.notify_review_interaction,
-                   p.display_name, p.bio, p.avatar_url, p.backdrop_url
-            FROM users u LEFT JOIN user_settings s ON u.id = s.user_id LEFT JOIN user_profiles p ON u.id = p.user_id
-            WHERE u.username = $1
-        `;
+      SELECT u.id, u.username, u.email, s.is_private, s.notify_new_follower, s.notify_review_interaction,
+             p.display_name, p.bio, p.avatar_url, p.backdrop_url
+      FROM users u LEFT JOIN user_settings s ON u.id = s.user_id LEFT JOIN user_profiles p ON u.id = p.user_id
+      WHERE u.username = $1
+    `;
     const result = await db.query(query, [requestedUsername]);
     if (result.rows.length === 0) return res.status(404).send("User not found");
     const profileUser = result.rows[0];
@@ -368,11 +368,11 @@ export const renderProfile = async (req, res, next) => {
       ).rows;
 
     const statsQuery = `
-            SELECT r.tmdb_id, r.media_type, r.season_number, r.episode_number, m.run_time, m.total_episodes, m.total_seasons,
-            EXISTS (SELECT 1 FROM reviews r2 WHERE r2.user_id = $1 AND r2.tmdb_id = r.tmdb_id AND r2.media_type = r.media_type AND r2.season_number IS NULL) as watched_all
-            FROM (SELECT DISTINCT ON (tmdb_id, media_type) * FROM reviews WHERE user_id = $1 ORDER BY tmdb_id, media_type, watch_date DESC, created_at DESC) r
-            JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
-        `;
+      SELECT r.tmdb_id, r.media_type, r.season_number, r.episode_number, m.run_time, m.total_episodes, m.total_seasons,
+      EXISTS (SELECT 1 FROM reviews r2 WHERE r2.user_id = $1 AND r2.tmdb_id = r.tmdb_id AND r2.media_type = r.media_type AND r2.season_number IS NULL) as watched_all
+      FROM (SELECT DISTINCT ON (tmdb_id, media_type) * FROM reviews WHERE user_id = $1 ORDER BY tmdb_id, media_type, watch_date DESC, created_at DESC) r
+      JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
+    `;
     const statsRes = await db.query(statsQuery, [profileUser.id]);
 
     let statsMovies = 0,
@@ -382,7 +382,7 @@ export const renderProfile = async (req, res, next) => {
       finalWatchedCount = 0;
     statsRes.rows.forEach((row) => {
       let runtime =
-        parseInt(row.run_time) || (row.media_type === "anime" ? 24 : 45);
+        parseInt(row.run_time, 10) || (row.media_type === "anime" ? 24 : 45);
       if (row.media_type === "movie" || row.watched_all) {
         finalWatchedCount++;
         if (row.media_type === "movie") statsMovies++;
@@ -391,20 +391,20 @@ export const renderProfile = async (req, res, next) => {
       }
       if (row.media_type === "movie") totalWatchMinutes += runtime;
       else {
-        const totalEps = parseInt(row.total_episodes) || 1;
+        const totalEps = parseInt(row.total_episodes, 10) || 1;
         if (row.watched_all) totalWatchMinutes += totalEps * runtime;
         else {
-          const totalSeasons = parseInt(row.total_seasons) || 1;
+          const totalSeasons = parseInt(row.total_seasons, 10) || 1;
           const avgEpsPerSeason = totalEps / totalSeasons;
           let estimatedEpsWatched =
-            (parseInt(row.season_number) || 1 - 1) * avgEpsPerSeason +
-            (parseInt(row.episode_number) || 0);
+            (parseInt(row.season_number, 10) || 1 - 1) * avgEpsPerSeason +
+            (parseInt(row.episode_number, 10) || 0);
           if (
             estimatedEpsWatched > totalEps ||
-            (parseInt(row.episode_number) || 0) > avgEpsPerSeason
+            (parseInt(row.episode_number, 10) || 0) > avgEpsPerSeason
           )
             estimatedEpsWatched = Math.min(
-              parseInt(row.episode_number) || 0,
+              parseInt(row.episode_number, 10) || 0,
               totalEps,
             );
           totalWatchMinutes += Math.round(estimatedEpsWatched) * runtime;
@@ -420,10 +420,10 @@ export const renderProfile = async (req, res, next) => {
       )
     ).rows
       .map((item) => {
-        const totalEps = parseInt(item.total_episodes) || 0,
-          totalSeasons = parseInt(item.total_seasons) || 1,
-          currentSeason = parseInt(item.season_number) || 1,
-          currentEp = parseInt(item.episode_number) || 0;
+        const totalEps = parseInt(item.total_episodes, 10) || 0,
+          totalSeasons = parseInt(item.total_seasons, 10) || 1,
+          currentSeason = parseInt(item.season_number, 10) || 1,
+          currentEp = parseInt(item.episode_number, 10) || 0;
         let progressPercentage = 0,
           progressText = `Season ${currentSeason} • Episode ${currentEp}`;
         if (totalEps > 0) {

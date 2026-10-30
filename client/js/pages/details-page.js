@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ==========================================
-  // 🌟 1. تفاعلات ولوجيك زرار الـ Log 🌟
-  // ==========================================
+  // Log modal trigger and state reset
   const openLogBtn = document.getElementById("openLogModal");
 
   function resetLocalLogState() {
@@ -43,9 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==========================================
-  // 🌟 4. تشغيل زرار الـ Like في المراجعات 🌟
-  // ==========================================
+  // Review like toggle handler
   const reviewLikeBtns = document.querySelectorAll(".review-like-btn");
   reviewLikeBtns.forEach((btn) => {
     btn.addEventListener("click", async function (e) {
@@ -66,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
             this.querySelector(".like-count") ||
             this.querySelector("span:last-child");
           const icon = this.querySelector("i");
-          let count = parseInt(countSpan.textContent) || 0;
+          let count = parseInt(countSpan.textContent, 10) || 0;
 
           if (data.status === "added") {
             this.classList.add("is-liked");
@@ -85,9 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
-  // ==========================================
-  // 🌟 5. تبديل المواسم وجلب الحلقات ديناميكياً (المُعدل) 🌟
-  // ==========================================
+
+  // Dynamic season switcher and episodes loader
   const seasonsSection = document.getElementById("sec-episodes");
   if (seasonsSection) {
     const tvId = seasonsSection.getAttribute("data-tv-id");
@@ -96,14 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     seasonBtns.forEach((btn) => {
       btn.addEventListener("click", async () => {
-        // تفعيل الزر المختار وإلغاء تفعيل البقية
         seasonBtns.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
 
         const seasonNum = btn.getAttribute("data-season");
         if (!episodesContainer || !tvId) return;
 
-        // إشعار تحميل سريع ومريح
         episodesContainer.innerHTML =
           '<p style="color: var(--accent-teal, #00b4d8); padding: 12px; font-size: 0.9rem;">Loading episodes...</p>';
 
@@ -117,7 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // رسم الحلقات الجديدة مباشرة داخل نفس الحاوية
           episodesContainer.innerHTML = episodes
             .map((ep) => {
               const epNum =
@@ -126,14 +118,14 @@ document.addEventListener("DOMContentLoaded", () => {
                   : ep.episode_number;
               const epTime = ep.runtime ? `${ep.runtime} min` : "45 min";
               return `
-                            <a href="javascript:void(0)" class="ep-row ep-link">
-                                <span class="ep-num">E${epNum}</span>
-                                <div class="ep-info-flex">
-                                    <span class="ep-title">${ep.name}</span>
-                                    <span class="ep-time">${epTime}</span>
-                                </div>
-                            </a>
-                        `;
+                <a href="javascript:void(0)" class="ep-row ep-link">
+                    <span class="ep-num">E${epNum}</span>
+                    <div class="ep-info-flex">
+                        <span class="ep-title">${ep.name}</span>
+                        <span class="ep-time">${epTime}</span>
+                    </div>
+                </a>
+              `;
             })
             .join("");
         } catch (err) {
@@ -145,9 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==========================================
-  // 🌟 6. كشف الحرق (Spoilers) 🌟
-  // ==========================================
+  // Spoiler text reveal
   const blurredReviews = document.querySelectorAll(".review-body.blurred");
   blurredReviews.forEach((review) => {
     review.addEventListener("click", function () {
@@ -159,9 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ==========================================
-  // 🌟 7. أزرار الكاروسيل للـ Reviews 🌟
-  // ==========================================
+  // Reviews carousel navigation
   const reviewsRow = document.getElementById("reviewsRow");
   const reviewPrevBtn = document.getElementById("reviewPrev");
   const reviewNextBtn = document.getElementById("reviewNext");

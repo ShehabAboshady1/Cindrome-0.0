@@ -1,4 +1,4 @@
--- 1. جدول الحسابات الأساسية 
+-- 1. Base Users Table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. جدول بيانات البروفايل 
+-- 2. User Profiles Metadata
 CREATE TABLE user_profiles (
     user_id INT PRIMARY KEY,
     display_name VARCHAR(100),
@@ -17,7 +17,7 @@ CREATE TABLE user_profiles (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 3. جدول إعدادات الحساب
+-- 3. Account Settings and Preferences
 CREATE TABLE user_settings (
     user_id INT PRIMARY KEY,
     is_private BOOLEAN DEFAULT FALSE,
@@ -27,7 +27,16 @@ CREATE TABLE user_settings (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 4. جدول الأنواع المفضلة 
+-- 4. User Sessions (Connect-PG-Simple)
+CREATE TABLE user_sessions (
+    sid VARCHAR NOT NULL COLLATE "default",
+    sess JSON NOT NULL,
+    expire TIMESTAMP(6) NOT NULL,
+    CONSTRAINT session_pkey PRIMARY KEY (sid)
+);
+CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON user_sessions (expire);
+
+-- 5. User Favorite Genres
 CREATE TABLE user_favorite_genres (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
@@ -35,7 +44,7 @@ CREATE TABLE user_favorite_genres (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 5. جدول الكاش للأعمال
+-- 6. Media Cache
 CREATE TABLE media_cache (
     tmdb_id INT,
     media_type VARCHAR(10), 
@@ -49,7 +58,7 @@ CREATE TABLE media_cache (
     PRIMARY KEY (tmdb_id, media_type)
 );
 
--- 6. جدول قائمة المشاهدة (Watchlist)
+-- 7. Watchlist Table
 CREATE TABLE watchlist (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
@@ -61,7 +70,7 @@ CREATE TABLE watchlist (
     FOREIGN KEY (tmdb_id, media_type) REFERENCES media_cache(tmdb_id, media_type) ON DELETE CASCADE
 );
 
--- 7. جدول المفضلة (Liked Media)
+-- 8. Liked Media Table
 CREATE TABLE liked_media (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
@@ -73,7 +82,7 @@ CREATE TABLE liked_media (
     UNIQUE (user_id, tmdb_id, media_type)
 );
 
--- 8. جدول المراجعات واليوميات (Reviews & Logs)
+-- 9. Reviews and Watch Logs
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -91,7 +100,7 @@ CREATE TABLE reviews (
     FOREIGN KEY (tmdb_id, media_type) REFERENCES media_cache(tmdb_id, media_type) ON DELETE CASCADE
 );
 
--- 9. جدول المتابعين (Followers)
+-- 10. Followers Graph
 CREATE TABLE followers (
     id SERIAL PRIMARY KEY,
     follower_id INT NOT NULL,
@@ -101,14 +110,18 @@ CREATE TABLE followers (
     FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE(follower_id, following_id)
 );
+
+-- 11. Lists Table
 CREATE TABLE lists (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
+    is_private BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 12. List Items Table
 CREATE TABLE list_items (
     id SERIAL PRIMARY KEY,
     list_id INTEGER REFERENCES lists(id) ON DELETE CASCADE,
@@ -118,32 +131,36 @@ CREATE TABLE list_items (
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(list_id, tmdb_id, media_type)
 );
--- ==========================================
--- 1. جدول إعجابات المراجعات (Review Likes)
--- ==========================================
+
+-- 13. Review Likes
 CREATE TABLE review_likes (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     review_id INT NOT NULL REFERENCES reviews(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, review_id) -- يمنع اللايك المكرر لنفس الريفيو من نفس اليوزر
+    UNIQUE(user_id, review_id)
 );
 
--- ==========================================
--- 2. جدول تعليقات المراجعات (Review Comments)
--- ==========================================
+-- 14. Review Comments (Threaded)
 CREATE TABLE review_comments (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     review_id INT NOT NULL REFERENCES reviews(id) ON DELETE CASCADE,
-    parent_comment_id INT REFERENCES review_comments(id) ON DELETE CASCADE, -- للردود المتداخلة
+    parent_comment_id INT REFERENCES review_comments(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ==========================================
--- 3. جدول إعجابات القوائم (List Likes)
--- ==========================================
+-- 15. Review Comment Likes
+CREATE TABLE review_comment_likes (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    comment_id INT NOT NULL REFERENCES review_comments(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, comment_id)
+);
+
+-- 16. List Likes
 CREATE TABLE list_likes (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -152,9 +169,7 @@ CREATE TABLE list_likes (
     UNIQUE(user_id, list_id)
 );
 
--- ==========================================
--- 4. جدول تعليقات القوائم (List Comments)
--- ==========================================
+-- 17. List Comments (Threaded)
 CREATE TABLE list_comments (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -163,17 +178,12 @@ CREATE TABLE list_comments (
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE comment_likes (
+
+-- 18. List Comment Likes
+CREATE TABLE list_comment_likes (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    comment_id INT NOT NULL REFERENCES review_comments(id) ON DELETE CASCADE,
+    comment_id INT NOT NULL REFERENCES list_comments(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, comment_id) -- عشان نمنع اليوزر يعمل لايك لنفس الكومنت مرتين
-);
-CREATE TABLE review_comment_likes (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    comment_id INT NOT NULL REFERENCES review_comments(id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, comment_id) -- يمنع اليوزر يعمل لايك مرتين لنفس الكومنت
+    UNIQUE(user_id, comment_id)
 );

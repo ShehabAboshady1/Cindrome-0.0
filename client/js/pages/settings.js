@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Tab switching controls
   const tabBtns = document.querySelectorAll(".settings-tab-btn");
   const panels = document.querySelectorAll(".settings-panel");
 
@@ -19,9 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ==================================================
-  // حفظ إعدادات الخصوصية والإشعارات (Preferences)
-  // ==================================================
+  // Save account preferences (privacy and notifications)
   async function savePreferences(btnElement) {
     const isPrivate =
       document.getElementById("privateAccountToggle")?.checked || false;
@@ -70,9 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
       savePreferences(saveNotificationsBtn),
     );
 
-  // ==================================================
-  // تحديث الأمان (تغيير الإيميل والباسورد)
-  // ==================================================
+  // Update security credentials (email or password)
   const updatePasswordBtn = document.getElementById("updatePasswordBtn");
   const changeEmailBtn = document.getElementById("changeEmailBtn");
 
@@ -142,9 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateSecurity(updatePasswordBtn, "password"),
     );
 
-  // ==================================================
-  // نافذة تأكيد حذف الحساب (Delete Account Modal)
-  // ==================================================
+  // Delete account confirmation modal
   const deleteModal = document.getElementById("deleteAccountModal");
   const openDeleteBtn = document.getElementById("openDeleteModalBtn");
   const closeDeleteBtn = document.getElementById("closeDeleteModalBtn");

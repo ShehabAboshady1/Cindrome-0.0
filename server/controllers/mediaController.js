@@ -1,10 +1,10 @@
-// controllers/mediaController.js
 import axios from "axios";
 import db from "../config/db.js";
 import { formatCard } from "../utils/helpers.js";
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
+// Render home landing page with trending, categories, and top community lists
 export const renderHome = async (req, res) => {
   try {
     const commonParams = { api_key: TMDB_API_KEY, page: 1 };
@@ -86,39 +86,37 @@ export const renderHome = async (req, res) => {
     const filteredTrending = trendingAllRes.data.results.filter(
       (item) => item.vote_count >= 150 && item.vote_average >= 6.0,
     );
-    // ==========================================
-    // Fetch Top Community Lists from Actual Database
-    // ==========================================
+
+    // Fetch top community lists from database
     let topCommunityLists = [];
     try {
       const listsQuery = `
-    SELECT 
-      l.id, 
-      l.title, 
-      u.username AS author,
-      (SELECT COUNT(*) FROM list_items li WHERE li.list_id = l.id) AS "itemsCount",
-      (SELECT COUNT(*) FROM list_likes ll WHERE ll.list_id = l.id) AS likes,
-      (SELECT COUNT(*) FROM list_comments lc WHERE lc.list_id = l.id) AS "commentsCount",
-      (
-        SELECT array_agg(mc.poster_path) 
-        FROM (
-          SELECT tmdb_id, media_type 
-          FROM list_items 
-          WHERE list_id = l.id 
-          ORDER BY order_index ASC 
-          LIMIT 4
-        ) li_sub
-        JOIN media_cache mc ON li_sub.tmdb_id = mc.tmdb_id AND li_sub.media_type = mc.media_type
-      ) AS posters
-    FROM lists l
-    JOIN users u ON l.user_id = u.id
-    WHERE l.is_private = false
-    ORDER BY likes DESC
-    LIMIT 8;
-  `;
+        SELECT 
+          l.id, 
+          l.title, 
+          u.username AS author,
+          (SELECT COUNT(*) FROM list_items li WHERE li.list_id = l.id) AS "itemsCount",
+          (SELECT COUNT(*) FROM list_likes ll WHERE ll.list_id = l.id) AS likes,
+          (SELECT COUNT(*) FROM list_comments lc WHERE lc.list_id = l.id) AS "commentsCount",
+          (
+            SELECT array_agg(mc.poster_path) 
+            FROM (
+              SELECT tmdb_id, media_type 
+              FROM list_items 
+              WHERE list_id = l.id 
+              ORDER BY order_index ASC 
+              LIMIT 4
+            ) li_sub
+            JOIN media_cache mc ON li_sub.tmdb_id = mc.tmdb_id AND li_sub.media_type = mc.media_type
+          ) AS posters
+        FROM lists l
+        JOIN users u ON l.user_id = u.id
+        WHERE l.is_private = false
+        ORDER BY likes DESC
+        LIMIT 8;
+      `;
       const listsResult = await db.query(listsQuery);
       topCommunityLists = listsResult.rows.map((row) => {
-        // Ensure posters array is formatted correctly
         let formattedPosters = [];
         if (row.posters && Array.isArray(row.posters)) {
           formattedPosters = row.posters
@@ -140,7 +138,7 @@ export const renderHome = async (req, res) => {
     } catch (dbErr) {
       console.error("[DB Error fetching community lists]:", dbErr.message);
     }
-    // ==========================================
+
     res.render("index.ejs", {
       heroMovie,
       trendingNow: filteredTrending
@@ -165,10 +163,12 @@ export const renderHome = async (req, res) => {
       mustWatchMovies: [],
       topTVShows: [],
       topAnime: [],
+      topCommunityLists: [],
     });
   }
 };
 
+// Render anime discovery feed
 export const renderAnime = async (req, res) => {
   try {
     const TMDB_URL = "https://api.themoviedb.org/3/discover/tv";
@@ -281,6 +281,7 @@ export const renderAnime = async (req, res) => {
   }
 };
 
+// Render movies catalog
 export const renderMovies = async (req, res) => {
   try {
     const TMDB_MOVIE_URL = "https://api.themoviedb.org/3/discover/movie";
@@ -395,6 +396,7 @@ export const renderMovies = async (req, res) => {
   }
 };
 
+// Render series catalog
 export const renderSeries = async (req, res) => {
   try {
     const TMDB_TV_URL = "https://api.themoviedb.org/3/discover/tv";
@@ -519,6 +521,7 @@ export const renderSeries = async (req, res) => {
   }
 };
 
+// Render media details page with credits, seasons, and user reviews
 export const renderDetails = async (req, res) => {
   try {
     const mediaId = req.query.id || "1396";
@@ -673,6 +676,7 @@ export const renderDetails = async (req, res) => {
   }
 };
 
+// Fetch season episodes from TMDB
 export const getSeasonEpisodes = async (req, res) => {
   try {
     const { id, seasonNumber } = req.params;
@@ -689,7 +693,7 @@ export const getSeasonEpisodes = async (req, res) => {
 
 export const renderDiscover = (req, res) => res.render("discover.ejs");
 
-// 🌟 القاموس ودالة الـ format الخاصة بالـ Discover 🌟
+// TMDB Genre definitions for discover mapping
 const TMDB_GENRES = {
   28: "Action",
   12: "Adventure",
@@ -753,6 +757,7 @@ function formatDiscoverItem(item) {
   };
 }
 
+// Media discover endpoint with multi-criteria filtering
 export const apiDiscover = async (req, res) => {
   try {
     const {
@@ -1030,6 +1035,8 @@ export const apiDiscover = async (req, res) => {
     res.status(500).json({ results: [], page: 1, totalPages: 1 });
   }
 };
+
+// Global media search endpoint across movies, series, and anime
 export const apiSearch = async (req, res) => {
   try {
     const query = req.query.q;

@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ==========================================
-  // 🌟 تعريف العناصر الأساسية في الصفحة
-  // ==========================================
+  // DOM element selections
   const dromeInput = document.getElementById("dromeInput");
   const mainSendBtn = document.getElementById("mainSendBtn");
   const sendBtnIcon = document.getElementById("sendBtnIcon");
@@ -19,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentFocusText = document.getElementById("currentFocusText");
   const contentDropdown = document.getElementById("contentDropdown");
 
-  // استدعاء القوالب (Templates)
+  // Chat bubble templates
   const userBubbleTemplate = document.getElementById("userBubbleTemplate");
   const dromeBubbleTemplate = document.getElementById("dromeBubbleTemplate");
   const stopBubbleTemplate = document.getElementById("stopBubbleTemplate");
@@ -30,9 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let isGenerating = false;
   let replyTimeout;
 
-  // ==========================================
-  // 🌟 1. تمدد مربع النص
-  // ==========================================
+  // Auto-resize input textarea based on content
   function autoResize() {
     dromeInput.style.height = "auto";
     dromeInput.style.height = dromeInput.scrollHeight + "px";
@@ -40,9 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   dromeInput.addEventListener("input", autoResize);
 
-  // ==========================================
-  // 🌟 2. إرسال الرسالة (Enter)
-  // ==========================================
+  // Send message on Enter key without Shift
   dromeInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -52,9 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ==========================================
-  // 🌟 3. زرار الإرسال / الإيقاف
-  // ==========================================
+  // Toggle send and stop generation
   mainSendBtn.addEventListener("click", () => {
     if (isGenerating) {
       stopGeneration();
@@ -63,9 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ==========================================
-  // 🌟 4. الزراير الاقتراحية (Prompts)
-  // ==========================================
+  // Suggestion prompt buttons
   promptBtns.forEach((btn) => {
     btn.addEventListener("click", function () {
       if (isGenerating) return;
@@ -76,9 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ==========================================
-  // 🌟 5. قايمة نوع المحتوى (Drop-up)
-  // ==========================================
+  // Focus topic dropdown selector
   focusItems.forEach((item) => {
     item.addEventListener("click", function () {
       currentFocusText.textContent = this.textContent;
@@ -96,9 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ==========================================
-  // 🌟 6. محرك الدردشة (إرسال واستقبال بالقوالب)
-  // ==========================================
+  // Chat engine: message sending and response handling
   function handleSend() {
     const text = dromeInput.value.trim();
     if (text === "" || isGenerating) return;
@@ -122,15 +108,12 @@ document.addEventListener("DOMContentLoaded", () => {
     replyTimeout = setTimeout(() => {
       typingIndicator.classList.add("is-hidden");
 
-      // 1. إنشاء فقاعة الشات الأساسية
       const dromeClone = dromeBubbleTemplate.content.cloneNode(true);
       dromeClone.querySelector(".message-text").innerHTML =
         "I found some great options that match your mood perfectly! Check these out:";
 
-      // 2. هنجيب الحاوية اللي هتشيل الكروت بالعرض
       const cardsRow = dromeClone.querySelector(".chat-cards-row");
 
-      // 3. دالة صغيرة تبنيلنا الكروت بنظافة
       function createCard(title, year, rating, posterSrc, link) {
         const cardClone = chatMovieCardTemplate.content.cloneNode(true);
         cardClone.querySelector(".chat-movie-poster").src = posterSrc;
@@ -156,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return cardClone;
       }
 
-      // 4. إضافة كارتين للتجربة (جنب بعض)
       cardsRow.appendChild(
         createCard(
           "Interstellar",
@@ -213,9 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ==========================================
-  // 🌟 7. زرار مسح المحادثة (New Chat)
-  // ==========================================
+  // Clear conversation
   function clearChat() {
     const bubbles = chatInner.querySelectorAll(
       ".chat-bubble:not(.typing-indicator-bubble)",
@@ -228,9 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   newChatBtn.addEventListener("click", clearChat);
 
-  // ==========================================
-  // 🌟 8. سحب الشاشة لتحت للمسح (Pull to Refresh) للموبايل
-  // ==========================================
+  // Pull-to-refresh interaction for mobile devices
   let pStart = 0;
   let pCurrent = 0;
   const ptrIndicator = document.getElementById("pullToRefreshIndicator");

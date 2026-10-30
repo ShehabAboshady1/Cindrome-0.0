@@ -7,6 +7,7 @@ if (watchlistSection) {
   const cards = document.querySelectorAll(".mini-content-card");
   const gridCountText = document.querySelector(".grid-count-text");
 
+  // Filter watchlist items by query and media type
   function filterCards() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const activeTypeElement =
@@ -60,34 +61,25 @@ if (watchlistSection) {
   }
 }
 
-// =====================================================================
-// 🌟 نظام إظهار الأزرار عند اللمس (للموبايل فقط) - بدون تعارض مع الفلتر 🌟
-// =====================================================================
+// Mobile touch interaction: reveal action bar
 document.addEventListener("DOMContentLoaded", () => {
-  // بنعمل Query جديدة للكروت عشان نضمن إنها تشتغل حتى لو قسم الفلتر مش موجود لسبب ما
   const allCards = document.querySelectorAll(".mini-content-card");
 
-  // بنشغل الكود ده بس لو عرض الشاشة الموبايل أو التابلت
   if (window.innerWidth <= 768 && allCards.length > 0) {
     allCards.forEach((card) => {
       card.addEventListener("click", function (e) {
-        // لو اليوزر داس على زرار من الزراير اللي جوه (زي الحذف أو اللايك)، سيبه ينفذ الأكشن بتاعه
         if (e.target.closest(".mini-bar-btn")) return;
 
-        // بنشوف هل الكارت ده البار بتاعه ظاهر دلوقتي؟
         const isCurrentlyShowing = this.classList.contains("show-bar");
 
-        // نخفي البار من كل الكروت التانية في الصفحة
         allCards.forEach((c) => c.classList.remove("show-bar"));
 
-        // لو مكنش ظاهر، نظهره
         if (!isCurrentlyShowing) {
           this.classList.add("show-bar");
         }
       });
     });
 
-    // لو اليوزر داس في أي مكان فاضي في الصفحة بره الكروت، نخفي كل البارات
     document.addEventListener("click", function (e) {
       if (!e.target.closest(".mini-content-card")) {
         allCards.forEach((c) => c.classList.remove("show-bar"));

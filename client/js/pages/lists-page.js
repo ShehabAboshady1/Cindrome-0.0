@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // عناصر الـ DOM
+  // DOM elements
   const listsGrid = document.getElementById("listsGrid");
   const loader = document.getElementById("listsLoader");
   const noListsMsg = document.getElementById("noListsMsg");
@@ -8,16 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const paginationContainer = document.getElementById("paginationContainer");
   const listCardTemplate = document.getElementById("listCardTemplate");
 
-  // حالة التطبيق (State)
+  // State management
   let currentSearch = "";
   let currentFilter = "Popular";
   let currentPage = 1;
 
-  // ==========================================
-  // 1. جلب البيانات من السيرفر (Fetch)
-  // ==========================================
+  // Fetch lists from API
   async function fetchLists() {
-    // إظهار اللودر
     if (listsGrid) listsGrid.innerHTML = "";
     if (loader) loader.style.display = "block";
     if (noListsMsg) noListsMsg.style.display = "none";
@@ -35,9 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ==========================================
-  // 2. بناء الكروت (Render)
-  // ==========================================
+  // Render list cards
   function renderLists(lists) {
     if (loader) loader.style.display = "none";
     if (listsGrid) listsGrid.innerHTML = "";
@@ -51,13 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const clone = listCardTemplate.content.cloneNode(true);
       const card = clone.querySelector(".list-card");
 
-      // البوسترات (لو القائمة فاضية هنحط ديفولت)
+      // Handle posters with fallback defaults
       const posters = list.preview_posters || [];
       const posterElements = card.querySelectorAll(".stack-poster");
       posterElements.forEach((img, idx) => {
         if (posters[idx]) {
           img.src = posters[idx].startsWith("http")
-            ? posters[i]
+            ? posters[idx]
             : `https://image.tmdb.org/t/p/w500${posters[idx]}`;
           img.style.opacity = "1";
           img.style.filter = "none";
@@ -72,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
       });
 
-      // رابط القائمة بالكامل (البوسترات والعنوان)
+      // Card link targets
       const listUrl = `/single-list?id=${list.list_id}`;
       card
         .querySelector(".poster-stack")
@@ -82,18 +77,18 @@ document.addEventListener("DOMContentLoaded", () => {
       titleEl.textContent = list.title;
       titleEl.href = listUrl;
 
-      // اليوزر
+      // Author details
       const authorLink = card.querySelector(".list-author-link");
       authorLink.textContent = `@${list.username}`;
       authorLink.href = `/profile/${list.username}`;
 
-      // العدد
+      // Total items count
       card.querySelector(".count-num").textContent = list.total_items;
 
-      // اللايكات والكومنتات
+      // Likes and comments setup
       const likeBtn = card.querySelector(".like-btn");
       likeBtn.setAttribute("data-list-id", list.list_id);
-      if (list.is_liked_by_user) likeBtn.classList.add("is-liked", "liked"); // 'liked' عشان ה-CSS القديم
+      if (list.is_liked_by_user) likeBtn.classList.add("is-liked", "liked");
       card.querySelector(".like-count").textContent = formatNumber(
         list.likes_count,
       );
@@ -104,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         list.comments_count,
       );
 
-      // تفعيل زرار اللايك
+      // Like interaction
       likeBtn.addEventListener("click", async function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -117,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (res.ok) {
             const data = await res.json();
             const span = this.querySelector(".like-count");
-            let count = parseInt(span.textContent.replace(/,/g, "")) || 0;
+            let count = parseInt(span.textContent.replace(/,/g, ""), 10) || 0;
             if (data.status === "added") {
               this.classList.add("is-liked", "liked");
               span.textContent = formatNumber(count + 1);
@@ -137,22 +132,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // دالة لتنسيق الأرقام الكبيرة (1.2k)
   function formatNumber(num) {
     if (num >= 1000) return (num / 1000).toFixed(1) + "k";
     return num;
   }
 
-  // ==========================================
-  // 3. Pagination
-  // ==========================================
+  // Pagination navigation controls
   function renderPagination(current, total) {
     if (!paginationContainer) return;
     paginationContainer.innerHTML = "";
 
-    if (total <= 1) return; // مفيش داعي للزراير لو هي صفحة واحدة
+    if (total <= 1) return;
 
-    // زرار Prev
     const prevBtn = document.createElement("button");
     prevBtn.className = `page-btn prev-next ${current === 1 ? "disabled" : ""}`;
     prevBtn.textContent = "PREV";
@@ -165,8 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     paginationContainer.appendChild(prevBtn);
 
-    // زراير الأرقام (مبسطة: بنعرض اول 3 واخر صفحة، او نعرضها بطريقة ذكية)
-    // للحفاظ على بساطة الـ UI هنعرض شوية زراير
     let startPage = Math.max(1, current - 1);
     let endPage = Math.min(total, current + 1);
 
@@ -184,7 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
       paginationContainer.appendChild(btn);
     }
 
-    // زرار Next
     const nextBtn = document.createElement("button");
     nextBtn.className = `page-btn prev-next ${current === total ? "disabled" : ""}`;
     nextBtn.textContent = "NEXT";
@@ -198,11 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
     paginationContainer.appendChild(nextBtn);
   }
 
-  // ==========================================
-  // 4. الأحداث (Events: Search & Filter)
-  // ==========================================
-
-  // البحث
+  // Search input with debounce
   if (searchInput) {
     let timeout = null;
     searchInput.addEventListener("input", (e) => {
@@ -211,11 +195,11 @@ document.addEventListener("DOMContentLoaded", () => {
         currentSearch = e.target.value;
         currentPage = 1;
         fetchLists();
-      }, 500); // 500ms debounce
+      }, 500);
     });
   }
 
-  // الفلتر (Dropdown)
+  // Filter dropdown selection
   if (listsFilterDropdown) {
     const labelText = listsFilterDropdown.querySelector(".dropdown-label-text");
     const items = listsFilterDropdown.querySelectorAll(".dropdown-item");
@@ -246,6 +230,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // التشغيل الأول عند فتح الصفحة
   fetchLists();
 });

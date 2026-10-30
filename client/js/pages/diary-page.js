@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ==========================================
-  // 🌟 1. تفاعلات القوائم المنسدلة (Dropdown Filters)
-  // ==========================================
+  // Dropdown filter toggle interactions
   const dropdownItems = document.querySelectorAll(
     ".diary-filter-section .dropdown-item",
   );
@@ -27,30 +25,24 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   });
 
-  // ==========================================
-  // 🌟 2. تفاعل زرار الحذف (Custom Modal Delete)
-  // ==========================================
+  // Custom delete confirmation modal handling
   const deleteBtns = document.querySelectorAll(".delete-btn");
   const confirmModal = document.getElementById("deleteConfirmModal");
   const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
   const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 
-  let logToDelete = null; // متغير عشان نحفظ فيه بيانات الريفيو اللي هيتحذف
+  let logToDelete = null;
 
-  // لما اليوزر يدوس على أي زرار حذف في القائمة
   deleteBtns.forEach((btn) => {
     btn.addEventListener("click", function () {
-      // نحفظ السطر والـ ID
       logToDelete = {
         row: this.closest(".diary-entry-row"),
         id: this.getAttribute("data-id"),
       };
-      // نظهر المودال بتاعنا بدل الـ Alert القديم
       if (confirmModal) confirmModal.style.display = "flex";
     });
   });
 
-  // لو داس Cancel نلغي العملية ونقفل المودال
   if (cancelDeleteBtn) {
     cancelDeleteBtn.addEventListener("click", () => {
       logToDelete = null;
@@ -58,15 +50,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // لو أكد الحذف (داس Delete)
   if (confirmDeleteBtn) {
     confirmDeleteBtn.addEventListener("click", async () => {
       if (!logToDelete) return;
 
       const { row, id } = logToDelete;
-
-      // نعمل أنيميشن تحميل جوا الزرار
       const originalText = confirmDeleteBtn.innerHTML;
+
       confirmDeleteBtn.innerHTML =
         '<i class="fa-solid fa-spinner fa-spin"></i>';
       confirmDeleteBtn.style.opacity = "0.7";
@@ -78,10 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (response.ok) {
-          // إخفاء المودال فوراً بعد النجاح
           if (confirmModal) confirmModal.style.display = "none";
-
-          // مسح العنصر من الشاشة بـ Fade-out
           row.classList.add("fade-out");
           setTimeout(() => row.remove(), 400);
         } else {
@@ -90,7 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         console.error("Error:", err);
       } finally {
-        // نرجع كل حاجة لأصلها
         logToDelete = null;
         confirmDeleteBtn.innerHTML = originalText;
         confirmDeleteBtn.style.opacity = "1";
@@ -99,9 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==========================================
-  // 🌟 3. تفاعل زرار التعديل (Edit Pre-fill Logic)
-  // ==========================================
+  // Pre-fill log modal for editing existing entries
   const editBtns = document.querySelectorAll(".edit-btn");
   const logModal = document.getElementById("logModal");
   const modalTitle = logModal
@@ -211,19 +195,15 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           seasonSelectors.style.display = "flex";
 
-          // 🌟 الجديد: نكلم TMDB ونبني قائمة المواسم والحلقات زي ما السيرش بيعمل بالظبط 🌟
-          // 🌟 نكلم TMDB ونبني قائمة المواسم والحلقات 🌟
           if (tmdbId) {
             fetch(
               `https://api.themoviedb.org/3/tv/${tmdbId}?api_key=ea76631510d3901482064d17498c07b5`,
             )
               .then((res) => res.json())
               .then(async (data) => {
-                // 🌟 ضفنا async هنا 🌟
                 const totalSeasons = data.number_of_seasons || 1;
                 const seasonList = document.getElementById("logSeasonList");
 
-                // تفريغ وبناء المواسم
                 if (seasonList) {
                   seasonList.innerHTML =
                     '<li class="dropdown-item" onclick="selectDropdownOption(this, \'seasonText\')">All Seasons</li>';
@@ -238,13 +218,11 @@ document.addEventListener("DOMContentLoaded", () => {
                   }
                 }
 
-                // 🌟 نستنى بناء الحلقات يخلص، وبعدين نرجع رقم الحلقة اللي اليوزر مسجله 🌟
                 if (window.updateLogModalEpisodes) {
                   await window.updateLogModalEpisodes(
-                    itemSeason ? parseInt(itemSeason) : 1,
+                    itemSeason ? parseInt(itemSeason, 10) : 1,
                   );
 
-                  // إجبار المودال إنه يكتب رقم الحلقة الصح بعد ما الـ Reset يخلص
                   if (episodeText) {
                     episodeText.textContent = itemEpisode
                       ? `Episode ${itemEpisode}`
@@ -260,7 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (reviewText) reviewText.value = review;
       updateModalStars(rating);
 
-      // هنا بنقرأ الداتا القديمة ونعرضها (مش بنعمل كليك)
       if (isLiked) likeToggle.classList.add("active");
       else likeToggle.classList.remove("active");
 
@@ -274,12 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ==========================================
-  // 🌟 4. تصليحات التعارض مع modals.js 🌟
-  // ==========================================
-  // حذفنا كود الناف بار المكرر اللي كان بيعمل شلل للمودال، وضيفنا الحل ده:
-
-  // 1. إظهار البوستر تلقائياً بعد اختيار نتيجة من البحث في الناف بار
+  // Modal event synchronization and fallback handlers
   const logSearchResults = document.getElementById("logSearchResults");
   if (logSearchResults) {
     logSearchResults.addEventListener("click", () => {
@@ -288,7 +260,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 2. إجبار زراير المودال إنها تنور وتطفي لو الكود اللي بره معرفش يوصلها
   if (likeToggle && !likeToggle.dataset.diaryBound) {
     likeToggle.dataset.diaryBound = "true";
     likeToggle.addEventListener("click", function (e) {

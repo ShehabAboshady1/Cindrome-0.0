@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // =========================================================
-  // 1. تفعيل أزرار المودال (Like, Rewatch, Spoiler)
-  // =========================================================
+  // Modal button toggles (like, rewatch, spoiler)
   const likeBtn = document.getElementById("likeToggle");
   const rewatchBtn = document.getElementById("rewatchToggle");
   const spoilerToggleBtn = document.getElementById("spoilerToggle");
@@ -23,9 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   toggleLogButton(rewatchBtn, "active");
   toggleLogButton(spoilerToggleBtn, "spoiler-active");
 
-  // =========================================================
-  // 2. أزرار الهيدر (Like List, Share)
-  // =========================================================
+  // Header action buttons (like list, share link)
   const listLikeBtn = document.querySelector(
     ".single-list-actions-inline .like-btn",
   );
@@ -49,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const countSpan =
             listLikeBtn.querySelector(".like-count") ||
             listLikeBtn.querySelector("span");
-          let count = parseInt(countSpan.textContent) || 0;
+          let count = parseInt(countSpan.textContent, 10) || 0;
 
           if (data.status === "added") {
             listLikeBtn.classList.add("is-liked");
@@ -92,35 +88,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================================================
-  // 3. الكروت وأزرار القائمة (Delete, Add, Fav)
-  // =========================================================
-
-  // تفعيل زرار مسح القائمة (Custom Modal)
+  // Delete list modal confirmation
   const deleteListBtn = document.getElementById("deleteListBtn");
   const deleteListModal = document.getElementById("deleteListModal");
   const cancelDeleteListBtn = document.getElementById("cancelDeleteListBtn");
   const confirmDeleteListBtn = document.getElementById("confirmDeleteListBtn");
 
   if (deleteListBtn && deleteListModal) {
-    // 1. فتح المودال لما ندوس على زرار Delete List
     deleteListBtn.addEventListener("click", () => {
       deleteListModal.style.display = "flex";
     });
 
-    // 2. قفل المودال لما ندوس Cancel
     cancelDeleteListBtn.addEventListener("click", () => {
       deleteListModal.style.display = "none";
     });
 
-    // 3. قفل المودال لو دوسنا بره في الخلفية السودا
     deleteListModal.addEventListener("click", (e) => {
       if (e.target === deleteListModal) {
         deleteListModal.style.display = "none";
       }
     });
 
-    // 4. تنفيذ المسح الحقيقي لما ندوس Delete في المودال
     confirmDeleteListBtn.addEventListener("click", async () => {
       const listId = deleteListBtn.getAttribute("data-list-id");
       const originalText = confirmDeleteListBtn.innerHTML;
@@ -131,10 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         const res = await fetch(`/api/lists/${listId}`, { method: "DELETE" });
-        const data = await res.json(); // نقرا الداتا اللي رجعت من السيرفر
+        const data = await res.json();
 
         if (res.ok) {
-          // نستخدم الـ username الحقيقي اللي جي من الباك إند
           window.location.href = `/profile/${data.username}`;
         } else {
           alert(data.error || "Failed to delete the list. Please try again.");
@@ -153,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // تفعيل زراير הכروت (لايك ووتش ليست للميديا)
+  // Card interactions (watchlist, favorite, mobile touch bar)
   const cardsGrid = document.querySelector(".single-list-cards-grid");
   const plusIconSvg = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
   const minusIconSvg = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
@@ -166,13 +153,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const tmdb_id = card.dataset.id;
       const media_type = card.dataset.type;
 
-      // لو داس على زرار الوتش ليست (+)
+      // Watchlist toggle
       const addBtn = e.target.closest(".btn-add");
       if (addBtn) {
         e.preventDefault();
         e.stopPropagation();
 
-        // نكلم الداتابيز عشان نضيفه/نمسحه بجد
         fetch("/api/watchlist/toggle", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -188,13 +174,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // لو داس على القلب (Fav)
+      // Favorite toggle
       const favBtn = e.target.closest(".btn-fav");
       if (favBtn) {
         e.preventDefault();
         e.stopPropagation();
 
-        // نكلم الداتابيز عشان يعمل لايك بجد
         fetch("/api/like/toggle", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -205,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // بار الموبايل
+      // Mobile action bar toggle
       if (window.innerWidth <= 768) {
         document
           .querySelectorAll(".mini-content-card.show-bar")
@@ -216,9 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-  // =========================================================
-  // 5. زرار تعديل القائمة (Edit List) - النسخة الآمنة
-  // =========================================================
+
+  // Edit list modal trigger
   const editListTriggerBtn = document.getElementById("editListTriggerBtn");
 
   if (editListTriggerBtn) {
@@ -231,7 +215,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        // قراءة البيانات من الـ HTML وتحويلها لكائنات جافاسكريبت
         const currentList = JSON.parse(dataHelper.getAttribute("data-list"));
         const currentListItems = JSON.parse(
           dataHelper.getAttribute("data-items"),
@@ -242,7 +225,6 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // نبعت إشارة لملف modals.js عشان يفتح المودال ويفرش فيه الداتا
         const event = new CustomEvent("openEditListMode", {
           detail: {
             list: currentList,

@@ -2,24 +2,25 @@ import db from "../config/db.js";
 import axios from "axios";
 import { formatCommentText } from "../utils/helpers.js";
 
+// Render user viewing diary grouped by month and year
 export const renderDiary = async (req, res) => {
   try {
     const query = `
-          SELECT r.id AS review_id, r.tmdb_id, r.media_type, r.rating, r.review_text, r.is_rewatch, r.has_spoilers, r.liked, r.watch_date, r.season_number, r.episode_number,
-          m.title, m.poster_path, m.is_anime, m.run_time, m.total_episodes, m.total_seasons,
-          EXTRACT(YEAR FROM r.watch_date) AS watch_year, TO_CHAR(r.watch_date, 'Month') AS watch_month, EXTRACT(DAY FROM r.watch_date) AS watch_day
-          FROM reviews r JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
-          WHERE r.user_id = $1 ORDER BY r.watch_date DESC, r.created_at DESC
-        `;
+      SELECT r.id AS review_id, r.tmdb_id, r.media_type, r.rating, r.review_text, r.is_rewatch, r.has_spoilers, r.liked, r.watch_date, r.season_number, r.episode_number,
+      m.title, m.poster_path, m.is_anime, m.run_time, m.total_episodes, m.total_seasons,
+      EXTRACT(YEAR FROM r.watch_date) AS watch_year, TO_CHAR(r.watch_date, 'Month') AS watch_month, EXTRACT(DAY FROM r.watch_date) AS watch_day
+      FROM reviews r JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
+      WHERE r.user_id = $1 ORDER BY r.watch_date DESC, r.created_at DESC
+    `;
     const result = await db.query(query, [req.user.id]);
     const allLogs = result.rows;
     const currentYear = new Date().getFullYear();
     const currentYearCount = allLogs.filter(
-      (log) => parseInt(log.watch_year) === currentYear,
+      (log) => parseInt(log.watch_year, 10) === currentYear,
     ).length;
     const groupedLogs = {};
     allLogs.forEach((log) => {
-      const monthYear = `${log.watch_month.trim()} ${log.watch_year}`;
+      const monthYear = `${log.watch_month.trim()}${log.watch_year}`;
       if (!groupedLogs[monthYear]) groupedLogs[monthYear] = [];
       groupedLogs[monthYear].push(log);
     });
@@ -33,15 +34,16 @@ export const renderDiary = async (req, res) => {
   }
 };
 
+// Render single review detail page with likes and threaded comments
 export const renderSingleReview = async (req, res) => {
   try {
     const reviewId = req.params.id;
     const query = `
-          SELECT r.id AS review_id, r.rating, r.review_text, r.watch_date, r.has_spoilers, r.liked, r.season_number, r.episode_number,
-          u.username, p.display_name, p.avatar_url, m.tmdb_id, m.media_type, m.title, m.poster_path, m.is_anime, EXTRACT(YEAR FROM r.watch_date) AS watch_year
-          FROM reviews r JOIN users u ON r.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
-          WHERE r.id = $1
-        `;
+      SELECT r.id AS review_id, r.rating, r.review_text, r.watch_date, r.has_spoilers, r.liked, r.season_number, r.episode_number,
+      u.username, p.display_name, p.avatar_url, m.tmdb_id, m.media_type, m.title, m.poster_path, m.is_anime, EXTRACT(YEAR FROM r.watch_date) AS watch_year
+      FROM reviews r JOIN users u ON r.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN media_cache m ON r.tmdb_id = m.tmdb_id AND r.media_type = m.media_type
+      WHERE r.id = $1
+    `;
     const result = await db.query(query, [reviewId]);
     if (result.rows.length === 0)
       return res.status(404).send("Review not found");
@@ -57,12 +59,12 @@ export const renderSingleReview = async (req, res) => {
       "SELECT COUNT(*) FROM review_likes WHERE review_id = $1",
       [reviewId],
     );
-    const likesCount = parseInt(likesRes.rows[0].count) || 0;
+    const likesCount = parseInt(likesRes.rows[0].count, 10) || 0;
     const commentsRes = await db.query(
       "SELECT COUNT(*) FROM review_comments WHERE review_id = $1",
       [reviewId],
     );
-    const commentsCount = parseInt(commentsRes.rows[0].count) || 0;
+    const commentsCount = parseInt(commentsRes.rows[0].count, 10) || 0;
 
     let isLikedByCurrentUser = false;
     if (req.user) {
@@ -74,12 +76,12 @@ export const renderSingleReview = async (req, res) => {
     }
 
     const commentsQuery = `
-          SELECT c.id, c.content, c.created_at, c.parent_comment_id, u.username, p.avatar_url,
-          (SELECT COUNT(*) FROM review_comment_likes cl WHERE cl.comment_id = c.id) as likes_count,
-          ${req.user ? `EXISTS (SELECT 1 FROM review_comment_likes cl WHERE cl.comment_id = c.id AND cl.user_id = ${req.user.id})` : "false"} as is_liked_by_user
-          FROM review_comments c JOIN users u ON c.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id
-          WHERE c.review_id = $1 ORDER BY c.created_at ASC
-        `;
+      SELECT c.id, c.content, c.created_at, c.parent_comment_id, u.username, p.avatar_url,
+      (SELECT COUNT(*) FROM review_comment_likes cl WHERE cl.comment_id = c.id) as likes_count,
+      ${req.user ? `EXISTS (SELECT 1 FROM review_comment_likes cl WHERE cl.comment_id = c.id AND cl.user_id = ${req.user.id})` : "false"} as is_liked_by_user
+      FROM review_comments c JOIN users u ON c.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id
+      WHERE c.review_id = $1 ORDER BY c.created_at ASC
+    `;
     const commentsDataRes = await db.query(commentsQuery, [reviewId]);
     const allComments = commentsDataRes.rows.map((c) => ({
       ...c,
@@ -107,6 +109,7 @@ export const renderSingleReview = async (req, res) => {
   }
 };
 
+// Log a new watch review entry and cache media metadata
 export const logReview = async (req, res) => {
   const {
     tmdb_id,
@@ -190,6 +193,7 @@ export const logReview = async (req, res) => {
   }
 };
 
+// Update an existing watch log
 export const updateReview = async (req, res) => {
   const {
     rating,
@@ -223,6 +227,7 @@ export const updateReview = async (req, res) => {
   }
 };
 
+// Delete a watch review entry
 export const deleteReview = async (req, res) => {
   try {
     await db.query("DELETE FROM reviews WHERE id = $1 AND user_id = $2", [
@@ -235,6 +240,7 @@ export const deleteReview = async (req, res) => {
   }
 };
 
+// Toggle like on a review
 export const toggleReviewLike = async (req, res) => {
   try {
     const checkResult = await db.query(
@@ -258,6 +264,7 @@ export const toggleReviewLike = async (req, res) => {
   }
 };
 
+// Add a comment to a review
 export const addReviewComment = async (req, res) => {
   const { content, parent_comment_id } = req.body;
   if (!content?.trim()) return res.status(400).json({ error: "Empty comment" });
@@ -266,20 +273,19 @@ export const addReviewComment = async (req, res) => {
       `INSERT INTO review_comments (review_id, user_id, content, parent_comment_id) VALUES ($1, $2, $3, $4) RETURNING id, created_at`,
       [req.params.id, req.user.id, content.trim(), parent_comment_id || null],
     );
-    res
-      .status(200)
-      .json({
-        message: "Comment added",
-        comment_id: result.rows[0].id,
-        created_at: result.rows[0].created_at,
-        username: req.user.username,
-        avatar_url: req.user.avatar_url,
-      });
+    res.status(200).json({
+      message: "Comment added",
+      comment_id: result.rows[0].id,
+      created_at: result.rows[0].created_at,
+      username: req.user.username,
+      avatar_url: req.user.avatar_url,
+    });
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
 };
 
+// Toggle like on a review comment
 export const toggleCommentLike = async (req, res) => {
   try {
     const checkResult = await db.query(

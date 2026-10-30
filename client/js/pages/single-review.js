@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. كشف السبويلر
+  // Spoiler text reveal
   const reviewWrapper = document.getElementById("reviewTextWrapper");
   const spoilerBadge = document.getElementById("spoilerBadge");
 
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (reviewWrapper) reviewWrapper.addEventListener("click", revealSpoiler);
   if (spoilerBadge) spoilerBadge.addEventListener("click", revealSpoiler);
 
-  // 2. أزرار المراجعة (لايك وشير)
+  // Review action buttons (like, share)
   const reviewLikeBtn = document.getElementById("reviewLikeBtn");
   const reviewShareBtn = document.getElementById("reviewShareBtn");
 
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
           const data = await response.json();
           const span = reviewLikeBtn.querySelector("span");
-          let count = parseInt(span.textContent) || 0;
+          let count = parseInt(span.textContent, 10) || 0;
 
           if (data.status === "added") {
             reviewLikeBtn.classList.add("is-liked");
@@ -60,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
           reviewShareBtn.setAttribute("title", "Copy link");
         }, 800);
       } catch (err) {
-        // Fallback for older browsers
         const dummy = document.createElement("input");
         document.body.appendChild(dummy);
         dummy.value = window.location.href;

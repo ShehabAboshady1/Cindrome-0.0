@@ -1,4 +1,3 @@
-// routes/authRoutes.js
 import express from "express";
 import passport from "passport";
 import { upload } from "../config/upload.js";
@@ -7,12 +6,13 @@ import * as authController from "../controllers/authController.js";
 
 const router = express.Router();
 
+// Authentication view routes
 router.get("/sign-in", authController.renderSignIn);
 router.get("/sign-up", authController.renderSignUp);
 router.post("/register", authController.registerUser);
 router.get("/logout", authController.logoutUser);
 
-// مسار الدخول مدمج فيه إعدادات الجلسات الخاصة بـ Passport
+// Local authentication with session cookie duration handling
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user) => {
     if (err) return next(err);
@@ -30,7 +30,7 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-// مسار التعديل بنمرره على طبقة الحماية وبعدين رفع الصور وبعدين اللوجيك
+// Profile update route with file uploads
 router.post(
   "/edit-profile",
   ensureAuthenticated,

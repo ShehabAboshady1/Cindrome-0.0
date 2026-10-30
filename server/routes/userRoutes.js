@@ -4,6 +4,7 @@ import * as userController from "../controllers/userController.js";
 
 const router = express.Router();
 
+// User profile and watchlist routes
 router.get("/watchlist", ensureAuthenticated, userController.renderWatchlist);
 router.post(
   "/api/watchlist/toggle",
@@ -16,9 +17,10 @@ router.post(
   ensureAuthenticated,
   userController.toggleFollow,
 );
-// إضافة لملف routes/userRoutes.js
 
 router.get("/profile/:username", userController.renderProfile);
+
+// Account settings and preferences endpoints
 router.get("/settings", ensureAuthenticated, userController.renderSettings);
 router.put(
   "/api/settings/preferences",
@@ -35,4 +37,5 @@ router.delete(
   ensureAuthenticated,
   userController.deleteAccount,
 );
+
 export default router;

@@ -1,9 +1,5 @@
-// ==========================================
-// CINDROME - GLOBAL MODALS & INTERACTIONS
-// ==========================================
-
 document.addEventListener("DOMContentLoaded", () => {
-  // 🌟 1. تفاعلات نافذة السيرش (Search Modal) 🌟
+  // Search modal controls
   const searchTriggers = document.querySelectorAll(".search-trigger-btn");
   const searchModal = document.getElementById("searchModal");
   const closeSearchBtn = searchModal
@@ -24,10 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 🌟 2. تفاعلات نافذة الـ Log (Log Modal) 🌟
+  // Log modal controls
   const logModal = document.getElementById("logModal");
-  const openLogBtn = document.getElementById("openLogModal"); // لو فيه زرار مخصوص في الـ Hero
-  const navLogBtn = document.getElementById("navLogBtn"); // زرار الـ Navbar
+  const openLogBtn = document.getElementById("openLogModal");
+  const navLogBtn = document.getElementById("navLogBtn");
   const closeLogBtn = document.getElementById("closeLogModalBtn");
   const cancelLogBtn = document.getElementById("cancelLogBtn");
 
@@ -44,13 +40,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (closeLogBtn) closeLogBtn.addEventListener("click", closeLog);
   if (cancelLogBtn) cancelLogBtn.addEventListener("click", closeLog);
 
-  // 🌟 3. الإغلاق عند الضغط خارج النوافذ (في الخلفية السودا) 🌟
+  // Close modals on backdrop click
   window.addEventListener("click", (e) => {
     if (e.target === searchModal) searchModal.style.display = "none";
     if (e.target === logModal) closeLog();
   });
 
-  // 🌟 4. لوجيك نافذة الـ Log الداخلي (التاريخ والزراير) 🌟
+  // Log modal internal inputs and controls
   const dateInput = document.getElementById("watchDate");
   if (dateInput) {
     dateInput.value = new Date().toISOString().split("T")[0];
@@ -70,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // 🌟 5. نظام تقييم النجوم (Star Rating) 🌟
+  // Star rating handler
   const stars = document.querySelectorAll("#logModal .rate-star");
   let currentRating = 0;
 
@@ -107,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 🌟 6. إغلاق قوائم Dropdown عند النقر في الخارج 🌟
+  // Close dropdown menus when clicking outside
   document.addEventListener("click", function (event) {
     const dropdowns = document.querySelectorAll(".css-dropdown");
     dropdowns.forEach((dropdown) => {
@@ -117,41 +113,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-// =========================================================================
-// WATCHLIST TOGGLE LOGIC (Global)
-// =========================================================================
 
+// Global watchlist toggle handler
 async function toggleWatchlist(buttonElement, tmdbId, mediaType) {
   const isHeroBtn = buttonElement.classList.contains("hero-watchlist-btn");
-
-  // حفظ المحتوى القديم عشان لو حصل خطأ نرجعه
   const originalHTML = buttonElement.innerHTML;
 
-  // إظهار حالة التحميل (Spinner)
   if (isHeroBtn) {
     buttonElement.innerHTML = `<span class="default-content"><i class="fa-solid fa-spinner fa-spin"></i> Processing...</span>`;
   } else {
-    // الزرار الصغير في الكارت
     buttonElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
   }
   buttonElement.disabled = true;
 
   try {
-    // إرسال الطلب للسيرفر بتاعنا
     const response = await fetch("/api/watchlist/toggle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tmdb_id: tmdbId, media_type: mediaType }),
     });
 
-    const data = await response.json();
+    await response.json();
 
     if (response.status === 200) {
       buttonElement.classList.toggle("added");
 
       if (buttonElement.classList.contains("mini-bar-btn")) {
         const isAdded = buttonElement.classList.contains("added");
-        // نستخدم الـ SVGs الأصلية بتاعتك للـ + و الـ -
         const minusIcon = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
         const plusIcon = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
 
@@ -169,18 +157,14 @@ async function toggleWatchlist(buttonElement, tmdbId, mediaType) {
     alert("Failed to connect to the server.");
     buttonElement.innerHTML = originalHTML;
   } finally {
-    // نرجع نشغل الزرار تاني سواء نجح أو فشل
     buttonElement.disabled = false;
   }
 }
-// =========================================================================
-// LIKE MEDIA TOGGLE LOGIC (Global)
-// =========================================================================
 
+// Global media like toggle handler
 async function toggleLike(buttonElement, tmdbId, mediaType) {
   const originalHTML = buttonElement.innerHTML;
 
-  // إظهار اللودينج
   buttonElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
   buttonElement.disabled = true;
 
@@ -191,19 +175,15 @@ async function toggleLike(buttonElement, tmdbId, mediaType) {
       body: JSON.stringify({ tmdb_id: tmdbId, media_type: mediaType }),
     });
 
-    const data = await response.json();
+    await response.json();
 
     if (response.status === 200) {
       buttonElement.classList.toggle("liked");
 
-      // لو الزرار ده جوه كارت الوتش ليست (عنده كلاس btn-fav)
       if (buttonElement.classList.contains("btn-fav")) {
-        // هنبدل الكلاس اللي بيغير اللون للـ Accent Teal
         buttonElement.classList.toggle("is-favorited");
-        // ونرجع الـ SVG الأصلي بتاعك مكان علامة التحميل (Spinner) من غير ما نغيره
         buttonElement.innerHTML = originalHTML;
       } else {
-        // ده بتاع الهيرو اللي في صفحة details (بيستخدم FontAwesome)
         const isLiked = buttonElement.classList.contains("liked");
         buttonElement.innerHTML = `<i class="${isLiked ? "fa-solid" : "fa-regular"} fa-heart"></i>`;
       }

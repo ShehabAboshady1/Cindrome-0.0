@@ -1,6 +1,4 @@
-// ==========================================
-// 🌟 دوال التحكم والتنقل العامة
-// ==========================================
+// Profile global navigation and view controls
 
 window.setFollowState = function (state) {
   const followBtn = document.getElementById("followBtn");
@@ -117,6 +115,7 @@ window.selectDropdownOption = function (optionElement, targetSpanId) {
   }
 };
 
+// Edit profile modal initialization and handlers
 function setupEditModal() {
   const modal = document.getElementById("editProfileModal");
   const openBtn = document.getElementById("editProfileBtn");
@@ -124,9 +123,6 @@ function setupEditModal() {
   const cancelBtn = document.getElementById("cancelEditBtn");
   const saveBtn = modal ? modal.querySelector(".btn-save") : null;
 
-  // =====================================
-  // 1. فتح وإغلاق المودال
-  // =====================================
   if (openBtn && modal) {
     openBtn.addEventListener("click", () => {
       modal.classList.add("active");
@@ -149,9 +145,7 @@ function setupEditModal() {
     }
   });
 
-  // =====================================
-  // 2. المعاينة المباشرة للصور قبل الحفظ
-  // =====================================
+  // Avatar and backdrop real-time previews
   const avatarUpload = document.getElementById("avatarUpload");
   const editAvatarPreview = document.getElementById("editAvatarPreview");
 
@@ -182,9 +176,7 @@ function setupEditModal() {
     });
   }
 
-  // =====================================
-  // 3. تجميع البيانات وإرسالها للسيرفر
-  // =====================================
+  // Submit profile edit form
   if (saveBtn) {
     saveBtn.addEventListener("click", async () => {
       const inputs = modal.querySelectorAll(".edit-input");
@@ -247,6 +239,7 @@ function setupEditModal() {
   }
 }
 
+// Create list modal inside profile
 function setupCreateListModal() {
   const addedItemsContainer = document.getElementById("addedItemsContainer");
   const createListModal = document.getElementById("createListModal");
@@ -270,6 +263,7 @@ function setupCreateListModal() {
     if (e.target === createListModal) closeModal();
   });
 
+  // Drag and drop sorting for list items
   let draggedItem = null;
 
   function handleDragStart() {
@@ -337,9 +331,7 @@ function setupCreateListModal() {
   }
 }
 
-// ==========================================
-// 🌟 تشغيل الأحداث (EventListeners)
-// ==========================================
+// Profile page event listeners
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
 
@@ -350,6 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (urlParams.has("private")) {
     window.setPrivacyMode(urlParams.get("private") === "true");
   }
+
   const reviewBodies = document.querySelectorAll(".review-body");
   const MAX_CHARS = 150;
 
@@ -365,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 2. زرار المتابعة (يكلم السيرفر للتبديل الفعلي)
+  // Follow/unfollow toggle interaction
   const followBtn = document.getElementById("followBtn");
   if (followBtn) {
     followBtn.addEventListener("click", async () => {
@@ -413,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 4. القوائم المنسدلة المخصصة
+  // Custom select wrappers handling
   document.querySelectorAll(".custom-select-wrapper").forEach((wrapper) => {
     const trigger = wrapper.querySelector(".custom-select-trigger");
     const triggerSpan = trigger ? trigger.querySelector("span") : null;
@@ -447,11 +440,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 6. تفعيل زرار الإعجاب لكروت الـ Lists والاتصال بالسيرفر
+  // Community list like toggle
   document.querySelectorAll(".list-action-btn.like-btn").forEach((btn) => {
     btn.addEventListener("click", async function (e) {
       e.preventDefault();
-      e.stopPropagation(); // عشان الضغطة ماتفتحش القائمة وتنقلك لصفحة تانية
+      e.stopPropagation();
 
       const listId = this.getAttribute("data-list-id");
       if (!listId) return;
@@ -466,7 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const data = await response.json();
           const countSpan =
             this.querySelector(".like-count") || this.querySelector("span");
-          let count = parseInt(countSpan.textContent) || 0;
+          let count = parseInt(countSpan.textContent, 10) || 0;
 
           if (data.status === "added") {
             this.classList.add("is-liked");
@@ -476,7 +469,6 @@ document.addEventListener("DOMContentLoaded", () => {
             countSpan.textContent = Math.max(0, count - 1);
           }
         } else if (response.status === 401) {
-          // لو مش مسجل دخول
           window.location.href = "/sign-in";
         }
       } catch (error) {
@@ -485,7 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 7. تفعيل زرار الإعجاب لكروت الـ Reviews مع الاتصال بالسيرفر
+  // Review like toggle
   document.querySelectorAll(".review-like-btn").forEach((btn) => {
     btn.addEventListener("click", async function (e) {
       e.preventDefault();
@@ -504,7 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const countSpan =
             this.querySelector(".like-count") || this.querySelector("span");
           const icon = this.querySelector("i");
-          let count = parseInt(countSpan.textContent) || 0;
+          let count = parseInt(countSpan.textContent, 10) || 0;
 
           if (data.status === "added") {
             this.classList.add("is-liked");
@@ -526,24 +518,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupEditModal();
   setupCreateListModal();
-  // ==========================================
-  // 🌟 دالة إزالة العمل من المفضلة في صفحة البروفايل 🌟
-  // ==========================================
+
+  // Remove media from profile favorites
   window.toggleFavoriteProfile = async function (
     btnElement,
     tmdbId,
     mediaType,
   ) {
-    // حفظ المحتوى القديم عشان لو حصل خطأ
     const originalHTML = btnElement.innerHTML;
 
-    // إظهار حالة التحميل (Spinner) جوه الزرار المربع
     btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin" style="font-size: 1.1rem; color: #a0aec0;"></i>`;
     btnElement.disabled = true;
 
     try {
-      // إرسال طلب للسيرفر لإزالة العمل من المفضلة (تأكد إن المسار ده متوافق مع הـ API بتاعك)
-      // في العادة إنت بتستخدم نفس مسار اللوجيك بتاع الـ Like
       const response = await fetch("/api/like/toggle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -551,7 +538,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        // لو النجاح، نخفي الكارت كله بشكل جمالي (Fade out)
         const card = btnElement.closest(".content-card");
         if (card) {
           card.style.transition = "all 0.3s ease";
@@ -559,7 +545,6 @@ document.addEventListener("DOMContentLoaded", () => {
           card.style.opacity = "0";
           setTimeout(() => {
             card.remove();
-            // نقدر هنا نشيك لو مفيش كروت تانية نظهر رسالة "No favorites" بس خلينا نكتفي بالحذف حالياً
           }, 300);
         }
       } else {
@@ -576,17 +561,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // ==========================================
-  // 🌟 نظام الفلترة والترتيب لتاب المراجعات (Reviews) 🌟
-  // ==========================================
-
-  // 1. تحديد زرار الحرق (Toggle) - هنجيبه باستخدام الـ CSS selector لأنه ملوش ID صريح
+  // Review tab filtering and sorting engine
   const spoilersToggle = document.querySelector(
     '.spoiler-toggle-wrapper input[type="checkbox"]',
   );
   const reviewsFeed = document.querySelector(".minimal-reviews-feed");
 
-  // الدالة الرئيسية للفلترة
   function applyFilters() {
     if (!reviewsFeed) return;
 
@@ -594,8 +574,6 @@ document.addEventListener("DOMContentLoaded", () => {
       reviewsFeed.querySelectorAll(".minimal-review-card"),
     );
 
-    // 2. قراءة القيم من الـ Custom Dropdowns بناءً على الكلاس 'selected'
-    // القوائم مترتبة: 0 = Media Type, 1 = Rating, 2 = Sort By (في قسم الـ Reviews)
     const reviewFilters = document.querySelectorAll(
       "#reviews-sidebar-content .custom-select-options",
     );
@@ -623,26 +601,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let visibleCards = [];
 
-    // --- أ: الفلترة ---
     reviewCards.forEach((card) => {
-      const cardType = card.dataset.type; // movie, series, anime
+      const cardType = card.dataset.type;
       const cardRating = parseFloat(card.dataset.rating) || 0;
       const cardSpoiler = card.dataset.spoiler === "true";
 
       let isMatch = true;
 
-      // 1. فلتر الحرق (Spoilers)
       if (!showSpoilers && cardSpoiler) isMatch = false;
 
-      // 2. فلتر نوع المحتوى (movies, series, anime)
-      // لاحظ في الـ HTML إنت كاتب 'movies' بالجمع، وفي الداتا 'movie' بالمفرد، فهنعالجها هنا
       if (selectedMedia !== "all") {
         const expectedType =
           selectedMedia === "movies" ? "movie" : selectedMedia;
         if (cardType !== expectedType) isMatch = false;
       }
 
-      // 3. فلتر التقييم (5, 4, 3)
       if (selectedRating !== "any") {
         const requiredRating = parseFloat(selectedRating);
         if (cardRating < requiredRating) isMatch = false;
@@ -656,10 +629,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // --- ب: الترتيب ---
     visibleCards.sort((a, b) => {
-      const timeA = parseInt(a.dataset.timestamp) || 0;
-      const timeB = parseInt(b.dataset.timestamp) || 0;
+      const timeA = parseInt(a.dataset.timestamp, 10) || 0;
+      const timeB = parseInt(b.dataset.timestamp, 10) || 0;
       const ratingA = parseFloat(a.dataset.rating) || 0;
       const ratingB = parseFloat(b.dataset.rating) || 0;
 
@@ -671,7 +643,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return timeB - timeA;
     });
 
-    // --- ج: إعادة ترتيب الكروت وإظهار/إخفاء رسالة الفلتر ---
     reviewsFeed
       .querySelectorAll(".review-divider")
       .forEach((hr) => hr.remove());
@@ -679,10 +650,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterEmptyState = document.getElementById("filterEmptyState");
 
     if (visibleCards.length === 0) {
-      // لو مفيش كروت، أظهر الرسالة
       if (filterEmptyState) filterEmptyState.style.display = "block";
     } else {
-      // لو في كروت، اخفي الرسالة واعرض الكروت
       if (filterEmptyState) filterEmptyState.style.display = "none";
 
       visibleCards.forEach((card, index) => {
@@ -695,25 +664,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // بننقل الرسالة لآخر الكونتينر عشان تفضل دايماً تحت الكروت
       if (filterEmptyState) reviewsFeed.appendChild(filterEmptyState);
     }
   }
 
-  // 3. ربط الـ Toggle بتاع الحرق
   if (spoilersToggle) {
     spoilersToggle.addEventListener("change", applyFilters);
   }
 
-  // 4. ربط اختيارات القوائم المنسدلة للفلتر
-  // هنسمع الـ Click على أي اختيار جوه قسم الفلتر بتاع الـ Reviews
   const reviewFilterOptions = document.querySelectorAll(
     "#reviews-sidebar-content .custom-option",
   );
   reviewFilterOptions.forEach((option) => {
     option.addEventListener("click", () => {
-      // الجافاسكريبت بتاعك اللي بينقل كلاس 'selected' بيشتغل في نفس وقت الضغطة
-      // بنعمل تأخير صغير جداً (50 مللي ثانية) عشان نضمن إن الدالة بتاعتنا تقرأ القيمة الجديدة
       setTimeout(applyFilters, 50);
     });
   });

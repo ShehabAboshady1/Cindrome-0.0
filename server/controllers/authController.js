@@ -1,10 +1,10 @@
-// controllers/authController.js
 import bcrypt from "bcrypt";
 import db from "../config/db.js";
 
 export const renderSignIn = (req, res) => res.render("sign-in.ejs");
 export const renderSignUp = (req, res) => res.render("sign-up.ejs");
 
+// Register a new user account and initialize profile/settings records
 export const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -62,6 +62,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
+// Terminate user session and redirect
 export const logoutUser = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
@@ -69,6 +70,7 @@ export const logoutUser = (req, res, next) => {
   });
 };
 
+// Update user profile information, uploaded assets, and favorite genres
 export const editProfile = async (req, res) => {
   const userId = req.user.id;
   const { displayName, username, bio, genre1, genre2 } = req.body;
@@ -124,12 +126,10 @@ export const editProfile = async (req, res) => {
         return res
           .status(500)
           .json({ error: "Profile updated, but session refresh failed." });
-      return res
-        .status(200)
-        .json({
-          message: "Profile updated successfully",
-          newUsername: username,
-        });
+      return res.status(200).json({
+        message: "Profile updated successfully",
+        newUsername: username,
+      });
     });
   } catch (error) {
     if (error.code === "23505")
