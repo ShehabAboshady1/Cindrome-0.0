@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - <%= list.title %>
     </title>
     <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/mini-card.css">
@@ -15,18 +16,15 @@
     <link rel="stylesheet" href="/css/pages/single-list.css">
     <link rel="stylesheet" href="/css/modals.css">
     <link rel="stylesheet" href="/css/comments-section.css">
-
 </head>
 
 <body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">
-    <!-- Navbar -->
     <header>
         <%- include("partials/navbar.ejs") %>
     </header>
 
     <main class="single-list-main-section">
-
-        <!-- 1. HEADER (Dynamic) -->
+        <!-- Header -->
         <section class="single-list-header-section">
             <h1 class="single-list-title"
                 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
@@ -40,7 +38,7 @@
                 <img src="<%= list.avatar_url || '/assets/logos/cindrome-logo.png' %>" alt="User Avatar"
                     class="list-author-avatar">
                 <span class="list-author-name">A list by <a href="/profile/<%= list.username %>">@<%= list.username %>
-                    </a></span>
+                            </a></span>
                 <% const dateObj=new Date(list.updated_at || list.created_at); const
                     dateStr=dateObj.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' , day: 'numeric' });
                     %>
@@ -48,10 +46,9 @@
             </div>
         </section>
 
-        <!-- 2. GRID SECTION -->
+        <!-- List Items Grid -->
         <section class="single-list-grid-section">
             <div class="single-list-grid-container">
-
                 <div class="grid-header-meta list-inline-header">
                     <div class="header-meta-left">
                         <span class="grid-count-text">
@@ -63,7 +60,6 @@
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
-                            <!-- Progress is kept static visually until integrated with User Diary -->
                             <span class="progress-numbers">
                                 <%= watchedCount %>/<%= listItems.length %>
                             </span>
@@ -94,6 +90,7 @@
                                 <span>Delete</span>
                             </button>
                             <% } %>
+
                                 <button class="list-action-btn like-btn <%= list.is_liked_by_user ? 'is-liked' : '' %>"
                                     data-list-id="<%= list.id %>">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -118,11 +115,9 @@
                     </div>
                 </div>
 
-                <!-- شبكة الكروت الديناميكية -->
                 <div class="single-list-cards-grid">
                     <% if (listItems && listItems.length> 0) { %>
                         <% listItems.forEach(item=> { %>
-                            <!-- هنضيف الداتا عشان الجافاسكريبت يعرف إحنا بندوس على أي فيلم -->
                             <div class="mini-content-card" data-tooltip="<%= item.title %>"
                                 data-id="<%= item.tmdb_id %>" data-type="<%= item.media_type %>">
                                 <div class="mini-card-media">
@@ -142,7 +137,7 @@
                                                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                             </svg>
                                         </a>
-                                        <!-- الزرار بينور لو هو في الوتش ليست ويقلب أيقونة ناقص -->
+
                                         <button
                                             class="mini-bar-btn btn-add <%= item.is_watchlisted ? 'is-added' : '' %>"
                                             title="<%= item.is_watchlisted ? 'Remove from Watchlist' : 'Add to Watchlist' %>">
@@ -161,7 +156,7 @@
                                                     </svg>
                                                     <% } %>
                                         </button>
-                                        <!-- زرار اللايك بينور لو متسجل -->
+
                                         <button class="mini-bar-btn btn-fav <%= item.is_liked ? 'is-favorited' : '' %>"
                                             title="Favorite">
                                             <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
@@ -183,17 +178,15 @@
             </div>
         </section>
 
-        <!-- 3. MODERN COMMENTS SECTION (DYNAMIC) -->
+        <!-- Comments Section -->
         <%- include("partials/comments-section.ejs", { mainComments: mainComments, commentsCount: commentsCount,
             targetId: list.id, targetType: 'list' }) %>
-
     </main>
 
-    <!-- DELETE LIST CONFIRMATION MODAL -->
+    <!-- Delete List Confirmation Modal -->
     <div class="log-modal-overlay" id="deleteListModal" style="display: none; z-index: 10000;">
         <div class="log-modal-container confirm-modal-container">
             <i class="fa-solid fa-trash-can confirm-icon"></i>
-            <!-- ضفت هنا border: none عشان الخط اللي تحت العنوان يتشال ويبقى شبه الصورة بالظبط -->
             <h2 class="modal-main-title" style="justify-content: center; border-bottom: none; padding-bottom: 0;">Delete
                 List?</h2>
             <p class="confirm-text">Are you sure you want to delete this list? This action cannot be undone.</p>
@@ -203,16 +196,15 @@
             </div>
         </div>
     </div>
+
     <%- include("partials/footer.ejs") %>
         <%- include("partials/modals/search-modal.ejs") %>
             <%- include("partials/modals/log-modal.ejs") %>
-                <!-- المودال الخاص بالقوائم تم إضافته هنا عشان نستخدمه في التعديل لاحقاً -->
                 <%- include("partials/modals/list-modal.ejs") %>
-                    <!-- TEMPLATES FOR LIST MODAL (Search & Add) -->
+
                     <template id="miniCardTemplate">
                         <div class="modal-mini-card mini-content-card" draggable="true" style="margin: 5px;">
                             <div class="mini-card-media" style="pointer-events: none;">
-                                <!-- الجافاسكريبت بيدور على mini-card-poster بالظبط -->
                                 <img src="" alt="" class="mini-card-poster">
                                 <div class="mini-top-rating" style="display: none;"></div>
                             </div>
@@ -237,12 +229,10 @@
                         </div>
                     </template>
 
-                    <!-- العنصر المخفي لتمرير الداتا (اللي إنت عملته ومظبوط 100%) -->
                     <div id="listDataHelper" data-list="<%= JSON.stringify(list || {}) %>"
                         data-items="<%= JSON.stringify(listItems || []) %>" style="display: none;">
                     </div>
 
-                    <!-- استدعاء ملفات الجافاسكريبت -->
                     <script src="/js/modals.js"></script>
                     <script src="/js/comments-section.js"></script>
                     <script src="/js/pages/single-list.js"></script>

@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - Watchlist</title>
     <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/navbar.css">
@@ -24,17 +24,15 @@
         <%- include("partials/navbar.ejs") %>
     </header>
 
-    <!-- WATCHLIST MAIN SECTION -->
     <main class="watchlist-main-section">
-
-        <!-- 1. HEADER (TITLE & BADGE) -->
+        <!-- Header -->
         <section class="watchlist-header-section">
             <h1 class="watchlist-title">Watchlist</h1>
         </section>
 
-        <!-- 2. FILTER BAR SECTION -->
+        <!-- Filter Bar -->
         <section class="watchlist-filter-section" aria-label="Content Filters">
-            <form class="filter-bar-container" role="search" onSubmit="return false;">
+            <form class="filter-bar-container" role="search" onsubmit="return false;">
                 <div class="filter-search-box">
                     <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         aria-hidden="true">
@@ -63,7 +61,8 @@
                 </button>
             </form>
         </section>
-        <!-- 3. MAIN CONTENT GRID -->
+
+        <!-- Watchlist Grid -->
         <section class="watchlist-grid-section">
             <div class="watchlist-grid-container">
                 <div class="grid-header-meta">
@@ -71,29 +70,25 @@
                         <%= typeof watchlistItems !=='undefined' ? watchlistItems.length : 0 %> Titles
                     </span>
                 </div>
+
                 <div class="watchlist-cards-grid">
                     <% if (typeof watchlistItems !=='undefined' && watchlistItems.length> 0) { %>
                         <% watchlistItems.forEach(item=> { %>
-
-                            <!-- 1. إصلاح الفلتر: ترجمة دقيقة للنوع -->
                             <div class="mini-content-card" data-tooltip="<%= item.title %>"
                                 data-type="<%= item.is_anime ? 'anime' : (item.media_type === 'movie' ? 'movies' : 'series') %>"
                                 data-rating="<%= item.rating ? item.rating : 'N/A' %>">
-
                                 <div class="mini-card-media">
-
                                     <% const safePoster=item.poster_path ? 'https://image.tmdb.org/t/p/w500' +
                                         item.poster_path
                                         : "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='150' viewBox='0 0 100 150'%3E%3Crect fill='%2311201f' width='100' height='150'/%3E%3Ctext fill='%23718096' font-family='sans-serif' font-size='12' dy='75' dx='20'%3ENo Poster%3C/text%3E%3C/svg%3E"
                                         ; %>
+
                                         <img src="<%= safePoster %>" alt="<%= item.title %>" class="mini-card-poster"
                                             loading="lazy">
-
                                         <div class="mini-top-rating">★ <%= item.rating ? item.rating : 'N/A' %>
                                         </div>
 
                                         <div class="mini-card-bar">
-                                            <!-- زرار الـ Details بالـ SVG الأصلي -->
                                             <a href="/details?id=<%= item.tmdb_id %>&type=<%= item.media_type %>"
                                                 class="mini-bar-btn btn-info" title="Details">
                                                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
@@ -105,7 +100,6 @@
                                                 </svg>
                                             </a>
 
-                                            <!-- زرار الوتش ليست بالـ SVG الأصلي (-) -->
                                             <button class="mini-bar-btn btn-add added" title="Remove from Watchlist"
                                                 onclick="toggleWatchlist(this, <%= item.tmdb_id %>, '<%= item.media_type %>')">
                                                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
@@ -115,7 +109,6 @@
                                                 </svg>
                                             </button>
 
-                                            <!-- زرار اللايك بالـ SVG الأصلي (لون كريمي / Accent Teal) -->
                                             <button
                                                 class="mini-bar-btn btn-fav <%= item.is_liked ? 'is-favorited' : '' %>"
                                                 title="Favorite"
@@ -141,12 +134,12 @@
                 </div>
             </div>
         </section>
-
     </main>
+
     <%- include("partials/footer.ejs") %>
         <%- include("partials/modals/search-modal.ejs") %>
             <%- include("partials/modals/log-modal.ejs") %>
-                <!-- Scripts -->
+
                 <script src="/js/main.js"></script>
                 <script src="/js/modals.js"></script>
                 <script src="/js/pages/watchlist.js"></script>

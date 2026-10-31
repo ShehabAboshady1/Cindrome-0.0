@@ -2,11 +2,12 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - TV Series</title>
     <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/hero.css">
@@ -21,6 +22,7 @@
         <%- include("partials/navbar.ejs") %>
     </header>
 
+    <!-- Hero Section -->
     <section class="hero-section"
         style="background-image: url('<%= heroSeries && heroSeries.backdrop ? heroSeries.backdrop : '/assets/backdrops/backdrop-sherlock.webp' %>');">
         <div class="hero-overlay"></div>
@@ -73,6 +75,7 @@
         </div>
     </section>
 
+    <!-- Carousel 1: Top Rated & Fan Favorites -->
     <section class="carousel-section">
         <div class="carousel-header">
             <h2 class="carousel-title">🏆 Top Rated & Fan Favorites</h2>
@@ -128,7 +131,7 @@
         </div>
     </section>
 
-    <!-- Carousel Section 2: Action & Sci-Fi Blockbusters -->
+    <!-- Carousel 2: Action & Sci-Fi Blockbusters -->
     <section class="carousel-section">
         <div class="carousel-header">
             <h2 class="carousel-title">⚡ Action & Sci-Fi Blockbusters</h2>
@@ -184,7 +187,7 @@
         </div>
     </section>
 
-    <!-- Carousel Section 3: Crime, Mystery & Thriller -->
+    <!-- Carousel 3: Crime, Mystery & Thriller -->
     <section class="carousel-section">
         <div class="carousel-header">
             <h2 class="carousel-title">🕵️‍♂️ Crime, Mystery & Thriller</h2>
@@ -240,7 +243,7 @@
         </div>
     </section>
 
-    <!-- Carousel Section 4: Horror & Supernatural -->
+    <!-- Carousel 4: Horror & Supernatural -->
     <section class="carousel-section">
         <div class="carousel-header">
             <h2 class="carousel-title">👻 Horror & Supernatural</h2>
@@ -295,9 +298,11 @@
                         <% } %>
         </div>
     </section>
+
     <%- include("partials/footer.ejs") %>
         <%- include("partials/modals/search-modal.ejs") %>
             <%- include("partials/modals/log-modal.ejs") %>
+
                 <script src="/js/modals.js"></script>
                 <script src="/js/carousel.js"></script>
                 <script src="/js/main.js"></script>

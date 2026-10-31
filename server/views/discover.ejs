@@ -2,11 +2,12 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - Discover</title>
     <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/hero.css">
@@ -18,7 +19,6 @@
 </head>
 
 <body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">
-
     <header>
         <%- include("partials/navbar.ejs") %>
     </header>
@@ -28,9 +28,9 @@
         <p class="discover-subtitle">Explore thousands of movies, anime, and series all in one place.</p>
     </section>
 
+    <!-- Filters Bar -->
     <section class="discover-filter-section" aria-label="Content Filters">
-        <form class="filter-bar-container" role="search" onSubmit="return false;">
-
+        <form class="filter-bar-container" role="search" onsubmit="return false;">
             <div class="filter-search-box">
                 <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     aria-hidden="true">
@@ -53,7 +53,6 @@
             <div class="filter-v-divider" role="separator"></div>
 
             <div class="dropdowns-group">
-
                 <details class="css-dropdown" id="discoverGenreDropdown">
                     <summary class="dropdown-selected">
                         <span id="discoverGenreText">Genre</span>
@@ -117,7 +116,6 @@
                         <li class="dropdown-item" data-value="classics">Classics</li>
                     </ul>
                 </details>
-
             </div>
 
             <button class="reset-filter-btn" id="discoverResetBtn" type="button" aria-label="Reset Filters"
@@ -127,13 +125,12 @@
                     <path d="M3 3v5h5"></path>
                 </svg>
             </button>
-
         </form>
     </section>
 
+    <!-- Main Results Grid -->
     <main class="discover-grid-section">
         <div class="discover-grid-container">
-
             <div class="grid-header">
                 <h2 class="grid-title" id="discoverGridTitle">All Content</h2>
             </div>
@@ -179,6 +176,7 @@
     <%- include("partials/footer.ejs") %>
         <%- include("partials/modals/search-modal.ejs") %>
             <%- include("partials/modals/log-modal.ejs") %>
+
                 <script src="/js/modals.js"></script>
                 <script src="/js/pages/discover-page.js"></script>
                 <script src="/js/main.js"></script>

@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - Anime</title>
     <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/navbar.css">
@@ -15,8 +15,6 @@
     <link rel="stylesheet" href="css/carousel.css">
     <link rel="stylesheet" href="css/list.css">
     <link rel="stylesheet" href="css/modals.css">
-
-
 </head>
 
 <body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">
@@ -25,6 +23,7 @@
     </header>
 
     <main>
+        <!-- Hero Section -->
         <section class="hero-section"
             style="background-image: url('<%= heroAnime && heroAnime.backdrop ? heroAnime.backdrop : 'assets/backdrops/backdrop-onepiece.webp' %>');">
             <div class="hero-overlay"></div>
@@ -56,7 +55,6 @@
                         <%= heroAnime ? heroAnime.overview : 'Monkey D. Luffy sets sail with his pirate crew...' %>
                     </p>
                     <div class="hero-actions">
-                        <!-- زر المشاهدة/التفاصيل يوجه مباشرة لصفحة العمل -->
                         <a href="/details?id=<%= heroAnime ? heroAnime.id : '' %>&type=tv" class="btn btn-primary">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M8 5v14l11-7z" />
@@ -76,6 +74,7 @@
             </div>
         </section>
 
+        <!-- Top Rated Section -->
         <section class="carousel-section">
             <div class="carousel-header">
                 <h2 class="carousel-title">🏆 Top Rated & Fan Favorites</h2>
@@ -85,7 +84,6 @@
                 </div>
             </div>
             <div class="carousel-track">
-
                 <% if (topRatedAnime && topRatedAnime.length> 0) { %>
                     <% topRatedAnime.forEach(item=> { %>
                         <div class="content-card">
@@ -109,13 +107,11 @@
                                             <%= item.ageBadge %>
                                         </span>
                                     </div>
-
                                     <div class="meta-row">
                                         <span>
                                             <%= item.subtitle %>
                                         </span>
                                     </div>
-
                                     <div class="card-actions">
                                         <a href="/details?id=<%= item.id %>&type=anime" class="btn-details">Details</a>
                                         <button
@@ -131,13 +127,12 @@
                         </div>
                         <% }); %>
                             <% } else { %>
-                                <!-- Fallback if API fails -->
                                 <p style="color: #aaa; padding: 20px;">Could not load anime at this time.</p>
                                 <% } %>
-
             </div>
         </section>
 
+        <!-- Sports & Competition Section -->
         <section class="carousel-section">
             <div class="carousel-header">
                 <h2 class="carousel-title">⚡ Sports & High-Stakes Competition</h2>
@@ -193,6 +188,7 @@
             </div>
         </section>
 
+        <!-- Mystery & Dark Fantasy Section -->
         <section class="carousel-section">
             <div class="carousel-header">
                 <h2 class="carousel-title">🧠 Mind Games, Mystery & Dark Fantasy</h2>
@@ -245,14 +241,17 @@
                         </div>
                         <% }); %>
                             <% } %>
+            </div>
         </section>
-        <%- include("partials/footer.ejs") %>
-            <%- include("partials/modals/search-modal.ejs") %>
-                <%- include("partials/modals/log-modal.ejs") %>
+    </main>
 
-                    <script src="/js/main.js"></script>
-                    <script src="/js/modals.js"></script>
-                    <script src="/js/carousel.js"></script>
+    <%- include("partials/footer.ejs") %>
+        <%- include("partials/modals/search-modal.ejs") %>
+            <%- include("partials/modals/log-modal.ejs") %>
+
+                <script src="/js/main.js"></script>
+                <script src="/js/modals.js"></script>
+                <script src="/js/carousel.js"></script>
 </body>
 
 </html>

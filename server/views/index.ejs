@@ -2,11 +2,12 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome</title>
     <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/hero.css">
@@ -15,10 +16,6 @@
     <link rel="stylesheet" href="css/carousel.css">
     <link rel="stylesheet" href="css/list.css">
     <link rel="stylesheet" href="css/modals.css">
-
-
-
-
 </head>
 
 <body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">
@@ -27,6 +24,7 @@
     </header>
 
     <main>
+        <!-- Hero Section -->
         <section class="hero-section"
             style="background-image: url('<%= heroMovie && heroMovie.backdrop ? heroMovie.backdrop : 'assets/backdrops/backdrop-odyssey1.webp' %>');">
             <div class="hero-overlay"></div>
@@ -79,7 +77,7 @@
             </div>
         </section>
 
-        <!-- 1️⃣ Trending Now (8 Cards) -->
+        <!-- 1. Trending Now -->
         <section class="carousel-section">
             <div class="carousel-header">
                 <h2 class="carousel-title">🔥 Trending Now</h2>
@@ -98,8 +96,10 @@
                                     <span class="type-badge">
                                         <%= item.type %>
                                     </span>
-                                    <div class="rating-box"><span class="rating-label">TMDB</span><span
-                                            class="rating-score">⭐ <%= item.score %></span></div>
+                                    <div class="rating-box">
+                                        <span class="rating-label">TMDB</span>
+                                        <span class="rating-score">⭐ <%= item.score %></span>
+                                    </div>
                                 </div>
                                 <div class="card-bottom-content">
                                     <div class="title-row">
@@ -118,7 +118,6 @@
                                     <div class="card-actions">
                                         <a href="/details?id=<%= item.id %>&type=<%= item.mediaType %>"
                                             class="btn-details">Details</a>
-                                        <!-- ضفنا حدث onclick هنا برضه -->
                                         <button
                                             class="btn-watchlist <%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'added' : '' %>"
                                             title="<%= locals.watchlistMap && locals.watchlistMap.includes(item.id.toString()) ? 'Remove from Watchlist' : 'Toggle Watchlist' %>"
@@ -135,7 +134,7 @@
             </div>
         </section>
 
-        <!-- 2️⃣ Must-Watch Movies (8 Cards - Using 1 Image Asset & Correct IMDb Rating) -->
+        <!-- 2. Must-Watch Movies -->
         <section class="carousel-section">
             <div class="carousel-header">
                 <h2 class="carousel-title">🎬 Must-Watch Movies</h2>
@@ -154,8 +153,10 @@
                                     <span class="type-badge">
                                         <%= item.type %>
                                     </span>
-                                    <div class="rating-box"><span class="rating-label">TMDB</span><span
-                                            class="rating-score">⭐ <%= item.score %></span></div>
+                                    <div class="rating-box">
+                                        <span class="rating-label">TMDB</span>
+                                        <span class="rating-score">⭐ <%= item.score %></span>
+                                    </div>
                                 </div>
                                 <div class="card-bottom-content">
                                     <div class="title-row">
@@ -189,7 +190,7 @@
             </div>
         </section>
 
-        <!-- 3️⃣ Binge-Worthy Series (8 Cards - The Boys) -->
+        <!-- 3. Top TV Shows -->
         <section class="carousel-section">
             <div class="carousel-header">
                 <h2 class="carousel-title">📺 Top TV Shows</h2>
@@ -208,8 +209,10 @@
                                     <span class="type-badge">
                                         <%= item.type %>
                                     </span>
-                                    <div class="rating-box"><span class="rating-label">TMDB</span><span
-                                            class="rating-score">⭐ <%= item.score %></span></div>
+                                    <div class="rating-box">
+                                        <span class="rating-label">TMDB</span>
+                                        <span class="rating-score">⭐ <%= item.score %></span>
+                                    </div>
                                 </div>
                                 <div class="card-bottom-content">
                                     <div class="title-row">
@@ -243,7 +246,7 @@
             </div>
         </section>
 
-        <!-- 4️⃣ Top Anime Picked for You (8 Cards - One Piece) -->
+        <!-- 4. Top Anime -->
         <section class="carousel-section">
             <div class="carousel-header">
                 <h2 class="carousel-title">⚔️ Top Anime Picked for You</h2>
@@ -262,8 +265,10 @@
                                     <span class="type-badge">
                                         <%= item.type %>
                                     </span>
-                                    <div class="rating-box"><span class="rating-label">TMDB</span><span
-                                            class="rating-score">⭐ <%= item.score %></span></div>
+                                    <div class="rating-box">
+                                        <span class="rating-label">TMDB</span>
+                                        <span class="rating-score">⭐ <%= item.score %></span>
+                                    </div>
                                 </div>
                                 <div class="card-bottom-content">
                                     <div class="title-row">
@@ -297,7 +302,7 @@
             </div>
         </section>
 
-        <!-- 📂 User Custom Lists (3D Stack) -->
+        <!-- 5. Top Community Lists -->
         <section class="lists-section">
             <div class="carousel-header">
                 <h2 class="carousel-title">📁 Top Community Lists</h2>
@@ -312,10 +317,9 @@
                     <% topCommunityLists.forEach(list=> { %>
                         <div class="list-card">
                             <div class="poster-stack">
-                                <!-- لو فيه أقل من 4 أفلام، نكمل بالصورة الديفولت بتاعتك -->
-                                <% for(let i=0; i<4; i++) { %>
-                                    <% if(list.posters && list.posters[i]) { %>
-                                        <img src="<%= list.posters[i] %>" alt="Poster <%= i+1 %>" class="stack-poster"
+                                <% for (let i=0; i < 4; i++) { %>
+                                    <% if (list.posters && list.posters[i]) { %>
+                                        <img src="<%= list.posters[i] %>" alt="Poster <%= i + 1 %>" class="stack-poster"
                                             onerror="this.onerror=null; this.src='assets/posters/default-poster.png';">
                                         <% } else { %>
                                             <img src="assets/posters/default-poster.png" alt="Empty Slot"
@@ -334,7 +338,6 @@
                                                 Titles</span>
                                     </div>
                                     <div class="list-actions">
-                                        <!-- زر الإعجاب للقائمة -->
                                         <button
                                             class="list-action-btn like-btn <%= locals.likedListsMap && locals.likedListsMap.includes(list.id.toString()) ? 'is-liked' : '' %>"
                                             title="Like List" data-list-id="<%= list.id %>">
@@ -347,7 +350,6 @@
                                                 <%= list.likes || 0 %>
                                             </span>
                                         </button>
-                                        <!-- زر التعليقات -->
                                         <a href="/single-list?id=<%= list.id %>" class="list-action-btn comment-btn"
                                             title="Comment" style="text-decoration: none;">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -365,7 +367,6 @@
                         </div>
                         <% }); %>
                             <% } else { %>
-                                <!-- رسالة في حال عدم وجود أي قوائم في الداتابيز بعد -->
                                 <div
                                     style="width: 100%; text-align: center; padding: 40px; color: rgba(241, 227, 200, 0.4);">
                                     <p>No community lists available yet. Be the first to create one!</p>
@@ -374,9 +375,11 @@
             </div>
         </section>
     </main>
+
     <%- include("partials/footer.ejs") %>
         <%- include("partials/modals/search-modal.ejs") %>
             <%- include("partials/modals/log-modal.ejs") %>
+
                 <script src="/js/main.js"></script>
                 <script src="/js/modals.js"></script>
                 <script src="/js/carousel.js"></script>

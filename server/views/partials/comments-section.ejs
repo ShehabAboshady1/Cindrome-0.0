@@ -2,12 +2,14 @@
     data-target-id="<%= typeof targetId !== 'undefined' ? targetId : '' %>"
     data-target-type="<%= typeof targetType !== 'undefined' ? targetType : 'review' %>">
     <div class="comments-header-row">
-        <h2 class="comments-title">Comments <span class="comments-count">
+        <h2 class="comments-title">
+            Comments <span class="comments-count">
                 <%= typeof commentsCount !=='undefined' ? commentsCount : 0 %>
-            </span></h2>
+            </span>
+        </h2>
     </div>
 
-    <!-- إضافة تعليق رئيسي -->
+    <!-- Main Comment Input -->
     <div class="add-comment-box">
         <img src="<%= locals.user && locals.user.avatar_url ? locals.user.avatar_url : '/assets/profile-avatar.jpg' %>"
             alt="My Avatar" class="comment-avatar" onerror="this.src='/assets/profile-avatar.jpg'">
@@ -25,13 +27,12 @@
 
     <hr class="comments-divider">
 
-    <!-- قائمة التعليقات من الداتابيز -->
+    <!-- Rendered Comments List -->
     <div class="comments-list" id="commentsListContainer">
         <% if (typeof mainComments !=='undefined' && mainComments.length> 0) { %>
             <% mainComments.forEach(comment=> { %>
                 <div class="comment-thread" data-comment-id="<%= comment.id %>">
-
-                    <!-- التعليق الأساسي -->
+                    <!-- Top-level Comment -->
                     <div class="single-comment">
                         <a href="/profile/<%= comment.username %>">
                             <img src="<%= comment.avatar_url || '/assets/profile-avatar.jpg' %>"
@@ -53,7 +54,6 @@
                                 <%- comment.content %>
                             </p>
 
-                            <!-- أزرار تفاعل التعليق الأساسي -->
                             <div class="comment-interactions">
                                 <button
                                     class="interaction-btn comment-like-btn <%= comment.is_liked_by_user ? 'is-liked' : '' %>"
@@ -63,7 +63,8 @@
                                         <path
                                             d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
                                         </path>
-                                    </svg> <span>
+                                    </svg>
+                                    <span>
                                         <%= comment.likes_count %>
                                     </span>
                                 </button>
@@ -76,7 +77,6 @@
                                 </button>
                             </div>
 
-                            <!-- صندوق الرد للتعليق الأساسي -->
                             <div class="inline-reply-box">
                                 <img src="<%= locals.user && locals.user.avatar_url ? locals.user.avatar_url : '/assets/profile-avatar.jpg' %>"
                                     alt="My Avatar" class="comment-avatar small-avatar reply-avatar"
@@ -97,7 +97,7 @@
                         </div>
                     </div>
 
-                    <!-- الردود المتداخلة -->
+                    <!-- Threaded Replies -->
                     <div class="nested-replies">
                         <% if (comment.replies && comment.replies.length> 0) { %>
                             <% comment.replies.forEach(reply=> { %>
@@ -124,7 +124,6 @@
                                             <%- reply.content %>
                                         </p>
 
-                                        <!-- أزرار تفاعل الرد -->
                                         <div class="comment-interactions">
                                             <button
                                                 class="interaction-btn comment-like-btn <%= reply.is_liked_by_user ? 'is-liked' : '' %>"
@@ -134,7 +133,8 @@
                                                     <path
                                                         d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
                                                     </path>
-                                                </svg> <span>
+                                                </svg>
+                                                <span>
                                                     <%= reply.likes_count %>
                                                 </span>
                                             </button>
@@ -163,7 +163,7 @@
     </div>
 </section>
 
-<!-- Template للكومنت الجديد أو الرد عشان الجافاسكريبت يستخدمه -->
+<!-- Comment and Reply Template for Client-side Injection -->
 <template id="commentTemplate">
     <div class="comment-thread">
         <div class="single-comment">

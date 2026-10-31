@@ -1,14 +1,13 @@
 <nav class="bar">
     <div class="nav-container">
-
         <a href="/" class="logo-link">
             <img class="logo" src="/assets/logos/no background logo.png" alt="Cindrome Logo">
         </a>
 
-        <!-- الـ Checkbox لازم يفضل هنا عشان CSS الـ Hamburger يشتغل -->
+        <!-- Checkbox for hamburger menu toggle -->
         <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
-        <!-- 1. روابط الـ Navigation العادية (بتختفي في الموبايل) -->
+        <!-- Main Navigation Links -->
         <div class="right-bar">
             <a href="/" class="nav-item">Home</a>
             <a href="/discover" class="nav-item">Discover</a>
@@ -47,19 +46,19 @@
             </div>
         </div>
 
-        <!-- 🌟 2. زراير الأكشن والهامبرجر (بره القايمة عشان يظهروا دايماً) 🌟 -->
+        <!-- Navigation Action Buttons -->
         <div class="nav-actions">
-            <!-- للزوار بس -->
+            <!-- Guests only -->
             <a href="/sign-in" class="guest-only" style="text-decoration: none;">
                 <button class="signin-btn">Sign in</button>
             </a>
 
-            <!-- للمستخدمين بس -->
+            <!-- Authenticated users only -->
             <button class="log-nav-btn user-only" id="navLogBtn">
                 <i class="fa-solid fa-plus"></i> Log
             </button>
 
-            <!-- زرار البحث -->
+            <!-- Search trigger -->
             <button type="button" class="search-trigger-btn" aria-label="Search">
                 <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -68,9 +67,8 @@
                 </svg>
             </button>
 
-            <!-- زرار الهامبرجر -->
+            <!-- Mobile hamburger button -->
             <label for="menu-toggle" class="hamburger-btn">&#9776;</label>
         </div>
-
     </div>
 </nav>

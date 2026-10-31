@@ -1,11 +1,9 @@
 <div class="search-modal-overlay" id="searchModal" style="display: none;">
     <div class="search-modal-container">
-
         <button class="close-modal-btn" aria-label="Close search">&times;</button>
 
         <section class="g-search-section" aria-label="Content Filters">
-            <form class="g-filter-bar-container" role="search" onSubmit="return false;">
-
+            <form class="g-filter-bar-container" role="search" onsubmit="return false;">
                 <div class="g-filter-search-box">
                     <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         aria-hidden="true">
@@ -28,7 +26,6 @@
                 <div class="g-filter-v-divider" role="separator"></div>
 
                 <div class="g-dropdowns-group">
-
                     <details class="g-css-dropdown" id="filterGenreDropdown">
                         <summary class="g-dropdown-selected">
                             <span id="genreFilterText">Genre</span>
@@ -94,7 +91,6 @@
                             <li class="g-dropdown-item" data-value="classics">Classics</li>
                         </ul>
                     </details>
-
                 </div>
 
                 <button class="g-reset-filter-btn" id="globalResetBtn" type="button" aria-label="Reset Filters"
@@ -104,7 +100,6 @@
                         <path d="M3 3v5h5"></path>
                     </svg>
                 </button>
-
             </form>
         </section>
 
@@ -112,7 +107,6 @@
             <div class="g-search-status" id="globalSearchStatus">Type to search movies, series, or anime...</div>
             <div class="g-search-results-grid" id="globalSearchResults"></div>
         </div>
-
     </div>
 </div>
 
@@ -143,5 +137,6 @@
         </div>
     </div>
 </template>
-<!-- ديف مخفي لتمرير البيانات بأمان (استخدمنا علامة تنصيص مفردة ' حول الـ data-watchlist) -->
-<div id="userWatchlistData" data-watchlist='<%= JSON.stringify(locals.watchlistMap || []) %>' style="display: none;"></div>
+
+<div id="userWatchlistData" data-watchlist='<%= JSON.stringify(locals.watchlistMap || []) %>' style="display: none;">
+</div>

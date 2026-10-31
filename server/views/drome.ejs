@@ -7,23 +7,22 @@
     <title>Cindrome - Drome AI</title>
     <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/pages/drome.css">
     <link rel="stylesheet" href="css/modals.css">
-
 </head>
 
 <body class="drome-page <%= locals.user ? 'logged-in' : 'logged-out' %>">
     <header>
-        <%- include("partials/navbar.ejs")%>
+        <%- include("partials/navbar.ejs") %>
     </header>
 
     <main class="drome-wrapper">
         <section class="drome-chat-area">
             <div class="chat-messages-container" id="chatContainer">
                 <div class="chat-messages-inner" id="chatInner">
-
                     <div id="pullToRefreshIndicator" class="pull-to-refresh-indicator">
                         <i class="fa-solid fa-arrow-down"></i> <span>Pull down</span>
                     </div>
@@ -42,7 +41,6 @@
                         </div>
                     </div>
 
-                    <!-- 🌟 استبدلنا style=display:none بكلاس is-hidden للنظافة 🌟 -->
                     <div class="chat-bubble drome-chat-row typing-indicator-bubble is-hidden" id="typingIndicator">
                         <div class="drome-avatar">
                             <img src="assets/logos/cindrome-logo.png" alt="Cindrome">
@@ -89,13 +87,11 @@
             </div>
         </section>
     </main>
+
     <%- include("partials/modals/search-modal.ejs") %>
         <%- include("partials/modals/log-modal.ejs") %>
 
-            <!-- ========================================================= -->
-            <!-- 🌟 TEMPLATES (لإبقاء الـ HTML خارج الجافاسكريبت) 🌟 -->
-            <!-- ========================================================= -->
-
+            <!-- Templates for Client Injection -->
             <template id="userBubbleTemplate">
                 <div class="chat-bubble user-chat-row">
                     <div class="user-bubble-content">
@@ -104,19 +100,18 @@
                 </div>
             </template>
 
-            <!-- قالب فقاعة الـ Drome (اللي هتشيل النص وجواها حاوية للكروت) -->
             <template id="dromeBubbleTemplate">
                 <div class="chat-bubble drome-chat-row">
-                    <div class="drome-avatar"><img src="assets/logos/cindrome-logo.png" alt="Cindrome"></div>
+                    <div class="drome-avatar">
+                        <img src="assets/logos/cindrome-logo.png" alt="Cindrome">
+                    </div>
                     <div class="drome-bubble-content">
                         <p class="message-text"></p>
-                        <!-- حاوية بتلف بالعرض عشان لو فيه أكتر من اقتراح -->
                         <div class="chat-cards-row"></div>
                     </div>
                 </div>
             </template>
 
-            <!-- قالب كارت الفيلم الفردي -->
             <template id="chatMovieCardTemplate">
                 <div class="chat-movie-card">
                     <img src="" alt="Poster" class="chat-movie-poster">

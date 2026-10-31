@@ -5,7 +5,6 @@
 
     <div class="log-modal-overlay" id="logModal">
         <div class="log-modal-container">
-
             <button class="close-modal-btn" id="closeLogModalBtn" aria-label="Close log modal">&times;</button>
             <h2 class="modal-main-title">Log Content</h2>
 
@@ -35,7 +34,6 @@
                     </h3>
 
                     <div class="season-episode-selectors<%= isMovie ? ' is-hidden' : '' %>" id="logSeasonEpSelectors">
-
                         <details class="css-dropdown" id="logSeasonDropdown">
                             <summary class="dropdown-selected">
                                 <span id="seasonText">All Seasons</span>
@@ -45,7 +43,7 @@
                                 <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">All Seasons
                                 </li>
                                 <% const totalSeasons=(hasMedia && media.seasonsCount) ? media.seasonsCount : 1; %>
-                                    <% for(let s=1; s <=totalSeasons; s++) { %>
+                                    <% for (let s=1; s <=totalSeasons; s++) { %>
                                         <li class="dropdown-item" onclick="selectDropdownOption(this, 'seasonText')">
                                             Season <%= s %>
                                         </li>
@@ -70,13 +68,11 @@
                                             <% } %>
                             </ul>
                         </details>
-
                     </div>
                 </div>
             </div>
 
             <form class="log-form" onsubmit="return false;">
-
                 <div class="log-toolbar">
                     <div class="star-rating-input" id="starRating">
                         <i class="fa-regular fa-star rate-star" data-index="0"></i>

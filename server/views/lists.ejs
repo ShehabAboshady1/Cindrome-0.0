@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - Lists</title>
     <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/mini-card.css">
@@ -20,15 +20,11 @@
 </head>
 
 <body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">
-    <!-- Navbar -->
     <header>
         <%- include("partials/navbar.ejs") %>
     </header>
 
-    <!-- MAIN LISTS SECTION -->
     <main class="lists-page-wrapper">
-
-        <!-- Header -->
         <div class="lists-header-box">
             <h1 class="lists-title">Lists</h1>
             <p class="diary-teal-subtitle">Explore and share amazing collections</p>
@@ -47,7 +43,6 @@
 
                 <div class="filter-v-divider"></div>
 
-                <!-- 🌟 تم إصلاح الـ Dropdown بوضع النص في span مستقل 🌟 -->
                 <details class="css-dropdown" id="listsFilterDropdown">
                     <summary class="dropdown-selected">
                         <span class="dropdown-label-text">Popular</span>
@@ -59,13 +54,11 @@
                         <li class="dropdown-item">Following</li>
                     </ul>
                 </details>
-
             </div>
         </div>
 
-        <!-- 🌟 BLACK CONTAINER & GRID 🌟 -->
+        <!-- Lists Grid Container -->
         <section class="lists-container-box">
-
             <div class="container-inner-header">
                 <div class="container-header-flex">
                     <h2 class="inner-header-title">Community Lists</h2>
@@ -76,17 +69,12 @@
                 <hr class="inner-header-hr">
             </div>
 
-            <!-- ضفنا ID هنا -->
-            <div class="lists-grid" id="listsGrid">
-                <!-- الداتا هتيجي هنا بالجافاسكريبت -->
-            </div>
+            <div class="lists-grid" id="listsGrid"></div>
 
-            <!-- Loader (اختياري بس بيحسن الـ UX) -->
             <div id="listsLoader" style="text-align: center; padding: 40px; display: none;">
                 <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-teal);"></i>
             </div>
 
-            <!-- رسالة حالة لو مفيش نتايج -->
             <div id="noListsMsg"
                 style="text-align: center; padding: 40px; color: rgba(241, 227, 200, 0.5); display: none;">
                 <i class="fa-solid fa-list-ul" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
@@ -94,14 +82,12 @@
             </div>
         </section>
 
-        <!-- Pagination Bar (هنضيف IDs للزراير الأساسية عشان الجافاسكريبت يتحكم فيها) -->
+        <!-- Pagination Section -->
         <div class="pagination-section" id="paginationSection">
-            <nav class="pagination-container" aria-label="Page navigation" id="paginationContainer">
-                <!-- هيتملي ديناميكياً -->
-            </nav>
+            <nav class="pagination-container" aria-label="Page navigation" id="paginationContainer"></nav>
         </div>
 
-        <!-- Inside lists.ejs (List Card Template) -->
+        <!-- List Card Template for Dynamic Rendering -->
         <template id="listCardTemplate">
             <div class="list-card">
                 <div class="poster-stack" style="cursor: pointer;">
@@ -140,27 +126,13 @@
                 </div>
             </div>
         </template>
-
-        <!-- Pagination Bar -->
-        <div class="pagination-section">
-            <nav class="pagination-container" aria-label="Page navigation">
-                <button class="page-btn prev-next disabled" id="prevPageBtn" disabled type="button">PREV</button>
-                <button class="page-btn page-num-btn active" type="button">1</button>
-                <button class="page-btn page-num-btn" type="button">2</button>
-                <button class="page-btn page-num-btn" type="button">3</button>
-
-                <span class="pagination-dots" aria-hidden="true">...</span>
-
-                <button class="page-btn page-num-btn" type="button">10</button>
-                <button class="page-btn prev-next" id="nextPageBtn" type="button">NEXT</button>
-            </nav>
-        </div>
     </main>
+
     <%- include("partials/footer.ejs") %>
         <%- include("partials/modals/list-modal.ejs") %>
             <%- include("partials/modals/search-modal.ejs") %>
                 <%- include("partials/modals/log-modal.ejs") %>
-                    <!-- 🌟 Scripts 🌟 -->
+
                     <script src="js/modals.js"></script>
                     <script src="js/pages/lists-page.js"></script>
 </body>

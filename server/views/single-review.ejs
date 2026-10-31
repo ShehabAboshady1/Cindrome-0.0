@@ -7,9 +7,8 @@
     <title>Cindrome - Review by @<%= review.username %>
     </title>
     <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
-
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/pages/single-review.css">
@@ -18,23 +17,20 @@
 </head>
 
 <body class="single-review-page <%= locals.user ? 'logged-in' : 'logged-out' %>">
-    <!-- Navbar -->
     <header>
         <%- include("partials/navbar.ejs") %>
     </header>
 
-    <!-- Main Content -->
     <main class="single-review-main">
-
-        <!-- Backdrop Section (استخدمنا الباك دروب الحقيقي العريض من TMDB) -->
+        <!-- Backdrop Section -->
         <section class="review-backdrop-wrapper"
             style="background-image: url('<%= review.backdrop_path ? 'https://image.tmdb.org/t/p/original' + review.backdrop_path : (review.poster_path ? 'https://image.tmdb.org/t/p/w1000_and_h563_face' + review.poster_path : '/assets/backdrops/backdrop-odyssey1.webp') %>');">
             <div class="backdrop-gradient-overlay"></div>
         </section>
+
         <!-- Review Content Container -->
         <section class="review-content-container">
-
-            <!-- 1. EXTERNAL MOVIE INFO (Dynamic) -->
+            <!-- Media Information Header -->
             <div class="external-movie-header">
                 <a href="/details?id=<%= review.tmdb_id %>&type=<%= review.media_type %>" class="external-poster-link">
                     <img src="<%= review.poster_path ? 'https://image.tmdb.org/t/p/w500' + review.poster_path : '/assets/posters/poster-odyssey.webp' %>"
@@ -42,11 +38,11 @@
                 </a>
 
                 <div class="external-movie-info">
-                    <h1 class="external-movie-title"><a
-                            href="/details?id=<%= review.tmdb_id %>&type=<%= review.media_type %>">
+                    <h1 class="external-movie-title">
+                        <a href="/details?id=<%= review.tmdb_id %>&type=<%= review.media_type %>">
                             <%= review.title %>
-                        </a></h1>
-                    <!-- لو العمل مسلسل وله موسم وحلقة، نظهر الـ Pill -->
+                        </a>
+                    </h1>
                     <% if (review.season_number && review.episode_number) { %>
                         <div class="episode-meta-pill">
                             Season <%= review.season_number %> • Episode <%= review.episode_number %>
@@ -55,32 +51,29 @@
                 </div>
             </div>
 
-            <!-- 2. THE REVIEW CARD (Dynamic) -->
+            <!-- Review Card -->
             <article class="review-card-unified">
-
-                <!-- Card Header -->
                 <div class="card-user-header">
-
                     <div class="reviewer-meta-inside">
-                        <a href="/profile/<%= review.username %>"><img
-                                src="<%= review.avatar_url || '/assets/profile-avatar.jpg' %>"
+                        <a href="/profile/<%= review.username %>">
+                            <img src="<%= review.avatar_url || '/assets/profile-avatar.jpg' %>"
                                 alt="<%= review.username %>" class="card-avatar"
-                                onerror="this.src='/assets/profile-avatar.jpg'"></a>
+                                onerror="this.src='/assets/profile-avatar.jpg'">
+                        </a>
                         <div class="card-user-details">
-                            <span class="card-username"><a href="/profile/<%= review.username %>">@<%= review.username
-                                        %></a></span>
+                            <span class="card-username">
+                                <a href="/profile/<%= review.username %>">@<%= review.username %></a>
+                            </span>
                             <div class="card-rating-date">
-                                <!-- رسم النجوم ديناميكياً (بالشكل الموحد للموقع) -->
                                 <% if (review.rating) { %>
                                     <span class="stars" title="<%= review.rating %> Stars">
                                         <% const fullStars=Math.floor(review.rating); const hasHalf=review.rating % 1
-                                            !==0; for(let i=0; i<fullStars; i++) { %>★<% } %>
-                                                <% if(hasHalf) { %><span class="half-star">★</span>
+                                            !==0; for (let i=0; i < fullStars; i++) { %>★<% } %>
+                                                <% if (hasHalf) { %><span class="half-star">★</span>
                                                     <% } %>
                                     </span>
                                     <% } %>
 
-                                        <!-- رسم القلب لو اختار انه عاجبه -->
                                         <% if (review.liked) { %>
                                             <i class="fa-solid fa-heart favorite-heart" title="Favorited"></i>
                                             <% } %>
@@ -99,7 +92,6 @@
                         </div>
                     </div>
 
-                    <!-- علامة السبويلر -->
                     <% if (review.has_spoilers) { %>
                         <div class="card-spoiler-badge" id="spoilerBadge">
                             <i class="fa-solid fa-triangle-exclamation"></i> Spoiler
@@ -109,7 +101,7 @@
 
                 <hr class="card-divider">
 
-                <!-- Review Text (Dynamic) -->
+                <!-- Review Content -->
                 <div id="reviewTextWrapper" class="review-text-wrapper <%= review.has_spoilers ? 'is-spoiler' : '' %>"
                     <%=review.has_spoilers ? 'title="Click to reveal spoiler"' : '' %>>
                     <div class="review-text <%= review.has_spoilers ? 'blurred-text' : '' %>">
@@ -128,9 +120,7 @@
 
                 <hr class="actions-divider">
 
-                <!-- 🌟 Actions (Dynamic Likes Count) 🌟 -->
                 <div class="review-actions-bar">
-                    <!-- Like SVG Button -->
                     <button class="action-btn like-btn <%= isLikedByCurrentUser ? 'is-liked' : '' %>" id="reviewLikeBtn"
                         aria-label="Like Review">
                         <svg class="interactive-svg like-svg" viewBox="0 0 24 24" stroke-width="2"
@@ -143,7 +133,6 @@
                             <%= likesCount %>
                         </span>
                     </button>
-                    <!-- Share SVG Button -->
                     <button class="action-btn share-btn" id="reviewShareBtn" aria-label="Share Review"
                         title="Copy link">
                         <svg class="interactive-svg share-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -157,12 +146,11 @@
                     </button>
                 </div>
             </article>
-            <!-- 3. MODERN COMMENTS SECTION (Partial) -->
+
+            <!-- Comments Section -->
             <%- include("partials/comments-section.ejs") %>
-
-
         </section>
-        <!-- Template للكومنت الجديد عشان الجافاسكريبت يستخدمه بدون ما نكتب HTML جواه -->
+
         <template id="commentTemplate">
             <div class="comment-thread">
                 <div class="single-comment">
@@ -215,7 +203,6 @@
         <%- include("partials/modals/search-modal.ejs") %>
             <%- include("partials/modals/log-modal.ejs") %>
 
-                <!-- Scripts -->
                 <script src="/js/modals.js"></script>
                 <script src="/js/comments-section.js"></script>
                 <script src="/js/pages/single-review.js"></script>

@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - Settings</title>
     <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
-
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/pages/settings.css">
@@ -45,8 +44,7 @@
 
             <!-- Main Content Area -->
             <section class="settings-content">
-
-                <!-- TAB 1: ACCOUNT SECURITY -->
+                <!-- Tab 1: Account Security -->
                 <div id="tab-account" class="settings-panel active-panel">
                     <h2 class="panel-title">Account Security</h2>
 
@@ -97,12 +95,14 @@
                     <hr class="settings-divider">
 
                     <h3 class="panel-subtitle danger-text">Danger Zone</h3>
-                    <p class="input-hint" style="margin-bottom: 12px;">Once you delete your account, there is no going
-                        back. All your reviews, lists, and diary logs will be permanently removed.</p>
+                    <p class="input-hint" style="margin-bottom: 12px;">
+                        Once you delete your account, there is no going back. All your reviews, lists, and diary logs
+                        will be permanently removed.
+                    </p>
                     <button type="button" id="openDeleteModalBtn" class="btn-danger">Delete Account</button>
                 </div>
 
-                <!-- TAB 2: PRIVACY -->
+                <!-- Tab 2: Privacy -->
                 <div id="tab-privacy" class="settings-panel" style="display: none;">
                     <h2 class="panel-title">Privacy Settings</h2>
 
@@ -123,7 +123,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: NOTIFICATIONS -->
+                <!-- Tab 3: Notifications -->
                 <div id="tab-notifications" class="settings-panel" style="display: none;">
                     <h2 class="panel-title">Email Notifications</h2>
 
@@ -156,14 +156,13 @@
                             Settings</button>
                     </div>
                 </div>
-
             </section>
         </div>
     </main>
 
     <%- include("partials/footer.ejs") %>
 
-        <!-- 🌟 DELETE ACCOUNT CONFIRMATION MODAL 🌟 -->
+        <!-- Delete Account Confirmation Modal -->
         <div id="deleteAccountModal" class="settings-modal-overlay" style="display: none;">
             <div class="settings-modal-card">
                 <div class="settings-modal-header">
@@ -173,8 +172,7 @@
                 <div class="settings-modal-body">
                     <p>Are you sure you want to delete your account? This action is permanent and cannot be undone.</p>
                     <p class="input-hint">All your diary entries, watched history, custom lists, and written reviews
-                        will be
-                        permanently deleted.</p>
+                        will be permanently deleted.</p>
                 </div>
                 <div class="settings-modal-footer">
                     <button type="button" class="btn-secondary-action" id="cancelDeleteBtn">Cancel</button>
@@ -182,9 +180,10 @@
                 </div>
             </div>
         </div>
+
         <%- include("partials/modals/search-modal.ejs") %>
             <%- include("partials/modals/log-modal.ejs") %>
-                <!-- Scripts -->
+
                 <script src="/js/modals.js"></script>
                 <script src="/js/pages/settings.js"></script>
 </body>

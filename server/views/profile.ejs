@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - Profile</title>
     <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
-
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/hero.css">
@@ -19,7 +18,6 @@
     <link rel="stylesheet" href="/css/mini-card.css">
     <link rel="stylesheet" href="/css/pages/profile.css">
     <link rel="stylesheet" href="/css/modals.css">
-
 </head>
 
 <body
@@ -28,12 +26,13 @@
         <%- include("partials/navbar.ejs") %>
     </header>
 
-    <!-- BANNER -->
+    <!-- Banner -->
     <div class="profile-banner"
         style="background-image: url('<%= profileUser.backdrop_url || '/assets/backdrops/default-backdrop.png' %>');">
         <div class="banner-overlay"></div>
     </div>
-    <!-- PROFILE HEADER -->
+
+    <!-- Profile Header -->
     <div class="profile-header-container">
         <div class="profile-avatar-wrapper">
             <img src="<%= profileUser.avatar_url || '/assets/avatars/default-avatar.jpeg' %>"
@@ -47,7 +46,6 @@
                     <h1 class="display-name">
                         <%= profileUser.display_name || profileUser.username %>
                     </h1>
-                    <!-- 🌟 الثلاثة عناصر مجمعين في صف واحد إجباري 🌟 -->
                     <div class="user-meta-row">
                         <span class="username">@<%= profileUser.username %></span>
                         <span class="genre-badge">
@@ -74,7 +72,6 @@
                         aria-pressed="<%= typeof isFollowing !== 'undefined' && isFollowing ? 'true' : 'false' %>"
                         aria-label="<%= typeof isFollowing !== 'undefined' && isFollowing ? 'Following user' : 'Follow user' %>"
                         data-id="<%= profileUser.id %>">
-
                         <i
                             class="fa-solid <%= typeof isFollowing !== 'undefined' && isFollowing ? 'fa-check' : 'fa-user-plus' %>"></i>
                         <span class="btn-label">
@@ -111,19 +108,18 @@
         </div>
     </div>
 
-    <!-- الحاوية المجمعة للمحتوى الخاص بالتغبيش -->
+    <!-- Restricted Profile Area -->
     <div class="profile-restricted-wrapper">
-
         <div class="profile-private-overlay">
             <div class="private-lock-icon">
                 <i class="fa-solid fa-lock"></i>
             </div>
             <h2 class="private-title">This Account is Private</h2>
-            <p class="private-subtitle">Follow @Shehab_Aboshady to see their favorite titles, currently watching, and
-                lists.</p>
+            <p class="private-subtitle">Follow @<%= profileUser.username %> to see their favorite titles, currently
+                    watching, and lists.</p>
         </div>
 
-        <!-- MAIN TABS BAR -->
+        <!-- Navigation Tabs -->
         <nav class="profile-main-tabs" aria-label="Profile sections">
             <div class="tabs-container">
                 <button class="profile-tab-btn is-active" type="button"
@@ -134,14 +130,10 @@
             </div>
         </nav>
 
-        <!-- MAIN SECTION -->
         <main class="profile-main-container" id="mainContainer">
-
             <section class="profile-content">
-
-                <!-- TAB 1: OVERVIEW PANEL -->
+                <!-- Tab 1: Overview Panel -->
                 <div id="panel-overview" class="profile-tab-panel active-panel">
-
                     <div class="profile-card-box">
                         <div class="profile-box-header">
                             <h2 class="profile-box-title"><i class="fa-solid fa-star"></i> Favorites</h2>
@@ -157,13 +149,11 @@
                             <% if (locals.favoriteMedia && favoriteMedia.length> 0) { %>
                                 <% favoriteMedia.forEach(item=> { %>
                                     <div class="content-card">
-                                        <!-- البوستر -->
                                         <img src="<%= item.poster_path ? 'https://image.tmdb.org/t/p/w500' + item.poster_path : '/assets/default-poster.jpg' %>"
                                             alt="<%= item.title %>" class="card-poster">
 
                                         <div class="card-overlay">
                                             <div class="card-top-row">
-                                                <!-- نوع العمل -->
                                                 <span class="type-badge">
                                                     <%= item.media_type==='tv' ? 'SERIES' :
                                                         item.media_type.toUpperCase() %>
@@ -179,7 +169,6 @@
 
                                                 <div class="meta-row">
                                                     <span>
-                                                        <!-- حساب مدة العرض أو عدد الحلقات والمواسم -->
                                                         <% if (item.media_type==='movie' && item.run_time) { %>
                                                             <%= Math.floor(item.run_time / 60) %>h <%= item.run_time %
                                                                     60 %>m
@@ -195,7 +184,6 @@
                                                 <div class="card-actions">
                                                     <a href="/details?id=<%= item.tmdb_id %>&type=<%= item.media_type %>"
                                                         class="btn-details">Details</a>
-
                                                     <button class="btn-watchlist added" title="Remove from Favorites"
                                                         onclick="toggleFavoriteProfile(this, <%= item.tmdb_id %>, '<%= item.media_type %>')">
                                                         <i class="fa-solid fa-heart"></i>
@@ -216,7 +204,7 @@
                         </div>
                     </div>
 
-                    <!-- CURRENTLY WATCHING -->
+                    <!-- Currently Watching -->
                     <div class="profile-card-box">
                         <h2 class="profile-box-title"><i class="fa-solid fa-play"></i> Watching</h2>
                         <div class="currently-watching-list">
@@ -230,10 +218,12 @@
                                         </a>
                                         <div class="tracking-info">
                                             <div class="tracking-header">
-                                                <h3><a href="/details?id=<%= item.tmdb_id %>&type=<%= item.media_type %>"
+                                                <h3>
+                                                    <a href="/details?id=<%= item.tmdb_id %>&type=<%= item.media_type %>"
                                                         class="media-title-link">
                                                         <%= item.title %>
-                                                    </a></h3>
+                                                    </a>
+                                                </h3>
                                                 <span class="tag <%= item.is_anime ? 'anime-tag' : 'tv-tag' %>">
                                                     <%= item.is_anime ? 'Anime' : 'Series' %>
                                                 </span>
@@ -260,7 +250,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: REVIEWS PANEL -->
+                <!-- Tab 2: Reviews Panel -->
                 <div id="panel-reviews" class="profile-tab-panel" style="display: none;">
                     <div class="profile-reviews-container">
                         <div class="profile-box-header" style="margin-bottom: 25px;">
@@ -284,7 +274,6 @@
                                                 </a>
 
                                                 <div class="review-info-content">
-                                                    <!-- 🌟 صف العنوان وشارة الموسم/الحلقة 🌟 -->
                                                     <div class="review-title-row">
                                                         <a href="/details?id=<%= review.tmdb_id %>&type=<%= review.media_type %>"
                                                             class="review-media-title">
@@ -309,7 +298,6 @@
                                                             <% } %>
                                                     </div>
 
-                                                    <!-- 🌟 صف التقييم (النجوم) والقلب 🌟 -->
                                                     <div class="review-rating-line">
                                                         <% if (review.rating) { %>
                                                             <div class="stars" title="<%= review.rating %> Stars">
@@ -333,7 +321,6 @@
                                                                         <% } %>
                                                     </div>
 
-                                                    <!-- 🌟 صف الكاتب (الأفاتار واليوزرنيم) 🌟 -->
                                                     <div class="review-author-line">
                                                         <a href="/profile/<%= profileUser.username %>"
                                                             class="review-avatar-link">
@@ -344,7 +331,7 @@
                                                         </a>
                                                         <a href="/profile/<%= profileUser.username %>"
                                                             class="review-author-username">@<%= profileUser.username %>
-                                                        </a>
+                                                                </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -378,13 +365,15 @@
                                                 </button>
                                                 <a href="/review/<%= review.review_id %>" class="minimal-btn"
                                                     title="Comments">
-                                                    <i class="fa-regular fa-comment"></i> <span class="comment-count">
+                                                    <i class="fa-regular fa-comment"></i>
+                                                    <span class="comment-count">
                                                         <%= review.comments_count || 0 %>
                                                     </span>
                                                 </a>
                                             </div>
-                                            <a href="/review/<%= review.review_id %>" class="minimal-read-link">Read
-                                                More <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                            <a href="/review/<%= review.review_id %>" class="minimal-read-link">
+                                                Read More <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
                                         </div>
                                     </article>
 
@@ -400,7 +389,7 @@
                                                         <p>No written reviews yet.</p>
                                                     </div>
                                                     <% } %>
-                                                        <!-- رسالة حالة الفراغ الخاصة بالفلتر (مخفية افتراضياً بالـ CSS) -->
+
                                                         <div class="filter-empty-state" id="filterEmptyState">
                                                             <i class="fa-solid fa-filter-circle-xmark"></i>
                                                             <p class="primary-msg">No reviews match your filters</p>
@@ -411,14 +400,14 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: LISTS PANEL -->
+                <!-- Tab 3: Lists Panel -->
                 <div id="panel-lists" class="profile-tab-panel" style="display: none;">
                     <div class="profile-lists-container">
-
                         <div class="profile-box-header">
                             <div class="profile-title-with-action">
-                                <h2 class="profile-box-title" style="margin-bottom: 0;"><i
-                                        class="fa-solid fa-list-check"></i> Lists</h2>
+                                <h2 class="profile-box-title" style="margin-bottom: 0;">
+                                    <i class="fa-solid fa-list-check"></i> Lists
+                                </h2>
                                 <button id="openCreateListBtnProfile" class="profile-create-list-btn self-only">
                                     <i class="fa-solid fa-plus"></i> Create
                                 </button>
@@ -469,13 +458,12 @@
                                                     <span class="user-badge">By <a
                                                             href="/profile/<%= profileUser.username %>"
                                                             class="author-profile-link">@<%= profileUser.username %>
-                                                        </a></span>
+                                                                </a></span>
                                                     <span class="list-items-count">• <%= list.total_items %>
                                                             Items</span>
                                                 </div>
 
                                                 <div class="list-actions">
-                                                    <!-- 🌟 ربطنا الـ ID والـ Class بحالة اللايك من الداتابيز 🌟 -->
                                                     <button
                                                         class="list-action-btn like-btn <%= list.is_liked_by_user ? 'is-liked' : '' %>"
                                                         title="Like List" data-list-id="<%= list.list_id %>">
@@ -490,7 +478,6 @@
                                                         </span>
                                                     </button>
 
-                                                    <!-- 🌟 عرض عدد الكومنتات الفعلي 🌟 -->
                                                     <a href="/single-list?id=<%= list.list_id %>#comments-section"
                                                         class="list-action-btn comment-btn" title="Comments">
                                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -522,12 +509,10 @@
                         </div>
                     </div>
                 </div>
-
             </section>
 
-            <!-- SIDEBAR -->
+            <!-- Sidebar -->
             <aside class="profile-sidebar" id="sidebar">
-
                 <div id="overview-sidebar-content">
                     <div class="sidebar-card mobile-compact-stats">
                         <h3 class="sidebar-card-title">Watch Stats</h3>
@@ -562,7 +547,6 @@
 
                 <div id="reviews-sidebar-content" style="display: none;">
                     <div class="sidebar-card">
-
                         <div class="sidebar-card-header-flex">
                             <h3 class="sidebar-card-title"><i class="fa-solid fa-filter"></i> Filter</h3>
                             <div class="spoiler-toggle-wrapper">
@@ -623,19 +607,15 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
             </aside>
-
         </main>
-
     </div>
 
     <%- include("partials/footer.ejs") %>
 
-        <!-- EDIT PROFILE MODAL -->
+        <!-- Edit Profile Modal -->
         <div id="editProfileModal" class="modal-overlay">
             <div class="modal-content">
                 <div class="modal-header">
@@ -644,27 +624,21 @@
                 </div>
 
                 <div class="modal-body">
-
                     <div class="edit-visuals-wrapper">
-                        <!-- 🌟 حقول رفع الملفات المخفية 🌟 -->
                         <input type="file" id="backdropUpload" accept="image/*" style="display: none;">
                         <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
 
-                        <!-- صورة الغلاف (Backdrop) -->
                         <div class="edit-banner-box" id="editBannerPreview"
                             style="background-image: url('<%= profileUser.backdrop_url || '/assets/backdrops/default-backdrop.png' %>'); background-size: cover; background-position: center;">
-                            <!-- لما نضغط هنا، هنشغل حقل الـ backdrop -->
                             <div class="edit-img-overlay" onclick="document.getElementById('backdropUpload').click();">
                                 <i class="fa-solid fa-camera"></i>
                             </div>
                         </div>
 
-                        <!-- الصورة الشخصية (Avatar) -->
                         <div class="edit-avatar-box">
                             <img src="<%= profileUser.avatar_url || '/assets/avatars/default-avatar.jpeg' %>"
                                 alt="Avatar" class="edit-avatar-img" id="editAvatarPreview"
                                 onerror="this.onerror=null; this.src='/assets/avatars/default-avatar.jpeg';">
-                            <!-- لما نضغط هنا، هنشغل حقل الـ avatar -->
                             <div class="edit-img-overlay" onclick="document.getElementById('avatarUpload').click();">
                                 <i class="fa-solid fa-camera"></i>
                             </div>
@@ -723,7 +697,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="modal-footer">
@@ -736,7 +709,7 @@
         <%- include("partials/modals/search-modal.ejs") %>
             <%- include("partials/modals/log-modal.ejs") %>
                 <%- include("partials/modals/list-modal.ejs") %>
-                    <!-- Scripts -->
+
                     <script src="/js/main.js"></script>
                     <script src="/js/modals.js"></script>
                     <script src="/js/pages/profile-page.js"></script>

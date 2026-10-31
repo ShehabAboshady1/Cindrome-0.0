@@ -2,11 +2,12 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - Diary</title>
     <link rel="icon" type="image/png" href="assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/mini-card.css">
@@ -18,199 +19,173 @@
 </head>
 
 <body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">
-    <!-- Navbar -->
     <header>
         <%- include("partials/navbar.ejs") %>
     </header>
 
-    <!-- MAIN DIARY SECTION -->
     <main class="diary-main-wrapper">
-
         <div class="diary-header-box">
             <h1 class="watchlist-title">Diary</h1>
             <p class="diary-teal-subtitle">You have logged <%= currentYearCount %> items in <%= currentYear %>
             </p>
         </div>
 
-        <!-- فلتر الـ Diary هيفضل زي ما هو هنا... (سيب كود الفلتر القديم زي ما هو) -->
-        <%- /* خلي بالك أنا سبتلك الفلتر بتاعك سليم، حط الكود ده تحته مباشرة */ %>
+        <div class="diary-list-container">
+            <% if (Object.keys(groupedLogs).length> 0) { %>
+                <% for (const [monthYear, logs] of Object.entries(groupedLogs)) { %>
+                    <!-- Month Divider -->
+                    <div class="diary-month-divider">
+                        <%= monthYear %>
+                    </div>
 
-            <!-- Diary Entries Rows (الديناميكي) -->
-            <div class="diary-list-container">
+                    <% logs.forEach(entry=> { %>
+                        <div class="diary-entry-row">
+                            <div class="diary-date-num">
+                                <%= String(entry.watch_day).padStart(2, '0' ) %>
+                            </div>
 
-                <% if (Object.keys(groupedLogs).length> 0) { %>
-                    <% for (const [monthYear, logs] of Object.entries(groupedLogs)) { %>
-                        <!-- ================= MONTH DIVIDER ================= -->
-                        <div class="diary-month-divider">
-                            <%= monthYear %>
-                        </div>
-
-                        <% logs.forEach(entry=> { %>
-                            <!-- صف جديد لعمل متسجل -->
-                            <div class="diary-entry-row">
-                                <!-- رقم اليوم -->
-                                <div class="diary-date-num">
-                                    <%= String(entry.watch_day).padStart(2, '0' ) %>
+                            <div class="mini-content-card" tabindex="0"
+                                data-tooltip="<%= entry.is_anime ? 'ANIME' : (entry.media_type === 'movie' ? 'MOVIE' : 'TV SERIES') %>">
+                                <div class="mini-card-media">
+                                    <% const safePoster=entry.poster_path ? 'https://image.tmdb.org/t/p/w300' +
+                                        entry.poster_path : '/assets/posters/poster-odyssey.webp' ; %>
+                                        <img src="<%= safePoster %>" class="mini-card-poster" alt="<%= entry.title %>">
                                 </div>
+                            </div>
 
-                                <!-- البوستر -->
-                                <div class="mini-content-card" tabindex="0"
-                                    data-tooltip="<%= entry.is_anime ? 'ANIME' : (entry.media_type === 'movie' ? 'MOVIE' : 'TV SERIES') %>">
-                                    <div class="mini-card-media">
-                                        <% const safePoster=entry.poster_path ? 'https://image.tmdb.org/t/p/w300' +
-                                            entry.poster_path : '/assets/posters/poster-odyssey.webp' ; %>
-                                            <img src="<%= safePoster %>" class="mini-card-poster"
-                                                alt="<%= entry.title %>">
-                                    </div>
-                                </div>
-
-                                <!-- التفاصيل (اسم العمل، التقييم، الريفيو) -->
-                                <div class="diary-details-col">
-                                    <div class="diary-movie-heading">
-                                        <a href="/details?id=<%= entry.tmdb_id %>&type=<%= entry.media_type %>"
-                                            class="diary-item-title-link">
-                                            <%= entry.title %>
-                                        </a>
-                                        <% if (entry.season_number || entry.episode_number) { %>
-                                            <span class="diary-episode-info">
-                                                <% if (entry.season_number) { %>S<%= entry.season_number %>
-                                                        <% } %>
-                                                            <% if (entry.season_number && entry.episode_number) { %>
-                                                                <% } %>
-                                                                    <% if (entry.episode_number) { %>E<%=
-                                                                            entry.episode_number %>
-                                                                            <% } %>
-                                            </span>
-                                            <% } %>
-                                    </div>
-                                    <div class="diary-meta-row">
-                                        <!-- طباعة النجوم ديناميكياً -->
-                                        <% if (entry.rating> 0) { %>
-                                            <div class="stars" title="<%= entry.rating %> Stars">
-                                                <% const fullStars=Math.floor(entry.rating); %>
-                                                    <% const hasHalf=entry.rating % 1 !==0; %>
-                                                        <% for(let i=0; i<fullStars; i++) { %><span
-                                                                class="star-full">★</span>
-                                                            <% } %>
-                                                                <% if(hasHalf) { %><span class="star-half">★</span>
-                                                                    <% } %>
-                                            </div>
-                                            <% } %>
-
-                                                <!-- الشارات (القلب / الريفيو / إعادة المشاهدة) -->
-                                                <div class="diary-status-badges">
-                                                    <% if (entry.liked) { %>
-                                                        <span title="Favorited" style="cursor: help;">
-                                                            <svg class="status-svg liked" viewBox="0 0 24 24"
-                                                                fill="currentColor" stroke="currentColor"
-                                                                stroke-width="1.5" stroke-linecap="round"
-                                                                stroke-linejoin="round">
-                                                                <path
-                                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                                                </path>
-                                                            </svg>
-                                                        </span>
-                                                        <% } %>
-
-                                                            <% if (entry.review_text && entry.review_text.trim() !=='' )
-                                                                { %>
-                                                                <span title="Reviewed" style="cursor: help;">
-                                                                    <svg class="status-svg" viewBox="0 0 24 24"
-                                                                        fill="none" stroke="currentColor"
-                                                                        stroke-width="2">
-                                                                        <path
-                                                                            d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7">
-                                                                        </path>
-                                                                        <path
-                                                                            d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z">
-                                                                        </path>
-                                                                    </svg>
-                                                                </span>
-                                                                <% } %>
-
-                                                                    <% if (entry.is_rewatch) { %>
-                                                                        <span title="Rewatched" style="cursor: help;">
-                                                                            <svg class="status-svg" viewBox="0 0 24 24"
-                                                                                fill="none" stroke="currentColor"
-                                                                                stroke-width="2">
-                                                                                <polyline points="17 1 21 5 17 9">
-                                                                                </polyline>
-                                                                                <path d="M3 11V9a4 4 0 0 1 4-4h14">
-                                                                                </path>
-                                                                                <polyline points="7 23 3 19 7 15">
-                                                                                </polyline>
-                                                                                <path d="M21 13v2a4 4 0 0 1-4 4H3">
-                                                                                </path>
-                                                                            </svg>
-                                                                        </span>
-                                                                        <% } %>
-                                                </div>
-                                    </div>
-
-                                    <% if (entry.review_text && entry.review_text.trim() !=='' ) { %>
-                                        <a href="/review/<%= entry.review_id %>"
-                                            style="text-decoration: none; color: inherit; display: block;">
-                                            <p class="diary-user-review"
-                                                style="cursor: pointer; transition: opacity 0.2s;"
-                                                onmouseover="this.style.opacity='0.8'"
-                                                onmouseout="this.style.opacity='1'">
-                                                <% if (entry.has_spoilers) { %>
-                                                    <span class="spoiler-badge"
-                                                        style="margin-right: 4px; padding: 1px 4px; font-size: 0.65rem;">Spoiler</span>
+                            <div class="diary-details-col">
+                                <div class="diary-movie-heading">
+                                    <a href="/details?id=<%= entry.tmdb_id %>&type=<%= entry.media_type %>"
+                                        class="diary-item-title-link">
+                                        <%= entry.title %>
+                                    </a>
+                                    <% if (entry.season_number || entry.episode_number) { %>
+                                        <span class="diary-episode-info">
+                                            <% if (entry.season_number) { %>S<%= entry.season_number %>
                                                     <% } %>
-                                                        "<%= entry.review_text %>"
-                                            </p>
-                                        </a>
+                                                        <% if (entry.episode_number) { %>E<%= entry.episode_number %>
+                                                                <% } %>
+                                        </span>
                                         <% } %>
                                 </div>
 
-                                <!-- الأكشن (تعديل / حذف) ومربوطة بالداتا الحقيقية للمودال -->
-                                <div class="diary-actions-col">
-                                    <button class="diary-square-btn edit-btn" title="Edit"
-                                        data-reviewid="<%= entry.review_id %>" data-tmdbid="<%= entry.tmdb_id %>"
-                                        data-title="<%= entry.title %>"
-                                        data-type="<%= entry.media_type.toUpperCase() %>"
-                                        data-poster="<%= safePoster %>" data-rating="<%= entry.rating || 0 %>"
-                                        data-liked="<%= entry.liked %>" data-rewatched="<%= entry.is_rewatch %>"
-                                        data-spoiler="<%= entry.has_spoilers %>"
-                                        data-review="<%= entry.review_text || '' %>"
-                                        data-season="<%= entry.season_number || '' %>"
-                                        data-episode="<%= entry.episode_number || '' %>"
-                                        data-date="<%= entry.watch_date || '' %>">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                    </button>
-
-                                    <button class="diary-square-btn delete-btn" title="Delete"
-                                        data-id="<%= entry.review_id %>">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path
-                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <% }); %>
-                                <% } %>
-                                    <% } else { %>
-                                        <!-- لو اليوزر لسه معملش ولا Log -->
-                                        <div class="empty-diary-msg"
-                                            style="text-align: center; padding: 50px 20px; color: #718096;">
-                                            <i class="fa-solid fa-book-open"
-                                                style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
-                                            <h2>Your diary is empty.</h2>
-                                            <p>Every movie or episode you log will appear here in chronological order.
-                                            </p>
+                                <div class="diary-meta-row">
+                                    <% if (entry.rating> 0) { %>
+                                        <div class="stars" title="<%= entry.rating %> Stars">
+                                            <% const fullStars=Math.floor(entry.rating); %>
+                                                <% const hasHalf=entry.rating % 1 !==0; %>
+                                                    <% for (let i=0; i < fullStars; i++) { %>
+                                                        <span class="star-full">★</span>
+                                                        <% } %>
+                                                            <% if (hasHalf) { %>
+                                                                <span class="star-half">★</span>
+                                                                <% } %>
                                         </div>
                                         <% } %>
 
-            </div>
+                                            <div class="diary-status-badges">
+                                                <% if (entry.liked) { %>
+                                                    <span title="Favorited" style="cursor: help;">
+                                                        <svg class="status-svg liked" viewBox="0 0 24 24"
+                                                            fill="currentColor" stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round">
+                                                            <path
+                                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                                            </path>
+                                                        </svg>
+                                                    </span>
+                                                    <% } %>
+
+                                                        <% if (entry.review_text && entry.review_text.trim() !=='' ) {
+                                                            %>
+                                                            <span title="Reviewed" style="cursor: help;">
+                                                                <svg class="status-svg" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2">
+                                                                    <path
+                                                                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7">
+                                                                    </path>
+                                                                    <path
+                                                                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z">
+                                                                    </path>
+                                                                </svg>
+                                                            </span>
+                                                            <% } %>
+
+                                                                <% if (entry.is_rewatch) { %>
+                                                                    <span title="Rewatched" style="cursor: help;">
+                                                                        <svg class="status-svg" viewBox="0 0 24 24"
+                                                                            fill="none" stroke="currentColor"
+                                                                            stroke-width="2">
+                                                                            <polyline points="17 1 21 5 17 9">
+                                                                            </polyline>
+                                                                            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                                                                            <polyline points="7 23 3 19 7 15">
+                                                                            </polyline>
+                                                                            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                                                                        </svg>
+                                                                    </span>
+                                                                    <% } %>
+                                            </div>
+                                </div>
+
+                                <% if (entry.review_text && entry.review_text.trim() !=='' ) { %>
+                                    <a href="/review/<%= entry.review_id %>"
+                                        style="text-decoration: none; color: inherit; display: block;">
+                                        <p class="diary-user-review" style="cursor: pointer; transition: opacity 0.2s;"
+                                            onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                                            <% if (entry.has_spoilers) { %>
+                                                <span class="spoiler-badge"
+                                                    style="margin-right: 4px; padding: 1px 4px; font-size: 0.65rem;">Spoiler</span>
+                                                <% } %>
+                                                    "<%= entry.review_text %>"
+                                        </p>
+                                    </a>
+                                    <% } %>
+                            </div>
+
+                            <div class="diary-actions-col">
+                                <button class="diary-square-btn edit-btn" title="Edit"
+                                    data-reviewid="<%= entry.review_id %>" data-tmdbid="<%= entry.tmdb_id %>"
+                                    data-title="<%= entry.title %>" data-type="<%= entry.media_type.toUpperCase() %>"
+                                    data-poster="<%= safePoster %>" data-rating="<%= entry.rating || 0 %>"
+                                    data-liked="<%= entry.liked %>" data-rewatched="<%= entry.is_rewatch %>"
+                                    data-spoiler="<%= entry.has_spoilers %>"
+                                    data-review="<%= entry.review_text || '' %>"
+                                    data-season="<%= entry.season_number || '' %>"
+                                    data-episode="<%= entry.episode_number || '' %>"
+                                    data-date="<%= entry.watch_date || '' %>">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+
+                                <button class="diary-square-btn delete-btn" title="Delete"
+                                    data-id="<%= entry.review_id %>">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <% }); %>
+                            <% } %>
+                                <% } else { %>
+                                    <div class="empty-diary-msg"
+                                        style="text-align: center; padding: 50px 20px; color: #718096;">
+                                        <i class="fa-solid fa-book-open"
+                                            style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                                        <h2>Your diary is empty.</h2>
+                                        <p>Every movie or episode you log will appear here in chronological order.</p>
+                                    </div>
+                                    <% } %>
+        </div>
     </main>
-    <!-- 🌟 Custom Confirm Delete Modal 🌟 -->
+
+    <!-- Delete Confirmation Modal -->
     <div class="log-modal-overlay" id="deleteConfirmModal" style="display: none; z-index: 10000;">
         <div class="log-modal-container confirm-modal-container">
             <i class="fa-solid fa-trash-can confirm-icon"></i>
@@ -222,9 +197,11 @@
             </div>
         </div>
     </div>
+
     <%- include("partials/footer.ejs") %>
         <%- include("partials/modals/search-modal.ejs") %>
             <%- include("partials/modals/log-modal.ejs") %>
+
                 <script src="/js/main.js"></script>
                 <script src="/js/modals.js"></script>
                 <script src="/js/pages/diary-page.js"></script>

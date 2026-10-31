@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cindrome - <%= media.title %>
     </title>
     <link rel="icon" type="image/png" href="/assets/logos/cindrome-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/hero.css">
@@ -20,14 +21,12 @@
 </head>
 
 <body class="<%= locals.user ? 'logged-in' : 'logged-out' %>">
-    <!-- Navbar -->
     <header>
         <%- include("partials/navbar.ejs") %>
     </header>
 
     <main class="details-page">
-
-        <!-- 1. HERO SECTION -->
+        <!-- Hero Section -->
         <section class="details-hero"
             style="background-image: linear-gradient(rgba(8,15,14,0.88), rgba(8,15,14,0.88)), url('<%= media.backdrop %>'); background-position: center; background-size: cover;">
             <div class="nav-container hero-content-left">
@@ -47,7 +46,6 @@
                             <%= media.badge %>
                         </span>
                         <span class="meta-dot">•</span>
-                        <!-- تم حذف الإيموجي هنا لمنع تكرار النجمة -->
                         <span class="rating-star">
                             <%= media.score %> <i>/ 10</i>
                         </span>
@@ -83,10 +81,9 @@
             </div>
         </section>
 
-        <!-- MAIN CONTENT -->
+        <!-- Main Content Section -->
         <section class="nav-container details-content">
-
-            <!-- 2. OVERVIEW SECTION -->
+            <!-- Overview -->
             <div class="detail-section details-panel" id="sec-overview">
                 <h3 class="section-title">Overview</h3>
                 <p class="short-summary">
@@ -110,13 +107,13 @@
                 </div>
             </div>
 
-            <!-- 3. SEASONS & EPISODES -->
+            <!-- Seasons and Episodes -->
             <% if (media.type==='tv' && media.episodes && media.episodes.length> 0) { %>
                 <div class="detail-section details-panel" id="sec-episodes" data-tv-id="<%= media.id %>">
                     <h3 class="section-title">Episodes</h3>
 
                     <div class="seasons-sub-nav">
-                        <% for(let i=1; i <=Math.min(media.seasonsCount, 10); i++) { %>
+                        <% for (let i=1; i <=Math.min(media.seasonsCount, 10); i++) { %>
                             <button type="button" class="season-btn <%= i === 1 ? 'active' : '' %>"
                                 data-season="<%= i %>">Season <%= i %></button>
                             <% } %>
@@ -143,7 +140,7 @@
                 </div>
                 <% } %>
 
-                    <!-- 4. CAST SECTION -->
+                    <!-- Cast Section -->
                     <div class="detail-section details-panel" id="sec-cast">
                         <div class="section-header-flex">
                             <h3 class="section-title">Cast</h3>
@@ -158,7 +155,6 @@
                                 <% if (media.cast && media.cast.length> 0) { %>
                                     <% media.cast.forEach(actor=> { %>
                                         <article class="cast-card">
-                                            <!-- ضبط الموضع ليركز على أعلى الرأس والوجه -->
                                             <img src="<%= actor.image %>" alt="<%= actor.name %>" class="cast-img">
                                             <div class="cast-info">
                                                 <strong class="actor-name">
@@ -178,7 +174,7 @@
                         </div>
                     </div>
 
-                    <!-- 5. REVIEWS SECTION -->
+                    <!-- Reviews Section -->
                     <div class="detail-section details-panel" id="sec-reviews">
                         <div class="reviews-section-header">
                             <div class="reviews-section-heading">
@@ -211,14 +207,13 @@
                                                             class="review-media-title">
                                                             <%= media.title %>
                                                         </a>
-                                                        <!-- تحديد نوع المراجعة: موسم/حلقة أو عامة -->
                                                         <% if (review.season_number && review.episode_number) { %>
-                                                            <span class="review-context-pill highlight">S<%=
-                                                                    review.season_number < 10 ? '0'
-                                                                    +review.season_number : review.season_number %> E<%=
-                                                                        review.episode_number < 10 ? '0'
-                                                                        +review.episode_number : review.episode_number
-                                                                        %></span>
+                                                            <span class="review-context-pill highlight">
+                                                                S<%= review.season_number < 10 ? '0' +
+                                                                    review.season_number : review.season_number %>
+                                                                    E<%= review.episode_number < 10 ? '0' +
+                                                                        review.episode_number : review.episode_number %>
+                                                            </span>
                                                             <% } else if (review.season_number) { %>
                                                                 <span class="review-context-pill highlight">Season <%=
                                                                         review.season_number %></span>
@@ -234,14 +229,14 @@
                                                             <% const rating=parseFloat(review.rating) || 0; const
                                                                 fullStars=Math.floor(rating); const hasHalf=rating % 1
                                                                 !==0; const emptyStars=5 - Math.ceil(rating); %>
-
-                                                                <% for(let i=0; i<fullStars; i++) { %>
+                                                                <% for (let i=0; i < fullStars; i++) { %>
                                                                     <span class="star-full">★</span>
                                                                     <% } %>
                                                                         <% if (hasHalf) { %>
                                                                             <span class="star-half">★</span>
                                                                             <% } %>
-                                                                                <% for(let i=0; i<emptyStars; i++) { %>
+                                                                                <% for (let i=0; i < emptyStars; i++) {
+                                                                                    %>
                                                                                     <span class="star-empty">★</span>
                                                                                     <% } %>
                                                         </div>
@@ -281,14 +276,13 @@
                                                             <% } else { %>
                                                                 <p class="review-body"
                                                                     style="font-style: italic; color: rgba(241,227,200,0.5);">
-                                                                    Logged without a written review.</p>
+                                                                    Logged without a written review.
+                                                                </p>
                                                                 <% } %>
                                         </div>
 
-                                        <!-- التعديل هنا: تصليح مسار الرابط وتشغيل زرار اللايك -->
                                         <div class="minimal-card-footer">
                                             <div class="minimal-actions">
-                                                <!-- التعديل: شلنا onclick وضفنا data-review-id وكلاس is-liked -->
                                                 <button
                                                     class="minimal-btn review-like-btn <%= review.is_liked_by_user ? 'is-liked' : '' %>"
                                                     data-review-id="<%= review.review_id %>">
@@ -299,14 +293,15 @@
                                                     </span>
                                                 </button>
                                                 <a href="/review/<%= review.review_id %>" class="minimal-btn">
-                                                    <i class="fa-regular fa-comment"></i> <span class="comment-count">
+                                                    <i class="fa-regular fa-comment"></i>
+                                                    <span class="comment-count">
                                                         <%= review.comments_count || 0 %>
                                                     </span>
                                                 </a>
                                             </div>
-                                            <a href="/review/<%= review.review_id %>" class="minimal-read-link">Read
-                                                More
-                                                <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                            <a href="/review/<%= review.review_id %>" class="minimal-read-link">
+                                                Read More <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
                                         </div>
                                     </article>
                                     <% }); %>
@@ -319,13 +314,13 @@
                         </div>
                     </div>
 
-                    <!-- 6. MORE LIKE THIS SECTION -->
+                    <!-- Recommendations Section -->
                     <% if (media.recommendations && media.recommendations.length> 0) { %>
                         <div class="detail-section details-panel" id="sec-more-like-this">
                             <section class="carousel-section">
                                 <div class="carousel-header">
-                                    <h2 class="carousel-title" style="color: var(--accent-teal, #00b4d8);">If You Liked
-                                        <%= media.title %>
+                                    <h2 class="carousel-title" style="color: var(--accent-teal, #00b4d8);">
+                                        If You Liked <%= media.title %>
                                     </h2>
                                     <div class="carousel-controls">
                                         <button class="carousel-btn" aria-label="Previous">&#10094;</button>
@@ -341,8 +336,10 @@
                                                     <span class="type-badge">
                                                         <%= rec.type %>
                                                     </span>
-                                                    <div class="rating-box"><span class="rating-label">TMDB</span><span
-                                                            class="rating-score">⭐ <%= rec.score %></span></div>
+                                                    <div class="rating-box">
+                                                        <span class="rating-label">TMDB</span>
+                                                        <span class="rating-score">⭐ <%= rec.score %></span>
+                                                    </div>
                                                 </div>
                                                 <div class="card-bottom-content">
                                                     <div class="title-row">
@@ -377,13 +374,13 @@
                             </section>
                         </div>
                         <% } %>
-
         </section>
     </main>
 
     <%- include("partials/footer.ejs") %>
         <%- include("partials/modals/log-modal.ejs") %>
             <%- include("partials/modals/search-modal.ejs") %>
+
                 <script src="/js/main.js"></script>
                 <script src="/js/modals.js"></script>
                 <script src="/js/carousel.js"></script>
