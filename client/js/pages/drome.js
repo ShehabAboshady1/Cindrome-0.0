@@ -27,7 +27,159 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let isGenerating = false;
   let abortController = null;
+  let chatHistory = [];
 
+  // ==========================================
+  // 1. دوال إدارة الحفظ في sessionStorage
+  // ==========================================
+  function saveHistory() {
+    try {
+      sessionStorage.setItem("drome_chat_history", JSON.stringify(chatHistory));
+    } catch (e) {
+      console.warn("SessionStorage write failed:", e);
+    }
+  }
+
+  function loadHistory() {
+    try {
+      const stored = sessionStorage.getItem("drome_chat_history");
+      if (!stored) return;
+
+      chatHistory = JSON.parse(stored) || [];
+      if (chatHistory.length > 0) {
+        if (emptyState) emptyState.classList.add("is-hidden");
+
+        chatHistory.forEach((msg) => {
+          if (msg.role === "user") {
+            appendUserBubble(msg.text);
+          } else if (msg.role === "drome") {
+            appendDromeBubble(msg.message, msg.results || []);
+          } else if (msg.role === "stopped") {
+            appendStopBubble();
+          }
+        });
+
+        // التمرير التلقائي لآخر رسالة بعد إعادة البناء
+        setTimeout(() => {
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        }, 50);
+      }
+    } catch (err) {
+      console.error("Error restoring chat history:", err);
+      sessionStorage.removeItem("drome_chat_history");
+      chatHistory = [];
+    }
+  }
+
+  // ==========================================
+  // 2. دوال رسم الفقرات والكروت في الـ DOM
+  // ==========================================
+  function appendUserBubble(text) {
+    const userClone = userBubbleTemplate.content.cloneNode(true);
+    userClone.querySelector(".message-text").textContent = text;
+    chatInner.insertBefore(userClone, typingIndicator);
+  }
+
+  function appendDromeBubble(message, results = []) {
+    const dromeClone = dromeBubbleTemplate.content.cloneNode(true);
+    dromeClone.querySelector(".message-text").textContent = message;
+
+    const cardsRow = dromeClone.querySelector(".chat-cards-row");
+    if (results && results.length > 0) {
+      results.forEach((item) => {
+        cardsRow.appendChild(createCard(item));
+      });
+    }
+
+    chatInner.insertBefore(dromeClone, typingIndicator);
+  }
+
+  function appendStopBubble() {
+    const stopClone = stopBubbleTemplate.content.cloneNode(true);
+    chatInner.insertBefore(stopClone, typingIndicator);
+  }
+
+  function createCard(item) {
+    const cardClone = chatMovieCardTemplate.content.cloneNode(true);
+    cardClone.querySelector(".chat-movie-poster").src =
+      item.poster || "/assets/posters/default-poster.png";
+    cardClone.querySelector(".chat-movie-title").textContent = item.title;
+    cardClone.querySelector(".chat-movie-year").textContent =
+      item.meta || item.year || "";
+    cardClone.querySelector(".rating-val").textContent = item.score || "NR";
+    cardClone.querySelector(".chat-btn-details").href =
+      `/details?id=${item.id}&type=${item.mediaType}`;
+
+    const watchBtn = cardClone.querySelector(".chat-btn-watchlist");
+    const minusIcon = watchBtn.querySelector(".icon-minus");
+    const plusIcon = watchBtn.querySelector(".icon-plus");
+
+    // ضبط الحالة المبدئية للزرار (سواء كان قادماً من السيرفر أو مسترجعاً من الـ Session)
+    if (item.inWatchlist) {
+      watchBtn.classList.add("added");
+      watchBtn.title = "Remove from Watchlist";
+      minusIcon.style.display = "inline-block";
+      plusIcon.style.display = "none";
+    } else {
+      watchBtn.classList.remove("added");
+      watchBtn.title = "Add to Watchlist";
+      minusIcon.style.display = "none";
+      plusIcon.style.display = "inline-block";
+    }
+
+    // ربط الزرار بمسار الـ API الفعلي
+    watchBtn.addEventListener("click", async function (e) {
+      e.preventDefault();
+      if (this.disabled) return;
+      this.disabled = true;
+
+      try {
+        const res = await fetch("/api/watchlist/toggle", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tmdb_id: item.id,
+            media_type: item.mediaType,
+          }),
+        });
+
+        if (res.status === 401 || res.redirected) {
+          window.location.href = "/sign-in";
+          return;
+        }
+
+        const resData = await res.json();
+        if (res.ok) {
+          const isAdded = resData.status === "added";
+          item.inWatchlist = isAdded; // تحديث الحالة محلياً
+          saveHistory(); // تحديث الـ sessionStorage حتى يحتفظ الزرار بحالته الجديدة لو حدث Refresh
+
+          this.classList.toggle("added", isAdded);
+          if (isAdded) {
+            minusIcon.style.display = "inline-block";
+            plusIcon.style.display = "none";
+            this.title = "Remove from Watchlist";
+          } else {
+            minusIcon.style.display = "none";
+            plusIcon.style.display = "inline-block";
+            this.title = "Add to Watchlist";
+          }
+        } else {
+          alert(resData.error || "Failed to update watchlist");
+        }
+      } catch (err) {
+        console.error("Watchlist toggle error:", err);
+      } finally {
+        this.disabled = false;
+      }
+    });
+
+    return cardClone;
+  }
+
+  // ==========================================
+  // 3. معالجة الإدخال والتنقل
+  // ==========================================
   function autoResize() {
     dromeInput.style.height = "auto";
     dromeInput.style.height = dromeInput.scrollHeight + "px";
@@ -79,6 +231,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // ==========================================
+  // 4. إرسال واستقبال الرسائل
+  // ==========================================
   async function handleSend() {
     const text = dromeInput.value.trim();
     if (text === "" || isGenerating) return;
@@ -90,9 +245,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (emptyState) emptyState.classList.add("is-hidden");
 
-    const userClone = userBubbleTemplate.content.cloneNode(true);
-    userClone.querySelector(".message-text").textContent = text;
-    chatInner.insertBefore(userClone, typingIndicator);
+    // رسم فقرة المستخدم وحفظها في التاريخ
+    appendUserBubble(text);
+    chatHistory.push({ role: "user", text });
+    saveHistory();
 
     dromeInput.value = "";
     dromeInput.style.height = "auto";
@@ -115,55 +271,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
       typingIndicator.classList.add("is-hidden");
 
-      const dromeClone = dromeBubbleTemplate.content.cloneNode(true);
-      dromeClone.querySelector(".message-text").textContent = data.message;
+      // رسم رد Drome والكروت وحفظها في التاريخ
+      appendDromeBubble(data.message, data.results || []);
+      chatHistory.push({
+        role: "drome",
+        message: data.message,
+        results: data.results || [],
+      });
+      saveHistory();
 
-      const cardsRow = dromeClone.querySelector(".chat-cards-row");
-
-      function createCard(item) {
-        const cardClone = chatMovieCardTemplate.content.cloneNode(true);
-        cardClone.querySelector(".chat-movie-poster").src =
-          item.poster || "/assets/posters/default-poster.png";
-        cardClone.querySelector(".chat-movie-title").textContent = item.title;
-        cardClone.querySelector(".chat-movie-year").textContent =
-          item.meta || item.year || "";
-        cardClone.querySelector(".rating-val").textContent = item.score || "NR";
-        cardClone.querySelector(".chat-btn-details").href =
-          `/details?id=${item.id}&type=${item.mediaType}`;
-
-        const watchBtn = cardClone.querySelector(".chat-btn-watchlist");
-        watchBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          this.classList.toggle("added");
-          const minusIcon = this.querySelector(".icon-minus");
-          const plusIcon = this.querySelector(".icon-plus");
-          if (this.classList.contains("added")) {
-            minusIcon.style.display = "inline-block";
-            plusIcon.style.display = "none";
-          } else {
-            minusIcon.style.display = "none";
-            plusIcon.style.display = "inline-block";
-          }
-        });
-        return cardClone;
-      }
-
-      if (data.results && data.results.length > 0) {
-        data.results.forEach((item) => {
-          cardsRow.appendChild(createCard(item));
-        });
-      }
-
-      chatInner.insertBefore(dromeClone, typingIndicator);
       chatContainer.scrollTop = chatContainer.scrollHeight;
     } catch (error) {
       if (error.name !== "AbortError") {
         console.error("Drome Error:", error);
         typingIndicator.classList.add("is-hidden");
-        const dromeClone = dromeBubbleTemplate.content.cloneNode(true);
-        dromeClone.querySelector(".message-text").textContent =
+
+        const errorMsg =
           "Sorry, I ran into a technical issue. Please try again.";
-        chatInner.insertBefore(dromeClone, typingIndicator);
+        appendDromeBubble(errorMsg, []);
+        chatHistory.push({ role: "drome", message: errorMsg, results: [] });
+        saveHistory();
+
         chatContainer.scrollTop = chatContainer.scrollHeight;
       }
     } finally {
@@ -174,8 +302,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function stopGeneration() {
     if (abortController) abortController.abort();
     typingIndicator.classList.add("is-hidden");
-    const stopClone = stopBubbleTemplate.content.cloneNode(true);
-    chatInner.insertBefore(stopClone, typingIndicator);
+
+    appendStopBubble();
+    chatHistory.push({ role: "stopped" });
+    saveHistory();
+
     chatContainer.scrollTop = chatContainer.scrollHeight;
     finishGeneration();
   }
@@ -183,7 +314,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function finishGeneration() {
     isGenerating = false;
     updateInputUI();
-    // 🌟 إعادة الفوكس تلقائياً لمربع النص بعد الانتهاء
     setTimeout(() => {
       dromeInput.focus();
     }, 50);
@@ -201,15 +331,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ==========================================
+  // 5. مسح الشات (New Chat)
+  // ==========================================
   function clearChat() {
+    chatHistory = [];
+    sessionStorage.removeItem("drome_chat_history");
+
     const bubbles = chatInner.querySelectorAll(
       ".chat-bubble:not(.typing-indicator-bubble)",
     );
     bubbles.forEach((b) => b.remove());
+
     if (emptyState) emptyState.classList.remove("is-hidden");
     chatContainer.scrollTop = 0;
     dromeInput.focus();
   }
 
   newChatBtn.addEventListener("click", clearChat);
+
+  // تشغيل استعادة التاريخ عند تحميل الصفحة
+  loadHistory();
 });
