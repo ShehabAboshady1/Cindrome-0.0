@@ -455,43 +455,48 @@ body.drome-page {
   }
 }
 
-/* Inline Media Cards */
+/* =========================================================
+   Inline Media Cards (Compact 2x2 Grid Layout)
+========================================================= */
+.chat-cards-grid,
 .chat-cards-row {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.chat-cards-row::-webkit-scrollbar {
-  display: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 620px; /* تحديد العرض الأقصى للشبكة لتبقى ملمومة وأنيقة */
 }
 
 .chat-movie-card {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(241, 227, 200, 0.1);
-  border-radius: 12px;
-  padding: 10px;
-  width: 250px;
-  flex-shrink: 0;
-  transition: border-color 0.2s ease;
+  border-radius: 10px;
+  padding: 8px 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .chat-movie-card:hover {
   border-color: var(--accent-teal);
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
 }
 
 .chat-movie-poster {
-  width: 60px;
-  height: 90px;
-  border-radius: 6px;
+  width: 50px;
+  height: 75px;
+  border-radius: 5px;
   object-fit: cover;
   background-color: var(--maincolor);
+  flex-shrink: 0;
 }
 
 .chat-movie-info {
@@ -499,20 +504,24 @@ body.drome-page {
   flex-direction: column;
   justify-content: center;
   flex-grow: 1;
+  min-width: 0;
 }
 
 .chat-movie-title {
-  margin: 0 0 6px 0;
-  font-size: 0.95rem;
+  margin: 0 0 2px 0;
+  font-size: 0.86rem;
   color: var(--text-cream);
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chat-movie-meta {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: rgba(241, 227, 200, 0.6);
   display: flex;
-  gap: 6px;
+  gap: 5px;
   align-items: center;
 }
 
@@ -523,21 +532,22 @@ body.drome-page {
 
 .chat-movie-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 6px;
+  margin-top: 6px;
 }
 
 .chat-btn-details {
   background: var(--accent-teal);
   color: var(--dark-bg);
   text-decoration: none;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 4px 10px;
+  border-radius: 5px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .chat-btn-details:hover {
@@ -549,15 +559,16 @@ body.drome-page {
   background: transparent;
   border: 1px solid rgba(241, 227, 200, 0.2);
   color: var(--text-cream);
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.68rem;
+  flex-shrink: 0;
 }
 
 .chat-btn-watchlist:hover {
@@ -583,7 +594,9 @@ body.drome-page {
   display: none;
 }
 
-/* Mobile Responsive */
+/* =========================================================
+   Mobile Responsive Adjustments
+========================================================= */
 @media (max-width: 768px) {
   .chat-messages-container {
     scrollbar-width: none;
@@ -610,6 +623,50 @@ body.drome-page {
   .drome-bubble-content p {
     font-size: 0.82rem;
     line-height: 1.6;
+  }
+
+  /* تحويل الشبكة إلى عمود واحد كامل في الهواتف بأبعاد ملمومة */
+  .chat-cards-grid,
+  .chat-cards-row {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    gap: 8px;
+  }
+
+  .chat-movie-card {
+    width: 100%;
+    padding: 7px 9px;
+    gap: 8px;
+  }
+
+  .chat-movie-poster {
+    width: 46px;
+    height: 69px;
+  }
+
+  .chat-movie-title {
+    font-size: 0.82rem;
+    margin-bottom: 2px;
+  }
+
+  .chat-movie-meta {
+    font-size: 0.65rem;
+  }
+
+  .chat-movie-actions {
+    margin-top: 5px;
+    gap: 6px;
+  }
+
+  .chat-btn-details {
+    padding: 4px 8px;
+    font-size: 0.68rem;
+  }
+
+  .chat-btn-watchlist {
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
   }
 
   .drome-input-wrapper {
@@ -661,41 +718,5 @@ body.drome-page {
     padding: 6px 4px;
     min-width: 0;
     max-height: 120px;
-  }
-
-  .chat-movie-card {
-    width: 210px;
-    padding: 8px;
-    gap: 8px;
-  }
-
-  .chat-movie-poster {
-    width: 50px;
-    height: 75px;
-  }
-
-  .chat-movie-title {
-    font-size: 0.85rem;
-    margin-bottom: 4px;
-  }
-
-  .chat-movie-meta {
-    font-size: 0.65rem;
-  }
-
-  .chat-movie-actions {
-    margin-top: 6px;
-    gap: 6px;
-  }
-
-  .chat-btn-details {
-    padding: 5px 10px;
-    font-size: 0.7rem;
-  }
-
-  .chat-btn-watchlist {
-    width: 28px;
-    height: 28px;
-    font-size: 0.7rem;
   }
 }

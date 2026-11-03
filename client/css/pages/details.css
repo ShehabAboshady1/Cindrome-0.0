@@ -165,7 +165,7 @@ body {
 .watchlist-btn i {
   font-size: 0.9em;
   transition: color 0.2s ease;
-  transform: translateY(2px);
+  transform: translateY(0px);
 }
 
 .watchlist-btn .text-added {

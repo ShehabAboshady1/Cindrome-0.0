@@ -13,7 +13,7 @@ import listRoutes from "./routes/listRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import { getUserWatchlistIds, getUserLikedMediaIds } from "./utils/helpers.js";
-
+import dromeRoutes from "./routes/dromeRoutes.js";
 const pgSession = connectPgSimple(session);
 const app = express();
 const port = process.env.PORT || 3000;
@@ -64,7 +64,7 @@ app.use(mediaRoutes);
 app.use(listRoutes);
 app.use(userRoutes);
 app.use(reviewRoutes);
-
+app.use(dromeRoutes);
 app.get("/drome", (req, res) => res.render("drome.ejs"));
 
 app.listen(port, () => {
