@@ -17,6 +17,7 @@ const TMDB_ID_TO_NAME = {
   99: "Documentary",
   18: "Drama",
   10751: "Family",
+  10762: "Kids",
   14: "Fantasy",
   36: "History",
   27: "Horror",
@@ -29,7 +30,6 @@ const TMDB_ID_TO_NAME = {
   10752: "War",
   37: "Western",
   10759: "Action & Adventure",
-  10762: "Kids",
   10763: "News",
   10764: "Reality",
   10765: "Sci-Fi & Fantasy",
@@ -180,11 +180,26 @@ export const processChat = async (req, res) => {
       }
     }
 
+    // 🌟 حماية تامة من السقوط في رسالة الـ Onboarding عند التعرف على أي نية محددة
+    const hasSpecificUserIntent =
+      parsedIntent.detectedGenres.length > 0 ||
+      parsedIntent.detectedKeywords.length > 0 ||
+      parsedIntent.isKorean ||
+      parsedIntent.hasTwistKeywords ||
+      parsedIntent.isUnderdog ||
+      parsedIntent.isComfortComedy ||
+      parsedIntent.isHistoricalWar ||
+      parsedIntent.isTrueCrimeDoc ||
+      parsedIntent.isFamilyAnimation ||
+      parsedIntent.isCyberpunk ||
+      parsedIntent.isPhilosophicalSciFi ||
+      parsedIntent.isHeistRobbery;
+
     if (
       req.user &&
       userReviewsCount < 3 &&
       !anchorMedia &&
-      parsedIntent.detectedGenres.length === 0
+      !hasSpecificUserIntent
     ) {
       const coldStartMessage = CindromeEngine.generateResponseText(
         parsedIntent,
@@ -198,7 +213,7 @@ export const processChat = async (req, res) => {
       });
     }
 
-    // 5. رصد النوايا الثيماتية الدقيقة
+    // 5. رصد النوايا الثيماتية وحالات المود
     const iconicSitcomAnchors =
       /\b(friends|the office|how i met your mother|himym|modern family|brooklyn 99|brooklyn nine-nine|new girl|parks and recreation|seinfeld|community|schitt's creek|scrubs|two and a half men|the big bang theory|big bang theory)\b/i;
     const isSitcomIntent =
@@ -218,14 +233,20 @@ export const processChat = async (req, res) => {
       ["racing", "boxing", "football", "basketball"].includes(k.name),
     );
     const userWantsSports =
-      parsedIntent.detectedGenres.includes("sports") || !!specificSportKw;
+      (parsedIntent.detectedGenres.includes("sports") || !!specificSportKw) &&
+      !parsedIntent.isUnderdog;
 
     const wantsTimeTravel =
       parsedIntent.detectedKeywords.some((k) => k.name === "time travel") ||
       /\b(time travel|time loop|timeline|wormhole)\b/i.test(cleanPrompt);
+
     const wantsPlotTwist =
       parsedIntent.detectedKeywords.some((k) => k.name === "plot twist") ||
-      /\b(plot twist|twist ending|crazy plot twists?)\b/i.test(cleanPrompt);
+      parsedIntent.hasTwistKeywords ||
+      /\b(plot twists?|twist ending|crazy plot twists?|can'?t predict|unpredictable|mind[- ]blowing)\b/i.test(
+        cleanPrompt,
+      );
+
     const wantsMindBending =
       parsedIntent.detectedKeywords.some((k) => k.name === "mind bending") ||
       /\b(mind[- ]bending|psychological puzzle)\b/i.test(cleanPrompt);
@@ -236,6 +257,98 @@ export const processChat = async (req, res) => {
     const wantsMagic =
       parsedIntent.detectedKeywords.some((k) => k.name === "magic") ||
       /\b(magic|magical|sorcery|sorcerer|witch|wizard|mage|alchemy)\b/i.test(
+        cleanPrompt,
+      );
+
+    const wantsPsychological =
+      parsedIntent.isPsychologicalThriller ||
+      parsedIntent.detectedKeywords.some(
+        (k) => k.name === "psychological thriller",
+      ) ||
+      /\b(psychological thriller|mess with my head|mindfuck|mind game)\b/i.test(
+        cleanPrompt,
+      );
+
+    const isRomComIntent =
+      parsedIntent.isRomCom ||
+      parsedIntent.detectedKeywords.some((k) => k.name === "rom-com") ||
+      (/\b(sweet|light|lift my mood|feel[- ]good|rom-com|romcom|romantic comedy)\b/i.test(
+        cleanPrompt,
+      ) &&
+        (parsedIntent.detectedGenres.includes("romance") ||
+          parsedIntent.detectedGenres.includes("comedy")));
+
+    const isHistoricalWarIntent =
+      parsedIntent.isHistoricalWar ||
+      parsedIntent.detectedKeywords.some((k) => k.name === "historical war") ||
+      /\b(historical war|war movie|war movies|huge battles|epic battles|historical epic|epic war)\b/i.test(
+        cleanPrompt,
+      );
+
+    const isTrueCrimeDocIntent =
+      parsedIntent.isTrueCrimeDoc ||
+      parsedIntent.detectedKeywords.some((k) => k.name === "true crime") ||
+      /\b(true crime|docuseries|docu-series|real mysteries|real mystery|crime doc|unsolved mysteries)\b/i.test(
+        cleanPrompt,
+      );
+
+    const isKoreanIntent =
+      parsedIntent.isKorean ||
+      /\b(korean|k-drama|kdrama|k drama|south korea)\b/i.test(cleanPrompt);
+
+    const isFamilyAnimationIntent =
+      parsedIntent.isFamilyAnimation ||
+      (parsedIntent.detectedGenres.includes("animation") &&
+        parsedIntent.detectedGenres.includes("family")) ||
+      (/\b(animated|animation)\b/i.test(cleanPrompt) &&
+        /\b(family|cozy|kids)\b/i.test(cleanPrompt));
+
+    const isCyberpunkIntent =
+      parsedIntent.isCyberpunk ||
+      parsedIntent.detectedKeywords.some(
+        (k) => k.name === "cyberpunk" || k.name === "dystopia",
+      ) ||
+      /\b(cyberpunk|cyber-punk|dystopian?|dystopia|dark futuristic|futuristic city)\b/i.test(
+        cleanPrompt,
+      );
+
+    const isPhilosophicalSciFiIntent =
+      !isCyberpunkIntent &&
+      (parsedIntent.isPhilosophicalSciFi ||
+        (/\b(think about life|philosophical|existential|meaning of life|human condition)\b/i.test(
+          cleanPrompt,
+        ) &&
+          /\b(space|universe|cosmos|sci-fi|stars)\b/i.test(cleanPrompt)));
+
+    const isComfortComedyIntent =
+      parsedIntent.isComfortComedy ||
+      (parsedIntent.isTiredMood &&
+        parsedIntent.detectedGenres.includes("comedy"));
+
+    const isHeistRobberyIntent =
+      parsedIntent.isHeistRobbery ||
+      parsedIntent.detectedKeywords.some((k) => k.name === "heist") ||
+      /\b(plan (?:a )?robbery|big robbery|bank robbery|robbery|heist|bank heist|big heist|steal money|caper|vault|safecracker)\b/i.test(
+        cleanPrompt,
+      );
+
+    const isCrimeHeist =
+      !isTrueCrimeDocIntent &&
+      (isHeistRobberyIntent ||
+        parsedIntent.isCrimeHeist ||
+        parsedIntent.detectedGenres.includes("crime") ||
+        parsedIntent.detectedKeywords.some(
+          (k) => k.name === "organized crime",
+        ) ||
+        /\b(organized crime|mafia|gangster|mobster|mobsters|crime syndicate|underworld)\b/i.test(
+          cleanPrompt,
+        ));
+
+    // 🌟 رصد نية الصعود والتحدي والنجاح من الصفر
+    const isUnderdogIntent =
+      parsedIntent.isUnderdog ||
+      parsedIntent.detectedKeywords.some((k) => k.name === "underdog") ||
+      /\b(starting from zero|start from zero|starting from nothing|rags to riches|underdog|success story|winning against all odds|zero to hero)\b/i.test(
         cleanPrompt,
       );
 
@@ -253,7 +366,7 @@ export const processChat = async (req, res) => {
       });
       let rawRecs = recRes.data.results || [];
 
-      if (isSitcomIntent) {
+      if (isSitcomIntent || isComfortComedyIntent) {
         rawRecs = rawRecs.filter((c) => (c.vote_count || 0) >= 400);
       }
 
@@ -267,71 +380,128 @@ export const processChat = async (req, res) => {
       }
     }
 
-    // جامع روائع السيتكوم الجماهيرية
-    if (isSitcomIntent && parsedIntent.targetType !== "anime") {
+    // جامع روائع الكوميديا والسيتكوم المتوازن
+    if (
+      (isSitcomIntent || isComfortComedyIntent) &&
+      parsedIntent.targetType !== "anime"
+    ) {
       try {
-        const [popSitcomsRes, topSitcomsRes] = await Promise.all([
-          axios.get("https://api.themoviedb.org/3/discover/tv", {
-            params: {
-              api_key: TMDB_API_KEY,
-              with_genres: "35",
-              without_genres: "18,16",
-              "vote_count.gte": 800,
-              sort_by: "popularity.desc",
-              page: 1,
-              "first_air_date.lte": todayStr,
-            },
-          }),
-          axios.get("https://api.themoviedb.org/3/discover/tv", {
-            params: {
-              api_key: TMDB_API_KEY,
-              with_genres: "35",
-              without_genres: "18,16",
-              "vote_count.gte": 1500,
-              sort_by: "vote_average.desc",
-              page: 1,
-              "first_air_date.lte": todayStr,
-            },
-          }),
-        ]);
+        const harvestPromises = [];
 
-        const popSitcoms = (popSitcomsRes.data.results || []).map((t) => ({
-          ...t,
-          media_type: "tv",
-        }));
-        const topSitcoms = (topSitcomsRes.data.results || []).map((t) => ({
-          ...t,
-          media_type: "tv",
-        }));
+        if (
+          parsedIntent.targetType === "tv" ||
+          parsedIntent.targetType === "mixed"
+        ) {
+          harvestPromises.push(
+            axios
+              .get("https://api.themoviedb.org/3/discover/tv", {
+                params: {
+                  api_key: TMDB_API_KEY,
+                  with_genres: "35",
+                  without_genres: "18,16,10765,10768,10762",
+                  "vote_count.gte": 800,
+                  sort_by: "popularity.desc",
+                  page: 1,
+                  "first_air_date.lte": todayStr,
+                },
+              })
+              .then((res) =>
+                (res.data?.results || []).map((t) => ({
+                  ...t,
+                  media_type: "tv",
+                })),
+              ),
+            axios
+              .get("https://api.themoviedb.org/3/discover/tv", {
+                params: {
+                  api_key: TMDB_API_KEY,
+                  with_genres: "35",
+                  without_genres: "18,16,10765,10768,10762",
+                  "vote_count.gte": 1500,
+                  sort_by: "vote_average.desc",
+                  page: 1,
+                  "first_air_date.lte": todayStr,
+                },
+              })
+              .then((res) =>
+                (res.data?.results || []).map((t) => ({
+                  ...t,
+                  media_type: "tv",
+                })),
+              ),
+          );
+        }
 
-        candidates = [...candidates, ...popSitcoms, ...topSitcoms];
+        if (
+          parsedIntent.targetType === "movie" ||
+          parsedIntent.targetType === "mixed"
+        ) {
+          harvestPromises.push(
+            axios
+              .get("https://api.themoviedb.org/3/discover/movie", {
+                params: {
+                  api_key: TMDB_API_KEY,
+                  with_genres: "35",
+                  without_genres: "18,10752,36,27,99,14,16",
+                  without_keywords: "9716",
+                  "vote_count.gte": 1000,
+                  sort_by: "vote_count.desc",
+                  page: 1,
+                  "primary_release_date.lte": todayStr,
+                },
+              })
+              .then((res) =>
+                (res.data?.results || []).map((m) => ({
+                  ...m,
+                  media_type: "movie",
+                })),
+              ),
+            axios
+              .get("https://api.themoviedb.org/3/discover/movie", {
+                params: {
+                  api_key: TMDB_API_KEY,
+                  with_genres: "35",
+                  without_genres: "18,10752,36,27,99,14,16",
+                  without_keywords: "9716",
+                  "vote_count.gte": 800,
+                  sort_by: "popularity.desc",
+                  page: 1,
+                  "primary_release_date.lte": todayStr,
+                },
+              })
+              .then((res) =>
+                (res.data?.results || []).map((m) => ({
+                  ...m,
+                  media_type: "movie",
+                })),
+              ),
+          );
+        }
+
+        const harvestedResults = await Promise.all(harvestPromises);
+        harvestedResults.forEach((group) => {
+          candidates.push(...group);
+        });
       } catch (sitcomErr) {
-        console.error("Sitcom harvesting error:", sitcomErr.message);
+        console.error("Comfort comedy harvesting error:", sitcomErr.message);
       }
     }
 
-    // استرجاع أعمال الرياضة المتخصصة
+    // جامع مسلسلات الجرائم الحقيقية المباشر
     if (
       candidates.length < 5 &&
-      userWantsSports &&
+      isTrueCrimeDocIntent &&
       parsedIntent.targetType !== "anime"
     ) {
-      let searchQueries = [];
-      if (specificSportKw?.name === "football") {
-        searchQueries = ["football", "soccer", "fifa", "nfl"];
-      } else if (specificSportKw?.name === "racing") {
-        searchQueries = ["racing", "race car", "formula 1"];
-      } else if (specificSportKw?.name === "boxing") {
-        searchQueries = ["boxing", "boxer"];
-      } else if (specificSportKw?.name === "basketball") {
-        searchQueries = ["basketball", "nba"];
-      } else {
-        searchQueries = ["sports"];
-      }
-
-      const searchPromises = searchQueries.map((q) =>
+      const docQueries = [
+        "true crime",
+        "unsolved mysteries",
+        "serial killer",
+        "murder documentary",
+      ];
+      const docPromises = docQueries.map((q) =>
         axios
-          .get("https://api.themoviedb.org/3/search/movie", {
+          .get("https://api.themoviedb.org/3/search/tv", {
             params: {
               api_key: TMDB_API_KEY,
               query: q,
@@ -342,44 +512,126 @@ export const processChat = async (req, res) => {
           .catch(() => ({ data: { results: [] } })),
       );
 
-      const sportsDiscoverPromise = axios
-        .get("https://api.themoviedb.org/3/discover/movie", {
-          params: {
-            api_key: TMDB_API_KEY,
-            with_keywords: "6075",
-            sort_by: "vote_count.desc",
-            "vote_count.gte": 100,
-            without_genres: "16,878,14",
-            "primary_release_date.lte": todayStr,
-            page: 1,
-          },
-        })
-        .catch(() => ({ data: { results: [] } }));
-
-      const allResponses = await Promise.all([
-        ...searchPromises,
-        sportsDiscoverPromise,
-      ]);
-
-      let sportsHarvest = [];
-      allResponses.forEach((res) => {
+      const docResponses = await Promise.all(docPromises);
+      let docHarvest = [];
+      docResponses.forEach((res) => {
         if (res.data?.results) {
-          sportsHarvest.push(...res.data.results);
+          docHarvest.push(...res.data.results);
         }
       });
 
-      candidates = sportsHarvest
-        .filter((m) => (m.vote_count || 0) >= 20)
-        .map((m) => ({
-          ...m,
-          media_type:
-            parsedIntent.targetType === "mixed"
-              ? "movie"
-              : parsedIntent.targetType,
-        }));
+      const harvestedSeries = docHarvest
+        .filter((t) => (t.vote_count || 0) >= 30)
+        .map((t) => ({ ...t, media_type: "tv" }));
+
+      candidates = [...candidates, ...harvestedSeries];
     }
 
-    // 🌟 استدعاء TMDB Discover مع ضبط الكلمات المفتاحية وسهرات الرعب
+    // جامع مسلسلات الغموض والتويستات الكورية المباشر
+    if (
+      candidates.length < 5 &&
+      isKoreanIntent &&
+      (wantsPlotTwist || parsedIntent.hasTwistKeywords)
+    ) {
+      const kTwistQueries = [
+        "Signal",
+        "Flower of Evil",
+        "Beyond Evil",
+        "Mouse",
+        "Stranger",
+        "Blind",
+      ];
+      const kPromises = kTwistQueries.map((q) =>
+        axios
+          .get("https://api.themoviedb.org/3/search/tv", {
+            params: {
+              api_key: TMDB_API_KEY,
+              query: q,
+              page: 1,
+              include_adult: false,
+            },
+          })
+          .catch(() => ({ data: { results: [] } })),
+      );
+
+      const kResponses = await Promise.all(kPromises);
+      let kHarvest = [];
+      kResponses.forEach((res) => {
+        if (res.data?.results) {
+          kHarvest.push(...res.data.results);
+        }
+      });
+
+      const harvestedKShows = kHarvest
+        .filter(
+          (t) => t.original_language === "ko" && (t.vote_count || 0) >= 20,
+        )
+        .map((t) => ({ ...t, media_type: "tv" }));
+
+      candidates = [...candidates, ...harvestedKShows];
+    }
+
+    // 🌟 جامع روائع الصعود والتحدي من الصفر (Underdog & Rags to Riches Harvester)
+    if (
+      candidates.length < 5 &&
+      isUnderdogIntent &&
+      parsedIntent.targetType !== "anime"
+    ) {
+      const underdogQueries = [
+        { q: "The Pursuit of Happyness", type: "movie" },
+        { q: "Whiplash", type: "movie" },
+        { q: "Rocky", type: "movie" },
+        { q: "Creed", type: "movie" },
+        { q: "Ford v Ferrari", type: "movie" },
+        { q: "Moneyball", type: "movie" },
+        { q: "Cobra Kai", type: "tv" },
+        { q: "Slumdog Millionaire", type: "movie" },
+      ];
+
+      const uPromises = underdogQueries.map((item) => {
+        const endpoint =
+          parsedIntent.targetType === "movie"
+            ? "https://api.themoviedb.org/3/search/movie"
+            : parsedIntent.targetType === "tv"
+              ? "https://api.themoviedb.org/3/search/tv"
+              : `https://api.themoviedb.org/3/search/${item.type}`;
+
+        return axios
+          .get(endpoint, {
+            params: {
+              api_key: TMDB_API_KEY,
+              query: item.q,
+              page: 1,
+              include_adult: false,
+            },
+          })
+          .catch(() => ({ data: { results: [] } }));
+      });
+
+      const uResponses = await Promise.all(uPromises);
+      let uHarvest = [];
+      uResponses.forEach((res, index) => {
+        if (res.data?.results) {
+          const expectedType =
+            parsedIntent.targetType === "mixed"
+              ? underdogQueries[index].type
+              : parsedIntent.targetType;
+          uHarvest.push(
+            ...res.data.results.map((it) => ({
+              ...it,
+              media_type: it.media_type || expectedType,
+            })),
+          );
+        }
+      });
+
+      const harvestedUnderdogs = uHarvest.filter(
+        (it) => (it.vote_count || 0) >= 100,
+      );
+      candidates = [...candidates, ...harvestedUnderdogs];
+    }
+
+    // استدعاء TMDB Discover مع ضبط الكلمات المفتاحية
     if (candidates.length < 5) {
       const excludeSuperheroParam = wantsSuperhero ? null : "9715";
       const superheroKeywordParam = wantsSuperhero ? "9715" : null;
@@ -401,8 +653,48 @@ export const processChat = async (req, res) => {
       const complexKeywordParam =
         complexKeywordsList.length > 0 ? complexKeywordsList.join("|") : null;
 
+      const heistKeywordParam = isHeistRobberyIntent
+        ? String(TMDB_THEME_IDS.heist || "10051|6492|10292")
+        : null;
+
+      const crimeHeistKeywordParam = isCrimeHeist
+        ? String(TMDB_THEME_IDS.crimeHeist || "10051|6492|10292|10391|242")
+        : null;
+
+      const psychologicalKeywordParam = wantsPsychological
+        ? String(TMDB_THEME_IDS.psychologicalThriller || "10714|12565|9663")
+        : null;
+
+      const romcomKeywordParam = isRomComIntent
+        ? String(TMDB_THEME_IDS.romcom || "9799|158718|3133")
+        : null;
+
+      const historicalWarKeywordParam = isHistoricalWarIntent
+        ? String(TMDB_THEME_IDS.historicalWar || "11162|233|210103")
+        : null;
+
+      const trueCrimeKeywordParam = isTrueCrimeDocIntent
+        ? String(TMDB_THEME_IDS.trueCrime || "10714|9882|10303")
+        : null;
+
+      const cyberpunkKeywordParam = isCyberpunkIntent
+        ? String(TMDB_THEME_IDS.cyberpunk || "12190|4565|2853|156395")
+        : null;
+
+      const philosophicalSciFiKeywordParam = isPhilosophicalSciFiIntent
+        ? String(TMDB_THEME_IDS.philosophicalSciFi || "10090|310|156395")
+        : null;
+
+      // 🌟 وسوم الصعود والتحدي من الصفر
+      const underdogKeywordParam = isUnderdogIntent
+        ? String(TMDB_THEME_IDS.underdog || "9882|10714|1803")
+        : null;
+
       const wantsSciFi =
-        parsedIntent.detectedGenres.includes("scifi") || wantsTimeTravel;
+        parsedIntent.detectedGenres.includes("scifi") ||
+        wantsTimeTravel ||
+        isCyberpunkIntent ||
+        isPhilosophicalSciFiIntent;
       const isSciFiOnly =
         wantsSciFi &&
         !parsedIntent.detectedGenres.includes("fantasy") &&
@@ -412,10 +704,32 @@ export const processChat = async (req, res) => {
         : null;
 
       let excludedMovieGenres = [];
-      if (!wantsSciFi && userWantsSports) {
+      if (!wantsSciFi && (userWantsSports || isHistoricalWarIntent)) {
         excludedMovieGenres.push("878", "14", "16");
       } else if (parsedIntent.isHorrorNight) {
-        excludedMovieGenres.push("35", "16"); // حجب الكوميديا والرسوم المتحركة في سهرات الرعب
+        excludedMovieGenres.push("35", "16");
+      } else if (isHeistRobberyIntent) {
+        excludedMovieGenres.push("878", "14", "16", "27");
+      } else if (isCrimeHeist) {
+        if (!wantsSciFi) excludedMovieGenres.push("878");
+        excludedMovieGenres.push("16", "14");
+      } else if (isRomComIntent) {
+        excludedMovieGenres.push("10752", "36", "27", "16");
+      } else if (isFamilyAnimationIntent) {
+        excludedMovieGenres.push("27", "80", "53");
+      } else if (isTrueCrimeDocIntent) {
+        excludedMovieGenres.push("16", "878", "14", "35");
+      } else if (isCyberpunkIntent) {
+        excludedMovieGenres.push("10751", "35");
+      } else if (isPhilosophicalSciFiIntent) {
+        excludedMovieGenres.push("35", "16");
+      } else if (isComfortComedyIntent) {
+        excludedMovieGenres.push("18", "10752", "36", "27", "99", "14", "16");
+      } else if (isUnderdogIntent) {
+        // حجب الرعب والفانتازيا في قصص الصعود والتحدي الواقعية
+        excludedMovieGenres.push("27", "14", "16");
+      } else if (wantsPsychological) {
+        excludedMovieGenres.push("16", "35");
       } else if (isSciFiOnly) {
         excludedMovieGenres.push("16", "14");
       } else {
@@ -423,27 +737,104 @@ export const processChat = async (req, res) => {
       }
       const movieWithoutGenres = excludedMovieGenres.join(",");
 
+      let withoutKeywordsList = [];
+      if (excludeSuperheroParam)
+        withoutKeywordsList.push(excludeSuperheroParam);
+      if (isRomComIntent || isComfortComedyIntent)
+        withoutKeywordsList.push("9716");
+      if (isFamilyAnimationIntent && !/\banime\b/i.test(cleanPrompt)) {
+        withoutKeywordsList.push("210024");
+      }
+      const withoutKeywordsParam =
+        withoutKeywordsList.length > 0 ? withoutKeywordsList.join(",") : null;
+
       let movieGenres = [];
       parsedIntent.detectedGenres.forEach((g) => {
         if (TMDB_GENRE_IDS.movie[g]) movieGenres.push(TMDB_GENRE_IDS.movie[g]);
       });
 
-      if (wantsTimeTravel && !movieGenres.includes(878)) {
-        movieGenres.push(878);
+      if ((isCrimeHeist || isHeistRobberyIntent) && !movieGenres.includes(80)) {
+        movieGenres.unshift(80);
+      }
+
+      if (
+        wantsPsychological &&
+        !movieGenres.includes(53) &&
+        !movieGenres.includes(9648)
+      ) {
+        movieGenres.unshift(53);
+      }
+
+      if (
+        (wantsTimeTravel || isCyberpunkIntent || isPhilosophicalSciFiIntent) &&
+        !movieGenres.includes(878)
+      ) {
+        movieGenres.unshift(878);
+      }
+
+      if (isUnderdogIntent && !movieGenres.includes(18)) {
+        movieGenres.unshift(18);
       }
 
       let tvGenres = [];
       parsedIntent.detectedGenres.forEach((g) => {
         if (TMDB_GENRE_IDS.tv[g]) tvGenres.push(TMDB_GENRE_IDS.tv[g]);
       });
-      if (wantsTimeTravel && !tvGenres.includes(10765)) {
-        tvGenres.push(10765);
+      if ((isCrimeHeist || isHeistRobberyIntent) && !tvGenres.includes(80)) {
+        tvGenres.unshift(80);
+      }
+      if (wantsPsychological && !tvGenres.includes(9648)) {
+        tvGenres.unshift(9648);
+      }
+      if (
+        (wantsTimeTravel || isCyberpunkIntent || isPhilosophicalSciFiIntent) &&
+        !tvGenres.includes(10765)
+      ) {
+        tvGenres.unshift(10765);
       }
 
-      const primaryMovieGenre = movieGenres.length > 0 ? movieGenres[0] : null;
-      const primaryTvGenre = tvGenres.length > 0 ? tvGenres[0] : null;
+      if (isKoreanIntent) {
+        if (wantsPlotTwist || parsedIntent.hasTwistKeywords) {
+          if (!tvGenres.includes(9648)) tvGenres.push(9648);
+          if (!tvGenres.includes(80)) tvGenres.push(80);
+          if (!tvGenres.includes(18)) tvGenres.push(18);
+        } else {
+          if (!tvGenres.includes(9648)) tvGenres.push(9648);
+          if (!tvGenres.includes(80)) tvGenres.push(80);
+        }
+      }
 
-      // 🌟 اعتماد حد أدنى صارم للأصوات لسهرات الرعب (1000 صوت) لطرد أحدث الإصدارات المغمورة
+      let primaryMovieGenre = movieGenres.length > 0 ? movieGenres[0] : null;
+      let primaryTvGenre = tvGenres.length > 0 ? tvGenres.join("|") : null;
+
+      if (isComfortComedyIntent) {
+        primaryMovieGenre = "35";
+        primaryTvGenre = "35";
+      }
+
+      if (isRomComIntent) {
+        primaryMovieGenre = "35,10749";
+      }
+
+      if (isHistoricalWarIntent) {
+        primaryMovieGenre = "10752|36";
+        primaryTvGenre = "10768|36";
+      }
+
+      if (isTrueCrimeDocIntent) {
+        primaryMovieGenre = "99";
+        primaryTvGenre = "99";
+      }
+
+      if (isFamilyAnimationIntent) {
+        primaryMovieGenre = "16,10751";
+        primaryTvGenre = "16,10751";
+      }
+
+      if (isUnderdogIntent) {
+        primaryMovieGenre = "18";
+      }
+
       const movieMinVotes = wantsSuperhero
         ? 400
         : specificSportKw
@@ -452,9 +843,29 @@ export const processChat = async (req, res) => {
             ? 200
             : isComplexThemeIntent
               ? 250
-              : parsedIntent.isHorrorNight
-                ? 1000
-                : 1500;
+              : isRomComIntent
+                ? 500
+                : isComfortComedyIntent
+                  ? 800
+                  : isFamilyAnimationIntent
+                    ? 600
+                    : isHistoricalWarIntent
+                      ? 400
+                      : isTrueCrimeDocIntent
+                        ? 80
+                        : isKoreanIntent
+                          ? 60
+                          : isHeistRobberyIntent || isUnderdogIntent
+                            ? 350
+                            : isCyberpunkIntent || isPhilosophicalSciFiIntent
+                              ? 400
+                              : wantsPsychological
+                                ? 400
+                                : isCrimeHeist
+                                  ? 300
+                                  : parsedIntent.isHorrorNight
+                                    ? 1000
+                                    : 1500;
 
       const tvMinVotes = wantsSuperhero
         ? 200
@@ -464,46 +875,111 @@ export const processChat = async (req, res) => {
             ? 150
             : isComplexThemeIntent
               ? 100
-              : 400;
+              : isTrueCrimeDocIntent
+                ? 50
+                : isKoreanIntent
+                  ? 30
+                  : isComfortComedyIntent
+                    ? 400
+                    : isCrimeHeist
+                      ? 200
+                      : 400;
 
       if (parsedIntent.targetType === "mixed") {
         const movieParams = {
           api_key: TMDB_API_KEY,
           page: 1,
           "vote_count.gte": movieMinVotes,
-          sort_by: "vote_count.desc", // الاعتماد الدائم على vote_count.desc للأفلام الجماهيرية
+          sort_by: "vote_count.desc",
           without_genres: movieWithoutGenres,
           "primary_release_date.lte": todayStr,
         };
 
+        if (isKoreanIntent) {
+          movieParams.with_original_language = "ko";
+          movieParams.with_origin_country = "KR";
+        }
+
         if (parsedIntent.isHorrorNight && !parsedIntent.wantsClassic) {
-          movieParams["primary_release_date.gte"] = "2010-01-01"; // الرعب الجماهيري من 2010 وحتى اليوم
+          movieParams["primary_release_date.gte"] = "2010-01-01";
+        }
+
+        if (wantsPsychological) {
+          movieParams["vote_average.gte"] = 7.0;
         }
 
         if (primaryMovieGenre) movieParams.with_genres = primaryMovieGenre;
 
         if (superheroKeywordParam) {
           movieParams.with_keywords = superheroKeywordParam;
+        } else if (underdogKeywordParam) {
+          movieParams.with_keywords = underdogKeywordParam;
+        } else if (heistKeywordParam) {
+          movieParams.with_keywords = heistKeywordParam;
+        } else if (cyberpunkKeywordParam) {
+          movieParams.with_keywords = cyberpunkKeywordParam;
+        } else if (philosophicalSciFiKeywordParam) {
+          movieParams.with_keywords = philosophicalSciFiKeywordParam;
+        } else if (trueCrimeKeywordParam) {
+          movieParams.with_keywords = trueCrimeKeywordParam;
+        } else if (historicalWarKeywordParam) {
+          movieParams.with_keywords = historicalWarKeywordParam;
+        } else if (romcomKeywordParam) {
+          movieParams.with_keywords = romcomKeywordParam;
+        } else if (psychologicalKeywordParam) {
+          movieParams.with_keywords = psychologicalKeywordParam;
+        } else if (crimeHeistKeywordParam) {
+          movieParams.with_keywords = crimeHeistKeywordParam;
         } else if (complexKeywordParam) {
           movieParams.with_keywords = complexKeywordParam;
         } else if (sportsKeywordParam) {
           movieParams.with_keywords = sportsKeywordParam;
-        } else if (excludeSuperheroParam) {
-          movieParams.without_keywords = excludeSuperheroParam;
         }
+
+        if (withoutKeywordsParam) {
+          movieParams.without_keywords = withoutKeywordsParam;
+        }
+
+        const tvWithoutGenres = isFamilyAnimationIntent
+          ? "27,53,80"
+          : isComfortComedyIntent
+            ? "18,16,10765,10768,10762"
+            : "16";
 
         const liveTvParams = {
           api_key: TMDB_API_KEY,
           page: 1,
           "vote_count.gte": tvMinVotes,
           sort_by: "vote_count.desc",
-          without_genres: "16",
+          without_genres: tvWithoutGenres,
           "first_air_date.lte": todayStr,
         };
+
+        if (isKoreanIntent) {
+          liveTvParams.with_original_language = "ko";
+          liveTvParams.with_origin_country = "KR";
+        }
+
         if (primaryTvGenre) liveTvParams.with_genres = primaryTvGenre;
 
         if (superheroKeywordParam) {
           liveTvParams.with_keywords = superheroKeywordParam;
+        } else if (underdogKeywordParam) {
+          liveTvParams.with_keywords = underdogKeywordParam;
+        } else if (heistKeywordParam) {
+          liveTvParams.with_keywords = heistKeywordParam;
+        } else if (cyberpunkKeywordParam) {
+          liveTvParams.with_keywords = cyberpunkKeywordParam;
+        } else if (philosophicalSciFiKeywordParam) {
+          liveTvParams.with_keywords = philosophicalSciFiKeywordParam;
+        } else if (trueCrimeKeywordParam) {
+          liveTvParams.with_keywords = trueCrimeKeywordParam;
+        } else if (historicalWarKeywordParam) {
+          liveTvParams.with_keywords = historicalWarKeywordParam;
+        } else if (psychologicalKeywordParam) {
+          liveTvParams.with_keywords = psychologicalKeywordParam;
+        } else if (crimeHeistKeywordParam) {
+          liveTvParams.with_keywords = crimeHeistKeywordParam;
         } else if (complexKeywordParam) {
           liveTvParams.with_keywords = complexKeywordParam;
         } else if (sportsKeywordParam) {
@@ -514,7 +990,7 @@ export const processChat = async (req, res) => {
         const animeParams = {
           api_key: TMDB_API_KEY,
           page: 1,
-          "vote_count.gte": wantsMagic ? 80 : 40,
+          "vote_count.gte": wantsMagic ? 80 : 300,
           sort_by: "vote_count.desc",
           with_original_language: "ja",
           with_genres: wantsMagic
@@ -525,6 +1001,8 @@ export const processChat = async (req, res) => {
           "first_air_date.lte": todayStr,
         };
         if (wantsMagic) animeParams.with_keywords = "2343|9799";
+        else if (cyberpunkKeywordParam)
+          animeParams.with_keywords = cyberpunkKeywordParam;
         else if (complexKeywordParam)
           animeParams.with_keywords = complexKeywordParam;
         else if (sportsKeywordParam)
@@ -532,40 +1010,81 @@ export const processChat = async (req, res) => {
         if (tvFantasyExclude && !wantsMagic)
           animeParams.without_keywords = tvFantasyExclude;
 
-        // في سهرات الرعب نسحب صفحتين لجلب 40 مرشحاً من كبار أفلام الرعب في العقد الأخير
-        const moviePromises = parsedIntent.isHorrorNight
-          ? [
-              axios
-                .get("https://api.themoviedb.org/3/discover/movie", {
-                  params: { ...movieParams, page: 1 },
-                })
-                .catch(() => ({ data: { results: [] } })),
-              axios
-                .get("https://api.themoviedb.org/3/discover/movie", {
-                  params: { ...movieParams, page: 2 },
-                })
-                .catch(() => ({ data: { results: [] } })),
-            ]
-          : [
-              axios
-                .get("https://api.themoviedb.org/3/discover/movie", {
-                  params: movieParams,
-                })
-                .catch(() => ({ data: { results: [] } })),
-            ];
+        const moviePromises =
+          parsedIntent.isHorrorNight ||
+          isCrimeHeist ||
+          isHeistRobberyIntent ||
+          wantsPsychological ||
+          isRomComIntent ||
+          isHistoricalWarIntent ||
+          isTrueCrimeDocIntent ||
+          isFamilyAnimationIntent ||
+          isCyberpunkIntent ||
+          isComfortComedyIntent ||
+          isPhilosophicalSciFiIntent ||
+          isUnderdogIntent
+            ? [
+                axios
+                  .get("https://api.themoviedb.org/3/discover/movie", {
+                    params: { ...movieParams, page: 1 },
+                  })
+                  .catch(() => ({ data: { results: [] } })),
+                axios
+                  .get("https://api.themoviedb.org/3/discover/movie", {
+                    params: { ...movieParams, page: 2 },
+                  })
+                  .catch(() => ({ data: { results: [] } })),
+              ]
+            : [
+                axios
+                  .get("https://api.themoviedb.org/3/discover/movie", {
+                    params: movieParams,
+                  })
+                  .catch(() => ({ data: { results: [] } })),
+              ];
 
-        const [movieResList, liveTvRes, animeRes] = await Promise.all([
+        const tvPromises =
+          isTrueCrimeDocIntent ||
+          isKoreanIntent ||
+          isCyberpunkIntent ||
+          isComfortComedyIntent ||
+          wantsPlotTwist ||
+          isUnderdogIntent
+            ? [
+                axios
+                  .get("https://api.themoviedb.org/3/discover/tv", {
+                    params: { ...liveTvParams, page: 1 },
+                  })
+                  .catch(() => ({ data: { results: [] } })),
+                axios
+                  .get("https://api.themoviedb.org/3/discover/tv", {
+                    params: { ...liveTvParams, page: 2 },
+                  })
+                  .catch(() => ({ data: { results: [] } })),
+              ]
+            : [
+                axios
+                  .get("https://api.themoviedb.org/3/discover/tv", {
+                    params: liveTvParams,
+                  })
+                  .catch(() => ({ data: { results: [] } })),
+              ];
+
+        const animePromise =
+          isComfortComedyIntent ||
+          (isKoreanIntent && wantsPlotTwist) ||
+          isUnderdogIntent
+            ? Promise.resolve({ data: { results: [] } })
+            : axios
+                .get("https://api.themoviedb.org/3/discover/tv", {
+                  params: animeParams,
+                })
+                .catch(() => ({ data: { results: [] } }));
+
+        const [movieResList, tvResList, animeRes] = await Promise.all([
           Promise.all(moviePromises),
-          axios
-            .get("https://api.themoviedb.org/3/discover/tv", {
-              params: liveTvParams,
-            })
-            .catch(() => ({ data: { results: [] } })),
-          axios
-            .get("https://api.themoviedb.org/3/discover/tv", {
-              params: animeParams,
-            })
-            .catch(() => ({ data: { results: [] } })),
+          Promise.all(tvPromises),
+          animePromise,
         ]);
 
         let movies = [];
@@ -577,11 +1096,16 @@ export const processChat = async (req, res) => {
           }
         });
 
-        const liveTvs = (liveTvRes.data.results || []).map((t) => ({
-          ...t,
-          media_type: "tv",
-        }));
-        const animes = (animeRes.data.results || []).map((a) => ({
+        let liveTvs = [];
+        tvResList.forEach((r) => {
+          if (r.data?.results) {
+            liveTvs.push(
+              ...r.data.results.map((t) => ({ ...t, media_type: "tv" })),
+            );
+          }
+        });
+
+        const animes = (animeRes.data?.results || []).map((a) => ({
           ...a,
           media_type: "anime",
         }));
@@ -602,6 +1126,8 @@ export const processChat = async (req, res) => {
           "first_air_date.lte": todayStr,
         };
         if (wantsMagic) animeParams.with_keywords = "2343|9799";
+        else if (cyberpunkKeywordParam)
+          animeParams.with_keywords = cyberpunkKeywordParam;
         else if (complexKeywordParam)
           animeParams.with_keywords = complexKeywordParam;
         else if (sportsKeywordParam)
@@ -627,13 +1153,21 @@ export const processChat = async (req, res) => {
           api_key: TMDB_API_KEY,
           page: 1,
           "vote_count.gte": isTv ? tvMinVotes : movieMinVotes,
-          sort_by: "vote_count.desc", // 🌟 الاعتماد الدائم على vote_count.desc
+          sort_by: "vote_count.desc",
           [isTv ? "first_air_date.lte" : "primary_release_date.lte"]: todayStr,
         };
 
-        // حصر أفلام سهرة الرعب من عام 2010 وحتى اليوم
+        if (isKoreanIntent) {
+          singleParams.with_original_language = "ko";
+          singleParams.with_origin_country = "KR";
+        }
+
         if (!isTv && parsedIntent.isHorrorNight && !parsedIntent.wantsClassic) {
           singleParams["primary_release_date.gte"] = "2010-01-01";
+        }
+
+        if (!isTv && wantsPsychological) {
+          singleParams["vote_average.gte"] = 7.0;
         }
 
         const targetPrimary = isTv ? primaryTvGenre : primaryMovieGenre;
@@ -641,6 +1175,24 @@ export const processChat = async (req, res) => {
 
         if (superheroKeywordParam) {
           singleParams.with_keywords = superheroKeywordParam;
+        } else if (underdogKeywordParam) {
+          singleParams.with_keywords = underdogKeywordParam;
+        } else if (heistKeywordParam) {
+          singleParams.with_keywords = heistKeywordParam;
+        } else if (philosophicalSciFiKeywordParam) {
+          singleParams.with_keywords = philosophicalSciFiKeywordParam;
+        } else if (cyberpunkKeywordParam) {
+          singleParams.with_keywords = cyberpunkKeywordParam;
+        } else if (trueCrimeKeywordParam) {
+          singleParams.with_keywords = trueCrimeKeywordParam;
+        } else if (historicalWarKeywordParam) {
+          singleParams.with_keywords = historicalWarKeywordParam;
+        } else if (romcomKeywordParam) {
+          singleParams.with_keywords = romcomKeywordParam;
+        } else if (psychologicalKeywordParam) {
+          singleParams.with_keywords = psychologicalKeywordParam;
+        } else if (crimeHeistKeywordParam) {
+          singleParams.with_keywords = crimeHeistKeywordParam;
         } else if (complexKeywordParam) {
           singleParams.with_keywords = complexKeywordParam;
         } else if (sportsKeywordParam) {
@@ -648,15 +1200,38 @@ export const processChat = async (req, res) => {
         } else if (excludeSuperheroParam && !isTv) {
           singleParams.without_keywords = excludeSuperheroParam;
         }
+
+        if (withoutKeywordsParam) {
+          singleParams.without_keywords = withoutKeywordsParam;
+        }
+
         if (!isTv) singleParams.without_genres = movieWithoutGenres;
         if (isTv) {
-          singleParams.without_genres = "16";
+          singleParams.without_genres = isFamilyAnimationIntent
+            ? "27,53,80"
+            : isComfortComedyIntent
+              ? "18,16,10765,10768,10762"
+              : "16";
           if (tvFantasyExclude)
             singleParams.without_keywords = tvFantasyExclude;
         }
 
-        // 🌟 سحب صفحتين لأفلام سهرة الرعب لضمان حضور Talk to Me, Scream, Barbarian, Smile, Evil Dead Rise
-        if (!isTv && parsedIntent.isHorrorNight) {
+        if (
+          parsedIntent.isHorrorNight ||
+          isCrimeHeist ||
+          isHeistRobberyIntent ||
+          wantsPsychological ||
+          isRomComIntent ||
+          isHistoricalWarIntent ||
+          isTrueCrimeDocIntent ||
+          isKoreanIntent ||
+          isFamilyAnimationIntent ||
+          isCyberpunkIntent ||
+          isComfortComedyIntent ||
+          isPhilosophicalSciFiIntent ||
+          wantsPlotTwist ||
+          isUnderdogIntent
+        ) {
           try {
             const [p1Res, p2Res] = await Promise.all([
               axios.get(endpoint, { params: { ...singleParams, page: 1 } }),
@@ -665,12 +1240,12 @@ export const processChat = async (req, res) => {
             candidates = [
               ...(p1Res.data.results || []),
               ...(p2Res.data.results || []),
-            ].map((it) => ({ ...it, media_type: "movie" }));
+            ].map((it) => ({ ...it, media_type: parsedIntent.targetType }));
           } catch (err) {
             const resData = await axios.get(endpoint, { params: singleParams });
             candidates = (resData.data.results || []).map((it) => ({
               ...it,
-              media_type: "movie",
+              media_type: parsedIntent.targetType,
             }));
           }
         } else {
@@ -741,13 +1316,9 @@ export const processChat = async (req, res) => {
       const topSeries = eligibleCandidates.filter(
         (item) => item.media_type === "tv",
       );
-      const topAnimes = eligibleCandidates.filter(
-        (item) => item.media_type === "anime",
-      );
 
       topResultsRaw.push(...topMovies.slice(0, 2));
-      topResultsRaw.push(...topSeries.slice(0, 1));
-      topResultsRaw.push(...topAnimes.slice(0, 1));
+      topResultsRaw.push(...topSeries.slice(0, 2));
 
       if (topResultsRaw.length < 4) {
         for (const item of eligibleCandidates) {
@@ -759,13 +1330,25 @@ export const processChat = async (req, res) => {
       }
       topResultsRaw.sort((a, b) => b.finalScore - a.finalScore);
     } else if (parsedIntent.targetType === "movie") {
-      // إعفاء سهرات الرعب والسوبرهيرو والرياضة من تقسيم الحقب الإلزامي وأخذ أفضل 4 أعمال حديثة مؤهلة
+      // 🌟 إعفاء قصص الصعود والتحدي وكافة الفئات التخصصية من تقسيم الحقب الإلزامي
       if (
         wantsSuperhero ||
         specificSportKw ||
         userWantsSports ||
         isComplexThemeIntent ||
-        parsedIntent.isHorrorNight
+        parsedIntent.isHorrorNight ||
+        isCrimeHeist ||
+        parsedIntent.isHeistRobbery ||
+        wantsPsychological ||
+        isRomComIntent ||
+        isHistoricalWarIntent ||
+        isTrueCrimeDocIntent ||
+        isKoreanIntent ||
+        isFamilyAnimationIntent ||
+        isCyberpunkIntent ||
+        isComfortComedyIntent ||
+        isPhilosophicalSciFiIntent ||
+        parsedIntent.isUnderdog
       ) {
         topResultsRaw = eligibleCandidates.slice(0, 4);
       } else if (!parsedIntent.wantsClassic) {
