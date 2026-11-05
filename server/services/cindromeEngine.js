@@ -1,6 +1,82 @@
 // services/cindromeEngine.js
 
-// 1. قاموس استخراج النوايا الدلالية العامة (NLU) مع دعم قصص الصعود والتحدي
+// 🌟 قائمة الكلمات الوصفية والتصنيفات المحظورة من معاملتها كعناوين أعمال مرجعية (Stopwords)
+export const GENRE_DESCRIPTOR_STOPWORDS = new Set([
+  "thriller",
+  "a thriller",
+  "psychological thriller",
+  "thriller movie",
+  "thriller movies",
+  "action",
+  "action movie",
+  "action movies",
+  "adventure",
+  "animation",
+  "animated",
+  "comedy",
+  "pure comedy",
+  "comedy movie",
+  "comedy movies",
+  "funny movie",
+  "funny movies",
+  "crime",
+  "documentary",
+  "docuseries",
+  "docu-series",
+  "drama",
+  "drama movie",
+  "drama movies",
+  "family",
+  "fantasy",
+  "history",
+  "historical",
+  "horror",
+  "horror movie",
+  "horror movies",
+  "scary movie",
+  "scary movies",
+  "music",
+  "mystery",
+  "romance",
+  "romantic",
+  "sci-fi",
+  "scifi",
+  "science fiction",
+  "sci-fi movie",
+  "tv movie",
+  "war",
+  "western",
+  "sitcom",
+  "sitcoms",
+  "sitcom series",
+  "sitcom show",
+  "movie",
+  "movies",
+  "film",
+  "films",
+  "show",
+  "shows",
+  "series",
+  "tv show",
+  "anime",
+  "true crime",
+  "real crime",
+  "crime cases",
+  "real mysteries",
+  "something funny",
+  "crime family",
+  "building an empire",
+  "cute anime",
+  "anime series",
+  "dark anime",
+  "haunted house",
+  "cursed house",
+  "haunted family",
+  "mind blowing action",
+  "mind blowing",
+]);
+
+// 1. قاموس استخراج النوايا الدلالية العامة (NLU)
 export const genreMap = {
   action: [
     "action",
@@ -11,6 +87,8 @@ export const genreMap = {
     "martial arts",
     "superhero",
     "shonen",
+    "mind blowing action",
+    "mind-blowing action",
   ],
   animation: [
     "animation",
@@ -21,6 +99,8 @@ export const genreMap = {
     "disney",
     "dreamworks",
     "illumination",
+    "anime",
+    "manga",
   ],
   family: [
     "family",
@@ -50,6 +130,10 @@ export const genreMap = {
     "trenches",
     "warfare",
     "historical war",
+    "swords",
+    "sword",
+    "ancient warfare",
+    "medieval warfare",
   ],
   history: [
     "history",
@@ -63,6 +147,7 @@ export const genreMap = {
     "gladiator",
     "kingdom",
     "historical epic",
+    "old historical",
   ],
   documentary: [
     "documentary",
@@ -73,6 +158,9 @@ export const genreMap = {
     "real mystery",
     "investigative documentary",
     "crime doc",
+    "real crime cases",
+    "crime cases",
+    "real crime",
   ],
   scifi: [
     "sci-fi",
@@ -92,6 +180,8 @@ export const genreMap = {
     "neon",
     "neon lights",
     "ruined future",
+    "mind bending",
+    "mind blowing",
   ],
   horror: [
     "horror",
@@ -104,6 +194,9 @@ export const genreMap = {
     "slasher",
     "creepy",
     "haunted",
+    "cursed",
+    "haunted house",
+    "cursed house",
   ],
   comedy: [
     "comedy",
@@ -112,6 +205,8 @@ export const genreMap = {
     "hilarious",
     "humor",
     "sitcom",
+    "sitcoms",
+    "sit-com",
     "gag",
     "parody",
     "satire",
@@ -124,6 +219,8 @@ export const genreMap = {
     "easy watch",
     "need a laugh",
     "unwind",
+    "funny moments",
+    "pure comedy",
   ],
   drama: [
     "drama",
@@ -181,6 +278,9 @@ export const genreMap = {
     "syndicate",
     "underworld",
     "money laundering",
+    "crime family",
+    "crime empire",
+    "mafia empire",
   ],
   romance: [
     "romance",
@@ -194,6 +294,7 @@ export const genreMap = {
     "rom-com",
     "romcom",
     "romantic comedy",
+    "cute romance",
   ],
   fantasy: [
     "fantasy",
@@ -238,7 +339,170 @@ export const genreMap = {
 
 // 2. معجم الكلمات المفتاحية بالمعرّفات الرسمية في TMDB
 export const themeKeywords = {
-  // 🌟 معجم قصص الصعود من الصفر والتحدي والنجاح (Underdog / Rags to Riches)
+  sitcom: {
+    id: 35,
+    terms: [
+      "sitcom",
+      "sit-com",
+      "situational comedy",
+      "sitcoms",
+      "sitcom series",
+      "comfort show",
+      "comfort series",
+      "comfort watch",
+      "chill comedy",
+      "light comedy",
+    ],
+  },
+  "pure comedy": {
+    id: "9714|9713|10244|207317",
+    terms: [
+      "pure comedy",
+      "purely comedy",
+      "only comedy",
+      "strictly comedy",
+      "just comedy",
+      "hilarious",
+      "laugh out loud",
+      "hard comedy",
+      "hilarious comedy",
+      "standout comedy",
+    ],
+  },
+  "mind blowing action": {
+    id: "11162|9882|310|9663|12565",
+    terms: [
+      "mind blowing action",
+      "mind-blowing action",
+      "mind blowing",
+      "mind-blowing",
+      "high concept action",
+      "mind bending action",
+      "mind-bending action",
+      "epic action",
+    ],
+  },
+  "haunted house": {
+    id: "3358|10292|9715|9663",
+    terms: [
+      "haunted house",
+      "cursed house",
+      "haunted family",
+      "cursed family",
+      "scary house",
+      "possession",
+      "demonic possession",
+      "ghost house",
+      "paranormal",
+      "supernatural horror",
+      "evil spirits",
+    ],
+  },
+  "cute romcom anime": {
+    id: "9799|9840|158718",
+    terms: [
+      "cute anime",
+      "cute anime series",
+      "cute anime romance",
+      "romance and funny",
+      "romance and funny moments",
+      "wholesome anime",
+      "romcom anime",
+      "rom-com anime",
+      "sweet anime",
+      "fluffy romance",
+      "pure romance anime",
+    ],
+  },
+  "dark anime": {
+    id: "265|10714|9663|10085|210024",
+    terms: [
+      "dark anime",
+      "dark fantasy anime",
+      "psychological anime",
+      "bleak anime",
+      "grim anime",
+      "gore anime",
+    ],
+  },
+  "crime family": {
+    id: "10391|242|10051|9882",
+    terms: [
+      "crime family",
+      "mob family",
+      "mafia family",
+      "mafia empire",
+      "crime empire",
+      "building an empire",
+      "gangster empire",
+      "organized crime",
+      "gangster syndicate",
+      "mobster",
+      "godfather",
+      "drug empire",
+      "criminal empire",
+    ],
+  },
+  "organized crime": {
+    id: "10391|242",
+    terms: [
+      "organized crime",
+      "mafia",
+      "mob",
+      "mobster",
+      "mobsters",
+      "gangster",
+      "gangsters",
+      "crime syndicate",
+      "crime family",
+      "underworld",
+      "godfather",
+      "cartel",
+    ],
+  },
+  heist: {
+    id: "10051|6492|10292",
+    terms: [
+      "heist",
+      "bank heist",
+      "clever heist",
+      "robbery",
+      "bank robbery",
+      "plan a robbery",
+      "plan a heist",
+      "plan a big robbery",
+      "big robbery",
+      "big heist",
+      "steal money",
+      "caper",
+      "vault",
+      "safecracker",
+      "getaway driver",
+    ],
+  },
+  "sword warfare": {
+    id: "804|195779|2964",
+    terms: [
+      "sword",
+      "swords",
+      "sword fight",
+      "swords and armies",
+      "ancient warfare",
+      "medieval warfare",
+      "old historical battles",
+      "medieval armies",
+      "ancient battles",
+      "medieval battle",
+      "gladiator",
+      "gladiators",
+      "samurai",
+      "crusades",
+      "shields and swords",
+      "ancient army",
+      "ancient armies",
+      "chariot battles",
+    ],
+  },
   underdog: {
     id: "9882|10714|1803",
     terms: [
@@ -295,43 +559,6 @@ export const themeKeywords = {
       "conspiracy",
     ],
   },
-  heist: {
-    id: "10051|6492|10292",
-    terms: [
-      "heist",
-      "bank heist",
-      "clever heist",
-      "robbery",
-      "bank robbery",
-      "plan a robbery",
-      "plan a heist",
-      "plan a big robbery",
-      "big robbery",
-      "big heist",
-      "steal money",
-      "caper",
-      "vault",
-      "safecracker",
-      "getaway driver",
-    ],
-  },
-  "organized crime": {
-    id: "10391|242",
-    terms: [
-      "organized crime",
-      "mafia",
-      "mob",
-      "mobster",
-      "mobsters",
-      "gangster",
-      "gangsters",
-      "crime syndicate",
-      "crime family",
-      "underworld",
-      "godfather",
-      "cartel",
-    ],
-  },
   cyberpunk: {
     id: "12190|4565|2853|156395",
     terms: [
@@ -385,7 +612,7 @@ export const themeKeywords = {
     ],
   },
   "true crime": {
-    id: "10714|9882|10303",
+    id: "10714|9882|9715|10303",
     terms: [
       "true crime",
       "docuseries",
@@ -398,6 +625,11 @@ export const themeKeywords = {
       "crime documentary",
       "real life mystery",
       "serial killer documentary",
+      "real crime cases",
+      "crime cases",
+      "real crime",
+      "murder cases",
+      "criminal investigation",
     ],
   },
   "historical war": {
@@ -458,20 +690,6 @@ export const themeKeywords = {
       "paranoia",
       "unreliable narrator",
       "mental breakdown",
-    ],
-  },
-  sitcom: {
-    id: 35,
-    terms: [
-      "sitcom",
-      "sit-com",
-      "situational comedy",
-      "sitcoms",
-      "comfort show",
-      "comfort series",
-      "comfort watch",
-      "chill comedy",
-      "light comedy",
     ],
   },
   "dark comedy": {
@@ -619,16 +837,23 @@ export const TMDB_THEME_IDS = {
   romcom: "9799|158718|3133",
   heist: "10051|6492|10292",
   organizedCrime: "10391|242",
+  crimeFamily: "10391|242|10051|9882",
   crimeHeist: "10051|6492|10292|10391|242",
   historicalWar: "11162|233|210103",
-  trueCrime: "10714|9882|10303",
+  trueCrime: "10714|9882|9715|10303",
   documentary: 99,
   familyAnimation: "16,10751",
   animeKeyword: 210024,
   cyberpunk: "12190|4565|2853|156395",
   philosophicalSciFi: "10090|310|156395",
   underdog: "9882|10714|1803",
+  swordWarfare: "804|195779|2964",
+  cuteAnimeRomCom: "9799|9840|158718",
+  hauntedHouse: "3358|10292|9715|9663",
+  mindBlowingAction: "11162|9882|310|9663|12565",
+  pureComedy: "9714|9713|10244|207317",
   survival: 10085,
+  darkAnime: "265|10714|9663|10085|210024",
 };
 
 export const TMDB_GENRE_IDS = {
@@ -681,6 +906,39 @@ export class CindromeEngine {
       };
     }
 
+    // 🌟 1. رصد نية الكوميديا الصريحة
+    const isPureComedy =
+      /\b(pure comedy|only comedy|strictly comedy|purely comedy|hard comedy|just comedy|pure funny|hilarious|comedy movies?|funny movies?)\b/i.test(
+        lowerText,
+      );
+
+    // 🌟 رصد نية السيتكوم
+    const isSitcom =
+      /\b(sitcoms?|sit-coms?|situational comed(?:y|ies))\b/i.test(lowerText) ||
+      (/\b(comfort|chill|relaxing|easy watch)\b/i.test(lowerText) &&
+        /\b(series|show|shows|tv)\b/i.test(lowerText) &&
+        /\b(comedy|laugh|funny)\b/i.test(lowerText));
+
+    const hasQualityFloor =
+      isPureComedy ||
+      /\b(mind[- ]blowing|mind blowing|masterpiece|masterpieces|epic|best|top[- ]tier|greatest|unbelievable|flawless)\b/i.test(
+        lowerText,
+      );
+
+    const isHauntedHorror =
+      /\b(cursed house|haunted house|haunted family|cursed family|scary house)\b/i.test(
+        lowerText,
+      ) ||
+      (/\b(scary|horror|haunted|cursed|creepy|demonic|evil|spooky)\b/i.test(
+        lowerText,
+      ) &&
+        /\b(house|family|home|manor|mansion|cabin)\b/i.test(lowerText));
+
+    const isCrimeFamily =
+      /\b(crime family|mob family|mafia family|mafia empire|crime empire|gangster empire|building an empire|organized crime|gangster syndicate|drug empire|criminal empire)\b/i.test(
+        lowerText,
+      );
+
     const isTiredMood =
       /\b(tired|im tired|i'm tired|exhausted|long day|after a long day|stress|stressed|rough day|bad day|hard day|unwind|burnout|need a laugh|heavy day)\b/i.test(
         lowerText,
@@ -688,7 +946,9 @@ export class CindromeEngine {
 
     const withoutDrama =
       /\b(without\s+(?:any\s+)?drama|no\s+drama)\b/i.test(lowerText) ||
-      isTiredMood;
+      isTiredMood ||
+      isPureComedy ||
+      isSitcom;
 
     const isPure =
       /\b(pure|strictly|only|just|100%|nothing but)\b/i.test(lowerText) ||
@@ -703,7 +963,26 @@ export class CindromeEngine {
       }
     }
 
-    if (withoutDrama) {
+    // حظر تصنيف العائلة والأطفال والرياضة عند رصد الرعب أو عائلات الجريمة أو الكوميديا الخالصة أو السيتكوم
+    if (isHauntedHorror || isCrimeFamily || isPureComedy || isSitcom) {
+      detectedGenres = detectedGenres.filter(
+        (g) => g !== "family" && g !== "sports",
+      );
+    }
+
+    if (isPureComedy || isSitcom) {
+      detectedGenres = ["comedy"];
+    }
+
+    if (isHauntedHorror && !detectedGenres.includes("horror")) {
+      detectedGenres.push("horror");
+    }
+
+    if (isCrimeFamily && !detectedGenres.includes("crime")) {
+      detectedGenres.push("crime");
+    }
+
+    if (withoutDrama && !isPureComedy && !isSitcom) {
       detectedGenres = detectedGenres.filter((g) => g !== "drama");
     }
 
@@ -719,6 +998,19 @@ export class CindromeEngine {
     const wantsClassic =
       /\b(classic|retro|old|80s|90s|vintage|nostalgic)\b/i.test(lowerText);
 
+    const isMindBlowingAction =
+      detectedKeywords.some((k) => k.name === "mind blowing action") ||
+      (/\b(mind[- ]blowing|mind blowing)\b/i.test(lowerText) &&
+        (detectedGenres.includes("action") || /\baction\b/i.test(lowerText))) ||
+      (hasQualityFloor &&
+        /\baction\b/i.test(lowerText) &&
+        /\b(mind|reality|concept|twist|sci-fi)\b/i.test(lowerText));
+
+    if (isMindBlowingAction && !isPureComedy && !isSitcom) {
+      if (!detectedGenres.includes("action")) detectedGenres.push("action");
+      if (!detectedGenres.includes("scifi")) detectedGenres.push("scifi");
+    }
+
     const isHorrorNight =
       /\b(movie night|with friends|party|friends|sleepover|crowd|popcorn)\b/i.test(
         lowerText,
@@ -733,30 +1025,73 @@ export class CindromeEngine {
       );
 
     const isRomCom =
-      detectedKeywords.some((k) => k.name === "rom-com") ||
-      /\b(rom-com|romcom|romantic comedy|sweet.*romance|light.*romance|lift my mood|feel[- ]good)\b/i.test(
-        lowerText,
-      ) ||
-      (/\b(sweet|light|chill|comfort)\b/i.test(lowerText) &&
-        (detectedGenres.includes("romance") ||
-          /\b(romance|romantic)\b/i.test(lowerText)));
+      !isPureComedy &&
+      !isSitcom &&
+      (detectedKeywords.some((k) => k.name === "rom-com") ||
+        /\b(rom-com|romcom|romantic comedy|sweet.*romance|light.*romance|lift my mood|feel[- ]good)\b/i.test(
+          lowerText,
+        ) ||
+        (/\b(sweet|light|chill|comfort)\b/i.test(lowerText) &&
+          (detectedGenres.includes("romance") ||
+            /\b(romance|romantic)\b/i.test(lowerText))));
 
     if (isRomCom) {
       if (!detectedGenres.includes("comedy")) detectedGenres.push("comedy");
       if (!detectedGenres.includes("romance")) detectedGenres.push("romance");
     }
 
-    const isHistoricalWar =
-      detectedKeywords.some((k) => k.name === "historical war") ||
-      /\b(historical war|war movie|war movies|huge battles|epic battles|historical epic|epic war|ancient war|medieval war|world war|ancient warfare|medieval battle)\b/i.test(
+    const isAnimeTarget =
+      selectedType === "anime" || /\b(anime|manga)\b/i.test(lowerText);
+
+    const isCuteAnimeRomCom =
+      isAnimeTarget &&
+      /\b(cute|wholesome|sweet|adorable|fluffy|chill)\b/i.test(lowerText) &&
+      (/\b(romance|romantic|love)\b/i.test(lowerText) ||
+        /\b(funny|comedy|humor)\b/i.test(lowerText));
+
+    // 🌟 رصد نية Dark Anime
+    const isDarkAnime =
+      isAnimeTarget &&
+      /\b(dark|bleak|grim|disturbing|psychological|gore|brutal|dark fantasy|tragedy)\b/i.test(
+        lowerText,
+      );
+
+    if (isDarkAnime) {
+      detectedGenres = detectedGenres.filter(
+        (g) => g !== "comedy" && g !== "family",
+      );
+    }
+
+    if (isCuteAnimeRomCom) {
+      if (!detectedGenres.includes("romance")) detectedGenres.push("romance");
+      if (!detectedGenres.includes("comedy")) detectedGenres.push("comedy");
+      detectedGenres = detectedGenres.filter(
+        (g) => g !== "sports" && g !== "action",
+      );
+    }
+
+    const isSwordWarfare =
+      detectedKeywords.some((k) => k.name === "sword warfare") ||
+      /\b(swords?|sword fight|swords and armies|ancient warfare|medieval warfare|old historical battles?|medieval armies|ancient battles?|gladiators?|samurai|shields and swords|ancient armies)\b/i.test(
         lowerText,
       ) ||
-      (/\b(battle|battles|war|military|army|soldiers?)\b/i.test(lowerText) &&
-        /\b(historical|epic|history|ancient|medieval|period)\b/i.test(
+      (/\b(battle|battles|war|armies|army)\b/i.test(lowerText) &&
+        /\b(sword|swords|ancient|medieval|gladiator|samurai|shields?|old historical)\b/i.test(
           lowerText,
         ));
 
-    if (isHistoricalWar) {
+    const isHistoricalWar =
+      !isSwordWarfare &&
+      (detectedKeywords.some((k) => k.name === "historical war") ||
+        /\b(historical war|war movie|war movies|huge battles|epic battles|historical epic|epic war|ancient war|medieval war|world war|ancient warfare|medieval battle)\b/i.test(
+          lowerText,
+        ) ||
+        (/\b(battle|battles|war|military|army|soldiers?)\b/i.test(lowerText) &&
+          /\b(historical|epic|history|ancient|medieval|period)\b/i.test(
+            lowerText,
+          )));
+
+    if (isSwordWarfare || isHistoricalWar) {
       if (!detectedGenres.includes("war")) detectedGenres.push("war");
       if (!detectedGenres.includes("history")) detectedGenres.push("history");
       detectedGenres = detectedGenres.filter((g) => g !== "action");
@@ -764,32 +1099,36 @@ export class CindromeEngine {
 
     const isTrueCrimeDoc =
       detectedKeywords.some((k) => k.name === "true crime") ||
-      /\b(true crime|docuseries|docu-series|real mysteries|real mystery|crime doc|crime documentary|unsolved mysteries)\b/i.test(
+      /\b(true crime|docuseries|docu-series|real mysteries|real mystery|crime doc|crime documentary|unsolved mysteries|real crime|real crime cases|crime cases)\b/i.test(
         lowerText,
       ) ||
-      (/\b(documentary|docuseries)\b/i.test(lowerText) &&
-        /\b(crime|murder|killer|mystery|mysteries)\b/i.test(lowerText));
+      (/\b(documentary|docuseries|docu-series)\b/i.test(lowerText) &&
+        /\b(crime|murder|killer|mystery|mysteries|real crime|cases?|investigation)\b/i.test(
+          lowerText,
+        ));
 
     if (isTrueCrimeDoc) {
       if (!detectedGenres.includes("documentary"))
         detectedGenres.push("documentary");
-      detectedGenres = detectedGenres.filter((g) => g !== "crime");
+      detectedGenres = detectedGenres.filter(
+        (g) => g !== "crime" && g !== "mystery",
+      );
     }
 
     const isKorean =
       /\b(korean|k-drama|kdrama|k drama|south korea|korea)\b/i.test(lowerText);
 
     const hasTwistKeywords =
-      detectedKeywords.some((k) => k.name === "plot twist") ||
-      /\b(plot twists?|twists?|can'?t predict|unpredictable|mind[- ]blowing|mind[- ]bending|twist ending)\b/i.test(
-        lowerText,
-      );
+      !isTrueCrimeDoc &&
+      (detectedKeywords.some((k) => k.name === "plot twist") ||
+        /\b(plot twists?|twists?|can'?t predict|unpredictable|mind[- ]blowing|mind[- ]bending|twist ending)\b/i.test(
+          lowerText,
+        ));
 
     if (hasTwistKeywords && !detectedGenres.includes("mystery")) {
       detectedGenres.push("mystery");
     }
 
-    // 🌟 رصد نية الصعود من الصفر والتحدي والنجاح (Underdog / Rags to Riches)
     const isUnderdog =
       detectedKeywords.some((k) => k.name === "underdog") ||
       /\b(starting from zero|start from zero|starting from nothing|from zero|rags to riches|underdog(?: story)?|success story|winning against all odds|against all odds|zero to hero|rise to the top|overcoming odds)\b/i.test(
@@ -801,13 +1140,18 @@ export class CindromeEngine {
     }
 
     const isFamilyAnimation =
-      detectedKeywords.some((k) => k.name === "family animation") ||
-      (detectedGenres.includes("animation") &&
-        detectedGenres.includes("family")) ||
-      (/\b(animated|animation|cartoon)\b/i.test(lowerText) &&
-        /\b(family|kids|children|wholesome|cozy|for the whole family)\b/i.test(
-          lowerText,
-        ));
+      !isCrimeFamily &&
+      !isCuteAnimeRomCom &&
+      !isHauntedHorror &&
+      !isPureComedy &&
+      !isSitcom &&
+      (detectedKeywords.some((k) => k.name === "family animation") ||
+        (detectedGenres.includes("animation") &&
+          detectedGenres.includes("family")) ||
+        (/\b(animated|animation|cartoon)\b/i.test(lowerText) &&
+          /\b(family|kids|children|wholesome|cozy|for the whole family)\b/i.test(
+            lowerText,
+          )));
 
     if (isFamilyAnimation) {
       if (!detectedGenres.includes("animation"))
@@ -845,10 +1189,14 @@ export class CindromeEngine {
 
     const wantsComedy =
       detectedGenres.includes("comedy") ||
+      isPureComedy ||
+      isSitcom ||
       /\b(funny|laugh|comedy|hilarious|humor|chuckle)\b/i.test(lowerText);
 
     const isComfortComedy =
       (isTiredMood && wantsComedy) ||
+      isPureComedy ||
+      isSitcom ||
       /\b(something funny|just.*funny|comfort comedy|chill comedy|pure comedy)\b/i.test(
         lowerText,
       );
@@ -865,18 +1213,23 @@ export class CindromeEngine {
 
     const isCrimeHeist =
       !isTrueCrimeDoc &&
-      (isHeistRobbery ||
+      (isCrimeFamily ||
+        isHeistRobbery ||
         detectedGenres.includes("crime") ||
-        detectedKeywords.some((k) => k.name === "organized crime") ||
+        detectedKeywords.some(
+          (k) => k.name === "organized crime" || k.name === "crime family",
+        ) ||
         /\b(organized crime|mafia|gangster|mobster|mobsters|crime syndicate|underworld|cartel)\b/i.test(
           lowerText,
         ));
 
-    if (isHeistRobbery && !detectedGenres.includes("crime")) {
+    if (
+      (isHeistRobbery || isCrimeFamily) &&
+      !detectedGenres.includes("crime")
+    ) {
       detectedGenres.push("crime");
     }
 
-    // 🌟 معالجة التعارض بين النص والـ selectedType في القائمة
     const hasExplicitMovie = /\b(movie|movies|film|films)\b/i.test(lowerText);
     const hasExplicitSeries =
       /\b(series|show|shows|tv|sitcom|docuseries|docu-series|k-drama|kdrama)\b/i.test(
@@ -888,43 +1241,73 @@ export class CindromeEngine {
       if (/\b(anime|manga)\b/i.test(lowerText)) targetType = "anime";
       else if (hasExplicitMovie && !hasExplicitSeries) targetType = "movie";
       else if (hasExplicitSeries && !hasExplicitMovie) targetType = "tv";
+      else if (isSitcom) targetType = "tv";
     } else if (
       selectedType === "tv" &&
       hasExplicitMovie &&
       !hasExplicitSeries
     ) {
-      // المستخدم اختار TV لكن البرومبت يطلب صراحة فيلم (a movie about...)
       targetType = "movie";
     } else if (
       selectedType === "movie" &&
       hasExplicitSeries &&
       !hasExplicitMovie
     ) {
-      // المستخدم اختار Movie لكن البرومبت يطلب صراحة مسلسل
       targetType = "tv";
     }
 
+    // 🌟 ريجيكس استخراج العمل المرجعي المحدث ليستوعب حتى 6 كلمات مع قبول الفواصل والجمل التكميلية
     const refPatterns = [
-      /\b(?:like|liked|loved|enjoyed|similar to|such as|vibe of)\s+([a-zA-Z0-9'.-]+(?:\s+[a-zA-Z0-9'.-]+){0,3}?)(?=\s+(?:to|for|with|and|or|after|but|because|so|in|on|at|while|chill)\b|$)/i,
-      /\b(?:watched|finished)\s+([a-zA-Z0-9\s:.'-]+)\s+(?:and want|recommend)/i,
-      /\b(?:like|vibe of)\s+([a-zA-Z0-9\s:.'-]+)/i,
+      /\b(?:liked|loved|enjoyed|similar to|in the style of|vibe of)\s+([a-zA-Z0-9':.&!?-]+(?:\s+[a-zA-Z0-9':.&!?-]+){0,5}?)(?=[,.]|\s+(?:to|for|with|and|or|after|but|because|so|in|on|at|while|chill|what|where|how)\b|$)/i,
+      /(?<!feel\s|feels\s|look\s|looks\s|sound\s|sounds\s)\blike\s+([a-zA-Z0-9':.&!?-]+(?:\s+[a-zA-Z0-9':.&!?-]+){0,5}?)(?=[,.]|\s+(?:to|for|with|and|or|after|but|because|so|in|on|at|while|chill|what|where|how)\b|$)/i,
+      /\b(?:watched|finished)\s+([a-zA-Z0-9':.&!?-]+(?:\s+[a-zA-Z0-9':.&!?-]+){0,5}?)(?=[,.]|\s+(?:and|and want|recommend|what)\b|$)/i,
     ];
+
     let extractedReferenceTitle = null;
     for (const pattern of refPatterns) {
-      const match = lowerText.match(pattern);
+      const match = text.match(pattern);
       if (match) {
-        extractedReferenceTitle = match[1].trim();
-        break;
+        const candidateTitle = match[1]
+          .trim()
+          .replace(/^[,.\s]+|[,.\s]+$/g, "");
+        const cleanTitle = candidateTitle
+          .toLowerCase()
+          .replace(/^(a|an|the)\s+/, "");
+        if (
+          !GENRE_DESCRIPTOR_STOPWORDS.has(cleanTitle) &&
+          !GENRE_DESCRIPTOR_STOPWORDS.has(candidateTitle.toLowerCase())
+        ) {
+          extractedReferenceTitle = candidateTitle;
+          break;
+        }
       }
     }
 
-    // 🌟 حماية تامة من السقوط في Fallback عند التعرف على أي نية محددة
+    if (
+      extractedReferenceTitle &&
+      /\b(comedy movies?|funny movies?|pure comedy|sitcoms?|sitcom series)\b/i.test(
+        extractedReferenceTitle,
+      )
+    ) {
+      extractedReferenceTitle = null;
+    }
+
     const hasSpecificIntent =
+      Boolean(extractedReferenceTitle) ||
       detectedGenres.length > 0 ||
       detectedKeywords.length > 0 ||
       isKorean ||
       hasTwistKeywords ||
       isUnderdog ||
+      isSwordWarfare ||
+      isCrimeFamily ||
+      isCuteAnimeRomCom ||
+      isDarkAnime ||
+      isSitcom ||
+      isHauntedHorror ||
+      isMindBlowingAction ||
+      hasQualityFloor ||
+      isPureComedy ||
       isComfortComedy ||
       isHistoricalWar ||
       isTrueCrimeDoc ||
@@ -933,9 +1316,10 @@ export class CindromeEngine {
       isPhilosophicalSciFi ||
       isHeistRobbery;
 
+    // 🌟 عند استخراج العنوان المرجعي بنجاح، يُلغى الالتباس فوراً
     const isAmbiguous =
-      !hasSpecificIntent &&
       !extractedReferenceTitle &&
+      !hasSpecificIntent &&
       lowerText.split(" ").length > 3;
 
     return {
@@ -949,10 +1333,19 @@ export class CindromeEngine {
       wantsClassic,
       isHorrorNight,
       isCrimeHeist,
+      isCrimeFamily,
       isHeistRobbery,
       isPsychologicalThriller,
       isRomCom,
+      isCuteAnimeRomCom,
+      isDarkAnime,
+      isSitcom,
+      isSwordWarfare,
       isHistoricalWar,
+      isHauntedHorror,
+      isMindBlowingAction,
+      hasQualityFloor,
+      isPureComedy,
       isTrueCrimeDoc,
       isKorean,
       hasTwistKeywords,
@@ -998,11 +1391,50 @@ export class CindromeEngine {
     const iconicCrowdHorrorTitles =
       /\b(the conjuring|talk to me|scream|insidious|evil dead|a quiet place|smile|barbarian|sinister|it\b|don't breathe|the black phone|lights out|hereditary|m3gan|annabelle|the nun|terrifier|get out|us\b)\b/i;
 
+    const hauntedHorrorMasterpiecesRegex =
+      /\b(the conjuring|the conjuring 2|insidious|hereditary|sinister|the haunting in connecticut|poltergeist|the amityville horror|amityville|the others|paranormal activity|ouija|lights out|annabelle|the nun|talk to me|barbarian|the babadook|babadook|the shining|the grudge|the ring|house on haunted hill|the orphanage|woman in black|evil dead rise)\b/i;
+
+    const hauntedHorrorThemesRegex =
+      /\b(haunted house|cursed house|haunted family|cursed family|possession|demonic possession|demon|demons|evil spirit|evil presence|paranormal|supernatural|curse|exorcism|poltergeist|ghost|ghosts|creepy house|old house|entity|haunting)\b/i;
+
     const explicitHeistRobberyRegex =
       /\b(heist|robbery|bank robbery|bank heist|plan a robbery|big robbery|vault|safe crack|safecracker|caper|getaway driver|steal money|ocean's eleven|ocean's twelve|ocean's thirteen|the town|baby driver|inside man|heat|the italian job|den of thieves|logan lucky|reservoir dogs|point break|now you see me|snatch|lock, stock|tower heist|the score|rififi|dog day afternoon|fast five|inception|money heist|armored)\b/i;
 
     const revengeOrPureMafiaRegex =
-      /\b(equalizer|the equalizer|john wick|taken|revenge|vigilante|death wish|the irishman|goodfellas|casino|godfather|the godfather|mobster life|corleone|hitman|assassin|man on fire|law abiding citizen|sicario|peppermint|wrath of man)\b/i;
+      /\b(equalizer|the equalizer|john wick|taken|revenge|vigilante|death wish|hitman|assassin|man on fire|law abiding citizen|sicario|peppermint|wrath of man)\b/i;
+
+    const crimeFamilyMasterpiecesRegex =
+      /\b(the godfather|the godfather part ii|the godfather: part ii|godfather|scarface|goodfellas|american gangster|the irishman|casino|the departed|a bronx tale|donnie brasco|once upon a time in america|peaky blinders|boardwalk empire|the sopranos|blow|gotti|snatch|gangs of new york|road to perdition|miller's crossing|narcos|city of god|black mass|the untouchables|carlito's way)\b/i;
+
+    const crimeFamilyThemesRegex =
+      /\b(crime family|mob family|mafia family|mafia empire|crime empire|building an empire|organized crime|gangster empire|godfather|corleone|mobster|gangster|kingpin|drug lord|criminal empire|underworld|syndicate|cartel|boss of bosses|don\b)\b/i;
+
+    const mindBlowingActionHitsRegex =
+      /\b(inception|the matrix|the matrix reloaded|matrix|edge of tomorrow|tenet|mad max: fury road|mad max fury road|terminator 2|terminator 2: judgment day|t2|minority report|interstellar|avatar|everything everywhere all at once|looper|upgrade|source code|v for vendetta|district 9|children of men|aliens|blade runner 2049|oldboy|dune|dune: part two|dune part two)\b/i;
+
+    const mindBlowingActionThemesRegex =
+      /\b(high concept|dream within a dream|simulation|virtual reality|time loop|reality|subconscious|mind-bending|dystopian future|apocalyptic road|quantum|manipulation of time|parallel universe|time paradox|cyberspace)\b/i;
+
+    const bMovieTrashRegex =
+      /\b(iron sky|virtuosity|sharknado|mega shark|transmorphers|age of tomorrow|alien vs hunter|titanic ii)\b/i;
+
+    const pureComedyHitsRegex =
+      /\b(superbad|the hangover|21 jump street|22 jump street|tropic thunder|trading places|step brothers|we're the millers|bridesmaids|game night|horrible bosses|anchorman|dumb and dumber|liar liar|meet the parents|borat|old school|wedding crashers|ted\b|ted 2|good boys|blockers|tag\b|this is the end|zombieland|shaun of the dead|hot fuzz|the dictator|white chicks|rush hour|bad boys|groundhog day|airplane!|monty python)\b/i;
+
+    const kidsComedyMascotRegex =
+      /\b(sonic|sonic the hedgehog|minions|despicable me|alvin and the chipmunks|smurfs|paddington|spongebob|sponge bob|pokemon|detective pikachu|lego|garfield|peter rabbit|space jam|men in black|ghostbusters|shazam|ant-man|deadpool|marvel|dc comics)\b/i;
+
+    const darkAnimeMasterpiecesRegex =
+      /\b(attack on titan|death note|monster|berserk|tokyo ghoul|chainsaw man|vinland saga|parasyte|dororo|hellsing|psycho-pass|made in abyss|neon genesis evangelion|devilman crybaby|shinsekai yori|claymore|ergo proxy|texhnolyze)\b/i;
+
+    const lightOrEcchiFantasyAnimeRegex =
+      /\b(the seven deadly sins|nanatsu no taizai|fairy tail|konosuba|black clover|danmachi|is it wrong to try to pick up girls|no game no life|sword art online|welcome to demon school|radiant|seven deadly sins)\b/i;
+
+    const iconicComfortShows =
+      /\b(friends|the office|brooklyn nine-nine|brooklyn 99|modern family|how i met your mother|himym|parks and recreation|parks & rec|seinfeld|community|the big bang theory|malcolm in the middle|schitt's creek|new girl|scrubs|that '70s show|ted lasso|superstore|it's always sunny in philadelphia|arrested development|silicon valley|two and a half men|frasier|cheers|will & grace|curb your enthusiasm|broad city)\b/i;
+
+    const teenOrKidsSportsTelenovelaRegex =
+      /\b(o11ce|once\b|violetta|soy luna|patito feo|casi angeles|victorious|icarly|hannah montana|zoey 101|big time rush|disney channel|disney xd|nickelodeon|teen sitcom|tween|high school musical|saved by the bell|suite life|wizards of waverly place|sam & cat|henry danger|good luck charlie|shake it up|austin & ally|kc undercover|liv and maddie|teen drama|adolescence|high school football|youth academy)\b/i;
 
     const psychologicalMasterpiecesRegex =
       /\b(shutter island|fight club|prisoners|memento|se7en|seven|black swan|the prestige|zodiac|primal fear|the machinist|enemy|gone girl|the game|split|nightcrawler|the sixth sense|jacob's ladder|cure|identity|triangle|coherence|oldboy|mulholland drive|taxi driver|vertigo|misery|the silence of the lambs)\b/i;
@@ -1025,8 +1457,17 @@ export class CindromeEngine {
     const historicalWarRegex =
       /\b(war|world war|wwii|ww2|wwi|battle|battles|huge battles|epic battles|soldier|soldiers|army|infantry|combat|trenches|normandy|d-day|vietnam|crusade|crusades|crusaders|gladiator|gladiators|roman empire|medieval|kingdom|samurai|spartan|spartans|ancient warfare|saving private ryan|kingdom of heaven|braveheart|1917|dunkirk|hacksaw ridge|apocalypse now|platoon|full metal jacket|black hawk down|fury|the patriot|troy|300|master and commander|letters from iwo jima|bridge on the river kwai|all quiet on the western front|enemy at the gates|the bridge on the river kwai|paths of glory|the thin red line|midway|we were soldiers)\b/i;
 
+    const swordWarfareHitsRegex =
+      /\b(gladiator|kingdom of heaven|troy|braveheart|the last samurai|300|alexander|king arthur|outlaw king|the king|centurion|the eagle|spartacus|excalibur|ran\b|kagemusha|13 assassins|macbeth|ben-hur|the northman|mongol|red cliff|the 13th warrior|kingdom\b|hero\b)\b/i;
+
+    const swordWarfareThemesRegex =
+      /\b(sword|swords|blade|spear|shield|gladiator|roman empire|ancient rome|ancient greece|spartan|crusade|crusades|medieval|knights|samurai|katana|feudal japan|kingdom|castle siege|chariot|arrow|arrows|bow|armor|broadsword)\b/i;
+
+    const modernWarfareRegex =
+      /\b(world war|wwii|ww2|wwi|vietnam|nazi|hitler|pearl harbor|hacksaw ridge|unbroken|bridge on the river kwai|saving private ryan|dunkirk|1917|fury|platoon|full metal jacket|apocalypse now|black hawk down|enemy at the gates|machine gun|rifle|guns?|bullet|bullets|trench|trenches|normandy|d-day|air force|submarine|torpedo|bomber|tank|tanks|firearms|sniper|grenade|holocaust|all quiet on the western front)\b/i;
+
     const trueCrimeDocRegex =
-      /\b(documentary|docuseries|docu-series|true crime|investigative|real-life|archival|interviews?|unsolved mysteries|making a murderer|don't f\*\*k with cats|the jinx|night stalker|conversations with a killer|ted bundy|the staircase|wild wild country|keep sweet|tinder swindler|serial killer|homicide|cold case|forensic|fbi file|investigation discovery|murder trial|killer inside|evil genius|i am a killer|worst roommate ever)\b/i;
+      /\b(documentary|docuseries|docu-series|true crime|investigative|real-life|archival|interviews?|unsolved mysteries|making a murderer|don't f\*\*k with cats|the jinx|night stalker|conversations with a killer|ted bundy|the staircase|wild wild country|keep sweet|tinder swindler|serial killer|homicide|cold case|forensic|fbi file|investigation discovery|murder trial|killer inside|evil genius|i am a killer|worst roommate ever|the act of killing|capturing the friedmans|paradise lost|the thin blue line)\b/i;
 
     const scienceNatureDocRegex =
       /\b(cosmos|astronomy|outer space|universe|planet earth|one strange rock|our planet|blue planet|wildlife|nature|animals?|ocean|oceans|earth|solar system|paleontology|dinosaur|climate|geology|evolution|space exploration|species|safari|national geographic|discovery channel|physics|quantum|biology)\b/i;
@@ -1036,6 +1477,21 @@ export class CindromeEngine {
 
     const koreanThrillerThemesRegex =
       /\b(detective|police|serial killer|murder|investigation|corruption|revenge|conspiracy|crime syndicate|psychopath|unsolved case|prosecutor|courtroom|dark secret|suspense|thriller|mystery|hostage|twisted|plot twist|unpredictable)\b/i;
+
+    const cuteRomComAnimeHitsRegex =
+      /\b(kaguya-sama|love is war|horimiya|kimi ni todoke|my dress-up darling|toradora|the dangers in my heart|komi can't communicate|fruits basket|rascal does not dream|maid-sama|ouran|teasing master takagi|skip and loafer|tomo-chan|yamada-kun to lv999|bocchi the rock|wotakoi|tsuki ga kirei|my love story!!|ore monogatari|lovely complex|clannad|tamako love story|relife|nisekoi|romantic killer|golden time|saekano|tonikaku kawaii|fly me to the moon)\b/i;
+
+    const cuteRomComAnimeThemesRegex =
+      /\b(high school romance|first love|falling in love|wholesome|sweet romance|cute|crush|confession|school life|slice of life|heartwarming|friendship and romance|romantic comedy|shy|awkward romance)\b/i;
+
+    const ecchiOrAdultAnimeRegex =
+      /\b(high school dxd|dxd|ecchi|harem|fanservice|fan service|hentai|erotic|borderline porn|kiss x sis|to love-ru|monster musume|prison school|interspecies reviewers|yosuga no sora|shinmai maou|redo of healer|seikon no qwaser|valkyrie drive|queen's blade|shimoneta)\b/i;
+
+    const pureSportsAnimeRegex =
+      /\b(haikyuu?|kuroko|blue lock|slam dunk|hajime no ippo|diamond no ace|free!|run with the wind|aoashi|captain tsubasa|yowamushi pedal|ping pong the animation)\b/i;
+
+    const retroDatedAnimeRegex =
+      /\b(ranma|urusei yatsura|maison ikkoku|kimagure orange road|city hunter|fist of the north star|touch\b)\b/i;
 
     const familyAnimationHitsRegex =
       /\b(coco|inside out|encanto|moana|zootopia|paddington|paddington 2|despicable me|toy story|finding nemo|finding dory|shrek|ratatouille|up\b|tangled|the incredibles|monsters, inc\.|monsters inc|how to train your dragon|frozen|sing\b|kung fu panda|madagascar|wall-e|spider-man: into the spider-verse|megamind|the lion king|beauty and the beast|aladdin|luca|soul\b|turning red|big hero 6|onward|tarzan|mulan)\b/i;
@@ -1058,9 +1514,6 @@ export class CindromeEngine {
     const dramedyOrArthouseRegex =
       /\b(la la land|the grand budapest hotel|life is beautiful|forrest gump|birdman|her\b|lost in translation|the banshees of inisherin|parasite|jojo rabbit|wes anderson|bittersweet|melancholy|tragic ending|musical drama|existential|crying|suicide|death|dying|grief|depression)\b/i;
 
-    const teenOrKidsShowRegex =
-      /\b(victorious|icarly|hannah montana|zoey 101|big time rush|disney channel|nickelodeon|teen sitcom|tween|high school musical|once\b|saved by the bell|suite life|wizards of waverly place|sam & cat|henry danger|good luck charlie|shake it up|austin & ally|kc undercover|liv and maddie|teen drama|adolescence|high school students?)\b/i;
-
     const philosophicalSpaceHitsRegex =
       /\b(interstellar|arrival|2001: a space odyssey|2001 a space odyssey|contact|ad astra|first man|solaris|gravity|moon\b|sunshine|the fountain|annihilation|high life)\b/i;
 
@@ -1070,7 +1523,6 @@ export class CindromeEngine {
     const spaceActionOrLightRegex =
       /\b(star wars|guardians of the galaxy|back to the future|space jam|men in black|galaxy quest|thor|space balls|space cowboys|the fifth element|armageddon|independence day|valerian|star trek)\b/i;
 
-    // 🌟 ريجيكس روائع الصعود والتحدي والنجاح من الصفر (Pursuit of Happyness, Whiplash, Rocky, Creed, Ford v Ferrari, Cobra Kai, Moneyball)
     const underdogInspirationalHitsRegex =
       /\b(the pursuit of happyness|pursuit of happyness|whiplash|rocky|creed|ford v ferrari|cobra kai|moneyball|million dollar baby|the fighter|cinderella man|slumdog millionaire|the social network|the wolf of wall street|jerry maguire|rush\b|blind side|coach carter|southpaw|warrior|air\b|good will hunting|rudy|remember the titans|invincible|hustle|king richard)\b/i;
 
@@ -1179,7 +1631,135 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 40);
         }
 
-        // 🌟 بونص قصص الصعود والتحدي والنجاح من الصفر (+60)
+        // 🌟 بونص الأنمي السوداوي والنفسي المظلم (+60)
+        if (parsedIntent.isDarkAnime) {
+          const isDarkHit =
+            darkAnimeMasterpiecesRegex.test(itemTitle) ||
+            /\b(dark fantasy|psychological|gore|brutal|tragedy|grim|bleak|demons?|disturbing|survival)\b/i.test(
+              itemOverview,
+            ) ||
+            itemGenreIds.includes(10765) ||
+            itemGenreIds.includes(9648);
+
+          if (isDarkHit) {
+            s_intent = Math.min(100, s_intent + 60);
+          }
+        }
+
+        // 🌟 بونص الكوميديا الصريحة الجماهيرية للبالغين (+60)
+        if (parsedIntent.isPureComedy) {
+          const isPureHit =
+            pureComedyHitsRegex.test(itemTitle) ||
+            (itemGenreIds[0] === 35 &&
+              !itemGenreIds.includes(18) &&
+              !itemGenreIds.includes(10749) &&
+              voteAverage >= 7.0);
+
+          if (isPureHit) {
+            s_intent = Math.min(100, s_intent + 60);
+          }
+        }
+
+        // 🌟 سياق السيتكوم (Sitcom Intent)
+        const wantsSitcom =
+          parsedIntent.isSitcom ||
+          parsedIntent.detectedKeywords.some((k) => k.name === "sitcom") ||
+          (anchorTitle &&
+            /\b(friends|the office|how i met your mother|himym|modern family|brooklyn 99|brooklyn nine-nine|new girl|parks and recreation|seinfeld|community|schitt's creek|scrubs|two and a half men|the big bang theory|big bang theory)\b/i.test(
+              anchorTitle,
+            )) ||
+          (parsedIntent.isComfortComedy && !parsedIntent.isPureComedy) ||
+          /\b(sitcoms?|sit-coms?|situational comed(?:y|ies))\b/i.test(
+            parsedIntent.originalText,
+          );
+
+        if (wantsSitcom) {
+          const isIconicSitcom = iconicComfortShows.test(itemTitle);
+          const isPrimaryComedy =
+            itemGenreIds.length > 0 && itemGenreIds[0] === 35;
+
+          if (isIconicSitcom) {
+            s_intent = Math.min(100, s_intent + 60);
+          } else if (
+            item.media_type === "tv" &&
+            isPrimaryComedy &&
+            !itemGenreIds.includes(18)
+          ) {
+            s_intent = Math.min(100, s_intent + 40);
+          }
+        }
+
+        // بونص الأكشن الإبهاري عالي المفهوم (+60)
+        if (parsedIntent.isMindBlowingAction) {
+          const isHitMba =
+            mindBlowingActionHitsRegex.test(itemTitle) ||
+            (mindBlowingActionThemesRegex.test(itemOverview) &&
+              (itemGenreIds.includes(28) || itemGenreIds.includes(878))) ||
+            (itemGenreIds.includes(28) &&
+              itemGenreIds.includes(878) &&
+              voteAverage >= 7.5);
+
+          if (isHitMba) {
+            s_intent = Math.min(100, s_intent + 60);
+          }
+        }
+
+        // بونص رعب المنازل المسكونة والعائلات الملعونة (+60)
+        if (parsedIntent.isHauntedHorror) {
+          const isHauntedHit =
+            hauntedHorrorMasterpiecesRegex.test(itemTitle) ||
+            hauntedHorrorThemesRegex.test(itemOverview) ||
+            itemGenreIds.includes(27) ||
+            itemGenreIds.includes(3358) ||
+            itemGenreIds.includes(10292);
+
+          if (isHauntedHit) {
+            s_intent = Math.min(100, s_intent + 60);
+          }
+        }
+
+        // بونص الأنمي الرومانسي الكوميدي اللطيف الحديث (+60)
+        if (parsedIntent.isCuteAnimeRomCom) {
+          const isHitRomComAnime =
+            cuteRomComAnimeHitsRegex.test(itemTitle) ||
+            cuteRomComAnimeThemesRegex.test(itemOverview) ||
+            itemGenreIds.includes(9799) ||
+            itemGenreIds.includes(9840) ||
+            itemGenreIds.includes(158718);
+
+          if (isHitRomComAnime && releaseYear >= 2006) {
+            s_intent = Math.min(100, s_intent + 60);
+          }
+        }
+
+        // بونص أفلام المافيا وعائلات الجريمة وبناء الإمبراطوريات
+        if (parsedIntent.isCrimeFamily) {
+          const isHitMobFilm =
+            crimeFamilyMasterpiecesRegex.test(itemTitle) ||
+            crimeFamilyThemesRegex.test(itemOverview) ||
+            itemGenreIds.includes(10391) ||
+            itemGenreIds.includes(242);
+
+          if (isHitMobFilm) {
+            s_intent = Math.min(100, s_intent + 60);
+          }
+        }
+
+        // بونص ملاحم ومعارك السيوف التاريخية القديمة
+        if (parsedIntent.isSwordWarfare) {
+          const isSwordHit =
+            swordWarfareHitsRegex.test(itemTitle) ||
+            swordWarfareThemesRegex.test(itemOverview) ||
+            itemGenreIds.includes(804) ||
+            itemGenreIds.includes(195779) ||
+            itemGenreIds.includes(2964);
+
+          if (isSwordHit) {
+            s_intent = Math.min(100, s_intent + 60);
+          }
+        }
+
+        // بونص قصص الصعود والتحدي والنجاح من الصفر
         if (parsedIntent.isUnderdog) {
           const isUnderdogHit =
             underdogInspirationalHitsRegex.test(itemTitle) ||
@@ -1240,7 +1820,7 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 50);
         }
 
-        // بونص أفلام السرقات والتخطيط المباشر (+60)
+        // بونص أفلام السرقات والتخطيط المباشر
         const hasExplicitHeistRobbery =
           explicitHeistRobberyRegex.test(itemTitle) ||
           explicitHeistRobberyRegex.test(itemOverview) ||
@@ -1275,8 +1855,12 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 60);
         }
 
-        // بونص الكوميديا الخالصة والمريحة عند التعب والإرهاق (+60)
-        if (parsedIntent.isComfortComedy || parsedIntent.isTiredMood) {
+        // بونص الكوميديا الخالصة والمريحة عند التعب والإرهاق
+        if (
+          (parsedIntent.isComfortComedy || parsedIntent.isTiredMood) &&
+          !parsedIntent.isPureComedy &&
+          !wantsSitcom
+        ) {
           const isPureLaughHit =
             crowdPleaserComedyRegex.test(itemTitle) ||
             (itemGenreIds.includes(35) && !itemGenreIds.includes(18));
@@ -1286,7 +1870,7 @@ export class CindromeEngine {
           }
         }
 
-        // بونص أفلام الأنيميشن العائلية المبهجة (+50)
+        // بونص أفلام الأنيميشن العائلية المبهجة
         const hasBothAnimationAndFamily =
           (itemGenreIds.includes(16) ||
             itemGenres.some((g) => g.includes("animation"))) &&
@@ -1331,7 +1915,7 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 50);
         }
 
-        // فحص وبونص الحروب التاريخية والمعارك الملحمية
+        // فحص وبونص الحروب التاريخية العامة
         const hasWarOrHistoryGenre =
           itemGenreIds.includes(10752) ||
           itemGenreIds.includes(36) ||
@@ -1361,6 +1945,7 @@ export class CindromeEngine {
           trueCrimeDocRegex.test(itemOverview) ||
           itemGenreIds.includes(10714) ||
           itemGenreIds.includes(9882) ||
+          itemGenreIds.includes(9715) ||
           itemGenreIds.includes(10303);
 
         if (
@@ -1393,7 +1978,7 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 40);
         }
 
-        if (wantsDark) {
+        if (wantsDark && !parsedIntent.isDarkAnime) {
           const darkToneRegex =
             /\b(dark|death|tragedy|grim|violent|psychological|gore|brutal|survival|sinister|curse|bloody|dark fantasy|macabre|demon|demons)\b/i;
           if (
@@ -1438,56 +2023,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص السيتكوم الخالص
-        const iconicSitcomAnchors =
-          /\b(friends|the office|how i met your mother|himym|modern family|brooklyn 99|brooklyn nine-nine|new girl|parks and recreation|seinfeld|community|schitt's creek|scrubs|two and a half men|the big bang theory|big bang theory)\b/i;
-        const isAnchorSitcom =
-          anchorTitle && iconicSitcomAnchors.test(anchorTitle);
-
-        const wantsSitcom =
-          parsedIntent.detectedKeywords.some((k) => k.name === "sitcom") ||
-          isAnchorSitcom ||
-          parsedIntent.isComfortComedy ||
-          /\b(sitcom|sit-com|sitcoms|chill|comfort|lighthearted|feel[- ]good|relaxing|easy watch|after a long day)\b/i.test(
-            parsedIntent.originalText,
-          );
-
-        const iconicComfortShows =
-          /\b(how i met your mother|brooklyn nine-nine|modern family|parks and recreation|new girl|community|the office|the big bang theory|schitt's creek|scrubs|that '70s show|malcolm in the middle|ted lasso|superstore|it's always sunny in philadelphia|arrested development|silicon valley)\b/i;
-
-        if (wantsSitcom) {
-          if (iconicComfortShows.test(itemTitle)) {
-            s_intent = Math.min(100, s_intent + 45);
-          } else if (
-            item.media_type === "tv" &&
-            itemGenreIds[0] === 35 &&
-            !itemGenreIds.includes(18)
-          ) {
-            s_intent = Math.min(100, s_intent + 30);
-          }
-
-          if (voteCount < 400 && !parsedIntent.isComfortComedy) {
-            penalties += 60;
-          }
-        }
-
-        // 2. حساب تفضيل المستخدم الشخصي
-        if (
-          userReviewsCount >= 5 &&
-          userProfileStats &&
-          Object.keys(userProfileStats).length > 0
-        ) {
-          let userTotal = 0;
-          let matched = 0;
-          itemGenres.forEach((g) => {
-            if (userProfileStats[g]) {
-              userTotal += (userProfileStats[g] / 10) * 100;
-              matched++;
-            }
-          });
-          if (matched > 0) s_user = userTotal / matched;
-        }
-
         // 3. الفلترة الصارمة والخصومات (Penalties System)
 
         // أ. بوابة النية العامة
@@ -1495,7 +2030,252 @@ export class CindromeEngine {
           penalties += 120;
         }
 
-        // 🌟 ب. عقوبة استبعاد الأعمال غير المتطابقة مع قصص الصعود والتحدي (طرد الرعب والخيال العلمي والفانتازيا غير المرتبطة بالكفاح)
+        // 🌟 ب. عقوبة استبعاد أعمال الفانتازيا والمغامرات الخفيفة/الإيتشي عند طلب Dark Anime (-60)
+        if (parsedIntent.isDarkAnime) {
+          if (
+            lightOrEcchiFantasyAnimeRegex.test(itemTitle) ||
+            /\b(ecchi|cheerful|harem|fan-service|fanservice|lighthearted adventure)\b/i.test(
+              itemOverview,
+            ) ||
+            itemGenreIds.includes(10762) // Kids
+          ) {
+            penalties += 60;
+          }
+        }
+
+        // 🌟 ج. اشتراطات وحظر السيتكوم (Sitcom Strict Rules)
+        if (wantsSitcom) {
+          const isIconicSitcom = iconicComfortShows.test(itemTitle);
+          const isPrimaryComedy =
+            itemGenreIds.length > 0 && itemGenreIds[0] === 35;
+
+          // 1. اشتراط أن تكون الكوميديا (35) هي التصنيف الأول والمهيمن
+          if (!isPrimaryComedy && !isIconicSitcom) {
+            penalties += 80;
+          }
+
+          // 2. حظر واستبعاد صارم للرياضة في السيتكوم (-120)
+          if (
+            sportsRegex.test(itemTitle) ||
+            sportsRegex.test(itemOverview) ||
+            itemGenreIds.includes(6075) ||
+            itemGenres.some((g) => g.includes("sport"))
+          ) {
+            penalties += 120;
+          }
+
+          // 3. حظر دراما وألعاب المراهقين والأطفال وتيلينوفيلا ديزني/نيكلوديون (-120) (طرد O11CE / Once)
+          if (
+            teenOrKidsSportsTelenovelaRegex.test(itemTitle) ||
+            teenOrKidsSportsTelenovelaRegex.test(itemOverview) ||
+            itemGenreIds.includes(10762) || // Kids
+            itemGenreIds.includes(10766) // Soap / Telenovela
+          ) {
+            penalties += 120;
+          }
+
+          // 4. خصم الدراما الثقيلة غير الكوميدية
+          if (itemGenreIds.includes(18) && !isIconicSitcom) {
+            penalties += 70;
+          }
+
+          if (voteCount < 400 && !isIconicSitcom) {
+            penalties += 60;
+          }
+        }
+
+        // 🌟 د. جدار الجودة والاشتراط الصارم للكوميديا الصريحة (Pure Comedy)
+        if (parsedIntent.isPureComedy) {
+          const isIconicComedy = pureComedyHitsRegex.test(itemTitle);
+          const isComedyPrimary =
+            itemGenreIds.length > 0 && itemGenreIds[0] === 35;
+
+          if (originalLang !== "en" && !isIconicComedy) {
+            penalties += 90;
+          }
+
+          if (!isComedyPrimary && !isIconicComedy) {
+            penalties += 50;
+          }
+
+          if (
+            (itemGenreIds.includes(28) || itemGenreIds.includes(80)) &&
+            !isIconicComedy
+          ) {
+            penalties += 40;
+          }
+
+          if (
+            (itemGenreIds.includes(18) ||
+              itemGenreIds.includes(53) ||
+              dramedyOrArthouseRegex.test(itemTitle)) &&
+            !isIconicComedy
+          ) {
+            penalties += 80;
+          }
+
+          if (voteAverage < 7.0) {
+            penalties += 95;
+          }
+
+          if (
+            itemGenreIds.includes(10751) ||
+            itemGenreIds.includes(10762) ||
+            itemGenreIds.includes(16) ||
+            kidsComedyMascotRegex.test(itemTitle)
+          ) {
+            penalties += 120;
+          }
+        }
+
+        // هـ. جدار الجودة الصارم للأعمال الإبهارية والأكشن عالي المفهوم
+        if (
+          (parsedIntent.hasQualityFloor || parsedIntent.isMindBlowingAction) &&
+          !parsedIntent.isPureComedy &&
+          !wantsSitcom
+        ) {
+          if (voteAverage < 7.0) {
+            penalties += 95;
+          } else if (voteAverage < 7.2) {
+            penalties += 40;
+          }
+
+          if (bMovieTrashRegex.test(itemTitle)) {
+            penalties += 120;
+          }
+
+          if (voteCount < 1000) {
+            penalties += 60;
+          }
+        }
+
+        // و. عقوبة استبعاد أفلام العائلة والأطفال والكوميديا عند طلب رعب المنازل المسكونة
+        if (parsedIntent.isHauntedHorror) {
+          if (
+            itemGenreIds.includes(10751) ||
+            itemGenreIds.includes(10762) ||
+            itemGenres.some((g) => g.includes("family") || g.includes("kids"))
+          ) {
+            penalties += 120;
+          }
+
+          if (itemGenreIds.includes(35)) {
+            penalties += 80;
+          }
+
+          const isHauntedHit =
+            hauntedHorrorMasterpiecesRegex.test(itemTitle) ||
+            hauntedHorrorThemesRegex.test(itemOverview) ||
+            itemGenreIds.includes(27) ||
+            itemGenreIds.includes(3358) ||
+            itemGenreIds.includes(10292);
+
+          if (!isHauntedHit) {
+            penalties += 50;
+          }
+        }
+
+        // ز. عقوبة استبعاد الإيتشي والرياضة والأنمي القديم في الأنمي الرومانسي الكوميدي اللطيف
+        if (parsedIntent.isCuteAnimeRomCom) {
+          if (
+            ecchiOrAdultAnimeRegex.test(itemTitle) ||
+            ecchiOrAdultAnimeRegex.test(itemOverview)
+          ) {
+            penalties += 120;
+          }
+
+          if (
+            pureSportsAnimeRegex.test(itemTitle) ||
+            (itemGenreIds.includes(6075) &&
+              !cuteRomComAnimeHitsRegex.test(itemTitle))
+          ) {
+            penalties += 100;
+          }
+
+          if (
+            !parsedIntent.wantsClassic &&
+            (retroDatedAnimeRegex.test(itemTitle) ||
+              (releaseYear > 0 && releaseYear < 2005))
+          ) {
+            penalties += 80;
+          }
+
+          const hasRomanceOrCute =
+            cuteRomComAnimeHitsRegex.test(itemTitle) ||
+            cuteRomComAnimeThemesRegex.test(itemOverview) ||
+            itemGenreIds.includes(9799) ||
+            itemGenreIds.includes(9840) ||
+            itemGenreIds.includes(158718);
+
+          if (!hasRomanceOrCute) {
+            penalties += 70;
+          }
+        }
+
+        // ح. عقوبة استبعاد الأفلام العائلية للأطفال عند طلب عائلات الجريمة والمافيا
+        if (parsedIntent.isCrimeFamily) {
+          if (
+            itemGenreIds.includes(10751) ||
+            itemGenreIds.includes(10762) ||
+            itemGenreIds.includes(16)
+          ) {
+            penalties += 100;
+          }
+
+          const isHitMobFilm =
+            crimeFamilyMasterpiecesRegex.test(itemTitle) ||
+            crimeFamilyThemesRegex.test(itemOverview) ||
+            itemGenreIds.includes(80) ||
+            itemGenreIds.includes(10391) ||
+            itemGenreIds.includes(242);
+
+          if (!isHitMobFilm) {
+            penalties += 70;
+          }
+        }
+
+        // ط. عقوبة استبعاد الأفلام والمسلسلات الروائية الخيالية تماماً عند طلب الوثائقيات الجنائية
+        if (parsedIntent.isTrueCrimeDoc) {
+          if (!isDocContent) {
+            penalties += 95;
+          } else if (!hasExplicitCrimeSignal) {
+            penalties += 60;
+          }
+
+          if (
+            scienceNatureDocRegex.test(itemTitle) ||
+            scienceNatureDocRegex.test(itemOverview)
+          ) {
+            penalties += 80;
+          }
+
+          if (itemGenreIds.includes(35) || itemGenreIds.includes(878)) {
+            penalties += 40;
+          }
+        }
+
+        // ي. عقوبة استبعاد أفلام الحروب الحديثة عند طلب السيوف والمعارك القديمة
+        if (parsedIntent.isSwordWarfare) {
+          if (
+            modernWarfareRegex.test(itemTitle) ||
+            modernWarfareRegex.test(itemOverview)
+          ) {
+            penalties += 80;
+          }
+
+          const isSwordHit =
+            swordWarfareHitsRegex.test(itemTitle) ||
+            swordWarfareThemesRegex.test(itemOverview) ||
+            itemGenreIds.includes(804) ||
+            itemGenreIds.includes(195779) ||
+            itemGenreIds.includes(2964);
+
+          if (!isSwordHit) {
+            penalties += 60;
+          }
+        }
+
+        // ك. عقوبة استبعاد الأعمال غير المتطابقة مع قصص الصعود والتحدي
         if (parsedIntent.isUnderdog) {
           if (
             itemGenreIds.includes(27) ||
@@ -1506,14 +2286,14 @@ export class CindromeEngine {
           }
         }
 
-        // ج. عقوبة استبعاد الأعمال غير الكورية تماماً عند طلب Korean Thriller / Show
+        // ل. عقوبة استبعاد الأعمال غير الكورية تماماً عند طلب Korean Thriller / Show
         if (parsedIntent.isKorean) {
           if (originalLang !== "ko") {
             penalties += 120;
           }
         }
 
-        // د. عقوبة استبعاد الأعمال الخالية من التويستات عند طلب Plot Twists
+        // م. عقوبة استبعاد الأعمال الخالية من التويستات عند طلب Plot Twists
         if (wantsPlotTwist || parsedIntent.hasTwistKeywords) {
           if (
             !hasTwistSignal &&
@@ -1523,7 +2303,7 @@ export class CindromeEngine {
           }
         }
 
-        // هـ. عقوبة استبعاد أفلام الانتقام الفردي ودراما المافيا البطيئة عند طلب السرقات والتخطيط
+        // ن. عقوبة استبعاد أفلام الانتقام الفردي عند طلب السرقات والتخطيط
         if (parsedIntent.isHeistRobbery) {
           if (
             revengeOrPureMafiaRegex.test(itemTitle) ||
@@ -1545,7 +2325,7 @@ export class CindromeEngine {
           }
         }
 
-        // و. عقوبة استبعاد الفضاء الخارجي والسفر بالزمن عند طلب السايبربنك والروبوتات والنيون
+        // س. عقوبة استبعاد الفضاء الخارجي والسفر بالزمن عند طلب السايبربنك والروبوتات والنيون
         if (parsedIntent.isCyberpunk) {
           if (
             spaceOrTimeTravelRegex.test(itemTitle) ||
@@ -1559,7 +2339,7 @@ export class CindromeEngine {
           }
         }
 
-        // ز. عقوبة استبعاد الأكشن الفضائي الترفيهي والسفر بالزمن الكوميدي عند طلب الفضاء الفلسفي
+        // ع. عقوبة استبعاد الأكشن الفضائي الترفيهي والسفر بالزمن الكوميدي عند طلب الفضاء الفلسفي
         if (parsedIntent.isPhilosophicalSciFi) {
           if (
             spaceActionOrLightRegex.test(itemTitle) ||
@@ -1577,7 +2357,7 @@ export class CindromeEngine {
           }
         }
 
-        // ح. عقوبة استبعاد الدراما الكوميدية، مسلسلات المراهقين والأنمي القديم عند التعب والكوميديا المريحة
+        // ف. عقوبة استبعاد الدراما الكوميدية، مسلسلات المراهقين والأنمي القديم عند التعب والكوميديا المريحة
         if (parsedIntent.isComfortComedy || parsedIntent.isTiredMood) {
           if (itemGenreIds.includes(18)) {
             penalties += 80;
@@ -1592,8 +2372,8 @@ export class CindromeEngine {
 
           if (
             itemGenreIds.includes(10762) ||
-            teenOrKidsShowRegex.test(itemTitle) ||
-            teenOrKidsShowRegex.test(itemOverview)
+            teenOrKidsSportsTelenovelaRegex.test(itemTitle) ||
+            teenOrKidsSportsTelenovelaRegex.test(itemOverview)
           ) {
             penalties += 75;
           }
@@ -1619,7 +2399,7 @@ export class CindromeEngine {
           }
         }
 
-        // ط. عقوبة استبعاد الأنمي والإنتاجات غير العائلية في سياق الأنيميشن العائلي العام
+        // ص. عقوبة استبعاد الأنمي والإنتاجات غير العائلية في سياق الأنيميشن العائلي العام
         if (parsedIntent.isFamilyAnimation) {
           const wantsExplicitAnime = /\banime\b/i.test(
             parsedIntent.originalText,
@@ -1647,27 +2427,7 @@ export class CindromeEngine {
           }
         }
 
-        // ي. عقوبة استبعاد الوثائقيات الطبيعية/العلمية والدراما الخيالية عند طلب True Crime Docuseries
-        if (parsedIntent.isTrueCrimeDoc) {
-          if (
-            scienceNatureDocRegex.test(itemTitle) ||
-            scienceNatureDocRegex.test(itemOverview)
-          ) {
-            penalties += 80;
-          }
-
-          if (!isDocContent) {
-            penalties += 95;
-          } else if (!hasExplicitCrimeSignal) {
-            penalties += 60;
-          }
-
-          if (itemGenreIds.includes(35) || itemGenreIds.includes(878)) {
-            penalties += 40;
-          }
-        }
-
-        // ك. عقوبة استبعاد الخيال العلمي والأكشن المعاصر عند طلب الحروب التاريخية الملحمية
+        // ق. عقوبة استبعاد الخيال العلمي والأكشن المعاصر عند طلب الحروب التاريخية الملحمية
         if (parsedIntent.isHistoricalWar) {
           if (!isGenuineHistoricalWar) {
             penalties += 80;
@@ -1690,7 +2450,7 @@ export class CindromeEngine {
           }
         }
 
-        // ل. عقوبة استبعاد التراجيديا والكوميديا السوداوية/التجريبية عند طلب Rom-Com خفيف ومبهج
+        // ر. عقوبة استبعاد التراجيديا والكوميديا السوداوية/التجريبية عند طلب Rom-Com خفيف ومبهج
         if (wantsRomCom) {
           if (
             darkOrExperimentalRomanceRegex.test(itemTitle) ||
@@ -1719,7 +2479,7 @@ export class CindromeEngine {
           }
         }
 
-        // م. عقوبة استبعاد الأعمال الضعيفة والسلاشر عند طلب Psychological Thriller
+        // ش. عقوبة استبعاد الأعمال الضعيفة والسلاشر عند طلب Psychological Thriller
         if (wantsPsychological) {
           if (voteAverage < 7.0) {
             penalties += 70;
@@ -1737,7 +2497,7 @@ export class CindromeEngine {
           }
         }
 
-        // ن. عقوبات سهرة الرعب الجماعية
+        // ت. عقوبات سهرة الرعب الجماعية
         if (parsedIntent.isHorrorNight) {
           if (
             !parsedIntent.wantsClassic &&
@@ -1765,7 +2525,7 @@ export class CindromeEngine {
           }
         }
 
-        // س. فلترة أنميات السحر واستبعاد العمالقة والدفتر الأسود
+        // ث. فلترة أنميات السحر واستبعاد العمالقة والدفتر الأسود
         if (wantsMagic) {
           if (
             nonMagicTitanOrNotebookRegex.test(itemOverview) ||
@@ -1777,12 +2537,12 @@ export class CindromeEngine {
           }
         }
 
-        // ع. عقوبة الخصم الحاسم على الخيال العلمي الخالي من السفر عبر الزمن
+        // خ. عقوبة الخصم الحاسم على الخيال العلمي الخالي من السفر عبر الزمن
         if (wantsTimeTravel && !hasTimeTravelSignal) {
           penalties += 70;
         }
 
-        // ف. بوابة الأبطال الخارقين الصارمة
+        // ذ. بوابة الأبطال الخارقين الصارمة
         const wantsSuperhero =
           parsedIntent.detectedKeywords.some((k) => k.name === "superhero") ||
           /\b(superhero|superheroes|super\s*hero|super\s*heroes|marvel|dc|comic\s*book|mcu|dceu)\b/i.test(
@@ -1806,7 +2566,7 @@ export class CindromeEngine {
           }
         }
 
-        // ص. بوابة الحظر التام للرياضة (تُستثنى إذا كان الطلب صعوداً وتحدياً Underdog)
+        // ض. بوابة الحظر التام للرياضة
         const detectedSportSubThemes = parsedIntent.detectedKeywords.filter(
           (k) =>
             ["racing", "boxing", "football", "basketball"].includes(k.name),
@@ -1814,7 +2574,9 @@ export class CindromeEngine {
         const userWantsSports =
           (parsedIntent.detectedGenres.includes("sports") ||
             detectedSportSubThemes.length > 0) &&
-          !parsedIntent.isUnderdog;
+          !parsedIntent.isUnderdog &&
+          !parsedIntent.isCuteAnimeRomCom &&
+          !wantsSitcom;
 
         if (userWantsSports) {
           const hasSportsSignal =
@@ -1838,7 +2600,7 @@ export class CindromeEngine {
           }
         }
 
-        // ق. فلترة الـ TV Movies والحلقات الخاصة (-60)
+        // ظ. فلترة الـ TV Movies والحلقات الخاصة (-60)
         const isMovieSearch =
           parsedIntent.targetType === "movie" || item.media_type === "movie";
         const isTvMovieOrSpecial =
@@ -1851,7 +2613,7 @@ export class CindromeEngine {
           penalties += 60;
         }
 
-        // ر. تعارض الكوميديا مع الإثارة والرعب والجرائم
+        // غ. تعارض الكوميديا مع الإثارة والرعب والجرائم
         const isDarkOrThriller =
           itemGenreIds.includes(53) ||
           itemGenreIds.includes(80) ||
@@ -1868,22 +2630,28 @@ export class CindromeEngine {
           parsedIntent.isCrimeHeist ||
           wantsPsychological ||
           parsedIntent.isHistoricalWar ||
+          parsedIntent.isSwordWarfare ||
           parsedIntent.isTrueCrimeDoc ||
           parsedIntent.isKorean ||
           parsedIntent.hasTwistKeywords ||
           parsedIntent.isCyberpunk ||
           parsedIntent.isPhilosophicalSciFi ||
-          parsedIntent.isUnderdog;
+          parsedIntent.isUnderdog ||
+          parsedIntent.isCrimeFamily ||
+          parsedIntent.isHauntedHorror ||
+          parsedIntent.isMindBlowingAction ||
+          parsedIntent.isDarkAnime;
         if (
           parsedIntent.detectedGenres.includes("comedy") &&
           isDarkOrThriller &&
           !userWantedDark &&
-          !parsedIntent.isFamilyAnimation
+          !parsedIntent.isFamilyAnimation &&
+          !parsedIntent.isCuteAnimeRomCom
         ) {
           penalties += 50;
         }
 
-        // ش. خصم العمل المرجعي وأجزائه المباشرة بدقة
+        // خصم العمل المرجعي وأجزائه المباشرة بدقة
         if (anchorTitle) {
           const cleanAnchor = anchorTitle.toLowerCase().trim();
           const cleanItem = itemTitle.toLowerCase().trim();
