@@ -1,3 +1,4 @@
+// client/js/pages/diary-page.js
 document.addEventListener("DOMContentLoaded", () => {
   // Dropdown filter toggle interactions
   const dropdownItems = document.querySelectorAll(
@@ -238,47 +239,36 @@ document.addEventListener("DOMContentLoaded", () => {
       if (reviewText) reviewText.value = review;
       updateModalStars(rating);
 
-      if (isLiked) likeToggle.classList.add("active");
-      else likeToggle.classList.remove("active");
+      if (likeToggle) {
+        if (isLiked) likeToggle.classList.add("active");
+        else likeToggle.classList.remove("active");
+      }
 
-      if (isRewatched) rewatchToggle.classList.add("active");
-      else rewatchToggle.classList.remove("active");
+      if (rewatchToggle) {
+        if (isRewatched) rewatchToggle.classList.add("active");
+        else rewatchToggle.classList.remove("active");
+      }
 
-      if (isSpoiler) spoilerToggle.classList.add("spoiler-active");
-      else spoilerToggle.classList.remove("spoiler-active");
+      // ضبط كلاس الـ spoiler بدقة لمنع التضارب
+      if (spoilerToggle) {
+        if (isSpoiler) {
+          spoilerToggle.classList.add("spoiler-active");
+          spoilerToggle.classList.remove("active");
+        } else {
+          spoilerToggle.classList.remove("spoiler-active");
+        }
+      }
 
       if (logModal) logModal.style.display = "flex";
     });
   });
 
-  // Modal event synchronization and fallback handlers
+  // Modal event synchronization
   const logSearchResults = document.getElementById("logSearchResults");
   if (logSearchResults) {
     logSearchResults.addEventListener("click", () => {
       if (logItemHeader) logItemHeader.style.display = "flex";
       if (logGlobalSearch) logGlobalSearch.style.display = "none";
-    });
-  }
-
-  if (likeToggle && !likeToggle.dataset.diaryBound) {
-    likeToggle.dataset.diaryBound = "true";
-    likeToggle.addEventListener("click", function (e) {
-      e.preventDefault();
-      this.classList.toggle("active");
-    });
-  }
-  if (rewatchToggle && !rewatchToggle.dataset.diaryBound) {
-    rewatchToggle.dataset.diaryBound = "true";
-    rewatchToggle.addEventListener("click", function (e) {
-      e.preventDefault();
-      this.classList.toggle("active");
-    });
-  }
-  if (spoilerToggle && !spoilerToggle.dataset.diaryBound) {
-    spoilerToggle.dataset.diaryBound = "true";
-    spoilerToggle.addEventListener("click", function (e) {
-      e.preventDefault();
-      this.classList.toggle("spoiler-active");
     });
   }
 });

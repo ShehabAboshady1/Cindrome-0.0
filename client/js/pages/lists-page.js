@@ -1,3 +1,4 @@
+// client/js/pages/lists-page.js
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
   const listsGrid = document.getElementById("listsGrid");
@@ -12,6 +13,45 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentSearch = "";
   let currentFilter = "Popular";
   let currentPage = 1;
+
+  // 🌟 حماية وربط مباشر لأزرار الـ Log Modal داخل صفحة الـ Lists
+  function bindLogModalToggles() {
+    const likeToggle = document.getElementById("likeToggle");
+    const rewatchToggle = document.getElementById("rewatchToggle");
+    const spoilerToggle = document.getElementById("spoilerToggle");
+
+    if (likeToggle && !likeToggle.dataset.listsBound) {
+      likeToggle.dataset.listsBound = "true";
+      likeToggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.toggle("active");
+        this.classList.remove("spoiler-active");
+      });
+    }
+
+    if (rewatchToggle && !rewatchToggle.dataset.listsBound) {
+      rewatchToggle.dataset.listsBound = "true";
+      rewatchToggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.toggle("active");
+        this.classList.remove("spoiler-active");
+      });
+    }
+
+    if (spoilerToggle && !spoilerToggle.dataset.listsBound) {
+      spoilerToggle.dataset.listsBound = "true";
+      spoilerToggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.toggle("spoiler-active");
+        this.classList.remove("active");
+      });
+    }
+  }
+
+  bindLogModalToggles();
 
   // Fetch lists from API
   async function fetchLists() {
@@ -69,64 +109,77 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Card link targets
       const listUrl = `/single-list?id=${list.list_id}`;
-      card
-        .querySelector(".poster-stack")
-        .addEventListener("click", () => (window.location.href = listUrl));
+      const posterStack = card.querySelector(".poster-stack");
+      if (posterStack) {
+        posterStack.addEventListener(
+          "click",
+          () => (window.location.href = listUrl),
+        );
+      }
 
       const titleEl = card.querySelector(".list-title");
-      titleEl.textContent = list.title;
-      titleEl.href = listUrl;
+      if (titleEl) {
+        titleEl.textContent = list.title;
+        titleEl.href = listUrl;
+      }
 
       // Author details
       const authorLink = card.querySelector(".list-author-link");
-      authorLink.textContent = `@${list.username}`;
-      authorLink.href = `/profile/${list.username}`;
+      if (authorLink) {
+        authorLink.textContent = `@${list.username}`;
+        authorLink.href = `/profile/${list.username}`;
+      }
 
       // Total items count
-      card.querySelector(".count-num").textContent = list.total_items;
+      const countEl = card.querySelector(".count-num");
+      if (countEl) countEl.textContent = list.total_items;
 
       // Likes and comments setup
       const likeBtn = card.querySelector(".like-btn");
-      likeBtn.setAttribute("data-list-id", list.list_id);
-      if (list.is_liked_by_user) likeBtn.classList.add("is-liked", "liked");
-      card.querySelector(".like-count").textContent = formatNumber(
-        list.likes_count,
-      );
+      if (likeBtn) {
+        likeBtn.setAttribute("data-list-id", list.list_id);
+        if (list.is_liked_by_user) likeBtn.classList.add("is-liked", "liked");
+        const likeCountEl = card.querySelector(".like-count");
+        if (likeCountEl)
+          likeCountEl.textContent = formatNumber(list.likes_count);
+
+        // Like interaction
+        likeBtn.addEventListener("click", async function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          try {
+            const res = await fetch(`/api/lists/${list.list_id}/like`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+            });
+            if (res.ok) {
+              const data = await res.json();
+              const span = this.querySelector(".like-count");
+              let count = parseInt(span.textContent.replace(/,/g, ""), 10) || 0;
+              if (data.status === "added") {
+                this.classList.add("is-liked", "liked");
+                span.textContent = formatNumber(count + 1);
+              } else {
+                this.classList.remove("is-liked", "liked");
+                span.textContent = formatNumber(Math.max(0, count - 1));
+              }
+            } else if (res.status === 401) {
+              window.location.href = "/sign-in";
+            }
+          } catch (err) {
+            console.error("Like error:", err);
+          }
+        });
+      }
 
       const commentBtn = card.querySelector(".comment-btn");
-      commentBtn.href = `${listUrl}#comments-section`;
-      card.querySelector(".comment-count").textContent = formatNumber(
-        list.comments_count,
-      );
-
-      // Like interaction
-      likeBtn.addEventListener("click", async function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        try {
-          const res = await fetch(`/api/lists/${list.list_id}/like`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            const span = this.querySelector(".like-count");
-            let count = parseInt(span.textContent.replace(/,/g, ""), 10) || 0;
-            if (data.status === "added") {
-              this.classList.add("is-liked", "liked");
-              span.textContent = formatNumber(count + 1);
-            } else {
-              this.classList.remove("is-liked", "liked");
-              span.textContent = formatNumber(Math.max(0, count - 1));
-            }
-          } else if (res.status === 401) {
-            window.location.href = "/sign-in";
-          }
-        } catch (err) {
-          console.error("Like error:", err);
-        }
-      });
+      if (commentBtn) {
+        commentBtn.href = `${listUrl}#comments-section`;
+        const commentCountEl = card.querySelector(".comment-count");
+        if (commentCountEl)
+          commentCountEl.textContent = formatNumber(list.comments_count);
+      }
 
       listsGrid.appendChild(card);
     });
@@ -206,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     items.forEach((item) => {
       item.addEventListener("click", function (e) {
+        e.preventDefault();
         e.stopPropagation();
         const newFilter = this.textContent.trim();
 

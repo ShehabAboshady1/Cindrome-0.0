@@ -1,3 +1,4 @@
+// client/js/modals.js
 document.addEventListener("DOMContentLoaded", () => {
   // Search modal visibility controls
   const searchTriggers = document.querySelectorAll(".search-trigger-btn");
@@ -331,11 +332,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!btn) return;
     btn.addEventListener("click", function (e) {
       e.preventDefault();
-      this.classList.toggle(activeClass);
-
+      e.stopPropagation();
       if (activeClass === "spoiler-active") {
+        this.classList.toggle("spoiler-active");
         this.classList.remove("active");
       } else {
+        this.classList.toggle("active");
         this.classList.remove("spoiler-active");
       }
     });

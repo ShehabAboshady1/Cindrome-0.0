@@ -1,3 +1,4 @@
+// server/controllers/mediaController.js
 import axios from "axios";
 import db from "../config/db.js";
 import { formatCard } from "../utils/helpers.js";
@@ -826,7 +827,10 @@ export const apiDiscover = async (req, res) => {
         items = items.filter((it) => it.media_type === "movie");
       else if (type === "tv")
         items = items.filter(
-          (it) => it.media_type === "tv" && it.original_language !== "ja",
+          (it) =>
+            it.media_type === "tv" &&
+            it.original_language !== "ja" &&
+            !(it.genre_ids && it.genre_ids.includes(16)),
         );
       else if (type === "anime")
         items = items.filter((it) => it.original_language === "ja");
@@ -884,6 +888,11 @@ export const apiDiscover = async (req, res) => {
           mediaType === "movie" ? movieGenreMap[genre] : tvGenreMap[genre];
         if (gid) params.with_genres = gid;
       }
+      // 🌟 تطبيق استبعاد الأنمي واللغة اليابانية فقط عند طلب فلتر TV الصريح لمنع إفساد نتائج Anime (type === "anime")
+      if (type === "tv" && mediaType === "tv") {
+        params.without_original_language = "ja";
+        params.without_genres = "16";
+      }
       return params;
     }
 
@@ -899,6 +908,7 @@ export const apiDiscover = async (req, res) => {
           params: {
             ...buildDiscoverParams("tv", 1),
             without_original_language: "ja",
+            without_genres: "16",
           },
         }),
       ]);
@@ -943,7 +953,10 @@ export const apiDiscover = async (req, res) => {
             ? "https://api.themoviedb.org/3/discover/movie"
             : "https://api.themoviedb.org/3/discover/tv";
         const baseParams = buildDiscoverParams(mediaType, p1);
-        if (mediaType === "tv") baseParams.without_original_language = "ja";
+        if (mediaType === "tv") {
+          baseParams.without_original_language = "ja";
+          baseParams.without_genres = "16";
+        }
         const p1Promise =
           p1 === 1
             ? Promise.resolve(initData)
@@ -956,7 +969,10 @@ export const apiDiscover = async (req, res) => {
                   params: {
                     ...buildDiscoverParams(mediaType, p2),
                     ...(mediaType === "tv"
-                      ? { without_original_language: "ja" }
+                      ? {
+                          without_original_language: "ja",
+                          without_genres: "16",
+                        }
                       : {}),
                   },
                 })
@@ -994,7 +1010,9 @@ export const apiDiscover = async (req, res) => {
       );
       if (type === "tv") {
         p1Params.without_original_language = "ja";
+        p1Params.without_genres = "16";
         p2Params.without_original_language = "ja";
+        p2Params.without_genres = "16";
       }
       if (type === "anime") {
         p1Params.with_original_language = "ja";
@@ -1062,7 +1080,10 @@ export const apiSearch = async (req, res) => {
       items = items.filter((item) => item.media_type === "movie");
     else if (filterType === "tv")
       items = items.filter(
-        (item) => item.media_type === "tv" && item.original_language !== "ja",
+        (item) =>
+          item.media_type === "tv" &&
+          item.original_language !== "ja" &&
+          !(item.genre_ids && item.genre_ids.includes(16)),
       );
     else if (filterType === "anime")
       items = items.filter((item) => item.original_language === "ja");
