@@ -14,13 +14,23 @@
     <link rel="stylesheet" href="css/modals.css">
 </head>
 
-<body class="drome-page <%= locals.user ? 'logged-in' : 'logged-out' %>">
+<body class="drome-page <%= locals.user ? 'logged-in' : 'logged-out' %>"
+    data-user-id="<%= locals.user ? locals.user.id : '' %>">
     <header>
         <%- include("partials/navbar.ejs") %>
     </header>
 
     <main class="drome-wrapper">
         <section class="drome-chat-area">
+            <!-- بنر التنبيه الثابت داخل هيكل الصفحة، يتحكم في ظهوره الـ JS والـ CSS فقط -->
+            <div id="dromeAuthBanner" class="drome-auth-banner is-hidden">
+                <div class="drome-auth-banner-text">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>Please sign in to access the Cindrome Dynamic Personalization Engine.</span>
+                </div>
+                <a href="/sign-in" class="btn-drome-login">Sign In</a>
+            </div>
+
             <div class="chat-messages-container" id="chatContainer">
                 <div class="chat-messages-inner" id="chatInner">
                     <div id="pullToRefreshIndicator" class="pull-to-refresh-indicator">
@@ -57,7 +67,7 @@
             </div>
 
             <div class="drome-input-wrapper">
-                <div class="drome-input-box">
+                <div class="drome-input-box" id="dromeInputBox">
                     <button class="inline-icon-btn" id="newChatBtn" title="New Chat">
                         <i class="fa-solid fa-plus"></i>
                     </button>
@@ -107,7 +117,6 @@
                     </div>
                     <div class="drome-bubble-content">
                         <p class="message-text"></p>
-                        <!-- تم تفعيل كلاس الشبكة 2x2 مع الحفاظ على التوافقية -->
                         <div class="chat-cards-grid chat-cards-row"></div>
                     </div>
                 </div>
@@ -144,6 +153,11 @@
                 </div>
             </template>
 
+            <!-- تمرير حالة المصادقة من Express/EJS مباشرة وبطريقة صحيحة -->
+            <script>
+                window.IS_AUTHENTICATED = <%= typeof user !== 'undefined' && user ? 'true' : 'false' %>;
+                window.CURRENT_USER_ID = "<%= typeof user !== 'undefined' && user ? user.id : '' %>";
+            </script>
             <script src="js/modals.js"></script>
             <script src="js/pages/drome.js"></script>
 </body>

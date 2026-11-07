@@ -1418,8 +1418,9 @@ export class CindromeEngine {
     const kidsComedyMascotRegex =
       /\b(sonic|sonic the hedgehog|minions|despicable me|alvin and the chipmunks|smurfs|paddington|spongebob|sponge bob|pokemon|detective pikachu|lego|garfield|peter rabbit|space jam|men in black|ghostbusters|shazam|ant-man|deadpool|marvel|dc comics)\b/i;
 
+    // 🌟 تدقيق عقوبة الـ Dark Anime: استثناء الأنميات السيكولوجية والجرائم الصريحة
     const darkAnimeMasterpiecesRegex =
-      /\b(attack on titan|death note|monster|berserk|tokyo ghoul|chainsaw man|vinland saga|parasyte|dororo|hellsing|psycho-pass|made in abyss|neon genesis evangelion|devilman crybaby|shinsekai yori|claymore|ergo proxy|texhnolyze)\b/i;
+      /\b(attack on titan|death note|monster|berserk|tokyo ghoul|chainsaw man|vinland saga|parasyte|dororo|hellsing|psycho-pass|made in abyss|neon genesis evangelion|devilman crybaby|shinsekai yori|claymore|ergo proxy|texhnolyze|bungo stray dogs|bungou stray dogs|death parade|shiki|another|higurashi|shinigami|light yagami|johan liebert|dark gathering)\b/i;
 
     const lightOrEcchiFantasyAnimeRegex =
       /\b(the seven deadly sins|nanatsu no taizai|fairy tail|konosuba|black clover|danmachi|is it wrong to try to pick up girls|no game no life|sword art online|welcome to demon school|radiant|seven deadly sins)\b/i;
@@ -1451,11 +1452,8 @@ export class CindromeEngine {
     const historicalWarRegex =
       /\b(war|world war|wwii|ww2|wwi|battle|battles|huge battles|epic battles|soldier|soldiers|army|infantry|combat|trenches|normandy|d-day|vietnam|crusade|crusades|crusaders|gladiator|gladiators|roman empire|medieval|kingdom|samurai|spartan|spartans|ancient warfare|saving private ryan|kingdom of heaven|braveheart|1917|dunkirk|hacksaw ridge|apocalypse now|platoon|full metal jacket|black hawk down|fury|the patriot|troy|300|master and commander|letters from iwo jima|bridge on the river kwai|all quiet on the western front|enemy at the gates|the bridge on the river kwai|paths of glory|the thin red line|midway|we were soldiers)\b/i;
 
-    const swordWarfareHitsRegex =
-      /\b(gladiator|kingdom of heaven|troy|braveheart|the last samurai|300|alexander|king arthur|outlaw king|the king|centurion|the eagle|spartacus|excalibur|ran\b|kagemusha|13 assassins|macbeth|ben-hur|the northman|mongol|red cliff|the 13th warrior|kingdom\b|hero\b)\b/i;
-
     const swordWarfareThemesRegex =
-      /\b(sword|swords|blade|spear|shield|gladiator|roman empire|ancient rome|ancient greece|spartan|crusade|crusades|medieval|knights|samurai|katana|feudal japan|kingdom|castle siege|chariot|arrow|arrows|bow|armor|broadsword)\b/i;
+      /\b(sword|swords|sword fight|blade|spear|shield|gladiator|gladiators|roman empire|ancient rome|ancient greece|spartan|spartans|crusade|crusades|crusaders|medieval|medieval warfare|knights|samurai|katana|feudal japan|kingdom|castle siege|chariot|arrow|arrows|bow|armor|broadsword|ancient warfare|ancient battles?|medieval armies)\b/i;
 
     const modernWarfareRegex =
       /\b(world war|wwii|ww2|wwi|vietnam|nazi|hitler|pearl harbor|hacksaw ridge|unbroken|bridge on the river kwai|saving private ryan|dunkirk|1917|fury|platoon|full metal jacket|apocalypse now|black hawk down|enemy at the gates|machine gun|rifle|guns?|bullet|bullets|trench|trenches|normandy|d-day|air force|submarine|torpedo|bomber|tank|tanks|firearms|sniper|grenade|holocaust|all quiet on the western front)\b/i;
@@ -1479,7 +1477,7 @@ export class CindromeEngine {
       /\b(high school romance|first love|falling in love|wholesome|sweet romance|cute|crush|confession|school life|slice of life|heartwarming|friendship and romance|romantic comedy|shy|awkward romance)\b/i;
 
     const ecchiOrAdultAnimeRegex =
-      /\b(high school dxd|dxd|ecchi|harem|fanservice|fan service|hentai|erotic|borderline porn|kiss x sis|to love-ru|monster musume|prison school|interspecies reviewers|yosuga no sora|shinmai maou|redo of healer|seikon no qwaser|valkyrie drive|queen's blade|shimoneta)\b/i;
+      /\b(high school dxd|dxd|ecchi|harem|fanservice|fan service|hentai|erotic|borderline porn|kiss x sis|to love-ru|to love ru|monster musume|prison school|interspecies reviewers|yosuga no sora|shinmai maou|redo of healer|seikon no qwaser|valkyrie drive|queen's blade|shimoneta)\b/i;
 
     const pureSportsAnimeRegex =
       /\b(haikyuu?|kuroko|blue lock|slam dunk|hajime no ippo|diamond no ace|free!|run with the wind|aoashi|captain tsubasa|yowamushi pedal|ping pong the animation)\b/i;
@@ -1546,6 +1544,23 @@ export class CindromeEngine {
           ? parseInt(releaseDate.split("-")[0], 10)
           : 0;
 
+        // استخراج معرفات الكلمات المفتاحية التابعة لـ TMDB للعمل المرشح ديناميكياً
+        const rawItemKeywords = Array.isArray(item.keywords)
+          ? item.keywords
+          : item.keywords?.keywords || item.keywords?.results || [];
+
+        const itemKwIds = rawItemKeywords
+          .map((k) => (typeof k === "object" ? k?.id : parseInt(k, 10)))
+          .filter(Boolean);
+
+        const itemKwStrings = rawItemKeywords
+          .map((k) => (typeof k === "string" ? k : k?.name || ""))
+          .filter(Boolean)
+          .map((k) => k.toLowerCase().trim());
+
+        const itemSearchableText =
+          `${itemTitle} ${itemOverview} ${item.tagline || ""} ${itemKwStrings.join(" ")}`.toLowerCase();
+
         // 1. حساب S_intent بناءً على تطابق التصنيف
         const lookupType = item.media_type === "movie" ? "movie" : "tv";
         const genreIdLookup =
@@ -1607,6 +1622,7 @@ export class CindromeEngine {
 
         const hasTimeTravelSignal =
           itemGenreIds.includes(4379) ||
+          itemKwIds.includes(4379) ||
           timeTravelRegex.test(itemOverview) ||
           timeTravelRegex.test(itemTitle);
 
@@ -1617,6 +1633,9 @@ export class CindromeEngine {
           itemGenreIds.includes(9715) ||
           itemGenreIds.includes(11160) ||
           itemGenreIds.includes(9882) ||
+          itemKwIds.some((id) =>
+            [12565, 9663, 10714, 9715, 11160, 9882].includes(id),
+          ) ||
           twistRegex.test(itemOverview) ||
           twistRegex.test(itemTitle);
 
@@ -1716,14 +1735,15 @@ export class CindromeEngine {
         }
 
         // بونص الأنمي الرومانسي الكوميدي اللطيف الحديث (+60)
-        if (parsedIntent.isCuteAnimeRomCom) {
-          const isHitRomComAnime =
-            cuteRomComAnimeHitsRegex.test(itemTitle) ||
-            cuteRomComAnimeThemesRegex.test(itemOverview) ||
-            itemGenreIds.includes(9799) ||
-            itemGenreIds.includes(9840) ||
-            itemGenreIds.includes(158718);
+        const isHitRomComAnime =
+          cuteRomComAnimeHitsRegex.test(itemTitle) ||
+          cuteRomComAnimeThemesRegex.test(itemOverview) ||
+          itemGenreIds.includes(9799) ||
+          itemGenreIds.includes(9840) ||
+          itemGenreIds.includes(158718) ||
+          itemKwIds.some((id) => [9799, 9840, 158718].includes(id));
 
+        if (parsedIntent.isCuteAnimeRomCom) {
           if (isHitRomComAnime && releaseYear >= 2006) {
             s_intent = Math.min(100, s_intent + 60);
           }
@@ -1742,17 +1762,20 @@ export class CindromeEngine {
           }
         }
 
-        // بونص ملاحم ومعارك السيوف التاريخية القديمة
-        if (parsedIntent.isSwordWarfare) {
-          const isSwordHit =
-            swordWarfareHitsRegex.test(itemTitle) ||
-            swordWarfareThemesRegex.test(itemOverview) ||
-            itemGenreIds.includes(804) ||
-            itemGenreIds.includes(195779) ||
-            itemGenreIds.includes(2964);
+        // الاعتماد المباشر على TMDB Theme IDs والمفردات الصريحة لمعارك وسيوف القرون الوسطى
+        const swordWarfareIdList = String(TMDB_THEME_IDS.swordWarfare)
+          .split("|")
+          .map((id) => parseInt(id, 10));
 
+        const isSwordHit =
+          itemKwIds.some((id) => swordWarfareIdList.includes(id)) ||
+          itemGenreIds.some((id) => swordWarfareIdList.includes(id)) ||
+          swordWarfareThemesRegex.test(itemOverview) ||
+          swordWarfareThemesRegex.test(itemTitle);
+
+        if (parsedIntent.isSwordWarfare) {
           if (isSwordHit) {
-            s_intent = Math.min(100, s_intent + 60);
+            s_intent = Math.min(100, s_intent + 75);
           }
         }
 
@@ -1811,7 +1834,8 @@ export class CindromeEngine {
           psychologicalThemesRegex.test(itemOverview) ||
           itemGenreIds.includes(10714) ||
           itemGenreIds.includes(12565) ||
-          itemGenreIds.includes(9663);
+          itemGenreIds.includes(9663) ||
+          itemKwIds.some((id) => [10714, 12565, 9663].includes(id));
 
         if (wantsPsychological && isPsychologicalHit) {
           s_intent = Math.min(100, s_intent + 50);
@@ -1823,7 +1847,8 @@ export class CindromeEngine {
           explicitHeistRobberyRegex.test(itemOverview) ||
           itemGenreIds.includes(10051) ||
           itemGenreIds.includes(6492) ||
-          itemGenreIds.includes(10292);
+          itemGenreIds.includes(10292) ||
+          itemKwIds.some((id) => [10051, 6492, 10292].includes(id));
 
         if (parsedIntent.isHeistRobbery && hasExplicitHeistRobbery) {
           s_intent = Math.min(100, s_intent + 60);
@@ -1836,7 +1861,8 @@ export class CindromeEngine {
           itemGenreIds.includes(12190) ||
           itemGenreIds.includes(4565) ||
           itemGenreIds.includes(2853) ||
-          itemGenreIds.includes(156395);
+          itemGenreIds.includes(156395) ||
+          itemKwIds.some((id) => [12190, 4565, 2853, 156395].includes(id));
 
         if (parsedIntent.isCyberpunk && isCyberpunkHit) {
           s_intent = Math.min(100, s_intent + 60);
@@ -1930,7 +1956,7 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 60);
         }
 
-        // فحص وبونص وثائقيات الجرائم الحقيقية
+        // 🌟 1. فحص وبونص وثائقيات الجرائم الحقيقية المباشر (+60)
         const isDocContent =
           itemGenreIds.includes(99) ||
           itemGenres.some((g) => g.includes("documentary")) ||
@@ -1943,13 +1969,12 @@ export class CindromeEngine {
           itemGenreIds.includes(10714) ||
           itemGenreIds.includes(9882) ||
           itemGenreIds.includes(9715) ||
-          itemGenreIds.includes(10303);
+          itemGenreIds.includes(10303) ||
+          itemKwIds.some((id) => [10714, 9882, 9715, 10303].includes(id));
 
-        if (
-          parsedIntent.isTrueCrimeDoc &&
-          isDocContent &&
-          hasExplicitCrimeSignal
-        ) {
+        const isHitTrueCrime = isDocContent && hasExplicitCrimeSignal;
+
+        if (parsedIntent.isTrueCrimeDoc && isHitTrueCrime) {
           s_intent = Math.min(100, s_intent + 60);
         }
 
@@ -2058,19 +2083,6 @@ export class CindromeEngine {
             s_user_genre = userTotal / matchedGenresCount;
           }
 
-          // ب) استخراج الكلمات المفتاحية للعمل المرشح (من Overview + Title + Tagline + TMDB Keywords Array)
-          const rawItemKeywords = Array.isArray(item.keywords)
-            ? item.keywords
-            : item.keywords?.keywords || item.keywords?.results || [];
-
-          const itemKwStrings = rawItemKeywords
-            .map((k) => (typeof k === "string" ? k : k?.name || ""))
-            .filter(Boolean)
-            .map((k) => k.toLowerCase().trim());
-
-          const itemSearchableText =
-            `${itemTitle} ${itemOverview} ${item.tagline || ""} ${itemKwStrings.join(" ")}`.toLowerCase();
-
           // ج) مطابقة دلالية صارمة لمنع الـ False Positives
           const candidateThemesSet = new Set();
 
@@ -2095,6 +2107,7 @@ export class CindromeEngine {
             normalizedUserKeywords["plot twist"] &&
             (twistRegex.test(itemSearchableText) ||
               itemGenreIds.includes(12565) ||
+              itemKwIds.includes(12565) ||
               itemKwStrings.some(
                 (k) => k === "plot twist" || k === "twist ending",
               ))
@@ -2106,6 +2119,7 @@ export class CindromeEngine {
             normalizedUserKeywords["psychological thriller"] &&
             (psychologicalThemesRegex.test(itemSearchableText) ||
               itemGenreIds.includes(10714) ||
+              itemKwIds.includes(10714) ||
               itemKwStrings.some(
                 (k) => k === "psychological thriller" || k === "mind games",
               ))
@@ -2117,6 +2131,7 @@ export class CindromeEngine {
             normalizedUserKeywords["time travel"] &&
             (timeTravelRegex.test(itemSearchableText) ||
               itemGenreIds.includes(4379) ||
+              itemKwIds.includes(4379) ||
               itemKwStrings.some(
                 (k) => k === "time travel" || k === "time loop",
               ))
@@ -2128,6 +2143,7 @@ export class CindromeEngine {
             normalizedUserKeywords["cyberpunk"] &&
             (cyberpunkThemesRegex.test(itemSearchableText) ||
               itemGenreIds.includes(12190) ||
+              itemKwIds.includes(12190) ||
               itemKwStrings.some(
                 (k) => k === "cyberpunk" || k === "cyber-punk",
               ))
@@ -2232,12 +2248,14 @@ export class CindromeEngine {
 
         // ب. عقوبة استبعاد أعمال الفانتازيا والمغامرات الخفيفة/الإيتشي عند طلب Dark Anime
         if (parsedIntent.isDarkAnime) {
+          const isMasterpieceHit = darkAnimeMasterpiecesRegex.test(itemTitle);
           if (
-            lightOrEcchiFantasyAnimeRegex.test(itemTitle) ||
-            /\b(ecchi|cheerful|harem|fan-service|fanservice|lighthearted adventure)\b/i.test(
-              itemOverview,
-            ) ||
-            itemGenreIds.includes(10762)
+            !isMasterpieceHit &&
+            (lightOrEcchiFantasyAnimeRegex.test(itemTitle) ||
+              /\b(ecchi|cheerful|harem|fan-service|fanservice|lighthearted adventure)\b/i.test(
+                itemOverview,
+              ) ||
+              itemGenreIds.includes(10762))
           ) {
             penalties += 35;
           }
@@ -2371,13 +2389,13 @@ export class CindromeEngine {
           }
         }
 
-        // ز. عقوبة استبعاد الإيتشي والرياضة والأنمي القديم في الأنمي الرومانسي الكوميدي اللطيف
+        // حظر قطعي ومشدد لمحتوى الـ Ecchi والـ Harem (penalties += 70)
         if (parsedIntent.isCuteAnimeRomCom) {
           if (
             ecchiOrAdultAnimeRegex.test(itemTitle) ||
             ecchiOrAdultAnimeRegex.test(itemOverview)
           ) {
-            penalties += 55;
+            penalties += 70;
           }
 
           if (
@@ -2450,7 +2468,7 @@ export class CindromeEngine {
           }
         }
 
-        // ي. عقوبة استبعاد أفلام الحروب الحديثة عند طلب السيوف والمعارك القديمة
+        // عقوبات الحروب والسيوف: استبعاد الفانتازيا الخفيفة والحروب المعاصرة ديناميكياً
         if (parsedIntent.isSwordWarfare) {
           if (
             modernWarfareRegex.test(itemTitle) ||
@@ -2459,15 +2477,12 @@ export class CindromeEngine {
             penalties += 40;
           }
 
-          const isSwordHit =
-            swordWarfareHitsRegex.test(itemTitle) ||
-            swordWarfareThemesRegex.test(itemOverview) ||
-            itemGenreIds.includes(804) ||
-            itemGenreIds.includes(195779) ||
-            itemGenreIds.includes(2964);
-
           if (!isSwordHit) {
-            penalties += 25;
+            penalties += 35;
+          }
+
+          if (itemGenreIds.includes(14) && !isSwordHit) {
+            penalties += 40;
           }
         }
 
@@ -2499,7 +2514,7 @@ export class CindromeEngine {
           }
         }
 
-        // ن. عقوبة استبعاد أفلام الانتقام الفردي عند طلب السرقات والتخطيط
+        // تدقيق عقوبة أفلام السرقات والتخطيط: تطبيق عقوبة -35 عند غياب عناصر السرقات الصريحة
         if (parsedIntent.isHeistRobbery) {
           if (
             revengeOrPureMafiaRegex.test(itemTitle) ||
@@ -2509,7 +2524,7 @@ export class CindromeEngine {
           }
 
           if (!hasExplicitHeistRobbery) {
-            penalties += 25;
+            penalties += 35;
           }
 
           if (
@@ -2863,7 +2878,18 @@ export class CindromeEngine {
         }
 
         // 🌟 خصم حاسم ومضمون للأعمال ذات المطابقة الضعيفة للكلمات المفتاحية
-        if (userReviewsCount >= 5 && totalUserKw > 0 && s_user_kw < 40) {
+        // يُستثنى منها الأنميات الرومانسية اللطيفة (isHitRomComAnime) ووثائقيات الجرائم الحقيقية المعتمدة (isHitTrueCrime)
+        const isExemptCuteAnime =
+          parsedIntent.isCuteAnimeRomCom && isHitRomComAnime;
+        const isExemptTrueCrime = parsedIntent.isTrueCrimeDoc && isHitTrueCrime;
+
+        if (
+          userReviewsCount >= 5 &&
+          totalUserKw > 0 &&
+          s_user_kw < 40 &&
+          !isExemptCuteAnime &&
+          !isExemptTrueCrime
+        ) {
           penalties += 30;
         }
 
@@ -2896,7 +2922,7 @@ export class CindromeEngine {
           recencyBonus = 3;
         }
 
-        // 🌟 3. تطبيق النظافة الهيكلية للأوزان وخصم العقوبات بشكل تراكمي قطعي
+        // 🌟 تطبيق النظافة الهيكلية للأوزان وخصم العقوبات بشكل تراكمي قطعي
         const finalScore = Math.min(
           100,
           Math.max(0, rawScore + popularityBonus + recencyBonus - penalties),

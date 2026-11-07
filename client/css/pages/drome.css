@@ -465,7 +465,7 @@ body.drome-page {
   gap: 10px;
   margin-top: 10px;
   width: 100%;
-  max-width: 620px; /* تحديد العرض الأقصى للشبكة لتبقى ملمومة وأنيقة */
+  max-width: 620px;
 }
 
 .chat-movie-card {
@@ -591,7 +591,58 @@ body.drome-page {
 }
 
 .is-hidden {
-  display: none;
+  display: none !important;
+}
+
+/* =========================================================
+   Auth Guard Banner & Disabled State
+========================================================= */
+.drome-auth-banner {
+  background: rgba(220, 38, 38, 0.12);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  color: #fca5a5;
+  padding: 12px 18px;
+  border-radius: 10px;
+  margin: 14px auto;
+  max-width: 650px;
+  width: calc(100% - 40px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.88rem;
+  backdrop-filter: blur(6px);
+  box-sizing: border-box;
+}
+
+.drome-auth-banner-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-drome-login {
+  background: #e11d48;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.82rem;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+  flex-shrink: 0;
+}
+
+.btn-drome-login:hover {
+  background: #be123c;
+  transform: translateY(-1px);
+}
+
+.drome-input-box.disabled {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 /* =========================================================
@@ -625,7 +676,6 @@ body.drome-page {
     line-height: 1.6;
   }
 
-  /* تحويل الشبكة إلى عمود واحد كامل في الهواتف بأبعاد ملمومة */
   .chat-cards-grid,
   .chat-cards-row {
     grid-template-columns: 1fr;
@@ -718,5 +768,15 @@ body.drome-page {
     padding: 6px 4px;
     min-width: 0;
     max-height: 120px;
+  }
+
+  .drome-auth-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .btn-drome-login {
+    align-self: flex-end;
   }
 }

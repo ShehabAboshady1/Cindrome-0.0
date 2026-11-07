@@ -58,6 +58,15 @@ export const getFranchiseKey = (title) => {
 
 export const processChat = async (req, res) => {
   try {
+    // 🔒 فحص أمان صارم للتحقق من تسجيل الدخول
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        error:
+          "Authentication required. Please sign in to use the Cindrome Personalization Engine.",
+      });
+    }
+
     const { prompt, focusType = "mixed" } = req.body;
 
     if (!prompt || prompt.trim() === "") {
@@ -99,100 +108,97 @@ export const processChat = async (req, res) => {
     let userProfileStats = { genres: {}, keywords: {} };
     let userReviewsCount = 0;
 
-    if (req.user && req.user.id) {
-      const currentUserId = req.user.id;
+    const currentUserId = req.user.id;
 
-      const countRes = await db.query(
-        "SELECT COUNT(*) FROM reviews WHERE user_id = $1 AND rating >= 4.0",
+    const countRes = await db.query(
+      "SELECT COUNT(*) FROM reviews WHERE user_id = $1 AND rating >= 4.0",
+      [currentUserId],
+    );
+    userReviewsCount = parseInt(countRes.rows[0].count, 10);
+
+    if (userReviewsCount >= 5) {
+      const topUserReviews = await db.query(
+        `SELECT tmdb_id, media_type, rating 
+                   FROM reviews 
+                   WHERE user_id = $1 AND rating >= 4.0 
+                   ORDER BY rating DESC, watch_date DESC 
+                   LIMIT 10`,
         [currentUserId],
       );
-      userReviewsCount = parseInt(countRes.rows[0].count, 10);
 
-      if (userReviewsCount >= 5) {
-        const topUserReviews = await db.query(
-          `SELECT tmdb_id, media_type, rating 
-                     FROM reviews 
-                     WHERE user_id = $1 AND rating >= 4.0 
-                     ORDER BY rating DESC, watch_date DESC 
-                     LIMIT 10`,
-          [currentUserId],
-        );
-
-        if (topUserReviews.rows.length > 0) {
-          const detailPromises = topUserReviews.rows.map((rev) => {
-            const endpointType =
-              rev.media_type === "anime" ? "tv" : rev.media_type;
-            return axios
-              .get(
-                `https://api.themoviedb.org/3/${endpointType}/${rev.tmdb_id}`,
-                {
-                  params: {
-                    api_key: TMDB_API_KEY,
-                    append_to_response: "keywords",
-                  },
+      if (topUserReviews.rows.length > 0) {
+        const detailPromises = topUserReviews.rows.map((rev) => {
+          const endpointType =
+            rev.media_type === "anime" ? "tv" : rev.media_type;
+          return axios
+            .get(
+              `https://api.themoviedb.org/3/${endpointType}/${rev.tmdb_id}`,
+              {
+                params: {
+                  api_key: TMDB_API_KEY,
+                  append_to_response: "keywords",
                 },
-              )
-              .catch(() => null);
-          });
+              },
+            )
+            .catch(() => null);
+        });
 
-          const responses = await Promise.all(detailPromises);
-          responses.forEach((resp, index) => {
-            if (resp && resp.data) {
-              const rawRating =
-                parseFloat(topUserReviews.rows[index].rating) || 4.5;
-              // مضاعفة التقييم من مقياس (0-5) إلى مقياس (0-10)
-              const personalRating = rawRating <= 5 ? rawRating * 2 : rawRating;
+        const responses = await Promise.all(detailPromises);
+        responses.forEach((resp, index) => {
+          if (resp && resp.data) {
+            const rawRating =
+              parseFloat(topUserReviews.rows[index].rating) || 4.5;
+            const personalRating = rawRating <= 5 ? rawRating * 2 : rawRating;
 
-              // أ) تسجيل تصنيفات الـ Genres
-              if (resp.data.genres) {
-                resp.data.genres.forEach((g) => {
-                  const gName = g.name.toLowerCase();
-                  userProfileStats.genres[gName] = Math.max(
-                    userProfileStats.genres[gName] || 0,
-                    personalRating,
-                  );
-                  userProfileStats[gName] = userProfileStats.genres[gName];
-                });
-              }
-
-              // ب) تسجيل الكلمات المفتاحية والـ Tropes الدقيقة للأعمال المفضلة
-              const combinedDetailsText =
-                `${resp.data.title || resp.data.name || ""} ${resp.data.overview || ""}`.toLowerCase();
-              const tmdbKeywordsList = (
-                resp.data.keywords?.keywords ||
-                resp.data.keywords?.results ||
-                []
-              ).map((k) => (k.name || "").toLowerCase());
-
-              for (const [theme, data] of Object.entries(themeKeywords)) {
-                const matchesTheme = data.terms.some(
-                  (t) =>
-                    combinedDetailsText.includes(t.toLowerCase()) ||
-                    tmdbKeywordsList.some((k) => k.includes(t.toLowerCase())),
+            // أ) تسجيل تصنيفات الـ Genres
+            if (resp.data.genres) {
+              resp.data.genres.forEach((g) => {
+                const gName = g.name.toLowerCase();
+                userProfileStats.genres[gName] = Math.max(
+                  userProfileStats.genres[gName] || 0,
+                  personalRating,
                 );
-                if (matchesTheme) {
-                  userProfileStats.keywords[theme] = Math.max(
-                    userProfileStats.keywords[theme] || 0,
-                    personalRating,
-                  );
-                }
+                userProfileStats[gName] = userProfileStats.genres[gName];
+              });
+            }
+
+            // ب) تسجيل الكلمات المفتاحية والـ Tropes الدقيقة للأعمال المفضلة
+            const combinedDetailsText =
+              `${resp.data.title || resp.data.name || ""} ${resp.data.overview || ""}`.toLowerCase();
+            const tmdbKeywordsList = (
+              resp.data.keywords?.keywords ||
+              resp.data.keywords?.results ||
+              []
+            ).map((k) => (k.name || "").toLowerCase());
+
+            for (const [theme, data] of Object.entries(themeKeywords)) {
+              const matchesTheme = data.terms.some(
+                (t) =>
+                  combinedDetailsText.includes(t.toLowerCase()) ||
+                  tmdbKeywordsList.some((k) => k.includes(t.toLowerCase())),
+              );
+              if (matchesTheme) {
+                userProfileStats.keywords[theme] = Math.max(
+                  userProfileStats.keywords[theme] || 0,
+                  personalRating,
+                );
               }
             }
-          });
-        }
-
-        const favGenresRes = await db.query(
-          "SELECT genre FROM user_favorite_genres WHERE user_id = $1",
-          [currentUserId],
-        );
-        favGenresRes.rows.forEach((row) => {
-          const g = row.genre.toLowerCase();
-          if (!userProfileStats.genres[g]) {
-            userProfileStats.genres[g] = 8.0;
-            userProfileStats[g] = 8.0;
           }
         });
       }
+
+      const favGenresRes = await db.query(
+        "SELECT genre FROM user_favorite_genres WHERE user_id = $1",
+        [currentUserId],
+      );
+      favGenresRes.rows.forEach((row) => {
+        const g = row.genre.toLowerCase();
+        if (!userProfileStats.genres[g]) {
+          userProfileStats.genres[g] = 8.0;
+          userProfileStats[g] = 8.0;
+        }
+      });
     }
 
     // 4. فحص العمل المرجعي المباشر مع استبعاد المصطلحات الوصفية
@@ -271,7 +277,6 @@ export const processChat = async (req, res) => {
       }
     }
 
-    // حماية تامة من السقوط في رسالة الـ Onboarding عند التعرف على أي نية محددة أو عمل مرجعي
     const hasSpecificUserIntent =
       Boolean(anchorTitle) ||
       Boolean(anchorMedia) ||
@@ -288,7 +293,7 @@ export const processChat = async (req, res) => {
       parsedIntent.isSitcom ||
       parsedIntent.isHauntedHorror ||
       parsedIntent.isMindBlowingAction ||
-      parsedIntent.hasQualityFloor ||
+      hasQualityFloor ||
       parsedIntent.isPureComedy ||
       parsedIntent.isComfortComedy ||
       parsedIntent.isHistoricalWar ||
@@ -299,7 +304,6 @@ export const processChat = async (req, res) => {
       parsedIntent.isHeistRobbery;
 
     if (
-      req.user &&
       userReviewsCount < 3 &&
       !anchorMedia &&
       !anchorTitle &&
@@ -540,7 +544,6 @@ export const processChat = async (req, res) => {
         });
         let rawRecs = recRes.data.results || [];
 
-        // تصفية الأعمال المجهولة والمستقبلية فوراً
         rawRecs = rawRecs.filter(
           (c) =>
             (c.vote_count || 0) >= 300 &&
@@ -1232,10 +1235,8 @@ export const processChat = async (req, res) => {
       const relDate = item.release_date || item.first_air_date;
       const voteCount = item.vote_count || 0;
 
-      // استبعاد قطعي لأي عمل بدون تاريخ إطلاق أو تاريخه مستقبلي
       if (!relDate || relDate > todayStr) return false;
 
-      // عتبة تصويت دنيا قطعية لعزل الأعمال المجهولة
       const minAllowedVotes =
         parsedIntent.targetType === "anime" ||
         isCuteAnimeRomComIntent ||
@@ -1249,11 +1250,11 @@ export const processChat = async (req, res) => {
     });
 
     // 8. استبعاد ما شاهده هذا المستخدم حصراً من جدول reviews
-    if (req.user && req.user.id && candidates.length > 0) {
+    if (candidates.length > 0) {
       const candidateIds = candidates.map((c) => c.id).filter(Boolean);
       const watchedRes = await db.query(
         "SELECT tmdb_id FROM reviews WHERE user_id = $1 AND tmdb_id = ANY($2::int[])",
-        [req.user.id, candidateIds],
+        [currentUserId, candidateIds],
       );
       const watchedIds = new Set(watchedRes.rows.map((r) => r.tmdb_id));
       candidates = candidates.filter((c) => !watchedIds.has(c.id));
@@ -1370,7 +1371,7 @@ export const processChat = async (req, res) => {
 
     console.log(`\n┌─ [Cindrome Dynamic Personalization Engine]`);
     console.log(
-      `├── User ID: ${req.user?.id || "Guest"} | Approved Reviews (>= 4.0): ${userReviewsCount}`,
+      `├── User ID: ${currentUserId} | Approved Reviews (>= 4.0): ${userReviewsCount}`,
     );
     console.log(
       `├── Applied Dynamic Weight: ${appliedWeightStr} (Intent: ${userReviewsCount >= 10 ? "40%" : userReviewsCount >= 5 ? "50%" : "60%"} | User: ${appliedWeightStr} | Rating: ${userReviewsCount >= 10 ? "25%" : userReviewsCount >= 5 ? "35%" : "40%"})`,
@@ -1402,12 +1403,12 @@ export const processChat = async (req, res) => {
 
     // فحص حالة الـ Watchlist للأعمال الأربعة للمستخدم الحالي
     let userWatchlistSet = new Set();
-    if (req.user && req.user.id && topResultsRaw.length > 0) {
+    if (topResultsRaw.length > 0) {
       const topIds = topResultsRaw.map((item) => item.id);
       try {
         const wlRes = await db.query(
           "SELECT tmdb_id FROM watchlist WHERE user_id = $1 AND tmdb_id = ANY($2::int[])",
-          [req.user.id, topIds],
+          [currentUserId, topIds],
         );
         userWatchlistSet = new Set(wlRes.rows.map((r) => Number(r.tmdb_id)));
       } catch (wlErr) {
