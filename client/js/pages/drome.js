@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================================
-  // 4. إرسال واستقبال الرسائل
+  // 4. إرسال واستقبال الرسائل مع حفظ السياق المترابط
   // ==========================================
   async function handleSend() {
     if (!enforceAuthGuard()) return;
@@ -307,6 +307,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (emptyState) emptyState.classList.add("is-hidden");
 
+    // 🌟 الاحتفاظ بنسخة السياق السابقة قبل إضافة رسالة المستخدم الحالية
+    const previousHistory = [...chatHistory];
+
     appendUserBubble(text);
     chatHistory.push({ role: "user", text });
     saveHistory();
@@ -320,10 +323,15 @@ document.addEventListener("DOMContentLoaded", () => {
     abortController = new AbortController();
 
     try {
+      // 🌟 إرسال chatHistory كاملة ضمن الـ Payload
       const response = await fetch("/api/drome/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: text, focusType: focusType }),
+        body: JSON.stringify({
+          prompt: text,
+          focusType: focusType,
+          history: previousHistory,
+        }),
         signal: abortController.signal,
       });
 
@@ -398,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // 5. مسح الشات (New Chat)
+  // 5. مسح الشات وبدء جلسة جديدة (New Chat)
   // ==========================================
   function clearChat() {
     chatHistory = [];

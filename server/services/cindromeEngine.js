@@ -76,7 +76,7 @@ export const GENRE_DESCRIPTOR_STOPWORDS = new Set([
   "mind blowing",
 ]);
 
-// 1. قاموس استخراج النوايا الدلالية العامة (NLU)
+// 1. قاموس استخراج النوايا الدلالية العامة (NLU) - مُصدَّر لاستخدامه في الفلترة المحلية المعمقة
 export const genreMap = {
   action: [
     "action",
@@ -197,6 +197,11 @@ export const genreMap = {
     "cursed",
     "haunted house",
     "cursed house",
+    "haunting",
+    "evil dead",
+    "demonic",
+    "slasher",
+    "possession",
   ],
   comedy: [
     "comedy",
@@ -906,6 +911,48 @@ export class CindromeEngine {
       };
     }
 
+    // 🌟 1. استخراج الاستثناءات الصريحة للتصنيفات (Exclusions): exclude [genre], no [genre], without [genre]
+    const excludedGenres = [];
+    const exclusionRegex = /\b(?:exclude|no|without)\s+([a-zA-Z\-]+)\b/gi;
+    let match;
+    while ((match = exclusionRegex.exec(lowerText)) !== null) {
+      const candidateTerm = match[1].toLowerCase().trim();
+      for (const [gName, kwList] of Object.entries(genreMap)) {
+        if (gName === candidateTerm || kwList.includes(candidateTerm)) {
+          if (!excludedGenres.includes(gName)) {
+            excludedGenres.push(gName);
+          }
+        }
+      }
+    }
+
+    // 🌟 2. استخراج الكلمات المفتاحية المستبعدة صراحةً (Excluded Keywords) - كشف حظر الأبطال الخارقين
+    const excludedKeywords = [];
+    if (
+      /\b(?:exclude|no|without)\s+.*?\b(superhero|superheroes|super\s*hero|super\s*heroes|marvel|dc|comic\s*book|mcu|dceu)\b/i.test(
+        lowerText,
+      )
+    ) {
+      excludedKeywords.push("9715");
+    }
+
+    // جمع الـ Genre IDs المقابلة للتصنيفات المستبعدة
+    const excludedGenreIds = [];
+    excludedGenres.forEach((g) => {
+      if (TMDB_GENRE_IDS.movie[g])
+        excludedGenreIds.push(TMDB_GENRE_IDS.movie[g]);
+      if (TMDB_GENRE_IDS.tv[g]) excludedGenreIds.push(TMDB_GENRE_IDS.tv[g]);
+    });
+
+    // 🌟 3. استخراج شرط السنة الأدنى (Year Filter)
+    let minYear = null;
+    const yearMatch = lowerText.match(
+      /\b(?:after|newer than|from|post|since)\s+(\d{4})\b/i,
+    );
+    if (yearMatch) {
+      minYear = parseInt(yearMatch[1], 10);
+    }
+
     const isPureComedy =
       /\b(pure comedy|only comedy|strictly comedy|purely comedy|hard comedy|just comedy|pure funny|hilarious|comedy movies?|funny movies?)\b/i.test(
         lowerText,
@@ -924,15 +971,17 @@ export class CindromeEngine {
       );
 
     const isHauntedHorror =
-      /\b(cursed house|haunted house|haunted family|cursed family|scary house)\b/i.test(
+      !excludedGenres.includes("horror") &&
+      (/\b(cursed house|haunted house|haunted family|cursed family|scary house)\b/i.test(
         lowerText,
       ) ||
-      (/\b(scary|horror|haunted|cursed|creepy|demonic|evil|spooky)\b/i.test(
-        lowerText,
-      ) &&
-        /\b(house|family|home|manor|mansion|cabin)\b/i.test(lowerText));
+        (/\b(scary|horror|haunted|cursed|creepy|demonic|evil|spooky)\b/i.test(
+          lowerText,
+        ) &&
+          /\b(house|family|home|manor|mansion|cabin)\b/i.test(lowerText)));
 
     const isCrimeFamily =
+      !excludedGenres.includes("crime") &&
       /\b(crime family|mob family|mafia family|mafia empire|crime empire|gangster empire|building an empire|organized crime|gangster syndicate|drug empire|criminal empire)\b/i.test(
         lowerText,
       );
@@ -943,6 +992,7 @@ export class CindromeEngine {
       );
 
     const withoutDrama =
+      excludedGenres.includes("drama") ||
       /\b(without\s+(?:any\s+)?drama|no\s+drama)\b/i.test(lowerText) ||
       isTiredMood ||
       isPureComedy ||
@@ -960,6 +1010,8 @@ export class CindromeEngine {
         if (!detectedGenres.includes(genre)) detectedGenres.push(genre);
       }
     }
+
+    detectedGenres = detectedGenres.filter((g) => !excludedGenres.includes(g));
 
     if (isHauntedHorror || isCrimeFamily || isPureComedy || isSitcom) {
       detectedGenres = detectedGenres.filter(
@@ -992,23 +1044,39 @@ export class CindromeEngine {
       }
     }
 
+    // إذا طلب المستخدم صراحة عدم وجود أبطال خارقين، نحذف أي keyword قد تم التعرف عليها
+    if (excludedKeywords.includes("9715")) {
+      detectedKeywords = detectedKeywords.filter((k) => k.name !== "superhero");
+    }
+
     const wantsClassic =
       /\b(classic|retro|old|80s|90s|vintage|nostalgic)\b/i.test(lowerText);
 
     const isMindBlowingAction =
-      detectedKeywords.some((k) => k.name === "mind blowing action") ||
-      (/\b(mind[- ]blowing|mind blowing)\b/i.test(lowerText) &&
-        (detectedGenres.includes("action") || /\baction\b/i.test(lowerText))) ||
-      (hasQualityFloor &&
-        /\baction\b/i.test(lowerText) &&
-        /\b(mind|reality|concept|twist|sci-fi)\b/i.test(lowerText));
+      !excludedGenres.includes("action") &&
+      (detectedKeywords.some((k) => k.name === "mind blowing action") ||
+        (/\b(mind[- ]blowing|mind blowing)\b/i.test(lowerText) &&
+          (detectedGenres.includes("action") ||
+            /\baction\b/i.test(lowerText))) ||
+        (hasQualityFloor &&
+          /\baction\b/i.test(lowerText) &&
+          /\b(mind|reality|concept|twist|sci-fi)\b/i.test(lowerText)));
 
     if (isMindBlowingAction && !isPureComedy && !isSitcom) {
-      if (!detectedGenres.includes("action")) detectedGenres.push("action");
-      if (!detectedGenres.includes("scifi")) detectedGenres.push("scifi");
+      if (
+        !detectedGenres.includes("action") &&
+        !excludedGenres.includes("action")
+      )
+        detectedGenres.push("action");
+      if (
+        !detectedGenres.includes("scifi") &&
+        !excludedGenres.includes("scifi")
+      )
+        detectedGenres.push("scifi");
     }
 
     const isHorrorNight =
+      !excludedGenres.includes("horror") &&
       /\b(movie night|with friends|party|friends|sleepover|crowd|popcorn)\b/i.test(
         lowerText,
       ) &&
@@ -1016,14 +1084,16 @@ export class CindromeEngine {
         /\b(horror|scary|spooky)\b/i.test(lowerText));
 
     const isPsychologicalThriller =
-      detectedKeywords.some((k) => k.name === "psychological thriller") ||
-      /\b(psychological thriller|mess with my head|mindfuck|mind game|mind games|sanity|paranoia|unreliable narrator)\b/i.test(
-        lowerText,
-      );
+      !excludedGenres.includes("mystery") &&
+      (detectedKeywords.some((k) => k.name === "psychological thriller") ||
+        /\b(psychological thriller|mess with my head|mindfuck|mind game|mind games|sanity|paranoia|unreliable narrator)\b/i.test(
+          lowerText,
+        ));
 
     const isRomCom =
       !isPureComedy &&
       !isSitcom &&
+      !excludedGenres.includes("romance") &&
       (detectedKeywords.some((k) => k.name === "rom-com") ||
         /\b(rom-com|romcom|romantic comedy|sweet.*romance|light.*romance|lift my mood|feel[- ]good)\b/i.test(
           lowerText,
@@ -1033,8 +1103,16 @@ export class CindromeEngine {
             /\b(romance|romantic)\b/i.test(lowerText))));
 
     if (isRomCom) {
-      if (!detectedGenres.includes("comedy")) detectedGenres.push("comedy");
-      if (!detectedGenres.includes("romance")) detectedGenres.push("romance");
+      if (
+        !detectedGenres.includes("comedy") &&
+        !excludedGenres.includes("comedy")
+      )
+        detectedGenres.push("comedy");
+      if (
+        !detectedGenres.includes("romance") &&
+        !excludedGenres.includes("romance")
+      )
+        detectedGenres.push("romance");
     }
 
     const isAnimeTarget =
@@ -1042,6 +1120,7 @@ export class CindromeEngine {
 
     const isCuteAnimeRomCom =
       isAnimeTarget &&
+      !excludedGenres.includes("romance") &&
       /\b(cute|wholesome|sweet|adorable|fluffy|chill)\b/i.test(lowerText) &&
       (/\b(romance|romantic|love)\b/i.test(lowerText) ||
         /\b(funny|comedy|humor)\b/i.test(lowerText));
@@ -1067,17 +1146,19 @@ export class CindromeEngine {
     }
 
     const isSwordWarfare =
-      detectedKeywords.some((k) => k.name === "sword warfare") ||
-      /\b(swords?|sword fight|swords and armies|ancient warfare|medieval warfare|old historical battles?|medieval armies|ancient battles?|gladiators?|samurai|shields and swords|ancient armies)\b/i.test(
-        lowerText,
-      ) ||
-      (/\b(battle|battles|war|armies|army)\b/i.test(lowerText) &&
-        /\b(sword|swords|ancient|medieval|gladiator|samurai|shields?|old historical)\b/i.test(
+      !excludedGenres.includes("war") &&
+      (detectedKeywords.some((k) => k.name === "sword warfare") ||
+        /\b(swords?|sword fight|swords and armies|ancient warfare|medieval warfare|old historical battles?|medieval armies|ancient battles?|gladiators?|samurai|shields and swords|ancient armies)\b/i.test(
           lowerText,
-        ));
+        ) ||
+        (/\b(battle|battles|war|armies|army)\b/i.test(lowerText) &&
+          /\b(sword|swords|ancient|medieval|gladiator|samurai|shields?|old historical)\b/i.test(
+            lowerText,
+          )));
 
     const isHistoricalWar =
       !isSwordWarfare &&
+      !excludedGenres.includes("war") &&
       (detectedKeywords.some((k) => k.name === "historical war") ||
         /\b(historical war|war movie|war movies|huge battles|epic battles|historical epic|epic war|ancient war|medieval war|world war|ancient warfare|medieval battle)\b/i.test(
           lowerText,
@@ -1094,14 +1175,15 @@ export class CindromeEngine {
     }
 
     const isTrueCrimeDoc =
-      detectedKeywords.some((k) => k.name === "true crime") ||
-      /\b(true crime|docuseries|docu-series|real mysteries|real mystery|crime doc|crime documentary|unsolved mysteries|real crime|real crime cases|crime cases)\b/i.test(
-        lowerText,
-      ) ||
-      (/\b(documentary|docuseries|docu-series)\b/i.test(lowerText) &&
-        /\b(crime|murder|killer|mystery|mysteries|real crime|cases?|investigation)\b/i.test(
+      !excludedGenres.includes("documentary") &&
+      (detectedKeywords.some((k) => k.name === "true crime") ||
+        /\b(true crime|docuseries|docu-series|real mysteries|real mystery|crime doc|crime documentary|unsolved mysteries|real crime|real crime cases|crime cases)\b/i.test(
           lowerText,
-        ));
+        ) ||
+        (/\b(documentary|docuseries|docu-series)\b/i.test(lowerText) &&
+          /\b(crime|murder|killer|mystery|mysteries|real crime|cases?|investigation)\b/i.test(
+            lowerText,
+          )));
 
     if (isTrueCrimeDoc) {
       if (!detectedGenres.includes("documentary"))
@@ -1116,6 +1198,7 @@ export class CindromeEngine {
 
     const hasTwistKeywords =
       !isTrueCrimeDoc &&
+      !excludedGenres.includes("mystery") &&
       (detectedKeywords.some((k) => k.name === "plot twist") ||
         /\b(plot twists?|twists?|can'?t predict|unpredictable|mind[- ]blowing|mind[- ]bending|twist ending)\b/i.test(
           lowerText,
@@ -1126,10 +1209,11 @@ export class CindromeEngine {
     }
 
     const isUnderdog =
-      detectedKeywords.some((k) => k.name === "underdog") ||
-      /\b(starting from zero|start from zero|starting from nothing|from zero|rags to riches|underdog(?: story)?|success story|winning against all odds|against all odds|zero to hero|rise to the top|overcoming odds)\b/i.test(
-        lowerText,
-      );
+      !excludedGenres.includes("drama") &&
+      (detectedKeywords.some((k) => k.name === "underdog") ||
+        /\b(starting from zero|start from zero|starting from nothing|from zero|rags to riches|underdog(?: story)?|success story|winning against all odds|against all odds|zero to hero|rise to the top|overcoming odds)\b/i.test(
+          lowerText,
+        ));
 
     if (isUnderdog && !detectedGenres.includes("drama")) {
       detectedGenres.push("drama");
@@ -1141,6 +1225,7 @@ export class CindromeEngine {
       !isHauntedHorror &&
       !isPureComedy &&
       !isSitcom &&
+      !excludedGenres.includes("animation") &&
       (detectedKeywords.some((k) => k.name === "family animation") ||
         (detectedGenres.includes("animation") &&
           detectedGenres.includes("family")) ||
@@ -1156,12 +1241,13 @@ export class CindromeEngine {
     }
 
     const isCyberpunk =
-      detectedKeywords.some(
+      !excludedGenres.includes("scifi") &&
+      (detectedKeywords.some(
         (k) => k.name === "cyberpunk" || k.name === "dystopia",
       ) ||
-      /\b(cyberpunk|cyber-punk|dystopian?|dystopia|dark futuristic|futuristic city|androids?|cyborgs?|robots?|neon lights?|ruined future|dystopian world|cyberpunk city)\b/i.test(
-        lowerText,
-      );
+        /\b(cyberpunk|cyber-punk|dystopian?|dystopia|dark futuristic|futuristic city|androids?|cyborgs?|robots?|neon lights?|ruined future|dystopian world|cyberpunk city)\b/i.test(
+          lowerText,
+        ));
 
     if (isCyberpunk) {
       if (!detectedGenres.includes("scifi")) detectedGenres.push("scifi");
@@ -1169,6 +1255,7 @@ export class CindromeEngine {
 
     const isPhilosophicalSciFi =
       !isCyberpunk &&
+      !excludedGenres.includes("scifi") &&
       (detectedKeywords.some((k) => k.name === "philosophical sci-fi") ||
         (/\b(think about life|philosophical|existential|meaning of life|human condition|human existence|ponder|deep sci-fi|cosmic perspective)\b/i.test(
           lowerText,
@@ -1180,35 +1267,43 @@ export class CindromeEngine {
 
     if (isPhilosophicalSciFi) {
       if (!detectedGenres.includes("scifi")) detectedGenres.push("scifi");
-      if (!detectedGenres.includes("drama")) detectedGenres.push("drama");
+      if (
+        !detectedGenres.includes("drama") &&
+        !excludedGenres.includes("drama")
+      )
+        detectedGenres.push("drama");
     }
 
     const wantsComedy =
-      detectedGenres.includes("comedy") ||
-      isPureComedy ||
-      isSitcom ||
-      /\b(funny|laugh|comedy|hilarious|humor|chuckle)\b/i.test(lowerText);
+      !excludedGenres.includes("comedy") &&
+      (detectedGenres.includes("comedy") ||
+        isPureComedy ||
+        isSitcom ||
+        /\b(funny|laugh|comedy|hilarious|humor|chuckle)\b/i.test(lowerText));
 
     const isComfortComedy =
       (isTiredMood && wantsComedy) ||
       isPureComedy ||
       isSitcom ||
-      /\b(something funny|just.*funny|comfort comedy|chill comedy|pure comedy)\b/i.test(
-        lowerText,
-      );
+      (!excludedGenres.includes("comedy") &&
+        /\b(something funny|just.*funny|comfort comedy|chill comedy|pure comedy)\b/i.test(
+          lowerText,
+        ));
 
     if (isComfortComedy && !detectedGenres.includes("comedy")) {
       detectedGenres.push("comedy");
     }
 
     const isHeistRobbery =
-      detectedKeywords.some((k) => k.name === "heist") ||
-      /\b(plan (?:a )?robbery|big robbery|bank robbery|robbery|heist|bank heist|big heist|steal money|caper|vault|safecracker|steal a fortune|heist movie)\b/i.test(
-        lowerText,
-      );
+      !excludedGenres.includes("crime") &&
+      (detectedKeywords.some((k) => k.name === "heist") ||
+        /\b(plan (?:a )?robbery|big robbery|bank robbery|robbery|heist|bank heist|big heist|steal money|caper|vault|safecracker|steal a fortune|heist movie)\b/i.test(
+          lowerText,
+        ));
 
     const isCrimeHeist =
       !isTrueCrimeDoc &&
+      !excludedGenres.includes("crime") &&
       (isCrimeFamily ||
         isHeistRobbery ||
         detectedGenres.includes("crime") ||
@@ -1291,6 +1386,9 @@ export class CindromeEngine {
       Boolean(extractedReferenceTitle) ||
       detectedGenres.length > 0 ||
       detectedKeywords.length > 0 ||
+      excludedGenres.length > 0 ||
+      excludedKeywords.length > 0 ||
+      Boolean(minYear) ||
       isKorean ||
       hasTwistKeywords ||
       isUnderdog ||
@@ -1322,6 +1420,10 @@ export class CindromeEngine {
       targetType,
       detectedGenres,
       detectedKeywords,
+      excludedGenres,
+      excludedGenreIds: Array.from(new Set(excludedGenreIds)),
+      excludedKeywords,
+      minYear,
       isPure,
       withoutDrama,
       wantsClassic,
@@ -1365,7 +1467,7 @@ export class CindromeEngine {
       /\b(sport|sports|football|soccer|basketball|baseball|tennis|athlete|athletics|coach|champion|championship|tournament|olympic|olympics|stadium|pitch|wrestler|wrestling|boxer|boxing|quarterback|touchdown|nfl|fifa|premier\s*league|world\s*cup|gridiron|super\s*bowl|underdog\s*athlete|nascar|formula\s*1|f1|motorsport|swimming|swimmer|grand\s*prix|le\s*mans|speedway)\b/i;
 
     const superheroRegex =
-      /\b(superhero|superheroes|super\s*hero|super\s*heroes|superpower|superpowers|super\s*human|mutant|mutants|marvel|dc\s*comics|comic\s*book|avengers|batman|superman|iron\s*man|thor|captain\s*america|spider[- ]man|spiderman|x-men|wolverine|deadpool|guardians\s*of\s*the\s*galaxy|justice\s*league|wonder\s*woman|flash|aquaman|black\s*panther|doctor\s*strange|thanos|infinity\s*war|endgame|gotham|dark\s*knight|man\s*of\s*steel|shazam|ant-man|daredevil|punisher|venom|hulk|peacemaker|the\s*boys|invincible|homelander|green\s*lantern|suicide\s*squad)\b/i;
+      /\b(superhero|superheroes|super\s*hero|super\s*heroes|superpower|superpowers|super\s*human|mutant|mutants|marvel|dc\s*comics|comic\s*book|avengers|batman|superman|iron\s*man|thor|captain\s*america|spider[- ]man|spiderman|x-men|wolverine|deadpool|guardians\s*of\s*the\s*galaxy|justice\s*league|justice\s*society|wonder\s*woman|flash|aquaman|black\s*panther|doctor\s*strange|thanos|infinity\s*war|endgame|gotham|dark\s*knight|man\s*of\s*steel|shazam|ant-man|daredevil|punisher|venom|hulk|peacemaker|the\s*boys|invincible|homelander|green\s*lantern|suicide\s*squad)\b/i;
 
     const timeTravelRegex =
       /\b(time travel|time-travel|time loop|time-loop|timelines?|space-time|wormhole|temporal|time machine|grandfather paradox|butterfly effect|quantum leap|alternate timeline|travel back in time|travel to the past|travel to the future|relativity|time dilation|delorean|marty mcfly|predestination|looper|twelve monkeys|tenet|donnie darko|coherence|primer|about time|butterfly effect|source code)\b/i;
@@ -1418,7 +1520,6 @@ export class CindromeEngine {
     const kidsComedyMascotRegex =
       /\b(sonic|sonic the hedgehog|minions|despicable me|alvin and the chipmunks|smurfs|paddington|spongebob|sponge bob|pokemon|detective pikachu|lego|garfield|peter rabbit|space jam|men in black|ghostbusters|shazam|ant-man|deadpool|marvel|dc comics)\b/i;
 
-    // 🌟 تدقيق عقوبة الـ Dark Anime: استثناء الأنميات السيكولوجية والجرائم الصريحة
     const darkAnimeMasterpiecesRegex =
       /\b(attack on titan|death note|monster|berserk|tokyo ghoul|chainsaw man|vinland saga|parasyte|dororo|hellsing|psycho-pass|made in abyss|neon genesis evangelion|devilman crybaby|shinsekai yori|claymore|ergo proxy|texhnolyze|bungo stray dogs|bungou stray dogs|death parade|shiki|another|higurashi|shinigami|light yagami|johan liebert|dark gathering)\b/i;
 
@@ -1523,6 +1624,19 @@ export class CindromeEngine {
 
     const underdogThemesRegex =
       /\b(underdog|rags to riches|from nothing|struggle|perseverance|overcome|overcoming|odds|boxing|fighter|champion|ambition|success|hustle|determination|wealth|poverty to|hard work|training|triumph|against all odds|self made|broke)\b/i;
+
+    // 🌟 فحص متغيرات الأبطال الخارقين الصريحة قبل الـ Loop
+    const isExcludedSuperhero =
+      parsedIntent.excludedKeywords &&
+      parsedIntent.excludedKeywords.includes("9715");
+
+    const wantsSuperhero =
+      !isExcludedSuperhero &&
+      ((parsedIntent.detectedKeywords &&
+        parsedIntent.detectedKeywords.some((k) => k.name === "superhero")) ||
+        /\b(superhero|superheroes|super\s*hero|super\s*heroes|marvel|dc|comic\s*book|mcu|dceu)\b/i.test(
+          parsedIntent.originalText || "",
+        ));
 
     return candidates
       .map((item) => {
@@ -1956,7 +2070,7 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 60);
         }
 
-        // 🌟 1. فحص وبونص وثائقيات الجرائم الحقيقية المباشر (+60)
+        // 🌟 فحص وبونص وثائقيات الجرائم الحقيقية المباشر (+60)
         const isDocContent =
           itemGenreIds.includes(99) ||
           itemGenres.some((g) => g.includes("documentary")) ||
@@ -2050,11 +2164,9 @@ export class CindromeEngine {
         let s_user_kw = 20;
         let matched_user_keywords = [];
 
-        // استخراج تفضيلات المستخدم (Genres & Keywords)
         const userGenres = userProfileStats?.genres || userProfileStats || {};
         const userKeywords = userProfileStats?.keywords || {};
 
-        // توحيد حالة الأحرف لتفضيلات المستخدم (Case-insensitive)
         const normalizedUserKeywords = {};
         for (const [k, v] of Object.entries(userKeywords)) {
           if (k && v !== undefined) {
@@ -2065,9 +2177,7 @@ export class CindromeEngine {
         const totalUserKw = Object.keys(normalizedUserKeywords).length;
         const hasUserGenres = Object.keys(userGenres).length > 0;
 
-        // تطبيق التخصيص للمستخدمين الذين يملكون 5 مراجعات معتمدة فأكثر (Rating >= 4.0)
         if (userReviewsCount >= 5 && (hasUserGenres || totalUserKw > 0)) {
-          // أ) حساب تطابق الـ Genres
           let userTotal = 0;
           let matchedGenresCount = 0;
           itemGenres.forEach((g) => {
@@ -2083,7 +2193,6 @@ export class CindromeEngine {
             s_user_genre = userTotal / matchedGenresCount;
           }
 
-          // ج) مطابقة دلالية صارمة لمنع الـ False Positives
           const candidateThemesSet = new Set();
 
           for (const [theme, data] of Object.entries(themeKeywords)) {
@@ -2102,7 +2211,6 @@ export class CindromeEngine {
             }
           }
 
-          // فحص مباشر وصارم للـ Micro-Tropes مع التحقق من رغبة واهتمام المستخدم الفعلي بها
           if (
             normalizedUserKeywords["plot twist"] &&
             (twistRegex.test(itemSearchableText) ||
@@ -2151,7 +2259,6 @@ export class CindromeEngine {
             candidateThemesSet.add("cyberpunk");
           }
 
-          // د) مطابقة الكلمات المستخرجة مع الكلمات المفضلة للمستخدم (Deduplicated Array)
           matched_user_keywords = Array.from(candidateThemesSet).filter(
             (theme) => {
               const t = theme.toLowerCase().trim();
@@ -2162,7 +2269,6 @@ export class CindromeEngine {
             },
           );
 
-          // هـ) حساب S_user_kw والتدرج الخاص بـ matchProportion بدقة
           if (totalUserKw > 0) {
             if (matched_user_keywords.length === 0) {
               s_user_kw = 20;
@@ -2197,6 +2303,45 @@ export class CindromeEngine {
         const s_user_kw_bonus = s_user - s_user_genre;
 
         // 🌟 3. الفلترة والخصومات الصارمة (Intent-First Tiered Architecture & Proportional Penalties)
+
+        // شرط التحقق من السنة الصريحة (Year Filter Penalty)
+        if (
+          parsedIntent.minYear &&
+          releaseYear > 0 &&
+          releaseYear < parsedIntent.minYear
+        ) {
+          penalties += 55;
+        }
+
+        // 🌟 تفعيل Hard Exclusion لفلتر الجودة مع شرط السنة: طرد الأفلام الضعيفة
+        if (parsedIntent.minYear && voteAverage < 6.8) {
+          penalties += 50;
+        }
+
+        // شرط التحقق من استبعاد التصنيفات الصريحة (Explicit Exclusions Penalty)
+        if (
+          parsedIntent.excludedGenres &&
+          parsedIntent.excludedGenres.length > 0
+        ) {
+          const hasExcludedGenre = parsedIntent.excludedGenres.some((exG) => {
+            const exId = genreIdLookup[exG];
+            return itemGenreIds.includes(exId) || itemGenres.includes(exG);
+          });
+          if (hasExcludedGenre) {
+            penalties += 60;
+          }
+        }
+
+        // 🌟 شرط التحقق من استبعاد الكلمات المفتاحية الصريحة (مثل أبطال خارقين 9715)
+        const hasSuperheroSignal =
+          itemKwIds.includes(9715) ||
+          itemGenreIds.includes(9715) ||
+          superheroRegex.test(itemTitle) ||
+          superheroRegex.test(itemOverview);
+
+        if (isExcludedSuperhero && hasSuperheroSignal) {
+          penalties += 80;
+        }
 
         // 1. إضافة شرط أهليّة النية الصارم (Hard Intent Gate)
         const hasSpecificIntentFlag =
@@ -2754,16 +2899,11 @@ export class CindromeEngine {
         }
 
         // ذ. بوابة الأبطال الخارقين الصارمة
-        const wantsSuperhero =
-          parsedIntent.detectedKeywords.some((k) => k.name === "superhero") ||
-          /\b(superhero|superheroes|super\s*hero|super\s*heroes|marvel|dc|comic\s*book|mcu|dceu)\b/i.test(
-            parsedIntent.originalText,
-          );
-
         const isSuperhero =
           superheroRegex.test(itemTitle) ||
           superheroRegex.test(itemOverview) ||
-          itemGenreIds.includes(9715);
+          itemGenreIds.includes(9715) ||
+          itemKwIds.includes(9715);
 
         if (wantsSuperhero) {
           if (isSuperhero) {
@@ -2773,7 +2913,7 @@ export class CindromeEngine {
           }
         } else {
           if (isSuperhero) {
-            penalties += 40;
+            penalties += isExcludedSuperhero ? 80 : 40;
           }
         }
 
@@ -2878,7 +3018,6 @@ export class CindromeEngine {
         }
 
         // 🌟 خصم حاسم ومضمون للأعمال ذات المطابقة الضعيفة للكلمات المفتاحية
-        // يُستثنى منها الأنميات الرومانسية اللطيفة (isHitRomComAnime) ووثائقيات الجرائم الحقيقية المعتمدة (isHitTrueCrime)
         const isExemptCuteAnime =
           parsedIntent.isCuteAnimeRomCom && isHitRomComAnime;
         const isExemptTrueCrime = parsedIntent.isTrueCrimeDoc && isHitTrueCrime;
@@ -2896,13 +3035,10 @@ export class CindromeEngine {
         // 🌟 4. تطبيق نظام الأوزان الديناميكي (Dynamic Weighting System)
         let rawScore = 0;
         if (userReviewsCount < 5) {
-          // أقل من 5 مراجعات معتمدة (rating >= 4.0): وزن التفضيل الشخصي = 0%
           rawScore = 0.6 * s_intent + 0.4 * s_rating;
         } else if (userReviewsCount <= 9) {
-          // من 5 إلى 9 مراجعات معتمدة: وزن التفضيل الشخصي = 15%
           rawScore = 0.5 * s_intent + 0.15 * s_user + 0.35 * s_rating;
         } else {
-          // 10 مراجعات معتمدة فأكثر: وزن التفضيل الشخصي = 35%
           rawScore = 0.4 * s_intent + 0.35 * s_user + 0.25 * s_rating;
         }
 

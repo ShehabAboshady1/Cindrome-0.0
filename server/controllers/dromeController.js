@@ -7,6 +7,7 @@ import {
   TMDB_THEME_IDS,
   GENRE_DESCRIPTOR_STOPWORDS,
   themeKeywords,
+  genreMap,
 } from "../services/cindromeEngine.js";
 import { formatCard } from "../utils/helpers.js";
 
@@ -67,7 +68,7 @@ export const processChat = async (req, res) => {
       });
     }
 
-    const { prompt, focusType = "mixed" } = req.body;
+    const { prompt, focusType = "mixed", history = [] } = req.body;
 
     if (!prompt || prompt.trim() === "") {
       return res.status(400).json({ error: "Please enter a message." });
@@ -81,11 +82,111 @@ export const processChat = async (req, res) => {
     if (normalizedFocus === "movies") normalizedFocus = "movie";
     if (normalizedFocus === "series") normalizedFocus = "tv";
 
-    // 2. استخراج النية
-    const parsedIntent = CindromeEngine.parseQuery(
-      cleanPrompt,
-      normalizedFocus,
-    );
+    // 🌟 2. استخراج السياق التراكمي (Cumulative Intent)
+    const userPreviousTexts = Array.isArray(history)
+      ? history
+          .filter((msg) => msg.role === "user" && msg.text)
+          .map((msg) => msg.text.trim())
+      : [];
+
+    let parsedIntent = CindromeEngine.parseQuery(cleanPrompt, normalizedFocus);
+
+    if (userPreviousTexts.length > 0) {
+      const combinedHistoryPrompt =
+        `${userPreviousTexts.join(" ")} ${cleanPrompt}`.trim();
+      const cumulativeIntent = CindromeEngine.parseQuery(
+        combinedHistoryPrompt,
+        normalizedFocus,
+      );
+
+      // دمج التصنيفات مع حظر الاستبعادات الصريحة
+      const mergedGenres = Array.from(
+        new Set([
+          ...cumulativeIntent.detectedGenres,
+          ...parsedIntent.detectedGenres,
+        ]),
+      );
+
+      parsedIntent.excludedGenres = Array.from(
+        new Set([
+          ...(cumulativeIntent.excludedGenres || []),
+          ...(parsedIntent.excludedGenres || []),
+        ]),
+      );
+
+      parsedIntent.excludedGenreIds = Array.from(
+        new Set([
+          ...(cumulativeIntent.excludedGenreIds || []),
+          ...(parsedIntent.excludedGenreIds || []),
+        ]),
+      );
+
+      parsedIntent.excludedKeywords = Array.from(
+        new Set([
+          ...(cumulativeIntent.excludedKeywords || []),
+          ...(parsedIntent.excludedKeywords || []),
+        ]),
+      );
+
+      parsedIntent.detectedGenres = mergedGenres.filter(
+        (g) => !parsedIntent.excludedGenres.includes(g),
+      );
+
+      if (!parsedIntent.minYear && cumulativeIntent.minYear) {
+        parsedIntent.minYear = cumulativeIntent.minYear;
+      }
+
+      // دمج الكلمات المفتاحية
+      const keywordMap = new Map();
+      [
+        ...cumulativeIntent.detectedKeywords,
+        ...parsedIntent.detectedKeywords,
+      ].forEach((k) => keywordMap.set(k.name, k));
+      parsedIntent.detectedKeywords = Array.from(keywordMap.values());
+
+      parsedIntent.isKorean =
+        parsedIntent.isKorean || cumulativeIntent.isKorean;
+      parsedIntent.isSwordWarfare =
+        parsedIntent.isSwordWarfare || cumulativeIntent.isSwordWarfare;
+      parsedIntent.isTrueCrimeDoc =
+        parsedIntent.isTrueCrimeDoc || cumulativeIntent.isTrueCrimeDoc;
+      parsedIntent.isCyberpunk =
+        parsedIntent.isCyberpunk || cumulativeIntent.isCyberpunk;
+      parsedIntent.isPhilosophicalSciFi =
+        parsedIntent.isPhilosophicalSciFi ||
+        cumulativeIntent.isPhilosophicalSciFi;
+      parsedIntent.isCrimeFamily =
+        parsedIntent.isCrimeFamily || cumulativeIntent.isCrimeFamily;
+      parsedIntent.isHeistRobbery =
+        parsedIntent.isHeistRobbery || cumulativeIntent.isHeistRobbery;
+      parsedIntent.isUnderdog =
+        parsedIntent.isUnderdog || cumulativeIntent.isUnderdog;
+      parsedIntent.isHauntedHorror =
+        parsedIntent.isHauntedHorror || cumulativeIntent.isHauntedHorror;
+      parsedIntent.isMindBlowingAction =
+        parsedIntent.isMindBlowingAction ||
+        cumulativeIntent.isMindBlowingAction;
+      parsedIntent.isDarkAnime =
+        parsedIntent.isDarkAnime || cumulativeIntent.isDarkAnime;
+      parsedIntent.isCuteAnimeRomCom =
+        parsedIntent.isCuteAnimeRomCom || cumulativeIntent.isCuteAnimeRomCom;
+      parsedIntent.isSitcom =
+        parsedIntent.isSitcom || cumulativeIntent.isSitcom;
+      parsedIntent.isPureComedy =
+        parsedIntent.isPureComedy || cumulativeIntent.isPureComedy;
+      parsedIntent.isComfortComedy =
+        parsedIntent.isComfortComedy || cumulativeIntent.isComfortComedy;
+      parsedIntent.hasQualityFloor =
+        parsedIntent.hasQualityFloor || cumulativeIntent.hasQualityFloor;
+
+      if (
+        !parsedIntent.extractedReferenceTitle &&
+        cumulativeIntent.extractedReferenceTitle
+      ) {
+        parsedIntent.extractedReferenceTitle =
+          cumulativeIntent.extractedReferenceTitle;
+      }
+    }
 
     if (!parsedIntent.isValid) {
       return res.json({
@@ -95,7 +196,7 @@ export const processChat = async (req, res) => {
       });
     }
 
-    if (parsedIntent.isAmbiguous) {
+    if (parsedIntent.isAmbiguous && userPreviousTexts.length === 0) {
       return res.json({
         success: true,
         message:
@@ -104,7 +205,7 @@ export const processChat = async (req, res) => {
       });
     }
 
-    // 🌟 3. استخراج ريفيوهات المستخدم الفعالة (Rating >= 4.0) وحساب الـ Genres والـ Micro-Keywords
+    // 🌟 3. استخراج ريفيوهات المستخدم الفعالة (Rating >= 4.0)
     let userProfileStats = { genres: {}, keywords: {} };
     let userReviewsCount = 0;
 
@@ -150,7 +251,6 @@ export const processChat = async (req, res) => {
               parseFloat(topUserReviews.rows[index].rating) || 4.5;
             const personalRating = rawRating <= 5 ? rawRating * 2 : rawRating;
 
-            // أ) تسجيل تصنيفات الـ Genres
             if (resp.data.genres) {
               resp.data.genres.forEach((g) => {
                 const gName = g.name.toLowerCase();
@@ -162,7 +262,6 @@ export const processChat = async (req, res) => {
               });
             }
 
-            // ب) تسجيل الكلمات المفتاحية والـ Tropes الدقيقة للأعمال المفضلة
             const combinedDetailsText =
               `${resp.data.title || resp.data.name || ""} ${resp.data.overview || ""}`.toLowerCase();
             const tmdbKeywordsList = (
@@ -201,7 +300,7 @@ export const processChat = async (req, res) => {
       });
     }
 
-    // 4. فحص العمل المرجعي المباشر مع استبعاد المصطلحات الوصفية
+    // 4. فحص العمل المرجعي المباشر
     let anchorTitle = parsedIntent.extractedReferenceTitle;
     let anchorMedia = null;
 
@@ -283,6 +382,10 @@ export const processChat = async (req, res) => {
       Boolean(parsedIntent.extractedReferenceTitle) ||
       parsedIntent.detectedGenres.length > 0 ||
       parsedIntent.detectedKeywords.length > 0 ||
+      (parsedIntent.excludedGenres && parsedIntent.excludedGenres.length > 0) ||
+      (parsedIntent.excludedKeywords &&
+        parsedIntent.excludedKeywords.length > 0) ||
+      Boolean(parsedIntent.minYear) ||
       parsedIntent.isKorean ||
       parsedIntent.hasTwistKeywords ||
       parsedIntent.isUnderdog ||
@@ -307,7 +410,8 @@ export const processChat = async (req, res) => {
       userReviewsCount < 3 &&
       !anchorMedia &&
       !anchorTitle &&
-      !hasSpecificUserIntent
+      !hasSpecificUserIntent &&
+      userPreviousTexts.length === 0
     ) {
       const coldStartMessage = CindromeEngine.generateResponseText(
         parsedIntent,
@@ -321,7 +425,7 @@ export const processChat = async (req, res) => {
       });
     }
 
-    // 5. رصد النوايا الثيماتية وحالات المود
+    // 5. رصد النوايا الثيماتية
     const iconicSitcomAnchors =
       /\b(friends|the office|how i met your mother|himym|modern family|brooklyn 99|brooklyn nine-nine|new girl|parks and recreation|seinfeld|community|schitt's creek|scrubs|two and a half men|the big bang theory|big bang theory)\b/i;
 
@@ -331,11 +435,16 @@ export const processChat = async (req, res) => {
       (anchorTitle && iconicSitcomAnchors.test(anchorTitle)) ||
       /\b(sitcoms?|sit-coms?|situational comed(?:y|ies))\b/i.test(cleanPrompt);
 
+    const isExcludedSuperhero =
+      parsedIntent.excludedKeywords &&
+      parsedIntent.excludedKeywords.includes("9715");
+
     const wantsSuperhero =
-      parsedIntent.detectedKeywords.some((k) => k.name === "superhero") ||
-      /\b(superhero|superheroes|super\s*hero|super\s*heroes|marvel|dc|comic\s*book|mcu|dceu)\b/i.test(
-        cleanPrompt,
-      );
+      !isExcludedSuperhero &&
+      (parsedIntent.detectedKeywords.some((k) => k.name === "superhero") ||
+        /\b(superhero|superheroes|super\s*hero|super\s*heroes|marvel|dc|comic\s*book|mcu|dceu)\b/i.test(
+          cleanPrompt,
+        ));
 
     const specificSportKw = parsedIntent.detectedKeywords.find((k) =>
       ["racing", "boxing", "football", "basketball"].includes(k.name),
@@ -449,6 +558,10 @@ export const processChat = async (req, res) => {
         /\b(historical war|war movie|war movies|huge battles|epic battles|historical epic|epic war)\b/i.test(
           cleanPrompt,
         ));
+
+    const trueCrimeKeywordParam = parsedIntent.isTrueCrimeDoc
+      ? String(TMDB_THEME_IDS.trueCrime || "10714|9882|9715|10303")
+      : null;
 
     const isTrueCrimeDocIntent =
       parsedIntent.isTrueCrimeDoc ||
@@ -565,7 +678,8 @@ export const processChat = async (req, res) => {
     }
 
     // ب) بناء استدعاءات TMDB Discover الديناميكية بالكامل
-    const excludeSuperheroParam = wantsSuperhero ? null : "9715";
+    const excludeSuperheroParam =
+      isExcludedSuperhero || !wantsSuperhero ? "9715" : null;
     const superheroKeywordParam = wantsSuperhero ? "9715" : null;
 
     let sportsKeywordParam = null;
@@ -611,10 +725,6 @@ export const processChat = async (req, res) => {
 
     const historicalWarKeywordParam = isHistoricalWarIntent
       ? String(TMDB_THEME_IDS.historicalWar || "11162|233|210103")
-      : null;
-
-    const trueCrimeKeywordParam = isTrueCrimeDocIntent
-      ? String(TMDB_THEME_IDS.trueCrime || "10714|9882|9715|10303")
       : null;
 
     const cyberpunkKeywordParam = isCyberpunkIntent
@@ -665,7 +775,16 @@ export const processChat = async (req, res) => {
       ? "2343,33443,9799,12564,4152,12554,9663"
       : null;
 
+    // 🌟 تحويل الاستثناءات الصريحة (Excluded Genres) إلى IDs لإرسالها لـ TMDB
     let excludedMovieGenres = [];
+    if (parsedIntent.excludedGenres && parsedIntent.excludedGenres.length > 0) {
+      parsedIntent.excludedGenres.forEach((exG) => {
+        if (TMDB_GENRE_IDS.movie[exG]) {
+          excludedMovieGenres.push(String(TMDB_GENRE_IDS.movie[exG]));
+        }
+      });
+    }
+
     if (
       !wantsSciFi &&
       (userWantsSports || isHistoricalWarIntent || isSwordWarfareIntent)
@@ -722,6 +841,8 @@ export const processChat = async (req, res) => {
     } else {
       excludedMovieGenres.push("16");
     }
+
+    excludedMovieGenres = Array.from(new Set(excludedMovieGenres));
     const movieWithoutGenres = excludedMovieGenres.join(",");
 
     let withoutKeywordsList = [];
@@ -877,6 +998,11 @@ export const processChat = async (req, res) => {
     const movieMinVotes = 300;
     const tvMinVotes = 200;
 
+    // 🌟 بناء تاريخ الإصدار الأدنى الصارم (Year Range Filter)
+    const minReleaseDateStr = parsedIntent.minYear
+      ? `${parsedIntent.minYear}-01-01`
+      : null;
+
     if (parsedIntent.targetType === "mixed") {
       const movieParams = {
         api_key: TMDB_API_KEY,
@@ -886,6 +1012,10 @@ export const processChat = async (req, res) => {
         without_genres: movieWithoutGenres,
         "primary_release_date.lte": todayStr,
       };
+
+      if (minReleaseDateStr) {
+        movieParams["primary_release_date.gte"] = minReleaseDateStr;
+      }
 
       if (isKoreanIntent) {
         movieParams.with_original_language = "ko";
@@ -932,15 +1062,31 @@ export const processChat = async (req, res) => {
         movieParams.without_keywords = withoutKeywordsParam;
       }
 
-      const tvWithoutGenres = isFamilyAnimationIntent
-        ? "27,53,80"
+      let tvExcludedIds = [];
+      if (
+        parsedIntent.excludedGenres &&
+        parsedIntent.excludedGenres.length > 0
+      ) {
+        parsedIntent.excludedGenres.forEach((exG) => {
+          if (TMDB_GENRE_IDS.tv[exG]) {
+            tvExcludedIds.push(String(TMDB_GENRE_IDS.tv[exG]));
+          }
+        });
+      }
+
+      const defaultTvWithout = isFamilyAnimationIntent
+        ? ["27", "53", "80"]
         : isSitcomIntent
-          ? "18,16,10765,10768,10762,10766"
+          ? ["18", "16", "10765", "10768", "10762", "10766"]
           : isComfortComedyIntent || isPureComedyIntent
-            ? "18,16,10765,10768,10762"
+            ? ["18", "16", "10765", "10768", "10762"]
             : isCrimeFamilyIntent || isHauntedHorrorIntent
-              ? "10751,10762,16"
-              : "16";
+              ? ["10751", "10762", "16"]
+              : ["16"];
+
+      const tvWithoutGenres = Array.from(
+        new Set([...defaultTvWithout, ...tvExcludedIds]),
+      ).join(",");
 
       const liveTvParams = {
         api_key: TMDB_API_KEY,
@@ -950,6 +1096,10 @@ export const processChat = async (req, res) => {
         without_genres: tvWithoutGenres,
         "first_air_date.lte": todayStr,
       };
+
+      if (minReleaseDateStr) {
+        liveTvParams["first_air_date.gte"] = minReleaseDateStr;
+      }
 
       if (isKoreanIntent) {
         liveTvParams.with_original_language = "ko";
@@ -1006,6 +1156,10 @@ export const processChat = async (req, res) => {
               : "16",
         "first_air_date.lte": todayStr,
       };
+
+      if (minReleaseDateStr) {
+        animeParams["first_air_date.gte"] = minReleaseDateStr;
+      }
 
       if (cuteAnimeKeywordParam)
         animeParams.with_keywords = cuteAnimeKeywordParam;
@@ -1108,6 +1262,10 @@ export const processChat = async (req, res) => {
         "first_air_date.lte": todayStr,
       };
 
+      if (minReleaseDateStr) {
+        animeParams["first_air_date.gte"] = minReleaseDateStr;
+      }
+
       if (cuteAnimeKeywordParam)
         animeParams.with_keywords = cuteAnimeKeywordParam;
       else if (darkAnimeKeywordParam)
@@ -1145,6 +1303,11 @@ export const processChat = async (req, res) => {
         sort_by: "popularity.desc",
         [isTv ? "first_air_date.lte" : "primary_release_date.lte"]: todayStr,
       };
+
+      if (minReleaseDateStr) {
+        singleParams[isTv ? "first_air_date.gte" : "primary_release_date.gte"] =
+          minReleaseDateStr;
+      }
 
       if (isKoreanIntent) {
         singleParams.with_original_language = "ko";
@@ -1200,15 +1363,30 @@ export const processChat = async (req, res) => {
 
       if (!isTv) singleParams.without_genres = movieWithoutGenres;
       if (isTv) {
-        singleParams.without_genres = isFamilyAnimationIntent
-          ? "27,53,80"
+        let tvExcludedIds = [];
+        if (
+          parsedIntent.excludedGenres &&
+          parsedIntent.excludedGenres.length > 0
+        ) {
+          parsedIntent.excludedGenres.forEach((exG) => {
+            if (TMDB_GENRE_IDS.tv[exG]) {
+              tvExcludedIds.push(String(TMDB_GENRE_IDS.tv[exG]));
+            }
+          });
+        }
+        const defaultTvWithout = isFamilyAnimationIntent
+          ? ["27", "53", "80"]
           : isSitcomIntent
-            ? "18,16,10765,10768,10762,10766"
+            ? ["18", "16", "10765", "10768", "10762", "10766"]
             : isComfortComedyIntent || isPureComedyIntent
-              ? "18,16,10765,10768,10762"
+              ? ["18", "16", "10765", "10768", "10762"]
               : isCrimeFamilyIntent || isHauntedHorrorIntent
-                ? "10751,10762,16"
-                : "16";
+                ? ["10751", "10762", "16"]
+                : ["16"];
+
+        singleParams.without_genres = Array.from(
+          new Set([...defaultTvWithout, ...tvExcludedIds]),
+        ).join(",");
         if (tvFantasyExclude) singleParams.without_keywords = tvFantasyExclude;
       }
 
@@ -1230,12 +1408,17 @@ export const processChat = async (req, res) => {
       }
     }
 
-    // 🌟 7. فلترة الأعمال المستقبلية محلياً مع حظر الأعمال التي ليس لها تاريخ إصدار معلن
+    // 🌟 7. فلترة الأعمال المستقبلية محلياً مع حظر الأعمال التي ليس لها تاريخ إصدار معلن أو أقدم من minYear
     candidates = candidates.filter((item) => {
       const relDate = item.release_date || item.first_air_date;
       const voteCount = item.vote_count || 0;
 
       if (!relDate || relDate > todayStr) return false;
+
+      if (parsedIntent.minYear) {
+        const itemYear = parseInt(relDate.split("-")[0], 10);
+        if (itemYear < parsedIntent.minYear) return false;
+      }
 
       const minAllowedVotes =
         parsedIntent.targetType === "anime" ||
@@ -1249,16 +1432,31 @@ export const processChat = async (req, res) => {
       return voteCount >= minAllowedVotes;
     });
 
-    // 8. استبعاد ما شاهده هذا المستخدم حصراً من جدول reviews
+    // 🌟 8. استبعاد ما شاهده المستخدم من DB + استبعاد ما عُرض سابقاً في نفس المحادثة (Session Deduplication)
+    const sessionSeenIds = new Set();
+    if (Array.isArray(history)) {
+      history.forEach((msg) => {
+        if (msg.results && Array.isArray(msg.results)) {
+          msg.results.forEach((item) => {
+            if (item && item.id) sessionSeenIds.add(Number(item.id));
+          });
+        }
+      });
+    }
+
+    let watchedIds = new Set();
     if (candidates.length > 0) {
       const candidateIds = candidates.map((c) => c.id).filter(Boolean);
       const watchedRes = await db.query(
         "SELECT tmdb_id FROM reviews WHERE user_id = $1 AND tmdb_id = ANY($2::int[])",
         [currentUserId, candidateIds],
       );
-      const watchedIds = new Set(watchedRes.rows.map((r) => r.tmdb_id));
-      candidates = candidates.filter((c) => !watchedIds.has(c.id));
+      watchedIds = new Set(watchedRes.rows.map((r) => Number(r.tmdb_id)));
     }
+
+    candidates = candidates.filter(
+      (c) => !watchedIds.has(Number(c.id)) && !sessionSeenIds.has(Number(c.id)),
+    );
 
     // إزالة التكرارات بالمعرف
     const uniqueCandidatesMap = new Map();
@@ -1276,7 +1474,67 @@ export const processChat = async (req, res) => {
       return { ...c, genres: textualGenres };
     });
 
-    // 9. مرحلة الفرز والتقييم المحلي الشامل مع تمرير userReviewsCount الفعالة
+    // 🌟 الفلترة المحلية الشاملة والعميقة للأعمال المستبعدة (Genre IDs + Keywords + Overview + Title)
+    const hasExclusions =
+      (parsedIntent.excludedGenres && parsedIntent.excludedGenres.length > 0) ||
+      (parsedIntent.excludedKeywords &&
+        parsedIntent.excludedKeywords.length > 0);
+
+    if (hasExclusions) {
+      const excludedGenreIds = new Set(parsedIntent.excludedGenreIds || []);
+      const excludedKeywordIds = new Set(parsedIntent.excludedKeywords || []);
+
+      const excludedTerms = [];
+      (parsedIntent.excludedGenres || []).forEach((g) => {
+        if (genreMap[g]) excludedTerms.push(...genreMap[g]);
+      });
+
+      const superheroRegex =
+        /\b(superhero|superheroes|super\s*hero|super\s*heroes|marvel|dc\s*comics|comic\s*book|avengers|batman|superman|wonder woman|justice society|justice league|flash|aquaman)\b/i;
+
+      const wantsNoSuperhero =
+        excludedKeywordIds.has("9715") ||
+        /\b(?:no|exclude|without)\s+.*?\b(superhero|marvel|dc|superheroes)\b/i.test(
+          cleanPrompt,
+        );
+
+      candidates = candidates.filter((c) => {
+        // 1. فحص الـ Genre IDs المباشرة
+        if (
+          c.genre_ids &&
+          Array.isArray(c.genre_ids) &&
+          c.genre_ids.some((id) => excludedGenreIds.has(Number(id)))
+        ) {
+          return false;
+        }
+
+        const fullText =
+          `${c.title || c.name || ""} ${c.overview || ""}`.toLowerCase();
+
+        // 2. فحص استبعاد الأبطال الخارقين الصريح (Keywords & Regex)
+        if (wantsNoSuperhero) {
+          const hasSuperheroKeyword =
+            (c.genre_ids && c.genre_ids.includes(9715)) ||
+            (Array.isArray(c.keywords) &&
+              c.keywords.some((k) => (k.id || k) === 9715));
+          if (hasSuperheroKeyword || superheroRegex.test(fullText)) {
+            return false;
+          }
+        }
+
+        // 3. فحص الكلمات المفتاحية والعنوان والوصف لأي تصنيف آخر غير مرغوب
+        if (excludedTerms.length > 0) {
+          const hasExcludedTerm = excludedTerms.some((term) =>
+            new RegExp(`\\b${term}\\b`, "i").test(fullText),
+          );
+          if (hasExcludedTerm) return false;
+        }
+
+        return true;
+      });
+    }
+
+    // 9. مرحلة الفرز والتقييم المحلي الشامل
     const resolvedAnchorName = anchorMedia
       ? anchorMedia.title || anchorMedia.name
       : null;
@@ -1343,7 +1601,7 @@ export const processChat = async (req, res) => {
       topResultsRaw = deduplicatedCandidates.slice(0, 4);
     }
 
-    // 🌟 آلية الاستكمال الإجباري للـ 4 كروت ديناميكياً بدون Hardcoded arrays
+    // 🌟 آلية الاستكمال الإجباري للـ 4 كروت
     if (topResultsRaw.length < 4) {
       for (const item of rankedResults) {
         if (topResultsRaw.length >= 4) break;
@@ -1358,7 +1616,7 @@ export const processChat = async (req, res) => {
       }
     }
 
-    // 🌟 طباعة شجرية لبيانات التقييم والـ Dynamic Weighting في Console الـ Backend (ديناميكية بالكامل)
+    // 🌟 طباعة بيانات التقييم في Backend Console
     let appliedWeightStr = "0%";
     if (userReviewsCount >= 10) appliedWeightStr = "35%";
     else if (userReviewsCount >= 5) appliedWeightStr = "15%";
@@ -1372,6 +1630,25 @@ export const processChat = async (req, res) => {
     console.log(`\n┌─ [Cindrome Dynamic Personalization Engine]`);
     console.log(
       `├── User ID: ${currentUserId} | Approved Reviews (>= 4.0): ${userReviewsCount}`,
+    );
+    if (parsedIntent.minYear) {
+      console.log(`├── Year Constraint Applied: >= ${parsedIntent.minYear}`);
+    }
+    if (parsedIntent.excludedGenres && parsedIntent.excludedGenres.length > 0) {
+      console.log(
+        `├── Excluded Genres: ${parsedIntent.excludedGenres.join(", ")}`,
+      );
+    }
+    if (
+      parsedIntent.excludedKeywords &&
+      parsedIntent.excludedKeywords.length > 0
+    ) {
+      console.log(
+        `├── Excluded Keywords: ${parsedIntent.excludedKeywords.join(", ")}`,
+      );
+    }
+    console.log(
+      `├── Session Memory Deduplication: Excluded ${sessionSeenIds.size} previously shown items.`,
     );
     console.log(
       `├── Applied Dynamic Weight: ${appliedWeightStr} (Intent: ${userReviewsCount >= 10 ? "40%" : userReviewsCount >= 5 ? "50%" : "60%"} | User: ${appliedWeightStr} | Rating: ${userReviewsCount >= 10 ? "25%" : userReviewsCount >= 5 ? "35%" : "40%"})`,
@@ -1401,7 +1678,7 @@ export const processChat = async (req, res) => {
     });
     console.log("");
 
-    // فحص حالة الـ Watchlist للأعمال الأربعة للمستخدم الحالي
+    // فحص حالة Watchlist للأعمال الأربعة للمستخدم الحالي
     let userWatchlistSet = new Set();
     if (topResultsRaw.length > 0) {
       const topIds = topResultsRaw.map((item) => item.id);
