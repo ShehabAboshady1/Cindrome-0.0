@@ -59,6 +59,8 @@ export const GENRE_DESCRIPTOR_STOPWORDS = new Set([
   "series",
   "tv show",
   "anime",
+  "live action",
+  "live-action",
   "true crime",
   "real crime",
   "crime cases",
@@ -74,6 +76,18 @@ export const GENRE_DESCRIPTOR_STOPWORDS = new Set([
   "haunted family",
   "mind blowing action",
   "mind blowing",
+  "korean",
+  "k-drama",
+  "kdrama",
+  "japanese",
+  "spanish",
+  "french",
+  "arabic",
+  "english",
+  "hollywood",
+  "plot twist",
+  "plot twists",
+  "twist",
 ]);
 
 // 1. قاموس استخراج النوايا الدلالية العامة (NLU) - مُصدَّر لاستخدامه في الفلترة المحلية المعمقة
@@ -911,32 +925,118 @@ export class CindromeEngine {
       };
     }
 
-    // 🌟 1. استخراج الاستثناءات الصريحة للتصنيفات (Exclusions): exclude [genre], no [genre], without [genre]
+    // 🌟 1. استخراج منضبط ودقيق للاستثناءات المنفية (Strict Negative Extraction Scope)
     const excludedGenres = [];
-    const exclusionRegex = /\b(?:exclude|no|without)\s+([a-zA-Z\-]+)\b/gi;
+    const excludedTermsFromPrompt = [];
+    const excludedKeywords = [];
+
+    // الكلمات الوظيفية وكلمات الطلب الممنوعة تماماً من الدخول في الاستثناءات
+    const NON_EXCLUDABLE_STOPWORDS = new Set([
+      "show",
+      "me",
+      "want",
+      "i",
+      "a",
+      "an",
+      "the",
+      "movies",
+      "movie",
+      "films",
+      "film",
+      "series",
+      "show",
+      "shows",
+      "tv",
+      "instead",
+      "actually",
+      "rather",
+      "light",
+      "pure",
+      "give",
+      "looking",
+      "find",
+      "some",
+      "any",
+      "please",
+      "like",
+      "with",
+      "only",
+    ]);
+
+    // التقاط عبارة النفي فقط وحصراً حتى علامة ترقيم أو أداة ربط أو كلمات التحول لمنع ابتلاع الجملة
+    const negativeClauseRegex =
+      /\b(?:exclude|without|except|zero|free\s+of|dont\s+want|don't\s+want|no)\s+([^,.;!?\n]+?)(?=\s+\b(?:instead|actually|but|however|with|and\s+also)\b|[,.;!?\n]|$)/gi;
+
     let match;
-    while ((match = exclusionRegex.exec(lowerText)) !== null) {
-      const candidateTerm = match[1].toLowerCase().trim();
-      for (const [gName, kwList] of Object.entries(genreMap)) {
-        if (gName === candidateTerm || kwList.includes(candidateTerm)) {
-          if (!excludedGenres.includes(gName)) {
-            excludedGenres.push(gName);
+    while ((match = negativeClauseRegex.exec(lowerText)) !== null) {
+      const clause = match[1].toLowerCase().trim();
+      const tokens = clause.split(/\s+(?:or|and|nor)\s+|\s*,\s*|\s+/);
+
+      tokens.forEach((rawToken) => {
+        const token = rawToken.trim();
+        if (!token || token.length <= 1 || NON_EXCLUDABLE_STOPWORDS.has(token))
+          return;
+
+        // استبعاد الميكا والروبوتات بدقة
+        if (
+          [
+            "mecha",
+            "robot",
+            "robots",
+            "mech",
+            "mechs",
+            "cyborg",
+            "cyborgs",
+          ].includes(token)
+        ) {
+          if (!excludedTermsFromPrompt.includes(token))
+            excludedTermsFromPrompt.push(token);
+          if (!excludedKeywords.includes("209355"))
+            excludedKeywords.push("209355");
+          if (!excludedKeywords.includes("163077"))
+            excludedKeywords.push("163077");
+          return;
+        }
+
+        // استبعاد السوبر هيرو
+        if (["superhero", "superheroes", "super"].includes(token)) {
+          if (!excludedTermsFromPrompt.includes("superhero"))
+            excludedTermsFromPrompt.push("superhero");
+          if (!excludedKeywords.includes("9715")) excludedKeywords.push("9715");
+          return;
+        }
+
+        if (token === "detective") {
+          if (!excludedTermsFromPrompt.includes("detective"))
+            excludedTermsFromPrompt.push("detective");
+          return;
+        }
+
+        // فحص التصنيفات الرسمية
+        let isOfficialGenre = false;
+        for (const [gName, kwList] of Object.entries(genreMap)) {
+          if (gName === token || kwList.includes(token)) {
+            if (!excludedGenres.includes(gName)) {
+              excludedGenres.push(gName);
+            }
+            isOfficialGenre = true;
           }
         }
-      }
+
+        if (!isOfficialGenre && !excludedTermsFromPrompt.includes(token)) {
+          excludedTermsFromPrompt.push(token);
+        }
+      });
     }
 
-    // 🌟 2. استخراج الكلمات المفتاحية المستبعدة صراحةً (Excluded Keywords) - كشف حظر الأبطال الخارقين
-    const excludedKeywords = [];
     if (
-      /\b(?:exclude|no|without)\s+.*?\b(superhero|superheroes|super\s*hero|super\s*heroes|marvel|dc|comic\s*book|mcu|dceu)\b/i.test(
+      /\b(?:exclude|no|without|except|zero)\s+.*?\b(superhero|superheroes|super\s*hero|super\s*heroes|marvel|dc|comic\s*book|mcu|dceu)\b/i.test(
         lowerText,
       )
     ) {
-      excludedKeywords.push("9715");
+      if (!excludedKeywords.includes("9715")) excludedKeywords.push("9715");
     }
 
-    // جمع الـ Genre IDs المقابلة للتصنيفات المستبعدة
     const excludedGenreIds = [];
     excludedGenres.forEach((g) => {
       if (TMDB_GENRE_IDS.movie[g])
@@ -944,7 +1044,7 @@ export class CindromeEngine {
       if (TMDB_GENRE_IDS.tv[g]) excludedGenreIds.push(TMDB_GENRE_IDS.tv[g]);
     });
 
-    // 🌟 3. استخراج شرط السنة الأدنى (Year Filter)
+    // 🌟 2. استخراج شرط السنة الأدنى (Year Filter)
     let minYear = null;
     const yearMatch = lowerText.match(
       /\b(?:after|newer than|from|post|since)\s+(\d{4})\b/i,
@@ -953,16 +1053,58 @@ export class CindromeEngine {
       minYear = parseInt(yearMatch[1], 10);
     }
 
+    // 🌟 3. رصد عبارات التحول (Topic Shift / Pivot Override)
+    const isPivot =
+      /\b(instead|actually|rather|change of mind|on second thought)\b/i.test(
+        lowerText,
+      );
+    const wantsExplicitLiveAction = /\b(live action|live-action)\b/i.test(
+      lowerText,
+    );
+
+    // 🌟 4. دعم اللغات ودول المنشأ مع مراعاة التحول إلى Live-Action
+    let detectedLanguage = null;
+    let detectedCountry = null;
+
+    const wantsExplicitAnime =
+      /\b(anime|manga)\b/i.test(lowerText) && !wantsExplicitLiveAction;
+    const wantsExplicitJapanese =
+      /\b(japanese|japan)\b/i.test(lowerText) && !wantsExplicitLiveAction;
+
+    if (
+      /\b(korean|k-drama|kdrama|k drama|south korea|korea)\b/i.test(lowerText)
+    ) {
+      detectedLanguage = "ko";
+      detectedCountry = "KR";
+    } else if (wantsExplicitAnime || wantsExplicitJapanese) {
+      detectedLanguage = "ja";
+      detectedCountry = "JP";
+    } else if (/\b(spanish|spain|mexican|mexico)\b/i.test(lowerText)) {
+      detectedLanguage = "es";
+    } else if (/\b(french|france)\b/i.test(lowerText)) {
+      detectedLanguage = "fr";
+    } else if (/\b(arabic|arab|egyptian|egypt)\b/i.test(lowerText)) {
+      detectedLanguage = "ar";
+    } else if (
+      /\b(english|hollywood|american|british|usa|uk)\b/i.test(lowerText)
+    ) {
+      detectedLanguage = "en";
+    }
+
+    const isKorean = detectedLanguage === "ko";
+
     const isPureComedy =
+      !excludedGenres.includes("comedy") &&
       /\b(pure comedy|only comedy|strictly comedy|purely comedy|hard comedy|just comedy|pure funny|hilarious|comedy movies?|funny movies?)\b/i.test(
         lowerText,
       );
 
     const isSitcom =
-      /\b(sitcoms?|sit-coms?|situational comed(?:y|ies))\b/i.test(lowerText) ||
-      (/\b(comfort|chill|relaxing|easy watch)\b/i.test(lowerText) &&
-        /\b(series|show|shows|tv)\b/i.test(lowerText) &&
-        /\b(comedy|laugh|funny)\b/i.test(lowerText));
+      !excludedGenres.includes("comedy") &&
+      (/\b(sitcoms?|sit-coms?|situational comed(?:y|ies))\b/i.test(lowerText) ||
+        (/\b(comfort|chill|relaxing|easy watch)\b/i.test(lowerText) &&
+          /\b(series|show|shows|tv)\b/i.test(lowerText) &&
+          /\b(comedy|laugh|funny)\b/i.test(lowerText)));
 
     const hasQualityFloor =
       isPureComedy ||
@@ -1011,7 +1153,16 @@ export class CindromeEngine {
       }
     }
 
+    // تنظيف صارم لأي تصنيف يقع تحت الاستثناء
     detectedGenres = detectedGenres.filter((g) => !excludedGenres.includes(g));
+
+    // 🌟 حماية الـ Target Genre: لو التصنيف مطلوب صراحة في الجملة بعد instead أو التحول، يُلغى استبعاده فوراً
+    detectedGenres.forEach((g) => {
+      const idx = excludedGenres.indexOf(g);
+      if (idx > -1) {
+        excludedGenres.splice(idx, 1);
+      }
+    });
 
     if (isHauntedHorror || isCrimeFamily || isPureComedy || isSitcom) {
       detectedGenres = detectedGenres.filter(
@@ -1044,7 +1195,6 @@ export class CindromeEngine {
       }
     }
 
-    // إذا طلب المستخدم صراحة عدم وجود أبطال خارقين، نحذف أي keyword قد تم التعرف عليها
     if (excludedKeywords.includes("9715")) {
       detectedKeywords = detectedKeywords.filter((k) => k.name !== "superhero");
     }
@@ -1115,18 +1265,22 @@ export class CindromeEngine {
         detectedGenres.push("romance");
     }
 
-    const isAnimeTarget =
-      selectedType === "anime" || /\b(anime|manga)\b/i.test(lowerText);
+    const isLiveActionSitcomPivot =
+      (isPivot || wantsExplicitLiveAction) &&
+      (isSitcom || detectedGenres.includes("comedy")) &&
+      !wantsExplicitAnime;
 
     const isCuteAnimeRomCom =
-      isAnimeTarget &&
+      !isLiveActionSitcomPivot &&
+      (selectedType === "anime" || wantsExplicitAnime) &&
       !excludedGenres.includes("romance") &&
       /\b(cute|wholesome|sweet|adorable|fluffy|chill)\b/i.test(lowerText) &&
       (/\b(romance|romantic|love)\b/i.test(lowerText) ||
         /\b(funny|comedy|humor)\b/i.test(lowerText));
 
     const isDarkAnime =
-      isAnimeTarget &&
+      !isLiveActionSitcomPivot &&
+      (selectedType === "anime" || wantsExplicitAnime) &&
       /\b(dark|bleak|grim|disturbing|psychological|gore|brutal|dark fantasy|tragedy)\b/i.test(
         lowerText,
       );
@@ -1176,6 +1330,8 @@ export class CindromeEngine {
 
     const isTrueCrimeDoc =
       !excludedGenres.includes("documentary") &&
+      !excludedGenres.includes("crime") &&
+      !excludedTermsFromPrompt.includes("documentary") &&
       (detectedKeywords.some((k) => k.name === "true crime") ||
         /\b(true crime|docuseries|docu-series|real mysteries|real mystery|crime doc|crime documentary|unsolved mysteries|real crime|real crime cases|crime cases)\b/i.test(
           lowerText,
@@ -1192,9 +1348,6 @@ export class CindromeEngine {
         (g) => g !== "crime" && g !== "mystery",
       );
     }
-
-    const isKorean =
-      /\b(korean|k-drama|kdrama|k drama|south korea|korea)\b/i.test(lowerText);
 
     const hasTwistKeywords =
       !isTrueCrimeDoc &&
@@ -1321,6 +1474,7 @@ export class CindromeEngine {
       detectedGenres.push("crime");
     }
 
+    // 🌟 5. ضبط الـ Target Type مع إعطاء الأولوية للتحول الصريح
     const hasExplicitMovie = /\b(movie|movies|film|films)\b/i.test(lowerText);
     const hasExplicitSeries =
       /\b(series|show|shows|tv|sitcom|docuseries|docu-series|k-drama|kdrama)\b/i.test(
@@ -1328,48 +1482,92 @@ export class CindromeEngine {
       );
 
     let targetType = selectedType;
-    if (selectedType === "mixed") {
-      if (/\b(anime|manga)\b/i.test(lowerText)) targetType = "anime";
-      else if (hasExplicitMovie && !hasExplicitSeries) targetType = "movie";
-      else if (hasExplicitSeries && !hasExplicitMovie) targetType = "tv";
-      else if (isSitcom) targetType = "tv";
-    } else if (
-      selectedType === "tv" &&
-      hasExplicitMovie &&
-      !hasExplicitSeries
-    ) {
-      targetType = "movie";
-    } else if (
-      selectedType === "movie" &&
-      hasExplicitSeries &&
-      !hasExplicitMovie
-    ) {
+    let hasExplicitTargetType = false;
+
+    if (wantsExplicitLiveAction) {
+      targetType = hasExplicitMovie ? "movie" : "tv";
+      hasExplicitTargetType = true;
+    } else if (isSitcom && !wantsExplicitAnime) {
       targetType = "tv";
+      hasExplicitTargetType = true;
+    } else if (wantsExplicitAnime) {
+      targetType = "anime";
+      hasExplicitTargetType = true;
+    } else if (hasExplicitMovie && !hasExplicitSeries) {
+      targetType = "movie";
+      hasExplicitTargetType = true;
+    } else if (hasExplicitSeries && !hasExplicitMovie) {
+      targetType = "tv";
+      hasExplicitTargetType = true;
     }
 
+    if (isPivot && detectedGenres.length > 0) {
+      detectedGenres = [...detectedGenres];
+    }
+
+    // 🌟 6. استخراج العناوين المرجعية مع استبعاد السنوات والتصنيفات بدقة
     const refPatterns = [
-      /\b(?:liked|loved|enjoyed|similar to|in the style of|vibe of)\s+([a-zA-Z0-9':.&!?-]+(?:\s+[a-zA-Z0-9':.&!?-]+){0,5}?)(?=[,.]|\s+(?:to|for|with|and|or|after|but|because|so|in|on|at|while|chill|what|where|how)\b|$)/i,
-      /(?<!feel\s|feels\s|look\s|looks\s|sound\s|sounds\s)\blike\s+([a-zA-Z0-9':.&!?-]+(?:\s+[a-zA-Z0-9':.&!?-]+){0,5}?)(?=[,.]|\s+(?:to|for|with|and|or|after|but|because|so|in|on|at|while|chill|what|where|how)\b|$)/i,
-      /\b(?:watched|finished)\s+([a-zA-Z0-9':.&!?-]+(?:\s+[a-zA-Z0-9':.&!?-]+){0,5}?)(?=[,.]|\s+(?:and|and want|recommend|what)\b|$)/i,
+      /\b(?:after|watch after)\s+(?!\d{4}\b)([a-zA-Z0-9':.&!\-]{2,}(?:\s+[a-zA-Z0-9':.&!\-]+){0,4}?)(?=[,.]|\s+(?:to|for|with|and|or|after|but|because|so|what|where|how)\b|$|\?)/i,
+      /\b(?:based on|inspired by)\s+([a-zA-Z0-9':.&!\-]{2,}(?:\s+[a-zA-Z0-9':.&!\-]+){0,4}?)(?=[,.]|\s+(?:to|for|with|and|or|after|but|because|so|what|where|how)\b|$|\?)/i,
+      /\b(?:anything like|something like)\s+([a-zA-Z0-9':.&!\-]{2,}(?:\s+[a-zA-Z0-9':.&!\-]+){0,4}?)(?=[,.]|\s+(?:to|for|with|and|or|after|but|because|so|what|where|how)\b|$|\?)/i,
+      /\b(?:liked|loved|enjoyed|similar to|in the style of|vibe of)\s+([a-zA-Z0-9':.&!\-]{2,}(?:\s+[a-zA-Z0-9':.&!\-]+){0,4}?)(?=[,.]|\s+(?:to|for|with|and|or|after|but|because|so|in|on|at|while|chill|what|where|how)\b|$|\?)/i,
+      /(?<!feel\s|feels\s|look\s|looks\s|sound\s|sounds\s)\blike\s+([a-zA-Z0-9':.&!\-]{2,}(?:\s+[a-zA-Z0-9':.&!\-]+){0,4}?)(?=[,.]|\s+(?:to|for|with|and|or|after|but|because|so|in|on|at|while|chill|what|where|how)\b|$|\?)/i,
+      /\b(?:watched|finished)\s+([a-zA-Z0-9':.&!\-]{2,}(?:\s+[a-zA-Z0-9':.&!\-]+){0,4}?)(?=[,.]|\s+(?:and|and want|recommend|what)\b|$|\?)/i,
     ];
 
     let extractedReferenceTitle = null;
     for (const pattern of refPatterns) {
-      const match = text.match(pattern);
-      if (match) {
-        const candidateTitle = match[1]
+      const pMatch = text.match(pattern);
+      if (pMatch) {
+        const candidateTitle = pMatch[1]
           .trim()
-          .replace(/^[,.\s]+|[,.\s]+$/g, "");
+          .replace(/^[,.\s?]+|[,.\s?]+$/g, "");
         const cleanTitle = candidateTitle
           .toLowerCase()
           .replace(/^(a|an|the)\s+/, "");
-        if (
-          !GENRE_DESCRIPTOR_STOPWORDS.has(cleanTitle) &&
-          !GENRE_DESCRIPTOR_STOPWORDS.has(candidateTitle.toLowerCase())
-        ) {
+
+        const isYearOnly = /^\d{4}$/.test(cleanTitle);
+        const hasGenreStopword =
+          GENRE_DESCRIPTOR_STOPWORDS.has(cleanTitle) ||
+          GENRE_DESCRIPTOR_STOPWORDS.has(candidateTitle.toLowerCase());
+
+        if (!isYearOnly && !hasGenreStopword) {
           extractedReferenceTitle = candidateTitle;
           break;
         }
+      }
+    }
+
+    // 🌟 7. الـ Implicit Title Fallback الذكي
+    const cleanWordList = lowerText.split(/\s+/).filter(Boolean);
+    const hasGenericPromptWords =
+      /\b(recommend|suggest|show|give|want|looking|find|movie|movies|film|films|series|show|shows|anime|another|option|options|similar|more|live|action)\b/i;
+    const hasKnownFilters =
+      detectedGenres.length > 0 ||
+      detectedKeywords.length > 0 ||
+      excludedGenres.length > 0 ||
+      minYear !== null ||
+      detectedLanguage !== null ||
+      hasTwistKeywords;
+
+    if (
+      !extractedReferenceTitle &&
+      !hasKnownFilters &&
+      cleanWordList.length <= 4
+    ) {
+      const rawCandidate = text.replace(/[?.,!]/g, "").trim();
+      const cleanCandidate = rawCandidate
+        .toLowerCase()
+        .replace(/^(a|an|the)\s+/, "")
+        .trim();
+
+      if (
+        rawCandidate.length >= 2 &&
+        !hasGenericPromptWords.test(rawCandidate) &&
+        !GENRE_DESCRIPTOR_STOPWORDS.has(cleanCandidate) &&
+        !GENRE_DESCRIPTOR_STOPWORDS.has(rawCandidate.toLowerCase())
+      ) {
+        extractedReferenceTitle = rawCandidate;
       }
     }
 
@@ -1389,6 +1587,8 @@ export class CindromeEngine {
       excludedGenres.length > 0 ||
       excludedKeywords.length > 0 ||
       Boolean(minYear) ||
+      Boolean(detectedLanguage) ||
+      wantsExplicitLiveAction ||
       isKorean ||
       hasTwistKeywords ||
       isUnderdog ||
@@ -1412,17 +1612,23 @@ export class CindromeEngine {
     const isAmbiguous =
       !extractedReferenceTitle &&
       !hasSpecificIntent &&
-      lowerText.split(" ").length > 3;
+      cleanWordList.length > 3;
 
     return {
       isValid: true,
       isAmbiguous,
+      isPivot,
+      isLiveAction: wantsExplicitLiveAction,
       targetType,
+      hasExplicitTargetType,
       detectedGenres,
       detectedKeywords,
+      detectedLanguage,
+      detectedCountry,
       excludedGenres,
       excludedGenreIds: Array.from(new Set(excludedGenreIds)),
       excludedKeywords,
+      excludedTermsFromPrompt,
       minYear,
       isPure,
       withoutDrama,
@@ -1625,7 +1831,6 @@ export class CindromeEngine {
     const underdogThemesRegex =
       /\b(underdog|rags to riches|from nothing|struggle|perseverance|overcome|overcoming|odds|boxing|fighter|champion|ambition|success|hustle|determination|wealth|poverty to|hard work|training|triumph|against all odds|self made|broke)\b/i;
 
-    // 🌟 فحص متغيرات الأبطال الخارقين الصريحة قبل الـ Loop
     const isExcludedSuperhero =
       parsedIntent.excludedKeywords &&
       parsedIntent.excludedKeywords.includes("9715");
@@ -1658,7 +1863,6 @@ export class CindromeEngine {
           ? parseInt(releaseDate.split("-")[0], 10)
           : 0;
 
-        // استخراج معرفات الكلمات المفتاحية التابعة لـ TMDB للعمل المرشح ديناميكياً
         const rawItemKeywords = Array.isArray(item.keywords)
           ? item.keywords
           : item.keywords?.keywords || item.keywords?.results || [];
@@ -1675,7 +1879,6 @@ export class CindromeEngine {
         const itemSearchableText =
           `${itemTitle} ${itemOverview} ${item.tagline || ""} ${itemKwStrings.join(" ")}`.toLowerCase();
 
-        // 1. حساب S_intent بناءً على تطابق التصنيف
         const lookupType = item.media_type === "movie" ? "movie" : "tv";
         const genreIdLookup =
           TMDB_GENRE_IDS[lookupType] || TMDB_GENRE_IDS.movie;
@@ -1712,7 +1915,6 @@ export class CindromeEngine {
           s_intent = 60;
         }
 
-        // فحص السفر عبر الزمن والتويستات
         const wantsTimeTravel =
           parsedIntent.detectedKeywords.some((k) => k.name === "time travel") ||
           /\b(time travel|time loop|timeline|wormhole)\b/i.test(
@@ -1761,7 +1963,6 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 40);
         }
 
-        // بونص الأنمي السوداوي والنفسي المظلم (+60)
         if (parsedIntent.isDarkAnime) {
           const isDarkHit =
             darkAnimeMasterpiecesRegex.test(itemTitle) ||
@@ -1776,7 +1977,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص الكوميديا الصريحة الجماهيرية للبالغين (+60)
         if (parsedIntent.isPureComedy) {
           const isPureHit =
             pureComedyHitsRegex.test(itemTitle) ||
@@ -1790,7 +1990,6 @@ export class CindromeEngine {
           }
         }
 
-        // سياق السيتكوم (Sitcom Intent)
         const wantsSitcom =
           parsedIntent.isSitcom ||
           parsedIntent.detectedKeywords.some((k) => k.name === "sitcom") ||
@@ -1819,7 +2018,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص الأكشن الإبهاري عالي المفهوم (+60)
         if (parsedIntent.isMindBlowingAction) {
           const isHitMba =
             mindBlowingActionHitsRegex.test(itemTitle) ||
@@ -1834,7 +2032,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص رعب المنازل المسكونة والعائلات الملعونة (+60)
         if (parsedIntent.isHauntedHorror) {
           const isHauntedHit =
             hauntedHorrorMasterpiecesRegex.test(itemTitle) ||
@@ -1848,7 +2045,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص الأنمي الرومانسي الكوميدي اللطيف الحديث (+60)
         const isHitRomComAnime =
           cuteRomComAnimeHitsRegex.test(itemTitle) ||
           cuteRomComAnimeThemesRegex.test(itemOverview) ||
@@ -1863,7 +2059,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص أفلام المافيا وعائلات الجريمة وبناء الإمبراطوريات
         if (parsedIntent.isCrimeFamily) {
           const isHitMobFilm =
             crimeFamilyMasterpiecesRegex.test(itemTitle) ||
@@ -1876,7 +2071,6 @@ export class CindromeEngine {
           }
         }
 
-        // الاعتماد المباشر على TMDB Theme IDs والمفردات الصريحة لمعارك وسيوف القرون الوسطى
         const swordWarfareIdList = String(TMDB_THEME_IDS.swordWarfare)
           .split("|")
           .map((id) => parseInt(id, 10));
@@ -1893,7 +2087,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص قصص الصعود والتحدي والنجاح من الصفر
         if (parsedIntent.isUnderdog) {
           const isUnderdogHit =
             underdogInspirationalHitsRegex.test(itemTitle) ||
@@ -1906,7 +2099,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص مسلسلات الغموض والتويستات الكورية
         if (
           parsedIntent.isKorean &&
           (wantsPlotTwist || parsedIntent.hasTwistKeywords)
@@ -1933,7 +2125,6 @@ export class CindromeEngine {
           }
         }
 
-        // فحص الإثارة السيكولوجية
         const wantsPsychological =
           parsedIntent.isPsychologicalThriller ||
           parsedIntent.detectedKeywords.some(
@@ -1955,7 +2146,6 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 50);
         }
 
-        // بونص أفلام السرقات والتخطيط المباشر
         const hasExplicitHeistRobbery =
           explicitHeistRobberyRegex.test(itemTitle) ||
           explicitHeistRobberyRegex.test(itemOverview) ||
@@ -1968,7 +2158,6 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 60);
         }
 
-        // فحص وبونص السايبربنك والمستقبل السوداوي والنيون
         const isCyberpunkHit =
           cyberpunkHitsRegex.test(itemTitle) ||
           cyberpunkThemesRegex.test(itemOverview) ||
@@ -1982,7 +2171,6 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 60);
         }
 
-        // بونص سينما الفضاء الفلسفية
         const isDeepSpacePhilosophical =
           philosophicalSpaceHitsRegex.test(itemTitle) ||
           (philosophicalSpaceThemesRegex.test(itemOverview) &&
@@ -1992,7 +2180,6 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 60);
         }
 
-        // بونص الكوميديا الخالصة والمريحة عند التعب والإرهاق
         if (
           (parsedIntent.isComfortComedy || parsedIntent.isTiredMood) &&
           !parsedIntent.isPureComedy &&
@@ -2007,7 +2194,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص أفلام الأنيميشن العائلية المبهجة
         const hasBothAnimationAndFamily =
           (itemGenreIds.includes(16) ||
             itemGenres.some((g) => g.includes("animation"))) &&
@@ -2024,7 +2210,6 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 50);
         }
 
-        // فحص وبونص الكوميديا الرومانسية الخفيفة المبهجة
         const wantsRomCom =
           parsedIntent.isRomCom ||
           parsedIntent.detectedKeywords.some((k) => k.name === "rom-com") ||
@@ -2052,7 +2237,6 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 50);
         }
 
-        // فحص وبونص الحروب التاريخية العامة
         const hasWarOrHistoryGenre =
           itemGenreIds.includes(10752) ||
           itemGenreIds.includes(36) ||
@@ -2070,7 +2254,6 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 60);
         }
 
-        // 🌟 فحص وبونص وثائقيات الجرائم الحقيقية المباشر (+60)
         const isDocContent =
           itemGenreIds.includes(99) ||
           itemGenres.some((g) => g.includes("documentary")) ||
@@ -2092,7 +2275,6 @@ export class CindromeEngine {
           s_intent = Math.min(100, s_intent + 60);
         }
 
-        // بونص السحر الصريح والأجواء السوداوية
         const wantsMagic =
           parsedIntent.detectedKeywords.some((k) => k.name === "magic") ||
           /\b(magic|magical|sorcery|sorcerer|witch|witches|witchcraft|wizard|wizards|mage|mages|spell|spells|alchemy)\b/i.test(
@@ -2127,7 +2309,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص أفلام سهرة الرعب الجماعية
         if (parsedIntent.isHorrorNight) {
           const isIconicHit = iconicCrowdHorrorTitles.test(itemTitle);
           const isCrowdHorror =
@@ -2141,7 +2322,6 @@ export class CindromeEngine {
           }
         }
 
-        // بونص سينما الفضاء العامة
         const isSciFiContext =
           (parsedIntent.detectedGenres.includes("scifi") ||
             (anchorTitle &&
@@ -2159,7 +2339,6 @@ export class CindromeEngine {
           }
         }
 
-        // 🌟 2. حساب تفضيل المستخدم الشخصي المعمق بدقة (Personalization Score: 35% Genres + 65% Micro-Keywords)
         let s_user_genre = 50;
         let s_user_kw = 20;
         let matched_user_keywords = [];
@@ -2302,9 +2481,6 @@ export class CindromeEngine {
 
         const s_user_kw_bonus = s_user - s_user_genre;
 
-        // 🌟 3. الفلترة والخصومات الصارمة (Intent-First Tiered Architecture & Proportional Penalties)
-
-        // شرط التحقق من السنة الصريحة (Year Filter Penalty)
         if (
           parsedIntent.minYear &&
           releaseYear > 0 &&
@@ -2313,12 +2489,39 @@ export class CindromeEngine {
           penalties += 55;
         }
 
-        // 🌟 تفعيل Hard Exclusion لفلتر الجودة مع شرط السنة: طرد الأفلام الضعيفة
         if (parsedIntent.minYear && voteAverage < 6.8) {
           penalties += 50;
         }
 
-        // شرط التحقق من استبعاد التصنيفات الصريحة (Explicit Exclusions Penalty)
+        if (parsedIntent.excludedTermsFromPrompt?.includes("detective")) {
+          const isDetectiveCentric =
+            /\b(detective|police detective|lead detective)\b/i.test(itemTitle);
+          if (isDetectiveCentric) {
+            penalties += 30;
+          }
+        }
+
+        // 🌟 فحص صارم للمصطلحات المنفية الشائعة (مثل mecha أو robots)
+        if (
+          parsedIntent.excludedTermsFromPrompt &&
+          parsedIntent.excludedTermsFromPrompt.length > 0
+        ) {
+          const hasExcludedTerm = parsedIntent.excludedTermsFromPrompt.some(
+            (term) => {
+              if (term === "detective") return false;
+              const termRegex = new RegExp(`\\b${term}\\b`, "i");
+              return (
+                termRegex.test(itemTitle) ||
+                termRegex.test(itemOverview) ||
+                itemKwStrings.includes(term)
+              );
+            },
+          );
+          if (hasExcludedTerm) {
+            penalties += 80; // عقوبة قطعية لمنع ظهور الميكا أو الروبوتات
+          }
+        }
+
         if (
           parsedIntent.excludedGenres &&
           parsedIntent.excludedGenres.length > 0
@@ -2332,7 +2535,16 @@ export class CindromeEngine {
           }
         }
 
-        // 🌟 شرط التحقق من استبعاد الكلمات المفتاحية الصريحة (مثل أبطال خارقين 9715)
+        // 🌟 عقوبة صارمة ضد الكوميديا في حال تم استبعادها
+        if (parsedIntent.excludedGenres.includes("comedy")) {
+          const hasComedySignal =
+            itemGenreIds.includes(35) ||
+            itemGenres.some((g) => g.includes("comedy"));
+          if (hasComedySignal) {
+            penalties += 65;
+          }
+        }
+
         const hasSuperheroSignal =
           itemKwIds.includes(9715) ||
           itemGenreIds.includes(9715) ||
@@ -2343,7 +2555,6 @@ export class CindromeEngine {
           penalties += 80;
         }
 
-        // 1. إضافة شرط أهليّة النية الصارم (Hard Intent Gate)
         const hasSpecificIntentFlag =
           parsedIntent.isHorrorNight ||
           parsedIntent.isCrimeHeist ||
@@ -2376,7 +2587,6 @@ export class CindromeEngine {
           penalties += 40;
         }
 
-        // 2. رفع فلتر التقييم (Quality Floor)
         if (
           (parsedIntent.hasQualityFloor ||
             parsedIntent.isMindBlowingAction ||
@@ -2386,12 +2596,10 @@ export class CindromeEngine {
           penalties += 35;
         }
 
-        // أ. بوابة النية العامة القديمة
         if (parsedIntent.detectedGenres.length > 0 && s_intent === 0) {
           penalties += 45;
         }
 
-        // ب. عقوبة استبعاد أعمال الفانتازيا والمغامرات الخفيفة/الإيتشي عند طلب Dark Anime
         if (parsedIntent.isDarkAnime) {
           const isMasterpieceHit = darkAnimeMasterpiecesRegex.test(itemTitle);
           if (
@@ -2406,7 +2614,6 @@ export class CindromeEngine {
           }
         }
 
-        // ج. اشتراطات وحظر السيتكوم (Sitcom Rules)
         if (wantsSitcom) {
           const isIconicSitcom = iconicComfortShows.test(itemTitle);
           const isPrimaryComedy =
@@ -2443,7 +2650,6 @@ export class CindromeEngine {
           }
         }
 
-        // د. جدار الجودة والاشتراط الصارم للكوميديا الصريحة (Pure Comedy)
         if (parsedIntent.isPureComedy) {
           const isIconicComedy = pureComedyHitsRegex.test(itemTitle);
           const isComedyPrimary =
@@ -2487,7 +2693,6 @@ export class CindromeEngine {
           }
         }
 
-        // هـ. جدار الجودة للأعمال الإبهارية والأكشن عالي المفهوم
         if (
           (parsedIntent.hasQualityFloor || parsedIntent.isMindBlowingAction) &&
           !parsedIntent.isPureComedy &&
@@ -2508,7 +2713,6 @@ export class CindromeEngine {
           }
         }
 
-        // و. عقوبة استبعاد أفلام العائلة والأطفال والكوميديا عند طلب رعب المنازل المسكونة
         if (parsedIntent.isHauntedHorror) {
           if (
             itemGenreIds.includes(10751) ||
@@ -2534,7 +2738,6 @@ export class CindromeEngine {
           }
         }
 
-        // حظر قطعي ومشدد لمحتوى الـ Ecchi والـ Harem (penalties += 70)
         if (parsedIntent.isCuteAnimeRomCom) {
           if (
             ecchiOrAdultAnimeRegex.test(itemTitle) ||
@@ -2571,7 +2774,6 @@ export class CindromeEngine {
           }
         }
 
-        // ح. عقوبة استبعاد الأفلام العائلية للأطفال عند طلب عائلات الجريمة والمافيا
         if (parsedIntent.isCrimeFamily) {
           if (
             itemGenreIds.includes(10751) ||
@@ -2593,7 +2795,6 @@ export class CindromeEngine {
           }
         }
 
-        // ط. عقوبة استبعاد الأفلام والمسلسلات الروائية الخيالية تماماً عند طلب الوثائقيات الجنائية
         if (parsedIntent.isTrueCrimeDoc) {
           if (!isDocContent) {
             penalties += 50;
@@ -2613,7 +2814,6 @@ export class CindromeEngine {
           }
         }
 
-        // عقوبات الحروب والسيوف: استبعاد الفانتازيا الخفيفة والحروب المعاصرة ديناميكياً
         if (parsedIntent.isSwordWarfare) {
           if (
             modernWarfareRegex.test(itemTitle) ||
@@ -2631,7 +2831,6 @@ export class CindromeEngine {
           }
         }
 
-        // ك. عقوبة استبعاد الأعمال غير المتطابقة مع قصص الصعود والتحدي
         if (parsedIntent.isUnderdog) {
           if (
             itemGenreIds.includes(27) ||
@@ -2642,14 +2841,12 @@ export class CindromeEngine {
           }
         }
 
-        // ل. عقوبة استبعاد الأعمال غير الكورية تماماً عند طلب Korean Thriller / Show
         if (parsedIntent.isKorean) {
           if (originalLang !== "ko") {
             penalties += 55;
           }
         }
 
-        // م. عقوبة استبعاد الأعمال الخالية من التويستات عند طلب Plot Twists
         if (wantsPlotTwist || parsedIntent.hasTwistKeywords) {
           if (
             !hasTwistSignal &&
@@ -2659,7 +2856,6 @@ export class CindromeEngine {
           }
         }
 
-        // تدقيق عقوبة أفلام السرقات والتخطيط: تطبيق عقوبة -35 عند غياب عناصر السرقات الصريحة
         if (parsedIntent.isHeistRobbery) {
           if (
             revengeOrPureMafiaRegex.test(itemTitle) ||
@@ -2681,7 +2877,6 @@ export class CindromeEngine {
           }
         }
 
-        // س. عقوبة استبعاد الفضاء الخارجي والسفر بالزمن عند طلب السايبربنك والروبوتات والنيون
         if (parsedIntent.isCyberpunk) {
           if (
             spaceOrTimeTravelRegex.test(itemTitle) ||
@@ -2695,7 +2890,6 @@ export class CindromeEngine {
           }
         }
 
-        // ع. عقوبة استبعاد الأكشن الفضائي الترفيهي والسفر بالزمن الكوميدي عند طلب الفضاء الفلسفي
         if (parsedIntent.isPhilosophicalSciFi) {
           if (
             spaceActionOrLightRegex.test(itemTitle) ||
@@ -2713,7 +2907,6 @@ export class CindromeEngine {
           }
         }
 
-        // ف. عقوبة استبعاد الدراما الكوميدية، مسلسلات المراهقين والأنمي القديم عند التعب والكوميديا المريحة
         if (parsedIntent.isComfortComedy || parsedIntent.isTiredMood) {
           if (itemGenreIds.includes(18)) {
             penalties += 35;
@@ -2734,11 +2927,11 @@ export class CindromeEngine {
             penalties += 45;
           }
 
-          const wantsExplicitAnime =
+          const wantsAnime =
             /\banime|manga\b/i.test(parsedIntent.originalText) ||
             parsedIntent.targetType === "anime";
           if (
-            !wantsExplicitAnime &&
+            !wantsAnime &&
             (originalLang === "ja" ||
               item.media_type === "anime" ||
               itemGenreIds.includes(16))
@@ -2755,13 +2948,10 @@ export class CindromeEngine {
           }
         }
 
-        // ص. عقوبة استبعاد الأنمي والإنتاجات غير العائلية في سياق الأنيميشن العائلي العام
         if (parsedIntent.isFamilyAnimation) {
-          const wantsExplicitAnime = /\banime\b/i.test(
-            parsedIntent.originalText,
-          );
+          const wantsAnime = /\banime\b/i.test(parsedIntent.originalText);
           if (
-            !wantsExplicitAnime &&
+            !wantsAnime &&
             (originalLang === "ja" || itemGenreIds.includes(210024))
           ) {
             penalties += 40;
@@ -2783,7 +2973,6 @@ export class CindromeEngine {
           }
         }
 
-        // ق. عقوبة استبعاد الخيال العلمي والأكشن المعاصر عند طلب الحروب التاريخية الملحمية
         if (parsedIntent.isHistoricalWar) {
           if (!isGenuineHistoricalWar) {
             penalties += 40;
@@ -2806,7 +2995,6 @@ export class CindromeEngine {
           }
         }
 
-        // ر. عقوبة استبعاد التراجيديا والكوميديا السوداوية/التجريبية عند طلب Rom-Com خفيف ومبهج
         if (wantsRomCom) {
           if (
             darkOrExperimentalRomanceRegex.test(itemTitle) ||
@@ -2835,7 +3023,6 @@ export class CindromeEngine {
           }
         }
 
-        // ش. عقوبة استبعاد الأعمال الضعيفة والسلاشر عند طلب Psychological Thriller
         if (wantsPsychological) {
           if (voteAverage < 7.0) {
             penalties += 30;
@@ -2853,7 +3040,6 @@ export class CindromeEngine {
           }
         }
 
-        // ت. عقوبات سهرة الرعب الجماعية
         if (parsedIntent.isHorrorNight) {
           if (
             !parsedIntent.wantsClassic &&
@@ -2881,7 +3067,6 @@ export class CindromeEngine {
           }
         }
 
-        // ث. فلترة أنميات السحر واستبعاد العمالقة والدفتر الأسود
         if (wantsMagic) {
           if (
             nonMagicTitanOrNotebookRegex.test(itemOverview) ||
@@ -2893,12 +3078,10 @@ export class CindromeEngine {
           }
         }
 
-        // خ. عقوبة الخصم الحاسم على الخيال العلمي الخالي من السفر عبر الزمن
         if (wantsTimeTravel && !hasTimeTravelSignal) {
           penalties += 35;
         }
 
-        // ذ. بوابة الأبطال الخارقين الصارمة
         const isSuperhero =
           superheroRegex.test(itemTitle) ||
           superheroRegex.test(itemOverview) ||
@@ -2917,7 +3100,6 @@ export class CindromeEngine {
           }
         }
 
-        // ض. بوابة الحظر التام للرياضة
         const detectedSportSubThemes = parsedIntent.detectedKeywords.filter(
           (k) =>
             ["racing", "boxing", "football", "basketball"].includes(k.name),
@@ -2951,7 +3133,6 @@ export class CindromeEngine {
           }
         }
 
-        // ظ. فلترة الـ TV Movies والحلقات الخاصة
         const isMovieSearch =
           parsedIntent.targetType === "movie" || item.media_type === "movie";
         const isTvMovieOrSpecial =
@@ -2964,7 +3145,6 @@ export class CindromeEngine {
           penalties += 35;
         }
 
-        // غ. تعارض الكوميديا مع الإثارة والرعب والجرائم
         const isDarkOrThriller =
           itemGenreIds.includes(53) ||
           itemGenreIds.includes(80) ||
@@ -3002,7 +3182,6 @@ export class CindromeEngine {
           penalties += 30;
         }
 
-        // خصم العمل المرجعي وأجزائه المباشرة
         if (anchorTitle) {
           const cleanAnchor = anchorTitle.toLowerCase().trim();
           const cleanItem = itemTitle.toLowerCase().trim();
@@ -3017,7 +3196,6 @@ export class CindromeEngine {
           }
         }
 
-        // 🌟 خصم حاسم ومضمون للأعمال ذات المطابقة الضعيفة للكلمات المفتاحية
         const isExemptCuteAnime =
           parsedIntent.isCuteAnimeRomCom && isHitRomComAnime;
         const isExemptTrueCrime = parsedIntent.isTrueCrimeDoc && isHitTrueCrime;
@@ -3032,7 +3210,6 @@ export class CindromeEngine {
           penalties += 30;
         }
 
-        // 🌟 4. تطبيق نظام الأوزان الديناميكي (Dynamic Weighting System)
         let rawScore = 0;
         if (userReviewsCount < 5) {
           rawScore = 0.6 * s_intent + 0.4 * s_rating;
@@ -3058,7 +3235,8 @@ export class CindromeEngine {
           recencyBonus = 3;
         }
 
-        // 🌟 تطبيق النظافة الهيكلية للأوزان وخصم العقوبات بشكل تراكمي قطعي
+        penalties = Math.min(penalties, 45);
+
         const finalScore = Math.min(
           100,
           Math.max(0, rawScore + popularityBonus + recencyBonus - penalties),
