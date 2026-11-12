@@ -32,6 +32,361 @@ export const getSimilarityScore = (str1, str2) => {
   return 1 - distance / maxLen;
 };
 
+// 🌟 قائمة المخرجين المعروفين لدعم البحث بالمخرج مع Fuzzy Matching (>= 0.72)
+export const KNOWN_DIRECTORS = [
+  "Christopher Nolan",
+  "Quentin Tarantino",
+  "Denis Villeneuve",
+  "Martin Scorsese",
+  "David Fincher",
+  "Steven Spielberg",
+  "Hayao Miyazaki",
+  "Ridley Scott",
+  "James Cameron",
+  "Stanley Kubrick",
+  "Alfred Hitchcock",
+  "Bong Joon-ho",
+  "Park Chan-wook",
+  "Youssef Chahine",
+  "Marwan Hamed",
+  "Greta Gerwig",
+  "Jordan Peele",
+  "Guillermo del Toro",
+  "Wes Anderson",
+  "Paul Thomas Anderson",
+  "Edgar Wright",
+  "Makoto Shinkai",
+  "Satoshi Kon",
+  "Akira Kurosawa",
+  "Zack Snyder",
+  "Matt Reeves",
+  "Robert Eggers",
+  "Ari Aster",
+  "Damien Chazelle",
+  "Alfonso Cuaron",
+  "Alejandro Gonzalez Inarritu",
+  "Guy Ritchie",
+  "Michael Mann",
+  "Sherif Arafa",
+  "Tarek Alarian",
+];
+
+// 🌟 قائمة الكلمات الزمنية والوظيفية المحظورة من المطابقة الضبابية كـ أسماء مخرجين
+export const NON_DIRECTOR_WORDS = new Set([
+  "after",
+  "before",
+  "between",
+  "since",
+  "until",
+  "through",
+  "from",
+  "only",
+  "just",
+  "movies",
+  "movie",
+  "films",
+  "film",
+  "series",
+  "shows",
+  "show",
+  "directed",
+  "director",
+  "best",
+  "top",
+  "greatest",
+  "favorite",
+  "favourite",
+  "recommend",
+  "suggest",
+  "watch",
+  "watching",
+  "rated",
+  "rating",
+  "score",
+  "above",
+  "over",
+  "under",
+  "below",
+  "least",
+  "minimum",
+  "higher",
+  "older",
+  "newer",
+  "earlier",
+  "prior",
+  "post",
+  "dark",
+  "light",
+  "cute",
+  "pure",
+  "scifi",
+  "sci-fi",
+  "science",
+  "fiction",
+  "action",
+  "comedy",
+  "drama",
+  "horror",
+  "thriller",
+  "mystery",
+  "crime",
+  "romance",
+  "fantasy",
+  "history",
+  "historical",
+  "war",
+  "family",
+  "animation",
+  "animated",
+  "anime",
+  "manga",
+  "documentary",
+  "docuseries",
+  "western",
+  "sitcom",
+  "sitcoms",
+  "instead",
+  "actually",
+  "rather",
+  "without",
+  "except",
+  "exclude",
+  "excluding",
+  "something",
+  "anything",
+  "other",
+  "another",
+  "more",
+  "like",
+  "similar",
+  "about",
+  "with",
+  "and",
+  "or",
+  "the",
+  "this",
+  "that",
+  "these",
+  "those",
+  "released",
+  "year",
+  "years",
+  "modern",
+  "classic",
+  "retro",
+]);
+
+export const resolveFuzzyDirector = (candidateStr) => {
+  if (!candidateStr || typeof candidateStr !== "string") return null;
+  const cleaned = candidateStr
+    .toLowerCase()
+    .trim()
+    .replace(
+      /\b(movies?|films?|series|shows?|cinema|works?|directed|director|by|of|who|best|top|greatest|favorite|favourite|recommend|suggest|watch|only|just|after|before|between|since|until|from|rated|rating|above|over)\b/gi,
+      "",
+    )
+    .replace(/\b(19\d{2}|20\d{2})s?\b/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (cleaned.length < 3 || NON_DIRECTOR_WORDS.has(cleaned)) return null;
+
+  const cleanedTokens = cleaned
+    .split(/\s+/)
+    .filter(
+      (t) => Boolean(t) && !NON_DIRECTOR_WORDS.has(t) && !/^\d+$/.test(t),
+    );
+  if (cleanedTokens.length === 0) return null;
+
+  const filteredCleaned = cleanedTokens.join(" ");
+  if (filteredCleaned.length < 3 || NON_DIRECTOR_WORDS.has(filteredCleaned)) {
+    return null;
+  }
+
+  let bestDirector = null;
+  let bestScore = 0;
+
+  for (const dir of KNOWN_DIRECTORS) {
+    const dirLower = dir.toLowerCase();
+    const parts = dirLower.split(/\s+/);
+    const lastName = parts[parts.length - 1];
+
+    const simFull = getSimilarityScore(filteredCleaned, dirLower);
+    let simLast = 0;
+    if (cleanedTokens.length === 1 && lastName.length >= 5) {
+      const singleSim = getSimilarityScore(cleanedTokens[0], lastName);
+      if (singleSim >= 0.85) {
+        simLast = singleSim;
+      }
+    }
+
+    let tokenScore = 0;
+    if (cleanedTokens.length > 1) {
+      for (const t of cleanedTokens) {
+        if (
+          t.length >= 5 &&
+          lastName.length >= 5 &&
+          !NON_DIRECTOR_WORDS.has(t)
+        ) {
+          const tSim = getSimilarityScore(t, lastName);
+          if (tSim >= 0.85) {
+            tokenScore = Math.max(tokenScore, tSim);
+          }
+        }
+      }
+      for (let i = 0; i < cleanedTokens.length - 1; i += 1) {
+        const pair = `${cleanedTokens[i]} ${cleanedTokens[i + 1]}`;
+        tokenScore = Math.max(tokenScore, getSimilarityScore(pair, dirLower));
+      }
+    }
+
+    const score = Math.max(simFull, simLast, tokenScore);
+
+    if (score >= 0.72 && score > bestScore) {
+      bestScore = score;
+      bestDirector = dir;
+    }
+  }
+  return bestDirector;
+};
+
+// 🌟 خريطة الجنسيات والأقاليم (Nationality & Regional Mapping)
+export const REGIONAL_NATIONALITY_MAP = [
+  {
+    pattern: /\b(egyptian|egypt|masri)\b/i,
+    lang: "ar",
+    country: "EG",
+    label: "Egyptian",
+  },
+  {
+    pattern: /\b(kuwaiti|kuwait)\b/i,
+    lang: "ar",
+    country: "KW",
+    label: "Kuwaiti",
+  },
+  {
+    pattern: /\b(saudi|saudi arabian|gulf|khaleeji)\b/i,
+    lang: "ar",
+    country: "SA",
+    label: "Gulf/Saudi",
+  },
+  {
+    pattern: /\b(emirati|uae)\b/i,
+    lang: "ar",
+    country: "AE",
+    label: "Emirati",
+  },
+  {
+    pattern: /\b(lebanese|lebanon)\b/i,
+    lang: "ar",
+    country: "LB",
+    label: "Lebanese",
+  },
+  {
+    pattern: /\b(syrian|syria)\b/i,
+    lang: "ar",
+    country: "SY",
+    label: "Syrian",
+  },
+  {
+    pattern: /\b(moroccan|morocco)\b/i,
+    lang: "ar",
+    country: "MA",
+    label: "Moroccan",
+  },
+  {
+    pattern: /\b(tunisian|tunisia)\b/i,
+    lang: "ar",
+    country: "TN",
+    label: "Tunisian",
+  },
+  {
+    pattern: /\b(jordanian|jordan)\b/i,
+    lang: "ar",
+    country: "JO",
+    label: "Jordanian",
+  },
+  { pattern: /\b(iraqi|iraq)\b/i, lang: "ar", country: "IQ", label: "Iraqi" },
+  { pattern: /\b(arabic|arab)\b/i, lang: "ar", country: null, label: "Arabic" },
+  {
+    pattern: /\b(turkish|turkey)\b/i,
+    lang: "tr",
+    country: "TR",
+    label: "Turkish",
+  },
+  {
+    pattern: /\b(indian|bollywood|hindi)\b/i,
+    lang: "hi",
+    country: "IN",
+    label: "Indian",
+  },
+  {
+    pattern: /\b(korean|k-drama|kdrama|k drama|south korea|korea)\b/i,
+    lang: "ko",
+    country: "KR",
+    label: "Korean",
+  },
+  {
+    pattern: /\b(japanese|japan)\b/i,
+    lang: "ja",
+    country: "JP",
+    label: "Japanese",
+  },
+  {
+    pattern: /\b(chinese|china|mandarin|hong kong)\b/i,
+    lang: "zh",
+    country: "CN",
+    label: "Chinese",
+  },
+  {
+    pattern: /\b(spanish|spain)\b/i,
+    lang: "es",
+    country: "ES",
+    label: "Spanish",
+  },
+  {
+    pattern: /\b(mexican|mexico)\b/i,
+    lang: "es",
+    country: "MX",
+    label: "Mexican",
+  },
+  {
+    pattern: /\b(french|france)\b/i,
+    lang: "fr",
+    country: "FR",
+    label: "French",
+  },
+  {
+    pattern: /\b(german|germany)\b/i,
+    lang: "de",
+    country: "DE",
+    label: "German",
+  },
+  {
+    pattern: /\b(italian|italy)\b/i,
+    lang: "it",
+    country: "IT",
+    label: "Italian",
+  },
+  {
+    pattern: /\b(russian|russia)\b/i,
+    lang: "ru",
+    country: "RU",
+    label: "Russian",
+  },
+  {
+    pattern: /\b(british|uk|england|english)\b/i,
+    lang: "en",
+    country: "GB",
+    label: "British",
+  },
+  {
+    pattern: /\b(american|hollywood|usa)\b/i,
+    lang: "en",
+    country: "US",
+    label: "American",
+  },
+];
+
 // 🌟 قائمة الأعمال الأيقونية المرجعية لدعم الـ Fuzzy Anchor Normalization (>= 0.65)
 export const KNOWN_ICONIC_ANCHORS = [
   { canonical: "Interstellar", genre: "scifi", flag: "isPhilosophicalSciFi" },
@@ -46,6 +401,9 @@ export const KNOWN_ICONIC_ANCHORS = [
   { canonical: "Dark", genre: "scifi", flag: "hasTwistKeywords" },
   { canonical: "Stranger Things", genre: "scifi", flag: "wantsSciFi" },
   { canonical: "Black Mirror", genre: "scifi", flag: "isCyberpunk" },
+  { canonical: "The Maze Runner", genre: "scifi", flag: "wantsSciFi" },
+  { canonical: "The Hunger Games", genre: "scifi", flag: "wantsSciFi" },
+  { canonical: "The Walking Dead", genre: "horror", flag: "wantsDark" },
   { canonical: "Oppenheimer", genre: "drama", flag: "historical" },
   { canonical: "Gladiator", genre: "history", flag: "isSwordWarfare" },
   { canonical: "Braveheart", genre: "history", flag: "isSwordWarfare" },
@@ -90,6 +448,9 @@ export const KNOWN_ICONIC_ANCHORS = [
   { canonical: "Attack on Titan", genre: "animation", flag: "isDarkAnime" },
   { canonical: "Death Note", genre: "animation", flag: "isDarkAnime" },
   { canonical: "Monster", genre: "animation", flag: "isDarkAnime" },
+  { canonical: "Vinland Saga", genre: "animation", flag: "isDarkAnime" },
+  { canonical: "Chainsaw Man", genre: "animation", flag: "isDarkAnime" },
+  { canonical: "Bungo Stray Dogs", genre: "animation", flag: "isDarkAnime" },
   {
     canonical: "Kaguya-sama: Love is War",
     genre: "romance",
@@ -99,13 +460,153 @@ export const KNOWN_ICONIC_ANCHORS = [
   { canonical: "Toradora!", genre: "romance", flag: "isCuteAnimeRomCom" },
 ];
 
-export const resolveFuzzyAnchorTitle = (candidateStr) => {
+export const AMBIGUOUS_SINGLE_WORD_TITLES = new Set([
+  "dark",
+  "her",
+  "it",
+  "you",
+  "up",
+  "us",
+  "him",
+  "them",
+  "split",
+  "signs",
+  "drive",
+  "heat",
+  "frozen",
+  "brave",
+  "soul",
+  "coco",
+  "saw",
+  "ring",
+  "scream",
+  "alien",
+  "monster",
+  "ghost",
+  "life",
+  "love",
+  "time",
+  "space",
+]);
+
+const PRE_MODIFIER_GENRE_MOOD_WORDS = new Set([
+  "action",
+  "adventure",
+  "animation",
+  "animated",
+  "comedy",
+  "comedies",
+  "crime",
+  "documentary",
+  "docuseries",
+  "drama",
+  "family",
+  "fantasy",
+  "history",
+  "historical",
+  "horror",
+  "music",
+  "musical",
+  "mystery",
+  "romance",
+  "romantic",
+  "scifi",
+  "sci-fi",
+  "science",
+  "fiction",
+  "thriller",
+  "thrillers",
+  "war",
+  "western",
+  "sitcom",
+  "sitcoms",
+  "anime",
+  "psychological",
+  "superhero",
+  "detective",
+  "cyberpunk",
+  "underdog",
+  "gladiator",
+  "heist",
+  "dystopia",
+  "dystopian",
+  "wholesome",
+  "cute",
+  "dark",
+  "ancient",
+  "sword",
+  "swords",
+  "battle",
+  "battles",
+  "movie",
+  "movies",
+  "film",
+  "films",
+  "series",
+  "show",
+  "shows",
+  "vibe",
+  "vibes",
+  "tone",
+  "mood",
+  "style",
+  "story",
+  "stories",
+]);
+
+export const isValidAmbiguousSingleWordUsage = (word, fullContextStr = "") => {
+  const w = (word || "")
+    .toLowerCase()
+    .trim()
+    .replace(/^(a|an|the)\s+/, "");
+  if (!AMBIGUOUS_SINGLE_WORD_TITLES.has(w)) return true;
+  if (!fullContextStr || typeof fullContextStr !== "string") return false;
+
+  const normalizedFull = fullContextStr
+    .toLowerCase()
+    .replace(/[?.,!]/g, "")
+    .trim()
+    .replace(/^(a|an|the)\s+/, "");
+
+  // Allow standalone single-word title queries (e.g., typing "Dark" or "Her" alone)
+  if (normalizedFull === w) {
+    return true;
+  }
+
+  const escapedW = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const triggerRegex = new RegExp(
+    `\\b(?:like|similar\\s+to|such\\s+as|vibes?\\s+of|shows?|series|movies?|films?|after|watch\\s+after|watched|finished|liked|loved|enjoyed)\\s+(?:the\\s+|a\\s+|an\\s+)?${escapedW}\\b(?:\\s+([a-zA-Z\\-]+))?`,
+    "i",
+  );
+
+  const match = fullContextStr.match(triggerRegex);
+  if (!match) return false;
+
+  const nextWord = (match[1] || "").toLowerCase().trim();
+  if (nextWord && PRE_MODIFIER_GENRE_MOOD_WORDS.has(nextWord)) {
+    return false;
+  }
+
+  return true;
+};
+
+export const resolveFuzzyAnchorTitle = (candidateStr, fullContextStr = "") => {
   if (!candidateStr || typeof candidateStr !== "string") return null;
   const cleanedCandidate = candidateStr
     .toLowerCase()
     .trim()
     .replace(/^(a|an|the)\s+/, "");
   if (cleanedCandidate.length < 3) return null;
+
+  if (
+    AMBIGUOUS_SINGLE_WORD_TITLES.has(cleanedCandidate) &&
+    !isValidAmbiguousSingleWordUsage(
+      cleanedCandidate,
+      fullContextStr || candidateStr,
+    )
+  ) {
+    return null;
+  }
 
   let bestMatch = null;
   let highestSim = 0;
@@ -114,6 +615,17 @@ export const resolveFuzzyAnchorTitle = (candidateStr) => {
     const canonicalClean = anchor.canonical
       .toLowerCase()
       .replace(/^(a|an|the)\s+/, "");
+
+    if (
+      AMBIGUOUS_SINGLE_WORD_TITLES.has(canonicalClean) &&
+      !isValidAmbiguousSingleWordUsage(
+        canonicalClean,
+        fullContextStr || candidateStr,
+      )
+    ) {
+      continue;
+    }
+
     const simFull = getSimilarityScore(
       candidateStr.toLowerCase(),
       anchor.canonical.toLowerCase(),
@@ -140,6 +652,8 @@ export const ENGINE_LEXICON = [
   "watch",
   "watching",
   "after",
+  "before",
+  "between",
   "similar",
   "like",
   "show",
@@ -219,9 +733,54 @@ export const ENGINE_LEXICON = [
   "swords",
   "battle",
   "battles",
+  // الجنسيات والمخرجين والسينما والتقييمات
+  "egyptian",
+  "egypt",
+  "kuwaiti",
+  "kuwait",
+  "saudi",
+  "gulf",
+  "khaleeji",
+  "emirati",
+  "lebanese",
+  "syrian",
+  "arabic",
+  "arab",
+  "turkish",
+  "turkey",
+  "indian",
+  "bollywood",
+  "korean",
+  "japanese",
+  "spanish",
+  "mexican",
+  "french",
+  "british",
+  "american",
+  "hollywood",
+  "director",
+  "directed",
+  "theaters",
+  "theatres",
+  "cinemas",
+  "cinema",
+  "playing",
+  "showing",
+  "rating",
+  "rated",
+  "score",
+  "nolan",
+  "tarantino",
+  "villeneuve",
+  "scorsese",
+  "fincher",
+  "spielberg",
+  "miyazaki",
+  "kubrick",
+  "hitchcock",
 ];
 
-// 🌟 خريطة الأخطاء الإملائية الصريحة والشائعة (بما فيها العناوين الأيقونية ومصطلحات الحظر)
+// 🌟 خريطة الأخطاء الإملائية الصريحة والشائعة (بما فيها العناوين الأيقونية ومصطلحات الحظر والجنسيات)
 const COMMON_TYPOS_MAP = {
   ur: "your",
   u: "you",
@@ -231,6 +790,8 @@ const COMMON_TYPOS_MAP = {
   watc: "watch",
   wtch: "watch",
   aftr: "after",
+  befor: "before",
+  betwen: "between",
   recamend: "recommend",
   recoment: "recommend",
   actionn: "action",
@@ -256,6 +817,19 @@ const COMMON_TYPOS_MAP = {
   haram: "harem",
   harim: "harem",
   hareem: "harem",
+  // تصحيح الجنسيات والمصطلحات السينمائية
+  egyption: "egyptian",
+  egiptian: "egyptian",
+  egyptain: "egyptian",
+  kuwati: "kuwaiti",
+  kwaiti: "kuwaiti",
+  turksh: "turkish",
+  directer: "director",
+  directd: "directed",
+  theatres: "theaters",
+  theters: "theaters",
+  cinmas: "cinemas",
+  rateing: "rating",
   // تصحيح الكلمات المفردة للأعمال الأيقونية الشائعة
   interstelar: "Interstellar",
   intersteller: "Interstellar",
@@ -287,6 +861,18 @@ const MULTI_WORD_ANCHOR_TYPOS = [
     pattern: /\bkaguya\s*[- ]?sama\b/gi,
     replacement: "Kaguya-sama: Love is War",
   },
+  { pattern: /\bblac?k\s+mir+or\b/gi, replacement: "Black Mirror" },
+  { pattern: /\bstrang+e?r\s+thing?s\b/gi, replacement: "Stranger Things" },
+  { pattern: /\bpe+a?ky\s+blind+ers?\b/gi, replacement: "Peaky Blinders" },
+  { pattern: /\bvinl+a?nd\s+saga\b/gi, replacement: "Vinland Saga" },
+  { pattern: /\bchains+a?w\s+man\b/gi, replacement: "Chainsaw Man" },
+  { pattern: /\bbung+o\s+stray\s+dogs?\b/gi, replacement: "Bungo Stray Dogs" },
+  { pattern: /\bthe\s+walk+ing\s+dead\b/gi, replacement: "The Walking Dead" },
+  { pattern: /\b(?:the\s+)?maze\s+run+er\b/gi, replacement: "The Maze Runner" },
+  {
+    pattern: /\b(?:the\s+)?hung+er\s+games?\b/gi,
+    replacement: "The Hunger Games",
+  },
 ];
 
 // 🌟 1. دالة المعالجة السابقة للنص وتصحيح الأخطاء الإملائية (Spell Normalizer)
@@ -314,15 +900,16 @@ export const normalizePromptSpelling = (rawPrompt) => {
       );
     }
 
-    // إذا كانت الكلمة مطابقة بالفعل للمعجم
-    if (ENGINE_LEXICON.includes(tokenClean)) {
+    // إذا كانت الكلمة مطابقة بالفعل للمعجم أو رقم سنة
+    if (ENGINE_LEXICON.includes(tokenClean) || /^\d{4}s?$/.test(tokenClean)) {
       return rawToken;
     }
 
-    // فحص التقارب مع العناوين الأيقونية أحادية الكلمة بنسبة تشابه >= 0.72
+    // فحص التقارب مع العناوين الأيقونية أحادية الكلمة بنسبة تشابه >= 0.72 (مع استثناء الكلمات الوصفية الملتبسة)
     for (const anchor of KNOWN_ICONIC_ANCHORS) {
       if (!anchor.canonical.includes(" ")) {
         const canonicalLower = anchor.canonical.toLowerCase();
+        if (AMBIGUOUS_SINGLE_WORD_TITLES.has(canonicalLower)) continue;
         if (Math.abs(canonicalLower.length - tokenClean.length) <= 2) {
           const simAnchor = getSimilarityScore(tokenClean, canonicalLower);
           if (simAnchor >= 0.72 && tokenClean.length >= 5) {
@@ -332,7 +919,7 @@ export const normalizePromptSpelling = (rawPrompt) => {
       }
     }
 
-    // فحص التقارب مع القاموس المرجعي بنسبة تشابه >= 0.70
+    // فحص التقارب مع القاموس المرجعي بنسبة تشابه >= 0.72
     let bestMatch = null;
     let bestScore = 0;
 
@@ -345,7 +932,7 @@ export const normalizePromptSpelling = (rawPrompt) => {
       }
     }
 
-    if (bestMatch && bestScore >= 0.7 && tokenClean.length >= 4) {
+    if (bestMatch && bestScore >= 0.72 && tokenClean.length >= 4) {
       return rawToken.replace(new RegExp(tokenClean, "i"), bestMatch);
     }
 
@@ -355,7 +942,7 @@ export const normalizePromptSpelling = (rawPrompt) => {
   return normalizedTokens.join(" ");
 };
 
-// 🌟 قائمة الكلمات الوصفية والتصنيفات المحظورة من معاملتها كعناوين أعمال مرجعية (Stopwords)
+// 🌟 قائمة الكلمات الوصفية والتصنيفات والجنسيات المحظورة من معاملتها كعناوين أعمال مرجعية (Stopwords)
 export const GENRE_DESCRIPTOR_STOPWORDS = new Set([
   "thriller",
   "a thriller",
@@ -444,9 +1031,35 @@ export const GENRE_DESCRIPTOR_STOPWORDS = new Set([
   "kdrama",
   "japanese",
   "spanish",
+  "mexican",
   "french",
+  "german",
+  "italian",
+  "russian",
+  "chinese",
   "arabic",
+  "arab",
+  "egyptian",
+  "egyptian movie",
+  "egyptian movies",
+  "egyptian series",
+  "kuwaiti",
+  "kuwaiti series",
+  "saudi",
+  "gulf",
+  "khaleeji",
+  "emirati",
+  "lebanese",
+  "syrian",
+  "moroccan",
+  "tunisian",
+  "turkish",
+  "turkish series",
+  "indian",
+  "bollywood",
   "english",
+  "british",
+  "american",
   "hollywood",
   "plot twist",
   "plot twists",
@@ -454,6 +1067,9 @@ export const GENRE_DESCRIPTOR_STOPWORDS = new Set([
   "ancient sword battle",
   "sword battle",
   "epic ancient sword battle",
+  "now playing",
+  "in theaters",
+  "in cinemas",
 ]);
 
 // 1. قاموس استخراج النوايا الدلالية العامة (NLU) - مُصدَّر لاستخدامه في الفلترة المحلية المعمقة
@@ -1291,10 +1907,125 @@ export class CindromeEngine {
   static normalizeInput(rawText) {
     if (!rawText) return "";
     return rawText
-      .replace(/[^\w\s':.&!\-]/g, " ")
+      .replace(/[^\w\s':.&!\-+]/g, " ")
       .replace(/([a-zA-Z])\1{2,}/g, "$1$1")
       .replace(/\s+/g, " ")
       .trim();
+  }
+
+  // 🌟 فاحص التناقضات المنطقية المبكر (Early Contradiction Detection)
+  static detectContradictions({
+    rawDetectedGenres,
+    excludedGenres,
+    isRomCom,
+    isCuteAnimeRomCom,
+    isSitcom,
+    isPureComedy,
+    isComfortComedy,
+    isMindBlowingAction,
+    isCyberpunk,
+    isPhilosophicalSciFi,
+    isTrueCrimeDoc,
+    isFamilyAnimation,
+    wantsExplicitLiveAction,
+    wantsExplicitAnime,
+    isAdaptationMentioned,
+    wantsClassic,
+    minYear,
+    maxYear,
+    extractedReferenceTitles,
+    fullContextText = "",
+  }) {
+    const formatGenreLabel = (g) => (g === "scifi" ? "Sci-Fi" : g);
+
+    // 1. تناقض مباشر بين التصنيف المطلوب والتصنيف المستبعد
+    for (const genre of rawDetectedGenres) {
+      if (excludedGenres.includes(genre)) {
+        const displayGenre = formatGenreLabel(genre);
+        return `It looks like there's a contradiction in your request: you asked for ${displayGenre} while also excluding ${displayGenre}. Could you clarify whether you'd like to include or exclude ${displayGenre}?`;
+      }
+    }
+
+    // 2. تناقض النوايا الفرعية مع التصنيفات المستبعدة
+    if (
+      (isRomCom || isCuteAnimeRomCom) &&
+      (excludedGenres.includes("romance") || excludedGenres.includes("comedy"))
+    ) {
+      const blocked = excludedGenres.includes("romance") ? "romance" : "comedy";
+      return `You requested a Romantic Comedy (Rom-Com) while also excluding ${blocked}. Would you prefer a pure ${blocked === "romance" ? "comedy" : "romance"} instead, or should I keep the Rom-Com vibe?`;
+    }
+
+    if (
+      (isSitcom || isPureComedy || isComfortComedy) &&
+      excludedGenres.includes("comedy")
+    ) {
+      return `You asked for a Sitcom / Comedy while also excluding comedy. Please let me know if you want light comedy recommendations or a different genre entirely!`;
+    }
+
+    if (
+      (isMindBlowingAction || isCyberpunk || isPhilosophicalSciFi) &&
+      excludedGenres.includes("scifi")
+    ) {
+      return `You requested a Cyberpunk / Sci-Fi concept while also excluding Sci-Fi. Would you like to keep the Sci-Fi theme or switch to a grounded non-Sci-Fi thriller/action?`;
+    }
+
+    if (
+      isTrueCrimeDoc &&
+      (excludedGenres.includes("documentary") ||
+        excludedGenres.includes("crime"))
+    ) {
+      const blocked = excludedGenres.includes("documentary")
+        ? "documentaries"
+        : "crime";
+      return `You asked for a True Crime Documentary while excluding ${blocked}. Would you prefer a fictional crime thriller or a true crime docuseries?`;
+    }
+
+    if (
+      isFamilyAnimation &&
+      (excludedGenres.includes("animation") ||
+        excludedGenres.includes("family"))
+    ) {
+      const blocked = excludedGenres.includes("animation")
+        ? "animation"
+        : "family";
+      return `You requested a Family Animation title while also excluding ${blocked}. Could you clarify which one you'd like to prioritize?`;
+    }
+
+    // 3. تناقض الفورمات (Live-Action vs Anime) أو التسلسل الزمني
+    if (
+      wantsExplicitLiveAction &&
+      wantsExplicitAnime &&
+      !isAdaptationMentioned
+    ) {
+      return `You asked for both Live-Action and Anime at the same time. Would you prefer animated Japanese anime or live-action movies/series?`;
+    }
+
+    if (wantsClassic && minYear && minYear >= 2010) {
+      return `You asked for a classic/retro (80s/90s) title released after ${minYear}. Would you prefer genuine 80s/90s classics, or modern releases from ${minYear} onward?`;
+    }
+
+    if (minYear !== null && maxYear !== null && minYear > maxYear) {
+      return `The timeline range in your request conflicts (after ${minYear} and before ${maxYear + 1}). Could you double-check the release years you're looking for?`;
+    }
+
+    // 4. تناقض العمل المرجعي (Reference Anchor) مع التصنيفات المستبعدة
+    if (
+      Array.isArray(extractedReferenceTitles) &&
+      extractedReferenceTitles.length > 0
+    ) {
+      for (const refTitle of extractedReferenceTitles) {
+        const matchedAnchor = resolveFuzzyAnchorTitle(
+          refTitle,
+          fullContextText,
+        );
+        if (matchedAnchor && excludedGenres.includes(matchedAnchor.genre)) {
+          const gLabel = formatGenreLabel(matchedAnchor.genre);
+          return `You asked for something like "${matchedAnchor.canonical}" (which is primarily ${gLabel}) while excluding ${gLabel}. Would you like ${gLabel} recommendations similar to "${matchedAnchor.canonical}", or another genre with a similar mood?`;
+        }
+      }
+    }
+
+    return null;
   }
 
   // 🌟 ربط دالة التنظيف بـ parseQuery: تمرير النص على normalizePromptSpelling أولاً
@@ -1310,6 +2041,13 @@ export class CindromeEngine {
           "Currently, Drome AI is optimized for English. Please write your request in English (e.g., 'Mind-bending sci-fi with a plot twist').",
       };
     }
+
+    // 🌟 استخراج النص الإيجابي بدون عبارات النفي لفحص النوايا والتناقضات بدقة
+    const negativeClauseStripRegex =
+      /\b(?:exclude|without|except|zero|free\s+of|dont\s+want|don't\s+want|no)\s+([^,.;!?\n]+?)(?=\s+\b(?:instead|actually|but|however|with|and\s+also)\b|[,.;!?\n]|$)/gi;
+    const affirmativeText = lowerText
+      .replace(negativeClauseStripRegex, " ")
+      .trim();
 
     // 🌟 استخراج منضبط ودقيق للاستثناءات المنفية (Strict Negative Extraction Scope)
     const excludedGenres = [];
@@ -1458,12 +2196,166 @@ export class CindromeEngine {
       if (!excludedKeywords.includes("9715")) excludedKeywords.push("9715");
     }
 
+    // 🌟 7. استخراج الفلاتر الزمنية الشاملة (minYear, maxYear, Exact Year & Decades)
     let minYear = null;
-    const yearMatch = lowerText.match(
-      /\b(?:after|newer than|from|post|since)\s+(\d{4})\b/i,
+    let maxYear = null;
+
+    const betweenYearMatch = lowerText.match(
+      /\bbetween\s+(19\d{2}|20\d{2})\s+(?:and|-|to)\s+(19\d{2}|20\d{2})\b/i,
     );
-    if (yearMatch) {
-      minYear = parseInt(yearMatch[1], 10);
+    if (betweenYearMatch) {
+      const y1 = parseInt(betweenYearMatch[1], 10);
+      const y2 = parseInt(betweenYearMatch[2], 10);
+      minYear = Math.min(y1, y2);
+      maxYear = Math.max(y1, y2);
+    } else {
+      const afterYearMatch = lowerText.match(
+        /\b(?:after|newer than|from|post|since)\s+(19\d{2}|20\d{2})\b/i,
+      );
+      if (afterYearMatch) {
+        minYear = parseInt(afterYearMatch[1], 10);
+      }
+
+      const beforeYearMatch = lowerText.match(
+        /\b(?:before|older than|prior to|pre|earlier than)\s+(19\d{2}|20\d{2})\b/i,
+      );
+      const upToYearMatch = lowerText.match(
+        /\b(?:up to|until|through)\s+(19\d{2}|20\d{2})\b/i,
+      );
+      if (beforeYearMatch) {
+        maxYear = parseInt(beforeYearMatch[1], 10) - 1;
+      } else if (upToYearMatch) {
+        maxYear = parseInt(upToYearMatch[1], 10);
+      }
+
+      // فحص العقود الزمنية (Decades: 70s, 80s, 90s, 2000s, 2010s, 2020s)
+      const decadeMatch = lowerText.match(
+        /\b(1970s|70s|1980s|80s|1990s|90s|2000s|00s|2010s|2020s)\b/i,
+      );
+      if (decadeMatch) {
+        const decToken = decadeMatch[1].toLowerCase();
+        const decadeMap = {
+          "70s": [1970, 1979],
+          "1970s": [1970, 1979],
+          "80s": [1980, 1989],
+          "1980s": [1980, 1989],
+          "90s": [1990, 1999],
+          "1990s": [1990, 1999],
+          "2000s": [2000, 2009],
+          "00s": [2000, 2009],
+          "2010s": [2010, 2019],
+          "2020s": [2020, 2029],
+        };
+        if (decadeMap[decToken]) {
+          if (minYear === null) minYear = decadeMap[decToken][0];
+          if (maxYear === null) maxYear = decadeMap[decToken][1];
+        }
+      }
+
+      // فحص سنة محددة بعينها (مثل "movies in 2014" أو "2019 sci-fi movies")
+      if (minYear === null && maxYear === null) {
+        const exactYearMatch = lowerText.match(
+          /\b(?:in|from|year|released in|of)?\s*\b(19[5-9]\d|20[0-2]\d)\b/i,
+        );
+        if (
+          exactYearMatch &&
+          !lowerText.includes("blade runner 2049") &&
+          !lowerText.includes("2001: a space odyssey") &&
+          !lowerText.includes("2001 a space odyssey") &&
+          !lowerText.includes("1917")
+        ) {
+          const exactY = parseInt(exactYearMatch[1], 10);
+          minYear = exactY;
+          maxYear = exactY;
+        }
+      }
+    }
+
+    // 🌟 10. استخراج حد التقييم الأدنى الصريح (minRating)
+    let minRating = null;
+    const ratingPatterns = [
+      /\b(?:rating|rated|score|imdb|tmdb)\s*(?:above|over|at least|minimum|min|higher than|>=|>|around|like|of)?\s*(\d(?:\.\d)?)\b/i,
+      /\b(\d(?:\.\d)?)\s*\+\s*(?:rating|rated|stars?|imdb|tmdb|score)?\b/i,
+      /\b(?:above|over|at least|minimum)\s+(\d(?:\.\d)?)\s*(?:rating|rated|stars?|imdb|tmdb|score|out of 10|\/10)\b/i,
+    ];
+    for (const rPat of ratingPatterns) {
+      const rMatch = lowerText.match(rPat);
+      if (rMatch) {
+        const parsedR = parseFloat(rMatch[1]);
+        if (!isNaN(parsedR) && parsedR >= 1.0 && parsedR <= 9.5) {
+          minRating = parsedR;
+          break;
+        }
+      }
+    }
+
+    // 🌟 9. فحص الأفلام المعروضة حالياً في السينما (isNowPlaying)
+    const isNowPlaying =
+      /\b(in\s+theat(?:er|re)s?|in\s+(?:the\s+)?cinemas?|now\s+playing|currently\s+(?:playing|showing)|playing\s+right\s+now|out\s+in\s+theat(?:er|re)s?|showing\s+in\s+theat(?:er|re)s?)\b/i.test(
+        lowerText,
+      );
+
+    // 🌟 6. استخراج اسم المخرج (extractedDirector)
+    let extractedDirector = null;
+    const explicitDirPatterns = [
+      /\b(?:directed\s+by|director|films?\s+by|movies?\s+by|series\s+by|shows?\s+by|works?\s+of|cinema\s+of)\s+([a-zA-Z.\-']+(?:\s+[a-zA-Z.\-']+){0,3}?)(?=[,.;!?]|\s+(?:after|before|without|with|from|in|above|over|rated|rating|and|or)\b|$)/i,
+      /\b([a-zA-Z.\-']+(?:\s+[a-zA-Z.\-']+){0,2}?)\s+(?:movies?|films?|cinema|filmography|directorial)\b/i,
+      /\b(?:best|top|greatest|favorite|favourite)\s+([a-zA-Z.\-']+(?:\s+[a-zA-Z.\-']+){0,3}?)\s+(?:movies?|films?|series|shows?|cinema|works?)\b/i,
+      /\b([a-zA-Z.\-']+(?:\s+[a-zA-Z.\-']+){0,2}?)\s+(?:sci-fi|scifi|action|horror|thriller|drama|crime|mystery|comedy|war|historical|history|fantasy|animation|animated|romance)\s+(?:movies?|films?|series|shows?|cinema|works?)\b/i,
+      /\bwho\s+directed\s+([a-zA-Z0-9':.&!\-,]+(?:\s+[a-zA-Z0-9':.&!\-,]+){0,5}?)(?=[,.;!?]|$)/i,
+    ];
+
+    for (const dPat of explicitDirPatterns) {
+      const dMatch = normalizedRawText.match(dPat);
+      if (dMatch) {
+        const candidateDir = dMatch[1].trim();
+        const fuzzyDir = resolveFuzzyDirector(candidateDir);
+        if (fuzzyDir) {
+          extractedDirector = fuzzyDir;
+          break;
+        } else if (
+          dPat === explicitDirPatterns[0] &&
+          candidateDir.split(/\s+/).length >= 2 &&
+          !GENRE_DESCRIPTOR_STOPWORDS.has(candidateDir.toLowerCase()) &&
+          !NON_DIRECTOR_WORDS.has(candidateDir.toLowerCase())
+        ) {
+          extractedDirector = candidateDir;
+          break;
+        }
+      }
+    }
+
+    if (!extractedDirector) {
+      const standaloneDir = resolveFuzzyDirector(normalizedRawText);
+      if (standaloneDir) {
+        extractedDirector = standaloneDir;
+      } else {
+        const rawTokens = normalizedRawText
+          .replace(/[^\w\s.\-']/g, " ")
+          .split(/\s+/)
+          .filter(
+            (t) =>
+              Boolean(t) &&
+              !NON_DIRECTOR_WORDS.has(t.toLowerCase()) &&
+              !/^\d+$/.test(t),
+          );
+        for (let i = 0; i < rawTokens.length; i += 1) {
+          const singleDir = resolveFuzzyDirector(rawTokens[i]);
+          if (singleDir) {
+            extractedDirector = singleDir;
+            break;
+          }
+          if (i < rawTokens.length - 1) {
+            const pairDir = resolveFuzzyDirector(
+              `${rawTokens[i]} ${rawTokens[i + 1]}`,
+            );
+            if (pairDir) {
+              extractedDirector = pairDir;
+              break;
+            }
+          }
+        }
+      }
     }
 
     const isPivot =
@@ -1473,70 +2365,66 @@ export class CindromeEngine {
     const wantsExplicitLiveAction = /\b(live action|live-action)\b/i.test(
       lowerText,
     );
-
-    let detectedLanguage = null;
-    let detectedCountry = null;
+    const isAdaptationMentioned =
+      /\b(adaptation|based on|live-action adaptation)\b/i.test(lowerText);
 
     const wantsExplicitAnime =
-      /\b(anime|manga)\b/i.test(lowerText) && !wantsExplicitLiveAction;
-    const wantsExplicitJapanese =
-      /\b(japanese|japan)\b/i.test(lowerText) && !wantsExplicitLiveAction;
+      /\b(anime|manga)\b/i.test(affirmativeText) &&
+      (!wantsExplicitLiveAction || isAdaptationMentioned);
 
-    if (
-      /\b(korean|k-drama|kdrama|k drama|south korea|korea)\b/i.test(lowerText)
-    ) {
-      detectedLanguage = "ko";
-      detectedCountry = "KR";
-    } else if (wantsExplicitAnime || wantsExplicitJapanese) {
+    // 🌟 8. رصد الجنسية والإقليم واللغة (REGIONAL_NATIONALITY_MAP)
+    let detectedLanguage = null;
+    let detectedCountry = null;
+    let detectedRegionLabel = null;
+
+    if (wantsExplicitAnime && !wantsExplicitLiveAction) {
       detectedLanguage = "ja";
       detectedCountry = "JP";
-    } else if (/\b(spanish|spain|mexican|mexico)\b/i.test(lowerText)) {
-      detectedLanguage = "es";
-    } else if (/\b(french|france)\b/i.test(lowerText)) {
-      detectedLanguage = "fr";
-    } else if (/\b(arabic|arab|egyptian|egypt)\b/i.test(lowerText)) {
-      detectedLanguage = "ar";
-    } else if (
-      /\b(english|hollywood|american|british|usa|uk)\b/i.test(lowerText)
-    ) {
-      detectedLanguage = "en";
+      detectedRegionLabel = "Japanese";
+    } else {
+      for (const regionRule of REGIONAL_NATIONALITY_MAP) {
+        if (regionRule.pattern.test(lowerText)) {
+          detectedLanguage = regionRule.lang;
+          detectedCountry = regionRule.country;
+          detectedRegionLabel = regionRule.label;
+          break;
+        }
+      }
     }
 
     const isKorean = detectedLanguage === "ko";
 
     const isPureComedy =
-      !excludedGenres.includes("comedy") &&
       /\b(pure comedy|only comedy|strictly comedy|purely comedy|hard comedy|just comedy|pure funny|hilarious|comedy movies?|funny movies?)\b/i.test(
-        lowerText,
+        affirmativeText,
       );
 
     const isSitcom =
-      !excludedGenres.includes("comedy") &&
-      (/\b(sitcoms?|sit-coms?|situational comed(?:y|ies))\b/i.test(lowerText) ||
-        (/\b(comfort|chill|relaxing|easy watch)\b/i.test(lowerText) &&
-          /\b(series|show|shows|tv)\b/i.test(lowerText) &&
-          /\b(comedy|laugh|funny)\b/i.test(lowerText)));
+      /\b(sitcoms?|sit-coms?|situational comed(?:y|ies))\b/i.test(
+        affirmativeText,
+      ) ||
+      (/\b(comfort|chill|relaxing|easy watch)\b/i.test(affirmativeText) &&
+        /\b(series|show|shows|tv)\b/i.test(affirmativeText) &&
+        /\b(comedy|laugh|funny)\b/i.test(affirmativeText));
 
     const hasQualityFloor =
       isPureComedy ||
       /\b(mind[- ]blowing|mind blowing|masterpiece|masterpieces|epic|best|top[- ]tier|greatest|unbelievable|flawless)\b/i.test(
-        lowerText,
+        affirmativeText,
       );
 
     const isHauntedHorror =
-      !excludedGenres.includes("horror") &&
-      (/\b(cursed house|haunted house|haunted family|cursed family|scary house)\b/i.test(
-        lowerText,
+      /\b(cursed house|haunted house|haunted family|cursed family|scary house)\b/i.test(
+        affirmativeText,
       ) ||
-        (/\b(scary|horror|haunted|cursed|creepy|demonic|evil|spooky)\b/i.test(
-          lowerText,
-        ) &&
-          /\b(house|family|home|manor|mansion|cabin)\b/i.test(lowerText)));
+      (/\b(scary|horror|haunted|cursed|creepy|demonic|evil|spooky)\b/i.test(
+        affirmativeText,
+      ) &&
+        /\b(house|family|home|manor|mansion|cabin)\b/i.test(affirmativeText));
 
     const isCrimeFamily =
-      !excludedGenres.includes("crime") &&
       /\b(crime family|mob family|mafia family|mafia empire|crime empire|gangster empire|building an empire|organized crime|gangster syndicate|drug empire|criminal empire)\b/i.test(
-        lowerText,
+        affirmativeText,
       );
 
     const isTiredMood =
@@ -1555,34 +2443,60 @@ export class CindromeEngine {
       /\b(pure|strictly|only|just|100%|nothing but)\b/i.test(lowerText) ||
       withoutDrama;
 
-    const wantsDark =
-      /\b(dark|grim|bleak|mature|disturbing|gothic|brutal|suffering)\b/i.test(
-        lowerText,
+    const isStandaloneAmbiguousTitlePrompt =
+      AMBIGUOUS_SINGLE_WORD_TITLES.has(
+        lowerText
+          .replace(/[?.,!]/g, "")
+          .replace(/^(a|an|the)\s+/, "")
+          .trim(),
+      ) &&
+      isValidAmbiguousSingleWordUsage(
+        lowerText
+          .replace(/[?.,!]/g, "")
+          .replace(/^(a|an|the)\s+/, "")
+          .trim(),
+        normalizedRawText,
       );
 
-    let detectedGenres = [];
+    const wantsDark =
+      !isStandaloneAmbiguousTitlePrompt &&
+      /\b(dark|grim|bleak|mature|disturbing|gothic|brutal|suffering)\b/i.test(
+        affirmativeText,
+      );
+
+    let rawDetectedGenres = [];
     for (const [genre, keywords] of Object.entries(genreMap)) {
       if (
-        keywords.some((kw) => new RegExp(`\\b${kw}\\b`, "i").test(lowerText))
+        keywords.some((kw) => {
+          if (
+            isStandaloneAmbiguousTitlePrompt &&
+            AMBIGUOUS_SINGLE_WORD_TITLES.has(kw.toLowerCase())
+          ) {
+            return false;
+          }
+          return new RegExp(`\\b${kw}\\b`, "i").test(affirmativeText);
+        })
       ) {
-        if (!detectedGenres.includes(genre)) detectedGenres.push(genre);
+        if (!rawDetectedGenres.includes(genre)) rawDetectedGenres.push(genre);
       }
     }
 
     // 🌟 فحص صريح ومباشر لطلبات الخيال العلمي (Sci-Fi) لضمان عدم ضياعها مع الأوصاف المركبة مثل "dark sci-fi series"
-    const hasExplicitSciFi =
-      !excludedGenres.includes("scifi") &&
-      /\b(sci[- ]?fi|scifi|science\s+fiction)\b/i.test(lowerText);
+    const hasExplicitSciFi = /\b(sci[- ]?fi|scifi|science\s+fiction)\b/i.test(
+      affirmativeText,
+    );
 
-    if (hasExplicitSciFi && !detectedGenres.includes("scifi")) {
-      detectedGenres.push("scifi");
+    if (hasExplicitSciFi && !rawDetectedGenres.includes("scifi")) {
+      rawDetectedGenres.push("scifi");
     }
 
     let detectedKeywords = [];
     const seenKeywordIds = new Set();
     for (const [theme, data] of Object.entries(themeKeywords)) {
       if (
-        data.terms.some((t) => new RegExp(`\\b${t}\\b`, "i").test(lowerText))
+        data.terms.some((t) =>
+          new RegExp(`\\b${t}\\b`, "i").test(affirmativeText),
+        )
       ) {
         if (!seenKeywordIds.has(data.id)) {
           seenKeywordIds.add(data.id);
@@ -1599,11 +2513,11 @@ export class CindromeEngine {
     const isSwordWarfare =
       detectedKeywords.some((k) => k.name === "sword warfare") ||
       /\b(swords?|sword fight|sword battles?|ancient sword battles?|swords and armies|ancient warfare|medieval warfare|old historical battles?|medieval armies|ancient battles?|gladiators?|samurai|shields and swords|ancient armies|braveheart)\b/i.test(
-        lowerText,
+        affirmativeText,
       ) ||
-      (/\b(battle|battles|war|armies|army)\b/i.test(lowerText) &&
+      (/\b(battle|battles|war|armies|army)\b/i.test(affirmativeText) &&
         /\b(sword|swords|ancient|medieval|gladiator|samurai|shields?|old historical)\b/i.test(
-          lowerText,
+          affirmativeText,
         ));
 
     // إذا طلب المستخدم معارك سيوف قديمة وقال "without modern war"، لا نحظر تصنيف الحرب التاريخية نفسه بل نحظر الحروب الحديثة فقط
@@ -1615,14 +2529,398 @@ export class CindromeEngine {
       }
     }
 
-    detectedGenres = detectedGenres.filter((g) => !excludedGenres.includes(g));
+    const wantsClassic =
+      /\b(classic|retro|old|70s|80s|90s|1970s|1980s|1990s|vintage|nostalgic)\b/i.test(
+        lowerText,
+      );
 
-    detectedGenres.forEach((g) => {
-      const idx = excludedGenres.indexOf(g);
-      if (idx > -1) {
-        excludedGenres.splice(idx, 1);
+    const isMindBlowingAction =
+      detectedKeywords.some((k) => k.name === "mind blowing action") ||
+      (/\b(mind[- ]blowing|mind blowing)\b/i.test(affirmativeText) &&
+        (rawDetectedGenres.includes("action") ||
+          /\baction\b/i.test(affirmativeText))) ||
+      (hasQualityFloor &&
+        /\baction\b/i.test(affirmativeText) &&
+        /\b(mind|reality|concept|twist|sci-fi)\b/i.test(affirmativeText));
+
+    const isHorrorNight =
+      /\b(movie night|with friends|party|friends|sleepover|crowd|popcorn)\b/i.test(
+        affirmativeText,
+      ) &&
+      (rawDetectedGenres.includes("horror") ||
+        /\b(horror|scary|spooky)\b/i.test(affirmativeText));
+
+    const isPsychologicalThriller =
+      detectedKeywords.some((k) => k.name === "psychological thriller") ||
+      /\b(psychological thriller|mess with my head|mindfuck|mind game|mind games|sanity|paranoia|unreliable narrator)\b/i.test(
+        affirmativeText,
+      );
+
+    const isRomCom =
+      !isPureComedy &&
+      !isSitcom &&
+      (detectedKeywords.some((k) => k.name === "rom-com") ||
+        /\b(rom-com|romcom|romantic comedy|sweet.*romance|light.*romance|lift my mood|feel[- ]good)\b/i.test(
+          affirmativeText,
+        ) ||
+        (/\b(sweet|light|chill|comfort|wholesome|cute)\b/i.test(
+          affirmativeText,
+        ) &&
+          (rawDetectedGenres.includes("romance") ||
+            /\b(romance|romantic)\b/i.test(affirmativeText))));
+
+    const isLiveActionSitcomPivot =
+      (isPivot || wantsExplicitLiveAction) &&
+      (isSitcom || rawDetectedGenres.includes("comedy")) &&
+      !wantsExplicitAnime;
+
+    const isCuteAnimeRomCom =
+      !isLiveActionSitcomPivot &&
+      (selectedType === "anime" || wantsExplicitAnime) &&
+      (isRomCom ||
+        detectedKeywords.some((k) => k.name === "cute romcom anime") ||
+        (/\b(cute|wholesome|sweet|adorable|fluffy|chill|rom-com|romcom|romantic comedy)\b/i.test(
+          affirmativeText,
+        ) &&
+          (/\b(romance|romantic|love|rom-com|romcom)\b/i.test(
+            affirmativeText,
+          ) ||
+            /\b(funny|comedy|humor)\b/i.test(affirmativeText))));
+
+    const isDarkAnime =
+      !isLiveActionSitcomPivot &&
+      !isStandaloneAmbiguousTitlePrompt &&
+      (selectedType === "anime" || wantsExplicitAnime) &&
+      /\b(dark|bleak|grim|disturbing|psychological|gore|brutal|dark fantasy|tragedy)\b/i.test(
+        affirmativeText,
+      );
+
+    const isHistoricalWar =
+      !isSwordWarfare &&
+      (detectedKeywords.some((k) => k.name === "historical war") ||
+        /\b(historical war|war movie|war movies|huge battles|epic battles|historical epic|epic war|ancient war|medieval war|world war|ancient warfare|medieval battle)\b/i.test(
+          affirmativeText,
+        ) ||
+        (/\b(battle|battles|war|military|army|soldiers?)\b/i.test(
+          affirmativeText,
+        ) &&
+          /\b(historical|epic|history|ancient|medieval|period)\b/i.test(
+            affirmativeText,
+          )));
+
+    const isTrueCrimeDoc =
+      detectedKeywords.some((k) => k.name === "true crime") ||
+      /\b(true crime|docuseries|docu-series|real mysteries|real mystery|crime doc|crime documentary|unsolved mysteries|real crime|real crime cases|crime cases)\b/i.test(
+        affirmativeText,
+      ) ||
+      (/\b(documentary|docuseries|docu-series)\b/i.test(affirmativeText) &&
+        /\b(crime|murder|killer|mystery|mysteries|real crime|cases?|investigation)\b/i.test(
+          affirmativeText,
+        ));
+
+    const hasTwistKeywords =
+      !isTrueCrimeDoc &&
+      (detectedKeywords.some((k) => k.name === "plot twist") ||
+        /\b(plot twists?|twists?|can'?t predict|unpredictable|mind[- ]blowing|mind[- ]bending|twist ending)\b/i.test(
+          affirmativeText,
+        ));
+
+    const isUnderdog =
+      detectedKeywords.some((k) => k.name === "underdog") ||
+      /\b(starting from zero|start from zero|starting from nothing|from zero|rags to riches|underdog(?: story)?|success story|winning against all odds|against all odds|zero to hero|rise to the top|overcoming odds)\b/i.test(
+        affirmativeText,
+      );
+
+    const isFamilyAnimation =
+      !isCrimeFamily &&
+      !isCuteAnimeRomCom &&
+      !isHauntedHorror &&
+      !isPureComedy &&
+      !isSitcom &&
+      (detectedKeywords.some((k) => k.name === "family animation") ||
+        (rawDetectedGenres.includes("animation") &&
+          rawDetectedGenres.includes("family")) ||
+        (/\b(animated|animation|cartoon)\b/i.test(affirmativeText) &&
+          /\b(family|kids|children|wholesome|cozy|for the whole family)\b/i.test(
+            affirmativeText,
+          )));
+
+    const isCyberpunk =
+      detectedKeywords.some(
+        (k) => k.name === "cyberpunk" || k.name === "dystopia",
+      ) ||
+      /\b(cyberpunk|cyber-punk|dystopian?|dystopia|dark futuristic|futuristic city|androids?|cyborgs?|robots?|neon lights?|ruined future|dystopian world|cyberpunk city)\b/i.test(
+        affirmativeText,
+      );
+
+    const isPhilosophicalSciFi =
+      !isCyberpunk &&
+      (detectedKeywords.some((k) => k.name === "philosophical sci-fi") ||
+        (/\b(think about life|philosophical|existential|meaning of life|human condition|human existence|ponder|deep sci-fi|cosmic perspective)\b/i.test(
+          affirmativeText,
+        ) &&
+          (rawDetectedGenres.includes("scifi") ||
+            /\b(space|universe|cosmos|sci-fi|stars|astronaut)\b/i.test(
+              affirmativeText,
+            ))));
+
+    const wantsComedy =
+      rawDetectedGenres.includes("comedy") ||
+      isPureComedy ||
+      isSitcom ||
+      /\b(funny|laugh|comedy|hilarious|humor|chuckle)\b/i.test(affirmativeText);
+
+    const isComfortComedy =
+      (isTiredMood && wantsComedy) ||
+      isPureComedy ||
+      isSitcom ||
+      /\b(something funny|just.*funny|comfort comedy|chill comedy|pure comedy)\b/i.test(
+        affirmativeText,
+      );
+
+    const isHeistRobbery =
+      detectedKeywords.some((k) => k.name === "heist") ||
+      /\b(plan (?:a )?robbery|big robbery|bank robbery|robbery|heist|bank heist|big heist|steal money|caper|vault|safecracker|steal a fortune|heist movie)\b/i.test(
+        affirmativeText,
+      );
+
+    const isCrimeHeist =
+      !isTrueCrimeDoc &&
+      (isCrimeFamily ||
+        isHeistRobbery ||
+        rawDetectedGenres.includes("crime") ||
+        detectedKeywords.some(
+          (k) => k.name === "organized crime" || k.name === "crime family",
+        ) ||
+        /\b(organized crime|mafia|gangster|mobster|mobsters|crime syndicate|underworld|cartel)\b/i.test(
+          affirmativeText,
+        ));
+
+    // 🌟 2. استخراج متعدد للعناوين المرجعية (Multi-Anchor Aggregation: up to 3 titles)
+    const refPatterns = [
+      /\b(?:after|watch after|watched|finished|liked|loved|enjoyed|similar to|in the style of|vibes? of|such as|something like|anything like)\s+(?!\d{4}\b)([a-zA-Z0-9':.&!\-,]+(?:\s+[a-zA-Z0-9':.&!\-,]+){0,8}?)(?=[.;!?]|\s+(?:without|except|exclude|excluding|no|but|because|so|while|instead|and\s+(?:want|without|no|exclude|i\s+want))\b|$)/i,
+      /\b(?:based on|inspired by)\s+([a-zA-Z0-9':.&!\-,]+(?:\s+[a-zA-Z0-9':.&!\-,]+){0,8}?)(?=[.;!?]|\s+(?:without|except|exclude|excluding|no|but|because|so|while|instead)\b|$)/i,
+      /(?<!feel\s|feels\s|look\s|looks\s|sound\s|sounds\s)\blike\s+([a-zA-Z0-9':.&!\-,]+(?:\s+[a-zA-Z0-9':.&!\-,]+){0,8}?)(?=[.;!?]|\s+(?:without|except|exclude|excluding|no|but|because|so|while|instead|to\s+watch|for\s+a)\b|$)/i,
+      /\b(?:shows?|series|movies?|films?)\s+(?:like|similar\s+to|such\s+as)\s+([a-zA-Z0-9':.&!\-,]+(?:\s+[a-zA-Z0-9':.&!\-,]+){0,8}?)(?=[.;!?]|\s+(?:without|except|exclude|excluding|no|but|because|so|while|instead)\b|$)/i,
+    ];
+
+    let extractedReferenceTitles = [];
+
+    const addCandidateAnchor = (rawCandidateStr) => {
+      if (!rawCandidateStr || extractedReferenceTitles.length >= 3) return;
+      const cleaned = rawCandidateStr
+        .trim()
+        .replace(/^[,.\s?]+|[,.\s?]+$/g, "");
+      if (!cleaned || cleaned.length < 2) return;
+
+      const lowerClean = cleaned.toLowerCase().replace(/^(a|an|the)\s+/, "");
+      if (/^\d{4}s?$/.test(lowerClean)) return;
+      if (
+        GENRE_DESCRIPTOR_STOPWORDS.has(lowerClean) ||
+        GENRE_DESCRIPTOR_STOPWORDS.has(cleaned.toLowerCase())
+      ) {
+        return;
       }
+
+      const candidateWords = lowerClean.split(/\s+/).filter(Boolean);
+      if (
+        candidateWords.length === 1 &&
+        AMBIGUOUS_SINGLE_WORD_TITLES.has(candidateWords[0]) &&
+        !isValidAmbiguousSingleWordUsage(candidateWords[0], normalizedRawText)
+      ) {
+        return;
+      }
+      if (
+        candidateWords.length >= 2 &&
+        AMBIGUOUS_SINGLE_WORD_TITLES.has(candidateWords[0]) &&
+        candidateWords
+          .slice(1)
+          .every((w) => PRE_MODIFIER_GENRE_MOOD_WORDS.has(w))
+      ) {
+        return;
+      }
+
+      if (
+        /\b(comedy movies?|funny movies?|pure comedy|sitcoms?|sitcom series|sci-fi series|dark sci-fi|dark psychological|psychological anime|dark anime)\b/i.test(
+          cleaned,
+        )
+      ) {
+        return;
+      }
+      if (
+        extractedDirector &&
+        (getSimilarityScore(cleaned, extractedDirector) >= 0.72 ||
+          resolveFuzzyDirector(cleaned) === extractedDirector)
+      ) {
+        return;
+      }
+
+      const fuzzyAnchor = resolveFuzzyAnchorTitle(cleaned, normalizedRawText);
+      const finalTitle = fuzzyAnchor ? fuzzyAnchor.canonical : cleaned;
+
+      const finalCleanLower = finalTitle
+        .toLowerCase()
+        .replace(/^(a|an|the)\s+/, "");
+      if (
+        AMBIGUOUS_SINGLE_WORD_TITLES.has(finalCleanLower) &&
+        !isValidAmbiguousSingleWordUsage(finalCleanLower, normalizedRawText)
+      ) {
+        return;
+      }
+
+      if (
+        !extractedReferenceTitles.some(
+          (t) => t.toLowerCase() === finalTitle.toLowerCase(),
+        )
+      ) {
+        extractedReferenceTitles.push(finalTitle);
+      }
+    };
+
+    for (const pattern of refPatterns) {
+      const pMatch = normalizedRawText.match(pattern);
+      if (pMatch) {
+        const rawBlock = pMatch[1].trim();
+        // تقسيم العناوين المتعددة المفصولة بـ "or" أو "and" أو فاصلة ","
+        const splitParts = rawBlock
+          .split(/\s+(?:or|and|&)\s+|\s*,\s*/i)
+          .map((s) => s.trim())
+          .filter(Boolean);
+
+        for (const part of splitParts) {
+          addCandidateAnchor(part);
+        }
+        if (extractedReferenceTitles.length > 0) break;
+      }
+    }
+
+    // فحص إضافي مباشر لكل العناوين الأيقونية الموجودة في الجملة (يدعم ذكر أكثر من عنوان أيقوني مع حماية الكلمات الملتبسة)
+    for (const anchor of KNOWN_ICONIC_ANCHORS) {
+      if (extractedReferenceTitles.length >= 3) break;
+      const canonicalLower = anchor.canonical
+        .toLowerCase()
+        .replace(/^(a|an|the)\s+/, "");
+
+      if (
+        AMBIGUOUS_SINGLE_WORD_TITLES.has(canonicalLower) &&
+        !isValidAmbiguousSingleWordUsage(canonicalLower, normalizedRawText)
+      ) {
+        continue;
+      }
+
+      const canonicalRegex = new RegExp(
+        `\\b${anchor.canonical.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
+        "i",
+      );
+      if (canonicalRegex.test(normalizedRawText)) {
+        if (
+          !extractedReferenceTitles.some(
+            (t) => t.toLowerCase() === anchor.canonical.toLowerCase(),
+          )
+        ) {
+          extractedReferenceTitles.push(anchor.canonical);
+        }
+      }
+    }
+
+    // 🌟 الـ Implicit Title Fallback الذكي مع حماية الجنسيات والمخرجين والـ Now Playing والكلمات الملتبسة
+    const cleanWordList = lowerText.split(/\s+/).filter(Boolean);
+    const hasGenericPromptWords =
+      /\b(recommend|suggest|show|give|want|looking|find|movie|movies|film|films|series|show|shows|anime|another|option|options|similar|more|live|action|sci-fi|scifi|dark|cute|wholesome|psychological|egyptian|kuwaiti|saudi|gulf|khaleeji|emirati|lebanese|syrian|arabic|arab|turkish|indian|bollywood|korean|japanese|spanish|mexican|french|british|american|hollywood|theaters|theatres|cinemas|playing|director|directed|rating|rated)\b/i;
+
+    const hasKnownFilters =
+      rawDetectedGenres.length > 0 ||
+      detectedKeywords.length > 0 ||
+      excludedGenres.length > 0 ||
+      minYear !== null ||
+      maxYear !== null ||
+      minRating !== null ||
+      detectedLanguage !== null ||
+      extractedDirector !== null ||
+      isNowPlaying ||
+      hasTwistKeywords ||
+      hasExplicitSciFi;
+
+    if (
+      extractedReferenceTitles.length === 0 &&
+      !extractedDirector &&
+      !isNowPlaying &&
+      cleanWordList.length <= 4
+    ) {
+      const rawCandidate = normalizedRawText.replace(/[?.,!]/g, "").trim();
+      const cleanCandidate = rawCandidate
+        .toLowerCase()
+        .replace(/^(a|an|the)\s+/, "")
+        .trim();
+
+      const isBlockedAmbiguous =
+        AMBIGUOUS_SINGLE_WORD_TITLES.has(cleanCandidate) &&
+        !isValidAmbiguousSingleWordUsage(cleanCandidate, normalizedRawText);
+
+      if (!isBlockedAmbiguous) {
+        const fuzzyMatched = resolveFuzzyAnchorTitle(
+          rawCandidate,
+          normalizedRawText,
+        );
+        if (fuzzyMatched) {
+          extractedReferenceTitles.push(fuzzyMatched.canonical);
+        } else if (!hasKnownFilters) {
+          if (
+            rawCandidate.length >= 2 &&
+            (!hasGenericPromptWords.test(rawCandidate) ||
+              isStandaloneAmbiguousTitlePrompt) &&
+            !GENRE_DESCRIPTOR_STOPWORDS.has(cleanCandidate) &&
+            !GENRE_DESCRIPTOR_STOPWORDS.has(rawCandidate.toLowerCase())
+          ) {
+            extractedReferenceTitles.push(rawCandidate);
+          }
+        }
+      }
+    }
+
+    // 🌟 1. تشغيل فاحص التناقضات المبكر (Early Contradiction Detection)
+    const contradictionMsg = CindromeEngine.detectContradictions({
+      rawDetectedGenres,
+      excludedGenres,
+      isRomCom,
+      isCuteAnimeRomCom,
+      isSitcom,
+      isPureComedy,
+      isComfortComedy,
+      isMindBlowingAction,
+      isCyberpunk,
+      isPhilosophicalSciFi,
+      isTrueCrimeDoc,
+      isFamilyAnimation,
+      wantsExplicitLiveAction,
+      wantsExplicitAnime: /\b(anime|manga)\b/i.test(affirmativeText),
+      isAdaptationMentioned,
+      wantsClassic,
+      minYear,
+      maxYear,
+      extractedReferenceTitles,
+      fullContextText: normalizedRawText,
     });
+
+    if (contradictionMsg) {
+      return {
+        isValid: true,
+        hasContradiction: true,
+        contradictionMessage: contradictionMsg,
+        message: contradictionMsg,
+        targetType: selectedType,
+        detectedGenres: [],
+        detectedKeywords: [],
+        extractedReferenceTitles: [],
+        extractedReferenceTitle: null,
+        originalText: text,
+      };
+    }
+
+    // استكمال فلترة التصنيفات وتطبيق قواعد الأولوية بعد التأكد من عدم وجود تناقض
+    let detectedGenres = rawDetectedGenres.filter(
+      (g) => !excludedGenres.includes(g),
+    );
 
     const excludedGenreIds = [];
     excludedGenres.forEach((g) => {
@@ -1653,19 +2951,6 @@ export class CindromeEngine {
       detectedGenres = detectedGenres.filter((g) => g !== "drama");
     }
 
-    const wantsClassic =
-      /\b(classic|retro|old|80s|90s|vintage|nostalgic)\b/i.test(lowerText);
-
-    const isMindBlowingAction =
-      !excludedGenres.includes("action") &&
-      (detectedKeywords.some((k) => k.name === "mind blowing action") ||
-        (/\b(mind[- ]blowing|mind blowing)\b/i.test(lowerText) &&
-          (detectedGenres.includes("action") ||
-            /\baction\b/i.test(lowerText))) ||
-        (hasQualityFloor &&
-          /\baction\b/i.test(lowerText) &&
-          /\b(mind|reality|concept|twist|sci-fi)\b/i.test(lowerText)));
-
     if (isMindBlowingAction && !isPureComedy && !isSitcom) {
       if (
         !detectedGenres.includes("action") &&
@@ -1679,33 +2964,6 @@ export class CindromeEngine {
         detectedGenres.push("scifi");
     }
 
-    const isHorrorNight =
-      !excludedGenres.includes("horror") &&
-      /\b(movie night|with friends|party|friends|sleepover|crowd|popcorn)\b/i.test(
-        lowerText,
-      ) &&
-      (detectedGenres.includes("horror") ||
-        /\b(horror|scary|spooky)\b/i.test(lowerText));
-
-    const isPsychologicalThriller =
-      !excludedGenres.includes("mystery") &&
-      (detectedKeywords.some((k) => k.name === "psychological thriller") ||
-        /\b(psychological thriller|mess with my head|mindfuck|mind game|mind games|sanity|paranoia|unreliable narrator)\b/i.test(
-          lowerText,
-        ));
-
-    const isRomCom =
-      !isPureComedy &&
-      !isSitcom &&
-      !excludedGenres.includes("romance") &&
-      (detectedKeywords.some((k) => k.name === "rom-com") ||
-        /\b(rom-com|romcom|romantic comedy|sweet.*romance|light.*romance|lift my mood|feel[- ]good)\b/i.test(
-          lowerText,
-        ) ||
-        (/\b(sweet|light|chill|comfort|wholesome|cute)\b/i.test(lowerText) &&
-          (detectedGenres.includes("romance") ||
-            /\b(romance|romantic)\b/i.test(lowerText))));
-
     if (isRomCom) {
       if (
         !detectedGenres.includes("comedy") &&
@@ -1718,30 +2976,6 @@ export class CindromeEngine {
       )
         detectedGenres.push("romance");
     }
-
-    const isLiveActionSitcomPivot =
-      (isPivot || wantsExplicitLiveAction) &&
-      (isSitcom || detectedGenres.includes("comedy")) &&
-      !wantsExplicitAnime;
-
-    const isCuteAnimeRomCom =
-      !isLiveActionSitcomPivot &&
-      (selectedType === "anime" || wantsExplicitAnime) &&
-      !excludedGenres.includes("romance") &&
-      (isRomCom ||
-        detectedKeywords.some((k) => k.name === "cute romcom anime") ||
-        (/\b(cute|wholesome|sweet|adorable|fluffy|chill|rom-com|romcom|romantic comedy)\b/i.test(
-          lowerText,
-        ) &&
-          (/\b(romance|romantic|love|rom-com|romcom)\b/i.test(lowerText) ||
-            /\b(funny|comedy|humor)\b/i.test(lowerText))));
-
-    const isDarkAnime =
-      !isLiveActionSitcomPivot &&
-      (selectedType === "anime" || wantsExplicitAnime) &&
-      /\b(dark|bleak|grim|disturbing|psychological|gore|brutal|dark fantasy|tragedy)\b/i.test(
-        lowerText,
-      );
 
     if (isDarkAnime) {
       detectedGenres = detectedGenres.filter(
@@ -1757,36 +2991,11 @@ export class CindromeEngine {
       );
     }
 
-    const isHistoricalWar =
-      !isSwordWarfare &&
-      !excludedGenres.includes("war") &&
-      (detectedKeywords.some((k) => k.name === "historical war") ||
-        /\b(historical war|war movie|war movies|huge battles|epic battles|historical epic|epic war|ancient war|medieval war|world war|ancient warfare|medieval battle)\b/i.test(
-          lowerText,
-        ) ||
-        (/\b(battle|battles|war|military|army|soldiers?)\b/i.test(lowerText) &&
-          /\b(historical|epic|history|ancient|medieval|period)\b/i.test(
-            lowerText,
-          )));
-
     if (isSwordWarfare || isHistoricalWar) {
       if (!detectedGenres.includes("war")) detectedGenres.push("war");
       if (!detectedGenres.includes("history")) detectedGenres.push("history");
       detectedGenres = detectedGenres.filter((g) => g !== "action");
     }
-
-    const isTrueCrimeDoc =
-      !excludedGenres.includes("documentary") &&
-      !excludedGenres.includes("crime") &&
-      !excludedTermsFromPrompt.includes("documentary") &&
-      (detectedKeywords.some((k) => k.name === "true crime") ||
-        /\b(true crime|docuseries|docu-series|real mysteries|real mystery|crime doc|crime documentary|unsolved mysteries|real crime|real crime cases|crime cases)\b/i.test(
-          lowerText,
-        ) ||
-        (/\b(documentary|docuseries|docu-series)\b/i.test(lowerText) &&
-          /\b(crime|murder|killer|mystery|mysteries|real crime|cases?|investigation)\b/i.test(
-            lowerText,
-          )));
 
     if (isTrueCrimeDoc) {
       if (!detectedGenres.includes("documentary"))
@@ -1796,43 +3005,13 @@ export class CindromeEngine {
       );
     }
 
-    const hasTwistKeywords =
-      !isTrueCrimeDoc &&
-      !excludedGenres.includes("mystery") &&
-      (detectedKeywords.some((k) => k.name === "plot twist") ||
-        /\b(plot twists?|twists?|can'?t predict|unpredictable|mind[- ]blowing|mind[- ]bending|twist ending)\b/i.test(
-          lowerText,
-        ));
-
     if (hasTwistKeywords && !detectedGenres.includes("mystery")) {
       detectedGenres.push("mystery");
     }
 
-    const isUnderdog =
-      !excludedGenres.includes("drama") &&
-      (detectedKeywords.some((k) => k.name === "underdog") ||
-        /\b(starting from zero|start from zero|starting from nothing|from zero|rags to riches|underdog(?: story)?|success story|winning against all odds|against all odds|zero to hero|rise to the top|overcoming odds)\b/i.test(
-          lowerText,
-        ));
-
     if (isUnderdog && !detectedGenres.includes("drama")) {
       detectedGenres.push("drama");
     }
-
-    const isFamilyAnimation =
-      !isCrimeFamily &&
-      !isCuteAnimeRomCom &&
-      !isHauntedHorror &&
-      !isPureComedy &&
-      !isSitcom &&
-      !excludedGenres.includes("animation") &&
-      (detectedKeywords.some((k) => k.name === "family animation") ||
-        (detectedGenres.includes("animation") &&
-          detectedGenres.includes("family")) ||
-        (/\b(animated|animation|cartoon)\b/i.test(lowerText) &&
-          /\b(family|kids|children|wholesome|cozy|for the whole family)\b/i.test(
-            lowerText,
-          )));
 
     if (isFamilyAnimation) {
       if (!detectedGenres.includes("animation"))
@@ -1840,30 +3019,9 @@ export class CindromeEngine {
       if (!detectedGenres.includes("family")) detectedGenres.push("family");
     }
 
-    const isCyberpunk =
-      !excludedGenres.includes("scifi") &&
-      (detectedKeywords.some(
-        (k) => k.name === "cyberpunk" || k.name === "dystopia",
-      ) ||
-        /\b(cyberpunk|cyber-punk|dystopian?|dystopia|dark futuristic|futuristic city|androids?|cyborgs?|robots?|neon lights?|ruined future|dystopian world|cyberpunk city)\b/i.test(
-          lowerText,
-        ));
-
-    if (isCyberpunk) {
-      if (!detectedGenres.includes("scifi")) detectedGenres.push("scifi");
+    if (isCyberpunk && !detectedGenres.includes("scifi")) {
+      detectedGenres.push("scifi");
     }
-
-    const isPhilosophicalSciFi =
-      !isCyberpunk &&
-      !excludedGenres.includes("scifi") &&
-      (detectedKeywords.some((k) => k.name === "philosophical sci-fi") ||
-        (/\b(think about life|philosophical|existential|meaning of life|human condition|human existence|ponder|deep sci-fi|cosmic perspective)\b/i.test(
-          lowerText,
-        ) &&
-          (detectedGenres.includes("scifi") ||
-            /\b(space|universe|cosmos|sci-fi|stars|astronaut)\b/i.test(
-              lowerText,
-            ))));
 
     if (isPhilosophicalSciFi) {
       if (!detectedGenres.includes("scifi")) detectedGenres.push("scifi");
@@ -1874,50 +3032,13 @@ export class CindromeEngine {
         detectedGenres.push("drama");
     }
 
-    // 🌟 تأكيد بقاء scifi داخل detectedGenres حتى لو اقترن بوصف "dark" أو "series"
     if (hasExplicitSciFi && !detectedGenres.includes("scifi")) {
       detectedGenres.unshift("scifi");
     }
 
-    const wantsComedy =
-      !excludedGenres.includes("comedy") &&
-      (detectedGenres.includes("comedy") ||
-        isPureComedy ||
-        isSitcom ||
-        /\b(funny|laugh|comedy|hilarious|humor|chuckle)\b/i.test(lowerText));
-
-    const isComfortComedy =
-      (isTiredMood && wantsComedy) ||
-      isPureComedy ||
-      isSitcom ||
-      (!excludedGenres.includes("comedy") &&
-        /\b(something funny|just.*funny|comfort comedy|chill comedy|pure comedy)\b/i.test(
-          lowerText,
-        ));
-
     if (isComfortComedy && !detectedGenres.includes("comedy")) {
       detectedGenres.push("comedy");
     }
-
-    const isHeistRobbery =
-      !excludedGenres.includes("crime") &&
-      (detectedKeywords.some((k) => k.name === "heist") ||
-        /\b(plan (?:a )?robbery|big robbery|bank robbery|robbery|heist|bank heist|big heist|steal money|caper|vault|safecracker|steal a fortune|heist movie)\b/i.test(
-          lowerText,
-        ));
-
-    const isCrimeHeist =
-      !isTrueCrimeDoc &&
-      !excludedGenres.includes("crime") &&
-      (isCrimeFamily ||
-        isHeistRobbery ||
-        detectedGenres.includes("crime") ||
-        detectedKeywords.some(
-          (k) => k.name === "organized crime" || k.name === "crime family",
-        ) ||
-        /\b(organized crime|mafia|gangster|mobster|mobsters|crime syndicate|underworld|cartel)\b/i.test(
-          lowerText,
-        ));
 
     if (
       (isHeistRobbery || isCrimeFamily) &&
@@ -1926,125 +3047,16 @@ export class CindromeEngine {
       detectedGenres.push("crime");
     }
 
-    const hasExplicitMovie = /\b(movie|movies|film|films)\b/i.test(lowerText);
-    const hasExplicitSeries =
-      /\b(series|show|shows|tv|sitcom|docuseries|docu-series|k-drama|kdrama)\b/i.test(
-        lowerText,
-      );
-
-    let targetType = selectedType;
-    let hasExplicitTargetType = false;
-
-    if (wantsExplicitLiveAction) {
-      targetType = hasExplicitMovie ? "movie" : "tv";
-      hasExplicitTargetType = true;
-    } else if (isSitcom && !wantsExplicitAnime) {
-      targetType = "tv";
-      hasExplicitTargetType = true;
-    } else if (wantsExplicitAnime) {
-      targetType = "anime";
-      hasExplicitTargetType = true;
-    } else if (hasExplicitMovie && !hasExplicitSeries) {
-      targetType = "movie";
-      hasExplicitTargetType = true;
-    } else if (hasExplicitSeries && !hasExplicitMovie) {
-      targetType = "tv";
-      hasExplicitTargetType = true;
-    }
-
-    if (isPivot && detectedGenres.length > 0) {
-      detectedGenres = [...detectedGenres];
-    }
-
-    // 🌟 استخراج العناوين المرجعية دون قطع العنوان عند حروف الجر مثل on أو of أو in (مثل Attack on Titan)
-    const refPatterns = [
-      /\b(?:after|watch after|watched|finished|liked|loved|enjoyed|similar to|in the style of|vibe of|something like|anything like)\s+(?!\d{4}\b)([a-zA-Z0-9':.&!\-]+(?:\s+[a-zA-Z0-9':.&!\-]+){0,5}?)(?=[,.;!?]|\s+(?:without|except|exclude|excluding|no|but|because|so|while|instead|and\s+(?:want|without|no|exclude)|or\s+[a-zA-Z0-9':.&!\-]+(?:\s+[a-zA-Z0-9':.&!\-]+){0,3}?\s+(?:without|except|exclude|but))\b|$)/i,
-      /\b(?:based on|inspired by)\s+([a-zA-Z0-9':.&!\-]+(?:\s+[a-zA-Z0-9':.&!\-]+){0,5}?)(?=[,.;!?]|\s+(?:without|except|exclude|excluding|no|but|because|so|while|instead)\b|$)/i,
-      /(?<!feel\s|feels\s|look\s|looks\s|sound\s|sounds\s)\blike\s+([a-zA-Z0-9':.&!\-]+(?:\s+[a-zA-Z0-9':.&!\-]+){0,5}?)(?=[,.;!?]|\s+(?:without|except|exclude|excluding|no|but|because|so|while|instead|to\s+watch|for\s+a)\b|$)/i,
-    ];
-
-    let extractedReferenceTitle = null;
-    for (const pattern of refPatterns) {
-      const pMatch = normalizedRawText.match(pattern);
-      if (pMatch) {
-        let candidateTitle = pMatch[1]
-          .trim()
-          .replace(/^[,.\s?]+|[,.\s?]+$/g, "");
-
-        // إذا كان المستخدم يذكر خيارين مثل "Attack on Titan or Death Note"، نأخذ العنوان الأول كـ Anchor رئيسي
-        if (/\s+or\s+/i.test(candidateTitle)) {
-          candidateTitle = candidateTitle.split(/\s+or\s+/i)[0].trim();
+    // 🌟 ضمان استخراج وحفظ الـ Genres والـ Keywords بالكامل في حال اقترانها بمخرج أو أفلام السينما الحالية
+    if (extractedDirector || isNowPlaying) {
+      rawDetectedGenres.forEach((g) => {
+        if (!excludedGenres.includes(g) && !detectedGenres.includes(g)) {
+          detectedGenres.push(g);
         }
-
-        const cleanTitle = candidateTitle
-          .toLowerCase()
-          .replace(/^(a|an|the)\s+/, "");
-
-        const isYearOnly = /^\d{4}$/.test(cleanTitle);
-        const hasGenreStopword =
-          GENRE_DESCRIPTOR_STOPWORDS.has(cleanTitle) ||
-          GENRE_DESCRIPTOR_STOPWORDS.has(candidateTitle.toLowerCase());
-
-        if (!isYearOnly && !hasGenreStopword) {
-          const fuzzyAnchor = resolveFuzzyAnchorTitle(candidateTitle);
-          extractedReferenceTitle = fuzzyAnchor
-            ? fuzzyAnchor.canonical
-            : candidateTitle;
-          break;
-        }
-      }
+      });
     }
 
-    // 🌟 فحص إضافي مباشر: هل النص يحتوي صراحة أو بـ Fuzzy Matching (>= 0.65) على أي عنوان من KNOWN_ICONIC_ANCHORS؟
-    if (!extractedReferenceTitle) {
-      for (const anchor of KNOWN_ICONIC_ANCHORS) {
-        const canonicalRegex = new RegExp(
-          `\\b${anchor.canonical.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
-          "i",
-        );
-        if (canonicalRegex.test(normalizedRawText)) {
-          extractedReferenceTitle = anchor.canonical;
-          break;
-        }
-      }
-    }
-
-    // 🌟 الـ Implicit Title Fallback الذكي مع دعم الـ Fuzzy Matching
-    const cleanWordList = lowerText.split(/\s+/).filter(Boolean);
-    const hasGenericPromptWords =
-      /\b(recommend|suggest|show|give|want|looking|find|movie|movies|film|films|series|show|shows|anime|another|option|options|similar|more|live|action|sci-fi|scifi|dark|cute|wholesome)\b/i;
-    const hasKnownFilters =
-      detectedGenres.length > 0 ||
-      detectedKeywords.length > 0 ||
-      excludedGenres.length > 0 ||
-      minYear !== null ||
-      detectedLanguage !== null ||
-      hasTwistKeywords ||
-      hasExplicitSciFi;
-
-    if (!extractedReferenceTitle && cleanWordList.length <= 4) {
-      const rawCandidate = normalizedRawText.replace(/[?.,!]/g, "").trim();
-      const fuzzyMatched = resolveFuzzyAnchorTitle(rawCandidate);
-      if (fuzzyMatched) {
-        extractedReferenceTitle = fuzzyMatched.canonical;
-      } else if (!hasKnownFilters) {
-        const cleanCandidate = rawCandidate
-          .toLowerCase()
-          .replace(/^(a|an|the)\s+/, "")
-          .trim();
-
-        if (
-          rawCandidate.length >= 2 &&
-          !hasGenericPromptWords.test(rawCandidate) &&
-          !GENRE_DESCRIPTOR_STOPWORDS.has(cleanCandidate) &&
-          !GENRE_DESCRIPTOR_STOPWORDS.has(rawCandidate.toLowerCase())
-        ) {
-          extractedReferenceTitle = rawCandidate;
-        }
-      }
-    }
-
-    // حقن خصائص العمل الأيقوني إذا تم رصده
+    // دمج البيانات الوصفية (Genres & Flags) لجميع العناوين المرجعية المستخرجة
     let finalSwordWarfare = isSwordWarfare;
     let finalDarkAnime = isDarkAnime;
     let finalCuteAnimeRomCom = isCuteAnimeRomCom;
@@ -2056,11 +3068,11 @@ export class CindromeEngine {
     let finalHauntedHorror = isHauntedHorror;
     let finalSitcom = isSitcom;
     let finalPureComedy = isPureComedy;
+    let finalHasTwistKeywords = hasTwistKeywords;
 
-    if (extractedReferenceTitle) {
-      const matchedMeta = resolveFuzzyAnchorTitle(extractedReferenceTitle);
+    extractedReferenceTitles = extractedReferenceTitles.map((refTitle) => {
+      const matchedMeta = resolveFuzzyAnchorTitle(refTitle, normalizedRawText);
       if (matchedMeta) {
-        extractedReferenceTitle = matchedMeta.canonical;
         if (
           matchedMeta.genre &&
           !detectedGenres.includes(matchedMeta.genre) &&
@@ -2083,31 +3095,66 @@ export class CindromeEngine {
         if (matchedMeta.flag === "isHauntedHorror") finalHauntedHorror = true;
         if (matchedMeta.flag === "isSitcom") finalSitcom = true;
         if (matchedMeta.flag === "isPureComedy") finalPureComedy = true;
+        if (matchedMeta.flag === "hasTwistKeywords")
+          finalHasTwistKeywords = true;
+        return matchedMeta.canonical;
       }
+      return refTitle;
+    });
+
+    const extractedReferenceTitle = extractedReferenceTitles[0] || null;
+
+    const hasExplicitMovie = /\b(movie|movies|film|films)\b/i.test(lowerText);
+    const hasExplicitSeries =
+      /\b(series|show|shows|tv|sitcom|docuseries|docu-series|k-drama|kdrama)\b/i.test(
+        lowerText,
+      );
+
+    let targetType = selectedType;
+    let hasExplicitTargetType = false;
+
+    if (isNowPlaying) {
+      targetType = "movie";
+      hasExplicitTargetType = true;
+    } else if (wantsExplicitLiveAction) {
+      targetType = hasExplicitMovie ? "movie" : "tv";
+      hasExplicitTargetType = true;
+    } else if (finalSitcom && !wantsExplicitAnime) {
+      targetType = "tv";
+      hasExplicitTargetType = true;
+    } else if (wantsExplicitAnime) {
+      targetType = "anime";
+      hasExplicitTargetType = true;
+    } else if (hasExplicitMovie && !hasExplicitSeries) {
+      targetType = "movie";
+      hasExplicitTargetType = true;
+    } else if (hasExplicitSeries && !hasExplicitMovie) {
+      targetType = "tv";
+      hasExplicitTargetType = true;
     }
 
-    if (
-      extractedReferenceTitle &&
-      /\b(comedy movies?|funny movies?|pure comedy|sitcoms?|sitcom series|sci-fi series|dark sci-fi)\b/i.test(
-        extractedReferenceTitle,
-      )
-    ) {
-      extractedReferenceTitle = null;
+    if (isPivot && detectedGenres.length > 0) {
+      detectedGenres = [...detectedGenres];
     }
 
     const hasSpecificIntent =
-      Boolean(extractedReferenceTitle) ||
+      extractedReferenceTitles.length > 0 ||
+      Boolean(extractedDirector) ||
+      isNowPlaying ||
       hasExplicitSciFi ||
       wantsDark ||
       detectedGenres.length > 0 ||
       detectedKeywords.length > 0 ||
       excludedGenres.length > 0 ||
       excludedKeywords.length > 0 ||
-      Boolean(minYear) ||
+      minYear !== null ||
+      maxYear !== null ||
+      minRating !== null ||
       Boolean(detectedLanguage) ||
+      Boolean(detectedCountry) ||
       wantsExplicitLiveAction ||
       isKorean ||
-      hasTwistKeywords ||
+      finalHasTwistKeywords ||
       isUnderdog ||
       finalSwordWarfare ||
       finalCrimeFamily ||
@@ -2127,26 +3174,36 @@ export class CindromeEngine {
       isHeistRobbery;
 
     const isAmbiguous =
-      !extractedReferenceTitle &&
-      !hasSpecificIntent &&
-      cleanWordList.length > 3;
+      extractedDirector || isNowPlaying
+        ? false
+        : extractedReferenceTitles.length === 0 &&
+          !hasSpecificIntent &&
+          cleanWordList.length > 3;
 
     return {
       isValid: true,
+      hasContradiction: false,
+      contradictionMessage: null,
       isAmbiguous,
       isPivot,
       isLiveAction: wantsExplicitLiveAction,
+      wantsExplicitAnime,
+      isNowPlaying: Boolean(isNowPlaying),
+      extractedDirector,
       targetType,
       hasExplicitTargetType,
       detectedGenres,
       detectedKeywords,
       detectedLanguage,
       detectedCountry,
+      detectedRegionLabel,
       excludedGenres,
       excludedGenreIds: Array.from(new Set(excludedGenreIds)),
       excludedKeywords,
       excludedTermsFromPrompt,
       minYear,
+      maxYear,
+      minRating,
       isPure,
       withoutDrama,
       wantsClassic,
@@ -2168,13 +3225,14 @@ export class CindromeEngine {
       isPureComedy: finalPureComedy,
       isTrueCrimeDoc,
       isKorean,
-      hasTwistKeywords,
+      hasTwistKeywords: finalHasTwistKeywords,
       isUnderdog,
       isFamilyAnimation,
       isCyberpunk: finalCyberpunk,
       isTiredMood,
       isComfortComedy,
       isPhilosophicalSciFi: finalPhilosophicalSciFi,
+      extractedReferenceTitles,
       extractedReferenceTitle,
       originalText: text,
     };
@@ -2184,9 +3242,22 @@ export class CindromeEngine {
     candidates,
     parsedIntent,
     userProfileStats = {},
-    anchorTitle = null,
+    anchorTitles = null,
     userReviewsCount = 0,
   ) {
+    // توحيد معامل العناوين المرجعية لدعم نص مفرد أو مصفوفة عناوين (Multi-Anchor Support)
+    const normalizedAnchorList = (
+      Array.isArray(anchorTitles)
+        ? anchorTitles
+        : anchorTitles
+          ? [anchorTitles]
+          : parsedIntent.extractedReferenceTitles || []
+    )
+      .filter(Boolean)
+      .map((t) => String(t).trim());
+
+    const primaryAnchorTitle = normalizedAnchorList[0] || null;
+
     const sportsRegex =
       /\b(sport|sports|football|soccer|basketball|baseball|tennis|athlete|athletics|coach|champion|championship|tournament|olympic|olympics|stadium|pitch|wrestler|wrestling|boxer|boxing|quarterback|touchdown|nfl|fifa|premier\s*league|world\s*cup|gridiron|super\s*bowl|underdog\s*athlete|nascar|formula\s*1|f1|motorsport|swimming|swimmer|grand\s*prix|le\s*mans|speedway)\b/i;
 
@@ -2364,6 +3435,8 @@ export class CindromeEngine {
           parsedIntent.originalText || "",
         ));
 
+    const effectiveRatingFloor = Math.max(6.8, parsedIntent.minRating || 6.8);
+
     return candidates
       .map((item) => {
         let s_intent = 0;
@@ -2446,6 +3519,17 @@ export class CindromeEngine {
           s_intent = 60;
         }
 
+        // مكافأة مطابقة المخرج أو العرض السينمائي الحالي أو الإقليم
+        if (parsedIntent.extractedDirector || parsedIntent.isNowPlaying) {
+          s_intent = Math.max(s_intent, 90);
+        }
+        if (
+          parsedIntent.detectedLanguage &&
+          originalLang === parsedIntent.detectedLanguage
+        ) {
+          s_intent = Math.min(100, s_intent + 25);
+        }
+
         const wantsTimeTravel =
           parsedIntent.detectedKeywords.some((k) => k.name === "time travel") ||
           /\b(time travel|time loop|timeline|wormhole)\b/i.test(
@@ -2524,10 +3608,11 @@ export class CindromeEngine {
         const wantsSitcom =
           parsedIntent.isSitcom ||
           parsedIntent.detectedKeywords.some((k) => k.name === "sitcom") ||
-          (anchorTitle &&
+          normalizedAnchorList.some((aTitle) =>
             /\b(friends|the office|how i met your mother|himym|modern family|brooklyn 99|brooklyn nine-nine|new girl|parks and recreation|seinfeld|community|schitt's creek|scrubs|two and a half men|the big bang theory|big bang theory)\b/i.test(
-              anchorTitle,
-            )) ||
+              aTitle,
+            ),
+          ) ||
           (parsedIntent.isComfortComedy && !parsedIntent.isPureComedy) ||
           /\b(sitcoms?|sit-coms?|situational comed(?:y|ies))\b/i.test(
             parsedIntent.originalText,
@@ -2877,8 +3962,9 @@ export class CindromeEngine {
 
         const isSciFiContext =
           (parsedIntent.detectedGenres.includes("scifi") ||
-            (anchorTitle &&
-              /interstellar|arrival|contact|2001/i.test(anchorTitle))) &&
+            normalizedAnchorList.some((aTitle) =>
+              /interstellar|arrival|contact|2001/i.test(aTitle),
+            )) &&
           !parsedIntent.isCyberpunk;
 
         if (isSciFiContext && hasSciFiGenreId) {
@@ -3037,14 +4123,16 @@ export class CindromeEngine {
         // ==============================================================
         // 🌟 تطبيق العقوبات الصارمة (Strict Penalties System)
         // ==============================================================
+        let hasSevereExclusionViolation = false;
 
-        // 1. Quality Floor Penalty: خصم 60 نقطة فورية لأي عمل تقييمه على TMDB أقل من 6.8
-        const isLowRatedQualityViolation = voteAverage < 6.8;
+        // 1. Quality Floor & Explicit minRating Penalty: خصم 60 نقطة لأي عمل أقل من effectiveRatingFloor (6.8 أو minRating)
+        const isLowRatedQualityViolation = voteAverage < effectiveRatingFloor;
         if (isLowRatedQualityViolation) {
           penalties += 60;
+          hasSevereExclusionViolation = true;
         }
 
-        // 2. Ecchi / Harem Penalty: خصم 90 نقطة فورية لأي أنمي يحتوي على سمات Ecchi أو Harem
+        // 2. Global Default Anti-Ecchi / Anti-Harem Enforcement: خصم 95 نقطة فورية لأي أنمي يحتوي على سمات Ecchi أو Harem
         const isAnimeCandidate =
           item.media_type === "anime" ||
           parsedIntent.targetType === "anime" ||
@@ -3065,10 +4153,26 @@ export class CindromeEngine {
           hasEcchiOrHaremSignal;
 
         if (isEcchiViolation) {
-          penalties += 90;
+          penalties += 95;
+          hasSevereExclusionViolation = true;
         }
 
-        // 3. Genre Mismatch Penalty (Sci-Fi): خصم 80 نقطة لأي عمل لا يحمل Genre ID الخاص بالـ Sci-Fi (878 أو 10765) عند طلب Sci-Fi
+        // 3. Sword Warfare Live-Action Isolation: عزل ملاحم السيوف الحية عن الأنمي ما لم يطلب المستخدم أنمي صراحة
+        const wantsExplicitAnimeInPrompt =
+          parsedIntent.wantsExplicitAnime ||
+          parsedIntent.targetType === "anime" ||
+          /\b(anime|manga)\b/i.test(parsedIntent.originalText || "");
+
+        if (
+          parsedIntent.isSwordWarfare &&
+          !wantsExplicitAnimeInPrompt &&
+          isAnimeCandidate
+        ) {
+          penalties += 90;
+          hasSevereExclusionViolation = true;
+        }
+
+        // 4. Genre Mismatch Penalty (Sci-Fi): خصم 80 نقطة لأي عمل لا يحمل Genre ID الخاص بالـ Sci-Fi (878 أو 10765) عند طلب Sci-Fi
         const isSciFiMismatchViolation =
           parsedIntent.detectedGenres.includes("scifi") &&
           !hasSciFiGenreId &&
@@ -3076,9 +4180,10 @@ export class CindromeEngine {
 
         if (isSciFiMismatchViolation) {
           penalties += 80;
+          hasSevereExclusionViolation = true;
         }
 
-        // 4. Modern Warfare & Crime Penalty: عند تفعيل isSwordWarfare، خصم 80 نقطة للأسلحة النارية أو الجريمة الحديثة
+        // 5. Modern Warfare & Crime Penalty: عند تفعيل isSwordWarfare، خصم 80 نقطة للأسلحة النارية أو الجريمة الحديثة
         const hasModernGunsOrCrimeInSwordSearch =
           parsedIntent.isSwordWarfare &&
           (modernWarfareOrCrimeRegex.test(itemTitle) ||
@@ -3088,14 +4193,26 @@ export class CindromeEngine {
 
         if (hasModernGunsOrCrimeInSwordSearch) {
           penalties += 80;
+          hasSevereExclusionViolation = true;
         }
 
+        // 6. Temporal Filtering Penalty (minYear & maxYear)
         if (
           parsedIntent.minYear &&
           releaseYear > 0 &&
           releaseYear < parsedIntent.minYear
         ) {
-          penalties += 55;
+          penalties += 65;
+          hasSevereExclusionViolation = true;
+        }
+
+        if (
+          parsedIntent.maxYear &&
+          releaseYear > 0 &&
+          releaseYear > parsedIntent.maxYear
+        ) {
+          penalties += 65;
+          hasSevereExclusionViolation = true;
         }
 
         if (parsedIntent.excludedTermsFromPrompt?.includes("detective")) {
@@ -3107,7 +4224,6 @@ export class CindromeEngine {
         }
 
         // 🌟 فحص صارم للمصطلحات المنفية الشائعة
-        let hasSevereExclusionViolation = false;
         if (
           parsedIntent.excludedTermsFromPrompt &&
           parsedIntent.excludedTermsFromPrompt.length > 0
@@ -3197,6 +4313,8 @@ export class CindromeEngine {
           parsedIntent.isFamilyAnimation ||
           parsedIntent.isCyberpunk ||
           parsedIntent.isPhilosophicalSciFi ||
+          Boolean(parsedIntent.extractedDirector) ||
+          parsedIntent.isNowPlaying ||
           parsedIntent.detectedKeywords.length > 0;
 
         if (
@@ -3355,7 +4473,7 @@ export class CindromeEngine {
         // 🌟 ضبط عقوبات صارمة للـ Cute Anime RomCom ضد الإيتشي، الهاريم، أنميات الأطفال، والرياضة
         if (parsedIntent.isCuteAnimeRomCom) {
           if (hasEcchiOrHaremSignal) {
-            penalties += 90;
+            penalties += 95;
           }
 
           if (
@@ -3455,6 +4573,16 @@ export class CindromeEngine {
           if (originalLang !== "ko") {
             penalties += 55;
           }
+        }
+
+        if (
+          parsedIntent.detectedLanguage &&
+          !parsedIntent.isKorean &&
+          originalLang &&
+          originalLang !== parsedIntent.detectedLanguage
+        ) {
+          penalties += 60;
+          hasSevereExclusionViolation = true;
         }
 
         if (wantsPlotTwist || parsedIntent.hasTwistKeywords) {
@@ -3788,14 +4916,18 @@ export class CindromeEngine {
           penalties += 30;
         }
 
-        if (anchorTitle) {
-          const cleanAnchor = anchorTitle.toLowerCase().trim();
+        // 🌟 تطبيق عقوبة السلسلة والأجزاء المباشرة على جميع العناوين المرجعية في المصفوفة (Multi-Anchor Sequel Penalty)
+        if (normalizedAnchorList.length > 0) {
           const cleanItem = itemTitle.toLowerCase().trim();
-          const isExactOrSequel =
-            cleanItem === cleanAnchor ||
-            cleanItem.startsWith(cleanAnchor + " ") ||
-            cleanItem.startsWith(cleanAnchor + ":") ||
-            cleanItem.startsWith(cleanAnchor + " -");
+          const isExactOrSequel = normalizedAnchorList.some((aTitle) => {
+            const cleanAnchor = aTitle.toLowerCase().trim();
+            return (
+              cleanItem === cleanAnchor ||
+              cleanItem.startsWith(cleanAnchor + " ") ||
+              cleanItem.startsWith(cleanAnchor + ":") ||
+              cleanItem.startsWith(cleanAnchor + " -")
+            );
+          });
 
           if (isExactOrSequel) {
             penalties += 85;
@@ -3842,7 +4974,7 @@ export class CindromeEngine {
           recencyBonus = 3;
         }
 
-        // 🌟 السماح بتطبيق العقوبات الصارمة كاملة (60 / 80 / 90 نقطة) دون قصها عند 45
+        // 🌟 السماح بتطبيق العقوبات الصارمة كاملة (60 / 80 / 95 نقطة) دون قصها عند 45
         const hasHardPenaltyTrigger =
           isEcchiViolation ||
           isLowRatedQualityViolation ||
@@ -3885,39 +5017,111 @@ export class CindromeEngine {
     parsedIntent,
     resultsCount,
     isColdStart = false,
-    anchorTitle = null,
+    anchorTitles = null,
   ) {
+    if (parsedIntent?.hasContradiction && parsedIntent?.contradictionMessage) {
+      return parsedIntent.contradictionMessage.replace(/\*\*/g, "");
+    }
+
+    const formatGenreDisplay = (g) => (g === "scifi" ? "Sci-Fi" : g);
+
+    const normalizedAnchors = (
+      Array.isArray(anchorTitles)
+        ? anchorTitles
+        : anchorTitles
+          ? [anchorTitles]
+          : parsedIntent?.extractedReferenceTitles || []
+    ).filter(Boolean);
+
+    const regionPrefix = parsedIntent?.detectedRegionLabel
+      ? `${parsedIntent.detectedRegionLabel} `
+      : "";
+
+    const formattedGenres =
+      parsedIntent?.detectedGenres?.length > 0
+        ? parsedIntent.detectedGenres.map(formatGenreDisplay)
+        : [];
+
     const genreStr =
-      parsedIntent.detectedGenres.length > 0
-        ? parsedIntent.detectedGenres.join(" and ")
-        : "top";
-    const typeStr =
-      parsedIntent.targetType === "mixed"
-        ? "titles"
-        : parsedIntent.targetType === "tv"
+      formattedGenres.length > 0 ? formattedGenres.join(" and ") : "top";
+
+    const isPlural =
+      resultsCount === undefined || resultsCount === null || resultsCount !== 1;
+    const rawTarget = parsedIntent?.targetType || "mixed";
+
+    let typeStr = "titles";
+    if (rawTarget === "movie") {
+      typeStr = isPlural ? "movies" : "movie";
+    } else if (rawTarget === "tv") {
+      typeStr = "series";
+    } else if (rawTarget === "anime") {
+      typeStr = "anime";
+    } else {
+      typeStr = isPlural ? "titles" : "title";
+    }
+
+    const singularTypeStr =
+      rawTarget === "movie"
+        ? "movie"
+        : rawTarget === "tv"
           ? "series"
-          : parsedIntent.targetType;
+          : rawTarget === "anime"
+            ? "anime"
+            : "title";
+
+    const ratingSuffix = parsedIntent?.minRating
+      ? ` rated ${parsedIntent.minRating}+`
+      : "";
 
     if (isColdStart) {
-      return `I see your watch history for ${typeStr} is still brand new! To help me tailor my recommendations, what is a specific ${typeStr} that you consider a masterpiece or always love watching?`;
+      const coldPluralType =
+        rawTarget === "movie"
+          ? "movies"
+          : rawTarget === "tv"
+            ? "series"
+            : rawTarget === "anime"
+              ? "anime"
+              : "titles";
+      return `I see your watch history for ${coldPluralType} is still brand new! To help me tailor my recommendations, what is a specific ${singularTypeStr} that you consider a masterpiece or always love watching?`;
     }
 
     if (resultsCount === 0) {
       return `I searched my database with those specific constraints, but couldn't find a strong match. Try broadening your request or naming a favorite title!`;
     }
 
-    if (anchorTitle) {
-      const toneName =
-        parsedIntent.detectedGenres.length > 0
-          ? parsedIntent.detectedGenres[0]
-          : "cinematic";
-      return `Great pick with "${anchorTitle}"! I've filtered out direct sequels and matched its exact ${toneName} tone and pacing. Here are my top recommendations for you:`;
+    if (parsedIntent?.isNowPlaying) {
+      const movieNoun = isPlural ? "movies" : "movie";
+      return `Here ${isPlural ? "are" : "is"} the top ${regionPrefix}${genreStr !== "top" ? genreStr + " " : ""}${movieNoun} currently playing in theaters${ratingSuffix}:`;
     }
 
+    if (parsedIntent?.extractedDirector) {
+      return `Here ${isPlural ? "are" : "is"} the highest-rated ${regionPrefix}${genreStr !== "top" ? genreStr + " " : ""}${typeStr} directed by ${parsedIntent.extractedDirector}${ratingSuffix}:`;
+    }
+
+    if (normalizedAnchors.length > 1) {
+      const formattedList = normalizedAnchors
+        .map((t) => `"${t}"`)
+        .join(" and ");
+      const toneName =
+        formattedGenres.length > 0 ? formattedGenres[0] : "cinematic";
+      return `Great picks with ${formattedList}! I've blended their ${toneName} tone and pacing while filtering out direct sequels. Here ${isPlural ? "are my top recommendations" : "is my top recommendation"}${ratingSuffix}:`;
+    }
+
+    if (normalizedAnchors.length === 1) {
+      const toneName =
+        formattedGenres.length > 0 ? formattedGenres[0] : "cinematic";
+      return `Great pick with "${normalizedAnchors[0]}"! I've filtered out direct sequels and matched its exact ${toneName} tone and pacing. Here ${isPlural ? "are my top recommendations" : "is my top recommendation"} for you${ratingSuffix}:`;
+    }
+
+    const descriptor =
+      `${regionPrefix}${genreStr} ${typeStr}${ratingSuffix}`.trim();
+    const recNoun = isPlural ? "recommendations" : "recommendation";
+    const matchNoun = isPlural ? "matches" : "match";
+
     const successPrompts = [
-      `Based on your request for ${genreStr} ${typeStr}, and factoring in your preferences, here are the top-rated recommendations:`,
-      `Here are some top-tier ${genreStr} ${typeStr} that match your requested tone and focus:`,
-      `I've analyzed titles matching your search for ${genreStr} ${typeStr} and ranked these as your best matches:`,
+      `Based on your request for ${descriptor}, and factoring in your preferences, here ${isPlural ? "are" : "is"} the top-rated ${recNoun}:`,
+      `Here ${isPlural ? "are some" : "is a"} top-tier ${descriptor} that ${isPlural ? "match" : "matches"} your requested tone and focus:`,
+      `I've analyzed titles matching your search for ${descriptor} and ranked ${isPlural ? "these as your best matches" : `this as your best ${matchNoun}`}:`,
     ];
     return successPrompts[Math.floor(Math.random() * successPrompts.length)];
   }
