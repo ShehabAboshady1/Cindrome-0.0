@@ -1,4 +1,4 @@
-// public/js/pages/drome.js
+// client/js/pages/drome.js
 
 document.addEventListener("DOMContentLoaded", () => {
   const dromeInput = document.getElementById("dromeInput");
@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================================
-  // 4. إرسال واستقبال الرسائل مع حفظ السياق المترابط
+  // 4. إرسال واستقبال الرسائل مع ضغط وتنظيف الـ Payload (Day 6)
   // ==========================================
   async function handleSend() {
     if (!enforceAuthGuard()) return;
@@ -307,8 +307,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (emptyState) emptyState.classList.add("is-hidden");
 
-    // 🌟 الاحتفاظ بنسخة السياق السابقة قبل إضافة رسالة المستخدم الحالية
-    const previousHistory = [...chatHistory];
+    // 🌟 تجهيز نسخة خفيفة من السياق (Slim History Payload) تحتوي فقط على نصوص المستخدم والـ IDs المعروضة سابقاً
+    const slimHistory = chatHistory
+      .filter((msg) => msg.role === "user" || msg.role === "drome")
+      .map((msg) =>
+        msg.role === "user"
+          ? { role: "user", text: msg.text }
+          : {
+              role: "drome",
+              results: Array.isArray(msg.results)
+                ? msg.results.map((r) => ({ id: r.id }))
+                : [],
+            },
+      );
 
     appendUserBubble(text);
     chatHistory.push({ role: "user", text });
@@ -323,14 +334,13 @@ document.addEventListener("DOMContentLoaded", () => {
     abortController = new AbortController();
 
     try {
-      // 🌟 إرسال chatHistory كاملة ضمن الـ Payload
       const response = await fetch("/api/drome/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: text,
           focusType: focusType,
-          history: previousHistory,
+          history: slimHistory,
         }),
         signal: abortController.signal,
       });
